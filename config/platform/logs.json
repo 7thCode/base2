@@ -1,0 +1,28 @@
+{
+  "appenders": {
+    "request": {
+      "type": "dateFile",
+      "filename": "logs/request.log",
+      "pattern": "%d"
+    },
+    "audit": {
+      "type": "file",
+      "filename": "logs/audit.log",
+      "pattern": "%d"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "request"
+      ],
+      "level": "error"
+    },
+    "audit": {
+      "appenders": [
+        "audit"
+      ],
+      "level": "info"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<ng-container>
+    <mat-card style="margin:2rem;">
+        <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="space-between">
+                <div style="font-size: 32px;font-weight: 900;">Accounts</div>
+                <button mat-fab color="primary" [disabled]="progress" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+            </div>
+            <div fxLayout="row" fxLayout.lt-sm="column">
+                <mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
+                    <input matInput type="text" placeholder="Find by nickname..." [(ngModel)]="nickname" (change)="findByNickname();">
+                    <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="nickname='';findByNickname();">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-paginator fxFlex="40%" fxFlex.lt-sm="100%" [length]="count" [pageSize]="size" (page)="Page($event)">
+                </mat-paginator>
+            </div>
+            <mat-grid-list #grid  cols="4" rowHeight="1:1">
+                <mat-grid-tile *ngFor="let account of results" [colspan]="account.cols" [rowspan]="account.rows" [style.background]="account.auth | authcolor">
+
+                    <mat-grid-tile-header fxLayout="row" fxLayoutAlign="space-between center" style="padding-left:4px;padding-right:4px;line-height:32px;">
+                        <app-image [fileName]="'avatar.jpg'" [view]="'visible'" [width]="32" [height]="32" [user_id]="account.user_id"></app-image>
+                        <h3 style="line-height: 1.2rem;">{{account.nickname}}</h3>
+                        <button mat-icon-button color="primary" (click)="updateDialog(account.username)"><mat-icon>folder_shared</mat-icon></button>
+                        <button *ngIf="account.auth > 1" mat-icon-button color="warn" (click)="deleteDialog(account.username)"><mat-icon>clear</mat-icon></button>
+                    </mat-grid-tile-header>
+
+                    <div fxLayout="column" style="margin-top:2rem;padding:1rem;overflow: hidden;">
+                        <div style="font-size:0.8rem;font-weight:500;color:#606060;margin:0.5rem auto;">{{account.username}}</div>
+                        <div class="mat-caption" style="height:4rem;overflow:hidden;">{{account.description}}</div>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card-content>
+    </mat-card>
+</ng-container>

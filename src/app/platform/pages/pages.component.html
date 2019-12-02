@@ -1,0 +1,38 @@
+<ng-container>
+	<mat-card style="margin:2rem;">
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<div style="font-size: 32px;font-weight: 900;">Pages</div>
+				<button mat-fab color="primary" [disabled]="progress" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+			</div>
+			<div fxLayout="row" fxLayout.lt-sm="column">
+				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" fxLayout.sm="column" style="width:100%;">
+					<input matInput type="text" placeholder="Find by Path..." [(ngModel)]="path" (change)="findByPath();">
+					<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="path='';findByPath();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+				<mat-paginator fxFlex="40%" fxFlex.lt-sm="100%" [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
+			</div>
+			<mat-grid-list #grid cols="4" rowHeight="1:1">
+				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
+					<mat-grid-tile-header>
+						<div class="box-header">{{resource.path}}</div>
+					</mat-grid-tile-header>
+					<a href="/pages/get/{{resource.path}}" target="_blank">{{resource.path}}</a>
+					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
+
+						<button mat-icon-button (click)="updateDialog(resource.id)">
+							<mat-icon class="material-icons" style="color:#b2ebf2;">edit</mat-icon>
+						</button>
+						<button mat-icon-button color="accent" (click)="onDelete(resource.path)">
+							<mat-icon class="material-icons">delete_sweep</mat-icon>
+						</button>
+
+					</mat-grid-tile-footer>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</mat-card-content>
+	</mat-card>
+</ng-container>

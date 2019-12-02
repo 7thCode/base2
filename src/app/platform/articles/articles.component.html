@@ -1,0 +1,32 @@
+<ng-container>
+	<mat-card style="margin:2rem;">
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<div style="font-size: 32px;font-weight: 900;">Articles</div>
+				<button mat-fab color="primary" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+			</div>
+			<div fxLayout="row">
+				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
+			</div>
+			<mat-grid-list #grid cols="4" rowHeight="1:1">
+				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
+					<mat-grid-tile-header>
+						<div class="box-header">{{resource.id}}</div>
+					</mat-grid-tile-header>
+
+					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
+
+						<button mat-icon-button (click)="updateDialog(resource.id)">
+							<mat-icon class="material-icons" style="color:#b2ebf2;">edit</mat-icon>
+						</button>
+						<button mat-icon-button color="accent" (click)="onDelete(resource.id)">
+							<mat-icon class="material-icons">delete_sweep</mat-icon>
+						</button>
+
+					</mat-grid-tile-footer>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</mat-card-content>
+	</mat-card>
+</ng-container>

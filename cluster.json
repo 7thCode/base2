@@ -1,0 +1,18 @@
+{
+  "apps" : [{
+    "name"        : "base1",
+    "script"      : "app.js",
+    "instances"  :  "1",
+    "exec_mode"  : "cluster_mode",
+    "args"        : [],
+    "watch": false,
+    "node_args"   : "--optimize_for_size --max_old_space_size=920 --gc_interval=100",
+    "instance_var" : "1",
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "env_production" : {
+      "NODE_ENV": "production"
+    }
+  }]
+}
