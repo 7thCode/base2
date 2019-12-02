@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>{{content.title}}</h1>
+
+<div mat-dialog-content fxLayout="column">
+	<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+		<div>{{content.message}}</div>
+	</form>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around">
+	<button mat-raised-button color="accent" (click)="onAccept()">OK</button>
+	<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+</div>
+

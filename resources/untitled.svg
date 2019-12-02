@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="265">
+    <desc iVinci="yes" version="4.4" gridStep="20" showGrid="no" snapToGrid="no" codePlatform="0"/>
+    <g id="Layer1">
+        <g id="Shape1">
+            <desc type="0" basicInfo-basicType="2" basicInfo-roundedRectRadius="24" basicInfo-polygonSides="6" basicInfo-starPoints="5" bounding="rect(-123,-127.5,246,255)" text="" font-familyName="Helvetica" font-pixelSize="20" font-bold="0" font-underline="0" font-alignment="1" strokeStyle="0" markerStart="0" markerEnd="0" shadowEnabled="0" shadowOffsetX="0" shadowOffsetY="2" shadowBlur="4" shadowOpacity="160" blurEnabled="0" blurRadius="4" transform="matrix(1.04065,0,0,1.03922,128,132.5)" pers-center="0,0" pers-size="0,0" pers-start="0,0" pers-end="0,0" locked="0" mesh="" flag=""/>
+            <path id="shapePath1" d="M-3.8147e-05,24.9412 C-3.8147e-05,11.1665 11.1819,-1.52588e-05 24.9756,-1.52588e-05 L231.024,-1.52588e-05 C244.818,-1.52588e-05 256,11.1665 256,24.9412 L256,240.059 C256,253.833 244.818,265 231.024,265 L24.9756,265 C11.1819,265 -3.8147e-05,253.833 -3.8147e-05,240.059 L-3.8147e-05,24.9412 Z" style="stroke:none;fill-rule:evenodd;fill:#f5f5f5;fill-opacity:1;"/>
+        </g>
+        <g id="Shape2">
+            <desc type="0" basicInfo-basicType="1" basicInfo-roundedRectRadius="12" basicInfo-polygonSides="6" basicInfo-starPoints="5" bounding="rect(-15.2343,-25.9998,30.4685,51.9996)" text="" font-familyName="Helvetica" font-pixelSize="20" font-bold="0" font-underline="0" font-alignment="1" strokeStyle="0" markerStart="0" markerEnd="0" shadowEnabled="0" shadowOffsetX="0" shadowOffsetY="2" shadowBlur="4" shadowOpacity="160" blurEnabled="0" blurRadius="4" transform="matrix(5.92,0,0,3.42969,126.546,102.374)" pers-center="0,0" pers-size="0,0" pers-start="0,0" pers-end="0,0" locked="0" mesh="" flag=""/>
+            <path id="shapePath2" d="M36.3592,13.2031 L216.733,13.2031 L216.733,191.545 L36.3592,191.545 L36.3592,13.2031 Z" style="stroke:none;fill-rule:evenodd;fill:#f53430;fill-opacity:0.701961;"/>
+        </g>
+        <g id="Shape3">
+            <desc type="0" basicInfo-basicType="1" basicInfo-roundedRectRadius="12" basicInfo-polygonSides="6" basicInfo-starPoints="5" bounding="rect(-15.2343,-25.9998,30.4685,51.9996)" text="" font-familyName="Helvetica" font-pixelSize="20" font-bold="0" font-underline="0" font-alignment="1" strokeStyle="0" markerStart="0" markerEnd="0" shadowEnabled="0" shadowOffsetX="0" shadowOffsetY="2" shadowBlur="4" shadowOpacity="160" blurEnabled="0" blurRadius="4" transform="matrix(5.28,0,0,3.19531,91.4055,168.186)" pers-center="0,0" pers-size="0,0" pers-start="0,0" pers-end="0,0" locked="0" mesh="" flag=""/>
+            <path id="shapePath3" d="M10.9687,85.1087 L171.842,85.1087 L171.842,251.264 L10.9687,251.264 L10.9687,85.1087 Z" style="stroke:none;fill-rule:evenodd;fill:#2257f5;fill-opacity:0.67451;"/>
+        </g>
+        <g id="Shape4">
+            <desc type="0" basicInfo-basicType="1" basicInfo-roundedRectRadius="12" basicInfo-polygonSides="6" basicInfo-starPoints="5" bounding="rect(-15.2343,-25.9998,30.4685,51.9996)" text="" font-familyName="Helvetica" font-pixelSize="20" font-bold="0" font-underline="0" font-alignment="1" strokeStyle="0" markerStart="0" markerEnd="0" shadowEnabled="0" shadowOffsetX="0" shadowOffsetY="2" shadowBlur="4" shadowOpacity="160" blurEnabled="0" blurRadius="4" transform="matrix(5.28,0,0,3.19531,165.952,155.592)" pers-center="0,0" pers-size="0,0" pers-start="0,0" pers-end="0,0" locked="0" mesh="" flag=""/>
+            <path id="shapePath4" d="M85.515,72.515 L246.389,72.515 L246.389,238.67 L85.515,238.67 L85.515,72.515 Z" style="stroke:none;fill-rule:evenodd;fill:#06f519;fill-opacity:0.564706;"/>
+        </g>
+    </g>
+</svg>

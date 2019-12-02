@@ -1,0 +1,45 @@
+/**
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * This software is released under the MIT License.
+ * opensource.org/licenses/mit-license.php
+ */
+
+"use strict";
+
+const express: any = require("express");
+export const router: any = express.Router();
+
+const path: any = require("path");
+
+const models: string = global._models;
+const controllers: string = global._controllers;
+const library: string = global._library;
+const _config: string = global.__config;
+
+const gatekeeper: any = require(path.join(library, "gatekeeper"));
+
+const PublicKey: any = require("./controller");
+const publickey: any = new PublicKey(module.parent.exports.event);
+
+router.get("/publickey/fixed", [gatekeeper.guard,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			publickey.get_fixed_public_key(request, response);
+		});
+	}]);
+
+router.get("/publickey/dynamic", [gatekeeper.guard, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			publickey.get_public_key(request, response);
+		});
+	}]);
+
+router.get("/publickey/token", [gatekeeper.guard, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			publickey.get_access_token(request, response);
+		});
+	}]);
+
+module.exports = router;

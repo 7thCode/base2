@@ -1,0 +1,57 @@
+<ng-container>
+	<mat-card style="margin:2rem;">
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<div style="font-size: 32px;font-weight: 900;">Files</div>
+				<input type="file" multiple style="display: none" #fileInput (change)="onChangeFileInput()"/>
+				<button mat-fab color="primary" [disabled]="progress" (click)="onClickFileInputButton()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+			</div>
+			<div fxLayout="row" fxLayout.lt-sm="column">
+				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
+					<input matInput type="text" placeholder="Find by Filename..." [(ngModel)]="filename" (change)="findByFilename();">
+					<button mat-button matSuffix mat-icon-button aria-label="Clear" [disabled]="progress" (click)="filename='';findByFilename();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+				<mat-paginator fxFlex="40%" fxFlex.lt-sm="100%" [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
+			</div>
+			<mat-grid-list #grid cols="4" rowHeight="1:1">
+				<mat-grid-tile class="box-body" [ngSwitch]="file.type" *ngFor="let file of results" [colspan]="file.cols" [rowspan]="file.rows">
+					<app-image *ngSwitchCase="1" [user_id]="file.metadata.user_id" [fileName]="file.filename" [view]="'editable'"></app-image>
+					<img *ngSwitchCase="2" style="height: 60%;" src="{{endPoint}}/files/get/{{file.filename}}" alt=""/>
+					<video *ngSwitchCase="3" style="height: 60%;" muted playsinline controls>
+						<source src="{{endPoint}}/files/get/{{file.filename}}">
+					</video>
+					<div *ngSwitchDefault [ngSwitch]="file.extension">
+						<i *ngSwitchCase="'zip'" class="material-icons" style="color:#f21411;font-size: 6rem;">insert_drive_file</i>
+						<i *ngSwitchDefault      class="material-icons" style="color:#02f2f2;font-size: 6rem;">insert_drive_file</i>
+					</div>
+
+					<!-- <div *ngIf="file.type == 3">
+						<div class="video">
+							<iframe src="//www.youtube.com/embed/ybVHwoS3q3c" frameborder="0" allowfullscreen></iframe>
+						</div>
+						 <div class="video">
+							<iframe src="//player.vimeo.com/video/ybVHwoS3q3c" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+						</div>
+					</div> -->
+
+					<mat-grid-tile-header>
+						<div class="box-header">{{file.filename}}</div>
+					</mat-grid-tile-header>
+					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
+
+						<a mat-icon-button href="{{endPoint}}/files/get/{{file.filename}}" download>
+							<mat-icon class="material-icons" style="color:#b2ebf2;">cloud_download</mat-icon>
+						</a>
+						<button mat-icon-button color="warn" (click)="onDelete(file.filename)">
+							<mat-icon class="material-icons">delete_sweep</mat-icon>
+						</button>
+
+					</mat-grid-tile-footer>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</mat-card-content>
+	</mat-card>
+</ng-container>

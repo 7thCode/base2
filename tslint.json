@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "no-console": false,
+    "no-var-requires": false,
+    "max-line-length": [
+      true,
+      {
+        "limit": 500
+      }
+    ],
+    "object-literal-sort-keys": false,
+    "no-shadowed-variable": [
+      false
+    ],
+    "no-namespace": false,
+    "only-arrow-functions": false,
+    "no-consecutive-blank-lines": false,
+    "no-trailing-whitespace": false,
+    "indent": [true, "tabs", 4],
+    "no-empty": false,
+    "member-ordering": [
+      true
+    ],
+    "variables-before-functions": true,
+    "variable-name": false
+  }
+}

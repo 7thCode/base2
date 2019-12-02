@@ -1,0 +1,6 @@
+<mat-checkbox [(ngModel)]="value" [formControl]="validators">{{description.label}}</mat-checkbox>
+<mat-hint>{{description.hint}}</mat-hint>
+<mat-error *ngFor="let validator of description.validators">
+	<span *ngIf="validators.hasError(validator.name)">{{validator.message}}</span>
+</mat-error>
+
