@@ -16,9 +16,9 @@ module.exports = {
 		dav: false,
 		db: {
 			address: "localhost",
-			user: "base1master",
+			user: "base2master",
 			password: "33550336",
-			name: "base1",
+			name: "base2",
 			backup: {
 				hour: 0,
 				minute: 0
@@ -47,11 +47,20 @@ module.exports = {
 			"MEgCQQCMCKOCbTexbTtSOPD0wqkQe6d5hTHI+TS2cpZXugYu1R1vj9i6nz6oIlJd" +
 			"iS8nLAg7Y+ptg4HldnCv7wLoEkQzAgMBAAE=\n" +
 			"-----END RSA PUBLIC KEY-----",
-		modules: [],
+		modules: [
+			{
+				type: "required",
+				path: "/grabber/modules/",
+				name: "crawl",
+				description: {
+					display: "Crawl"
+				}
+			}
+		],
 		root_modules: [
 			{
 				type: "required",
-				path: "/applications/",
+				path: "/applications/modules/",
 				name: "front",
 				description: {
 					display: "Front"

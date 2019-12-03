@@ -5,7 +5,7 @@
  */
 
 // for "global".
-declare namespace NodeJS  {
+declare namespace NodeJS {
 	// tslint:disable-next-line:interface-name
 	interface Global {
 		__config: string;
@@ -49,6 +49,12 @@ const Scheduler: any = require(path.join(library, "scheduler"));
 const Unix: any = require(path.join(library, "commandar"));
 const Cipher: any = require(path.join(library, "cipher"));
 const IPV6: any = require(path.join(library, "ipv6"));
+
+let saslprep;
+try {
+	saslprep = require("saslprep");
+} catch (e) {
+}
 
 const normal = () => {
 
@@ -154,7 +160,14 @@ const normal = () => {
 
 	// database
 	const MongoStore = require("connect-mongo")(session);
-	const options = {keepAlive: 1, connectTimeoutMS: 1000000, reconnectTries: 30, reconnectInterval: 2000, useNewUrlParser: true};
+	const options = {
+		keepAlive: 1,
+		connectTimeoutMS: 1000000,
+		reconnectTries: 30,
+		reconnectInterval: 2000,
+		useNewUrlParser: true,
+		// 	useUnifiedTopology: true,
+	};
 	let connect_url = "mongodb://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 	if (config.db.noauth) {
 		connect_url = "mongodb://" + config.db.address + "/" + config.db.name;
