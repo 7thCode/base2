@@ -1,20 +1,28 @@
+/**
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * This software is released under the MIT License.
+ * opensource.org/licenses/mit-license.php
+ */
+
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import {InteractionChannel} from "../library/channel";
 
 /*
 *
 * 送り側
-* 
+*
 * constructor(private interactionService: InteractionService)
 *
-* this.interactionService.publish('Login');
+* 		this.channel = this.interactionService.getChannel("channel-name");
+* 		this.channel.publish(data: any);
 *
 *
 * 受け側
 *
 * constructor(private interactionService: InteractionService)
 *
-* this.interactionService.event$.subscribe((text) => this.handler(text));
+* 		this.channel = this.interactionService.getChannel("channel-name");
+*		this.channel.subscribe((data: any) => this.handler(data: any));
 *
 */
 
@@ -24,11 +32,18 @@ import { Subject } from "rxjs";
 
 export class InteractionService {
 
-	private subject = new Subject<any>();
+	private channels: any = {};
 
-	public event$ = this.subject.asObservable();
+	public getChannel(name: string): InteractionChannel {
+		let result: InteractionChannel = this.channels[name];
+		if (!result) {
+			result = new InteractionChannel();
+			this.channels[name] = result;
+		}
+		return result;
+	}
 
-	public publish(change: any) {
-		this.subject.next(change);
+	public deleteChannel(name: string): void {
+		delete this.channels[name];
 	}
 }
