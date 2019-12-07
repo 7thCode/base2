@@ -4,13 +4,12 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
-
 "use strict";
+
+import {IEmit} from "../../../../../../../types/universe";
 
 import {EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {FormControl, Validators} from "@angular/forms";
-import {IEmit} from "../../../../../../../types/universe";
 
 export class BaseComponent implements OnInit {
 

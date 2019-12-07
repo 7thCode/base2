@@ -89,7 +89,7 @@ $ nodebrew use v6.X.0
     > sudo apt install mongodb
     > sudo apt install mongo-tools
 ### Mac(Homebrew)
-    > brew install mongodb
+    > brew install mongodb-community
 ### Windows
 
     see http://qiita.com/moto_pipedo/items/c3bb40370ba2792143ad
@@ -1226,9 +1226,8 @@ $ nodebrew use v6.X.0
     > sudo apt install mongodb
     > sudo apt install mongo-tools
 ### Mac(Homebrew)
-    > brew install mongodb
+    > brew install mongodb-community
 ### Windows
-
     see http://qiita.com/moto_pipedo/items/c3bb40370ba2792143ad
 
 ### 設定

@@ -4,11 +4,11 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserRequest} from "../../../../types/server";
 import {Callback, IErrorObject, IPasswordToken, IUserToken, StatusCallback} from "../../../../types/universe";
+
+import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserRequest} from "../../../../types/server";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");

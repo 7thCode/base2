@@ -11,7 +11,7 @@ module.exports = {
 		timeout: 100000,
 		bodysize: "200mb",
 		cors_enable: false,
-		ua: "base1",
+		ua: "base2",
 		use_publickey: false,
 		dav: false,
 		db: {
@@ -29,7 +29,7 @@ module.exports = {
 			member: true,
 			expire: 60
 		},
-		sessionname: "base1",
+		sessionname: "base2",
 		sessionsecret: "Daisy, Daisy.",
 		tokensecret: "Yes We therefore I think we",
 		key2: "Man is a thinking reed",

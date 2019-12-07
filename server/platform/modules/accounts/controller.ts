@@ -6,6 +6,8 @@
 
 "use strict";
 
+import {IErrorObject, IQueryOption} from "../../../../types/universe";
+
 import {
 	IAccountContent,
 	IAccountModel,
@@ -13,10 +15,8 @@ import {
 	IJSONResponse,
 	IQueryParam,
 	IQueryRequest,
-	IUsernameParam
+	IUsernameParam,
 } from "../../../../types/server";
-
-import {IErrorObject, IQueryOption} from "../../../../types/universe";
 
 const _: any = require("lodash");
 const SpeakEasy: any = require("speakeasy");

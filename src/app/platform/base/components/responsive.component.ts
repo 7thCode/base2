@@ -6,13 +6,15 @@
 
 "use strict";
 
+import {IErrorObject} from "../../../../../types/universe";
+
 import {MediaMatcher} from "@angular/cdk/layout";
 import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";
 
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
 import {MatSnackBar, MatSpinner} from "@angular/material";
-import {IErrorObject} from "../../../../../types/universe";
+
 import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
 

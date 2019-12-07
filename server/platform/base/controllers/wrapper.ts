@@ -4,11 +4,11 @@
  * //opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-import {IAccountModel, IJSONResponse} from "../../../../types/server";
 import {AuthLevel, Callback, IErrorObject} from "../../../../types/universe";
+
+import {IAccountModel, IJSONResponse} from "../../../../types/server";
 
 const path: any = require("path");
 

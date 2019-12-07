@@ -4,13 +4,11 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-// import {Promise} from "es6-promise";
-import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/server";
 import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
-import {Auth} from "../auth/controller";
+
+import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/server";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");
