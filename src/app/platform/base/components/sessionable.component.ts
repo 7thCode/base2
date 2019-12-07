@@ -11,7 +11,7 @@ import {ChangeDetectorRef, EventEmitter, Output} from "@angular/core";
 
 import * as momentNs from "moment-timezone";
 
-import {AuthLevel, Callback, IRole, IErrorObject} from "../../../../../types/universe";
+import {AuthLevel, Callback, IErrorObject, IRole} from "../../../../../types/universe";
 import {SessionService} from "../services/session.service";
 
 const moment: any = momentNs;

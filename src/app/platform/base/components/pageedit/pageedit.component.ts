@@ -6,8 +6,9 @@
 
 "use strict";
 
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {IEmit} from "../../../../../../types/universe";
+
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 
 @Component({
 	selector: "page-edit",

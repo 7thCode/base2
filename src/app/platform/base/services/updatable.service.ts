@@ -6,10 +6,11 @@
 
 "use strict";
 
+import {Callback, IContent} from "../../../../../types/universe";
+
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {Callback, IContent} from "../../../../../types/universe";
 import {ConstService} from "./const.service";
 import {QueryableService} from "./queryable.service";
 

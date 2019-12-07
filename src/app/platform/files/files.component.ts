@@ -6,12 +6,13 @@
 
 "use strict";
 
+import {Callback, IErrorObject} from "../../../../types/universe";
+
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, HostListener, OnChanges, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
 
-import {Callback, IErrorObject} from "../../../../types/universe";
 import {UploadableComponent} from "../base/components/uploadable.component";
 import {ConstService} from "../base/services/const.service";
 import {SessionService} from "../base/services/session.service";

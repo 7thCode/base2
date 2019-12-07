@@ -6,11 +6,12 @@
 
 "use strict";
 
+import {Callback, ISession} from "../../../../../types/universe";
+
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import {Callback, ISession} from "../../../../../types/universe";
 import {ConstService} from "./const.service";
 import {HttpService} from "./http.service";
 

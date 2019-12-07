@@ -6,8 +6,9 @@
 
 "use strict";
 
-import {IPageModel} from "../../../../types/server";
 import {IErrorObject} from "../../../../types/universe";
+
+import {IPageModel} from "../../../../types/server";
 
 const path: any = require("path");
 

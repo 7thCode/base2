@@ -4,11 +4,11 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/server";
 import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
+
+import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/server";
 
 const Updatable = require("./updatable_controller");
 

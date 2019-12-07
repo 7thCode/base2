@@ -6,12 +6,13 @@
 
 "use strict";
 
+import {IErrorObject, IVaultModelContent} from "../../../../types/universe";
+
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component} from "@angular/core";
 import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
-import {IErrorObject, IVaultModelContent} from "../../../../types/universe";
 import {GridViewComponent} from "../base/components/gridview.component";
 import {ConstService} from "../base/services/const.service";
 import {PublicKeyService} from "../base/services/publickey.service";

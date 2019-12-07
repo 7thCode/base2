@@ -6,12 +6,13 @@
 
 "use strict";
 
+import {Callback, IErrorObject} from "../../../../../types/universe";
+
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {Callback, IErrorObject} from "../../../../../types/universe";
 import {ConstService} from "./const.service";
 import {PublicKeyService} from "./publickey.service";
 import {UpdatableService} from "./updatable.service";

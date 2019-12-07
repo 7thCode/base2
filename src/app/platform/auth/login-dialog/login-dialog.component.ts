@@ -6,10 +6,11 @@
 
 "use strict";
 
+import {IErrorObject} from "../../../../../types/universe";
+
 import {Component, Inject, Input, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef, MatDividerModule, MatSnackBar} from "@angular/material";
 
-import {IErrorObject} from "../../../../../types/universe";
 import {AuthService} from "../auth.service";
 
 @Component({
