@@ -21,13 +21,25 @@ const library: string = global._library;
 const _config: string = global.__config;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
-// const Auth: any = require(path.join(modules, "auth/controller"));
-// const auth: any = new Auth(module.parent.exports.event);
 
 const Crawl: any = require("./controller");
 const crawls: any = new Crawl(module.parent.exports.event);
 
-router.get("/grabber/crawl", function(request, response, next) {
+router.get("/srcs/auth/query/:query/:option", [
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			crawls.query(request, response);
+		});
+	}]);
+
+router.get("/srcs/auth/count/:query", [
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			crawls.count(request, response);
+		});
+	}]);
+
+router.get("/srcs/crawl", function(request, response, next) {
 
 	response.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
 	response.write("<div>ok</div>");

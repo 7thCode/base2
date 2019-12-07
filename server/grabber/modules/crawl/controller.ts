@@ -6,17 +6,8 @@
 
 "use strict";
 
-import {
-	IAccountContent,
-	IAccountModel,
-	IAccountRequest,
-	IJSONResponse,
-	IQueryParam,
-	IQueryRequest,
-	IUsernameParam,
-} from "../../../../types/server";
-
-import {IErrorObject, IQueryOption} from "../../../../types/universe";
+import {IAccountModel, IAccountRequest, IJSONResponse, IUpdatableModel,} from "../../../../types/server";
+import {IContent, IQueryOption} from "../../../../types/universe";
 
 const _: any = require("lodash");
 const SpeakEasy: any = require("speakeasy");
@@ -29,16 +20,35 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const Wrapper: any = require(path.join(controllers, "wrapper"));
+const Updatable: any = require(path.join(controllers, "updatable_controller"));
 
 const Crawler = require("../../base/library/crawler").Crawler;
 
 const Src: any = require(path.join(models, "grabber/srces/src"));
 
-export class Crawls extends Wrapper {
+interface IArticleModelContent extends IContent {
+	src: string;
+	alt: string;
+	url: string;
+	description: string;
+}
+
+interface ISrcModel extends IUpdatableModel {
+	create: Date;
+	modify: Date;
+	user_id: string;
+	enabled: boolean;
+	content: IArticleModelContent;
+
+}
+
+export class Crawls extends Updatable {
+
+	protected Model: any;
 
 	constructor(event: any) {
 		super(event);
+		this.Model = Src as ISrcModel;
 	}
 
 	public crawl(request: IAccountRequest<any>, response: IJSONResponse): void {
@@ -65,12 +75,12 @@ export class Crawls extends Wrapper {
 								}
 
 								const setter = {
-									content: {
-										id: "",
-										src: src_text,
-										alt: alt_text,
-										url: result.url,
-										description: "",
+									$set: {
+										"content.id": "",
+										"content.src": src_text,
+										"content.alt": alt_text,
+										"content.url": result.url,
+										"content.description": "",
 									},
 								};
 

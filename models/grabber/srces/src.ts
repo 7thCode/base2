@@ -32,12 +32,18 @@ namespace ArticleModel {
 		},
 	});
 
+
 	const query_by_user_read: any = (user: any, query): any => {
 		return {$and: [{user_id: {$eq: user.user_id}}, query]};
 	};
 
 	const query_by_user_write: any = (user: any, query): any => {
 		return {$and: [{user_id: {$eq: user.user_id}}, query]};
+	};
+
+	// Public data
+	Src.methods.public = function(cb: Callback<any>): any {
+		return this.content;
 	};
 
 	Src.statics.set = function(user: IAccountModel, src: string, setter: object, cb: Callback<any>): void {

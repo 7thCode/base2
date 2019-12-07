@@ -14,8 +14,10 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatProgressSpinnerModule, MatSpinner} from "@angular/material";
 
 import {AppRoutingModule} from "./app-routing.module";
-import {AppComponent} from "./app.component";
+import {GrabberModule} from "./grabber/grabber.module";
 import {PlatformModule} from "./platform/platform.module";
+
+import {AppComponent} from "./app.component";
 
 @NgModule({
 	declarations: [
@@ -28,6 +30,7 @@ import {PlatformModule} from "./platform/platform.module";
 		MatProgressSpinnerModule,
 		OverlayModule,
 		PlatformModule,
+		GrabberModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent],

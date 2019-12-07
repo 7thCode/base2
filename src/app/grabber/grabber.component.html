@@ -1,0 +1,30 @@
+<ng-container>
+	<mat-card style="margin:2rem;">
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<div style="font-size: 32px;font-weight: 900;">Images</div>
+			</div>
+			<div fxLayout="row" fxLayout.lt-sm="column">
+				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
+					<input matInput type="text" placeholder="Find by alt..." [(ngModel)]="alt" (change)="findByAlt();">
+					<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="alt='';findByAlt();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+				<mat-paginator fxFlex="40%" fxFlex.lt-sm="100%" [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
+			</div>
+			<mat-grid-list #grid cols="4" rowHeight="1:1">
+				<mat-grid-tile class="box-body" *ngFor="let image of results" [colspan]="image.cols" [rowspan]="image.rows">
+					<mat-grid-tile-header>
+						{{image.alt}}
+					</mat-grid-tile-header>
+					<img style="height: 60%;" src="{{image.src}}" alt=""/>
+					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
+
+					</mat-grid-tile-footer>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</mat-card-content>
+	</mat-card>
+</ng-container>
