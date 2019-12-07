@@ -4,10 +4,10 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-// import {Promise} from "es6-promise";
+import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
+
 import {
 	IAccountModel,
 	IDeleteRequest, IDParam,
@@ -17,7 +17,6 @@ import {
 	IQueryRequest,
 	IUpdatableModel,
 } from "../../../../types/server";
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
 
 const Wrapper: any = require("./wrapper");
 

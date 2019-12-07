@@ -4,15 +4,15 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
+
+import {IArticleModelContent, IErrorObject} from "../../../../types/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component} from "@angular/core";
 import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
-import {IArticleModelContent, IErrorObject} from "../../../../types/universe";
 import {GridViewComponent} from "../base/components/gridview.component";
 import {ConstService} from "../base/services/const.service";
 import {SessionService} from "../base/services/session.service";

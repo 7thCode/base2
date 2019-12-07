@@ -6,12 +6,13 @@
 
 "use strict";
 
+import {Callback, IErrorObject} from "../../../../types/universe";
+
 import {HttpClient} from "@angular/common/http";
 import {AfterContentInit, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout"; // for responsive
 import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
 
-import {Callback, IErrorObject} from "../../../../types/universe";
 import {AuthService} from "../auth/auth.service";
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 import {SessionableComponent} from "../base/components/sessionable.component";

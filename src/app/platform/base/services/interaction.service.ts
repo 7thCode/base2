@@ -4,7 +4,7 @@
  * opensource.org/licenses/mit-license.php
  */
 
-import { Injectable } from "@angular/core";
+import {Injectable} from "@angular/core";
 import {InteractionChannel} from "../library/channel";
 
 /*

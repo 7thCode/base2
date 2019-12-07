@@ -6,10 +6,11 @@
 
 "use strict";
 
-import {HttpClient} from "@angular/common/http";
-
-import {ChangeDetectorRef, OnInit} from "@angular/core";
 import {Callback, IErrorObject} from "../../../../../types/universe";
+
+import {HttpClient} from "@angular/common/http";
+import {ChangeDetectorRef, OnInit} from "@angular/core";
+
 import {ConstService} from "../services/const.service";
 import {FileService} from "../services/file.service";
 import {SessionService} from "../services/session.service";

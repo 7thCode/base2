@@ -4,13 +4,13 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
+
+import {Callback, IErrorObject, IQueryOption} from "../../../../../types/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../../types/universe";
 import {ConstService} from "./const.service";
 import {HttpService} from "./http.service";
 

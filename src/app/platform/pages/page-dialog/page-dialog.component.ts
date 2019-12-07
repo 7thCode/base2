@@ -4,15 +4,15 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
-
 "use strict";
+
+import {IEmit} from "../../../../../types/universe";
 
 import {Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
-import {IEmit} from "../../../../../types/universe";
+
 
 @Component({
 	selector: "page-dialog",

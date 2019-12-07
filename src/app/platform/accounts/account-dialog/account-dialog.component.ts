@@ -4,13 +4,12 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
+
+import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-
-import {AuthLevel, IRole, IErrorObject, ISession} from "../../../../../types/universe";
 
 @Component({
 	selector: "account-dialog",

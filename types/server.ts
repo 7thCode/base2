@@ -230,10 +230,10 @@ export interface IDeleteRequest {
 	user: object;
 }
 
-// export interface IUserIDRequest<PARAMS> {
-// 	user: {user_id: string};
-// 	params: PARAMS;
-// }
+export interface IUserIDRequest<PARAMS> {
+ 	user: {user_id: string};
+ 	params: PARAMS;
+}
 
 export interface ISecureContent {
 	content: string;

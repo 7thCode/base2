@@ -11,14 +11,14 @@ module.exports = {
 		timeout: 100000,
 		bodysize: "200mb",
 		cors_enable: false,
-		ua: "base1",
+		ua: "base2",
 		use_publickey: false,
 		dav: false,
 		db: {
 			address: "localhost",
-			user: "base1master",
+			user: "base2master",
 			password: "33550336",
-			name: "base1",
+			name: "base2",
 			backup: {
 				hour: 0,
 				minute: 0
@@ -29,7 +29,7 @@ module.exports = {
 			member: true,
 			expire: 60
 		},
-		sessionname: "base1",
+		sessionname: "base2",
 		sessionsecret: "Daisy, Daisy.",
 		tokensecret: "Yes We therefore I think we",
 		key2: "Man is a thinking reed",
@@ -51,7 +51,7 @@ module.exports = {
 		root_modules: [
 			{
 				type: "required",
-				path: "/applications/",
+				path: "/applications/modules/",
 				name: "front",
 				description: {
 					display: "Front"

@@ -1,8 +1,17 @@
+/**
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * This software is released under the MIT License.
+ * opensource.org/licenses/mit-license.php
+ */
+
+"use strict";
+
+import {IErrorObject} from "../../../../types/universe";
+
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material";
 
-import {IErrorObject} from "../../../../types/universe";
 import {UpdatableComponent} from "../base/components/updatable.component";
 import {ConstService} from "../base/services/const.service";
 import {SessionService} from "../base/services/session.service";

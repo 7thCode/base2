@@ -4,7 +4,6 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
 import {Pipe, PipeTransform} from "@angular/core";

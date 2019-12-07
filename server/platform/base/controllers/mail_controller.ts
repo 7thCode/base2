@@ -7,6 +7,7 @@
 "use strict";
 
 import {IErrorObject} from "../../../../types/universe";
+
 import {IJSONResponse} from "../../../../types/server";
 
 const _: any = require("lodash");

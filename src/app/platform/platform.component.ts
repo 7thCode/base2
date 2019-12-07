@@ -6,14 +6,14 @@
 
 "use strict";
 
+import {Callback, IErrorObject} from "../../../types/universe";
+
 import {MediaMatcher} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MatDialog, MatSidenav, MatSnackBar} from "@angular/material";
-import {ActivatedRoute} from "@angular/router";
 
-import {Callback, IErrorObject} from "../../../types/universe";
 import {AccountDialogComponent} from "./accounts/account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts/accounts.component";
 import {AccountsService} from "./accounts/accounts.service";

@@ -4,8 +4,9 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
+
+import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
 
 import {
 	IAccountModel,
@@ -16,7 +17,6 @@ import {
 	IQueryRequest, ISecureContent,
 	ISecureUpdatableModel,
 } from "../../../../types/server";
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
 
 const Updatable: any = require("./updatable_controller");
 
