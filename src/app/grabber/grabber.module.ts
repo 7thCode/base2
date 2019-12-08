@@ -1,5 +1,5 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {NgModule} from "@angular/core";
 
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
@@ -7,21 +7,31 @@ import {
 	MatAutocompleteModule,
 	MatButtonModule,
 	MatCardModule,
-	MatFormFieldModule, MatGridListModule,
+	MatDialogModule,
+	MatFormFieldModule,
+	MatGridListModule,
 	MatIconModule,
 	MatInputModule,
-	MatListModule, MatNativeDateModule,
-	MatPaginatorModule, MatProgressSpinnerModule, MatSelectModule,
+	MatListModule,
+	MatNativeDateModule,
+	MatPaginatorModule,
+	MatProgressSpinnerModule,
+	MatSelectModule,
 	MatSnackBarModule,
 } from "@angular/material";
 
 import {GrabberRoutingModule} from "./grabber-routing.module";
 import {GrabberComponent} from "./grabber.component";
 
+import {FilepathPipe} from "./base/pipes/filepath.pipe";
+import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
+
 @NgModule({
-  declarations: [
-  	GrabberComponent,
-  ],
+	declarations: [
+		GrabberComponent,
+		UrlDialogComponent,
+		FilepathPipe,
+	],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -31,6 +41,7 @@ import {GrabberComponent} from "./grabber.component";
 		MatCardModule,
 		MatIconModule,
 		MatButtonModule,
+		MatDialogModule,
 		MatNativeDateModule,
 		MatInputModule,
 		MatListModule,
@@ -45,9 +56,14 @@ import {GrabberComponent} from "./grabber.component";
 		MatGridListModule,
 
 	],
+	exports: [
+		FilepathPipe,
+	],
 	bootstrap: [
 		GrabberComponent,
+		UrlDialogComponent,
 	],
 })
 
-export class GrabberModule { }
+export class GrabberModule {
+}

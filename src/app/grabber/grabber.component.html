@@ -6,6 +6,12 @@
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
+					<input matInput type="text" placeholder="Find by src..." [(ngModel)]="src" (change)="findBySrc();">
+					<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="src='';findBySrc();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
 					<input matInput type="text" placeholder="Find by alt..." [(ngModel)]="alt" (change)="findByAlt();">
 					<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="alt='';findByAlt();">
 						<mat-icon>close</mat-icon>
@@ -17,11 +23,11 @@
 			<mat-grid-list #grid cols="4" rowHeight="1:1">
 				<mat-grid-tile class="box-body" *ngFor="let image of results" [colspan]="image.cols" [rowspan]="image.rows">
 					<mat-grid-tile-header>
-						{{image.alt}}
+						<div style="font-size:10px;">{{image.alt}}</div>
 					</mat-grid-tile-header>
-					<img style="height: 60%;" src="{{image.src}}" alt=""/>
-					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-
+					<img style="height: 60%;" src="{{image.src}}" alt="" (click)="urlDialog(image)" />
+					<mat-grid-tile-footer>
+						<div style="font-size:10px;">{{image.src | filepath:3 }}</div>
 					</mat-grid-tile-footer>
 				</mat-grid-tile>
 			</mat-grid-list>

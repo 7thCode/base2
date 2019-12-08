@@ -4,13 +4,14 @@ import {HttpClient} from "@angular/common/http";
 import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
-import {Callback, IErrorObject} from "../../../types/universe";
+import {IErrorObject} from "../../../types/universe";
 
 import {ConstService} from "../platform/base/services/const.service";
 import {SessionService} from "../platform/base/services/session.service";
 import {GrabberService} from "./grabber.service";
 
 import {GridViewComponent} from "../platform/base/components/gridview.component";
+import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
 
 @Component({
 	selector: "app-grabber",
@@ -35,6 +36,7 @@ export class GrabberComponent extends GridViewComponent implements OnInit {
 
 	protected service: GrabberService;
 
+	public src = "";
 	public alt = "";
 
 	protected query: object = {};
@@ -65,8 +67,27 @@ export class GrabberComponent extends GridViewComponent implements OnInit {
 	/**
 	 * @returns none
 	 */
+	public findBySrc(): void {
+		this.query = {};
+		this.page = 0;
+		if (this.src) {
+			this.query = {"content.src": {$regex: this.src}};
+		}
+		this.draw((error: IErrorObject, accounts: object[]): void => {
+			if (!error) {
+				this.results = accounts;
+			} else {
+				this.errorBar(error);
+			}
+		});
+	}
+
+	/**
+	 * @returns none
+	 */
 	public findByAlt(): void {
 		this.query = {};
+		this.page = 0;
 		if (this.alt) {
 			this.query = {"content.alt": {$regex: this.alt}};
 		}
@@ -86,6 +107,31 @@ export class GrabberComponent extends GridViewComponent implements OnInit {
 		object.cols = 1;
 		object.rows = 1;
 		return object;
+	}
+
+	/**
+	 * @returns none
+	 */
+	public urlDialog(image: any): void {
+		const resultDialogContent: any = {
+			src: image.src,
+			alt: image.alt,
+			url: image.url,
+			description: image.description,
+		};
+
+		const dialog: any = this.matDialog.open(UrlDialogComponent, {
+			width: "40vw",
+			data: {
+				session: this.currentSession,
+				content: resultDialogContent,
+			},
+			disableClose: true,
+		});
+
+		dialog.afterClosed().subscribe((result: object) => {
+
+		});
 	}
 
 }
