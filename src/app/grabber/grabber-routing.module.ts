@@ -9,9 +9,11 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {GrabberComponent} from "./grabber.component";
+import {ImagesComponent} from "./images/images.component";
 
 const routes: Routes = [
-	{path: "", component: GrabberComponent, children: []},
+	{path: "sites", component: GrabberComponent},
+	{path: "images", component: ImagesComponent},
 ];
 
 @NgModule({

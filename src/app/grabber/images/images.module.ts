@@ -20,13 +20,16 @@ import {
 	MatSnackBarModule,
 } from "@angular/material";
 
-import {GrabberRoutingModule} from "./grabber-routing.module";
-import {GrabberComponent} from "./grabber.component";
-import {ImagesModule} from "./images/images.module";
+import {ImagesComponent} from "./images.component";
+
+import {FilepathPipe} from "../base/pipes/filepath.pipe";
+import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
 
 @NgModule({
 	declarations: [
-		GrabberComponent,
+		ImagesComponent,
+		UrlDialogComponent,
+		FilepathPipe,
 	],
 	imports: [
 		CommonModule,
@@ -47,18 +50,18 @@ import {ImagesModule} from "./images/images.module";
 		MatAutocompleteModule,
 		MatProgressSpinnerModule,
 		MatPaginatorModule,
+
 		MatGridListModule,
 
-		GrabberRoutingModule,
-		ImagesModule,
 	],
 	exports: [
-
+		FilepathPipe,
 	],
 	bootstrap: [
-		GrabberComponent,
+		ImagesComponent,
+		UrlDialogComponent,
 	],
 })
 
-export class GrabberModule {
+export class ImagesModule {
 }

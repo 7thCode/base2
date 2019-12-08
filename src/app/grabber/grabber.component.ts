@@ -11,7 +11,6 @@ import {SessionService} from "../platform/base/services/session.service";
 import {GrabberService} from "./grabber.service";
 
 import {GridViewComponent} from "../platform/base/components/gridview.component";
-import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
 
 @Component({
 	selector: "app-grabber",
@@ -36,9 +35,6 @@ export class GrabberComponent extends GridViewComponent implements OnInit {
 
 	protected service: GrabberService;
 
-	public src = "";
-	public alt = "";
-
 	protected query: object = {};
 	protected page: number = 0;
 	public size: number = 20;
@@ -61,76 +57,6 @@ export class GrabberComponent extends GridViewComponent implements OnInit {
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	public findBySrc(): void {
-		this.query = {};
-		this.page = 0;
-		if (this.src) {
-			this.query = {"content.src": {$regex: this.src}};
-		}
-		this.draw((error: IErrorObject, accounts: object[]): void => {
-			if (!error) {
-				this.results = accounts;
-			} else {
-				this.errorBar(error);
-			}
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	public findByAlt(): void {
-		this.query = {};
-		this.page = 0;
-		if (this.alt) {
-			this.query = {"content.alt": {$regex: this.alt}};
-		}
-		this.draw((error: IErrorObject, accounts: object[]): void => {
-			if (!error) {
-				this.results = accounts;
-			} else {
-				this.errorBar(error);
-			}
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	protected toListView(object: any): any {
-		object.cols = 1;
-		object.rows = 1;
-		return object;
-	}
-
-	/**
-	 * @returns none
-	 */
-	public urlDialog(image: any): void {
-		const resultDialogContent: any = {
-			src: image.src,
-			alt: image.alt,
-			url: image.url,
-			description: image.description,
-		};
-
-		const dialog: any = this.matDialog.open(UrlDialogComponent, {
-			width: "40vw",
-			data: {
-				session: this.currentSession,
-				content: resultDialogContent,
-			},
-			disableClose: true,
-		});
-
-		dialog.afterClosed().subscribe((result: object) => {
-
 		});
 	}
 
