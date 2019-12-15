@@ -53,7 +53,6 @@ export class GrabberComponent extends GridViewComponent implements OnInit {
 		this.service = new GrabberService(http, constService);
 	}
 
-
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,

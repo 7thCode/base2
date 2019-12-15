@@ -11,13 +11,13 @@ import {QueryableService} from "../platform/base/services/queryable.service";
 
 export class GrabberService extends QueryableService {
 
-	public model: string = "srcs";
+	public model: string = "sites";
 
 	constructor(
 		public http: HttpClient,
 		public constService: ConstService,
 	) {
-		super(http, constService, "srcs");
+		super(http, constService, "sites");
 	}
-	
+
 }

@@ -4,7 +4,11 @@
 	<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 		<div style="font-size:9px;margin:4px;">alt: {{content.alt}}</div>
 		<div style="font-size:9px;margin:4px;">src: {{content.src}}</div>
-		<div style="font-size:9px;margin:4px;">contains: {{content.url}}</div>
+		<mat-list role="list">
+			<mat-list-item *ngFor="let url of content.url">
+				<a style="font-size:9px;margin:4px;" href="{{url}}">{{url}}</a>
+			</mat-list-item>
+		</mat-list>
 		<div style="font-size:9px;margin:4px;">description: {{content.description}}</div>
 	</form>
 </div>

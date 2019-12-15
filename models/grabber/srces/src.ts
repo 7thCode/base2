@@ -10,22 +10,9 @@
 import {IAccountModel} from "../../../types/server";
 import {Callback, IQueryOption, IRights} from "../../../types/universe";
 
-namespace ArticleModel {
+namespace SrcesModel {
 
 	const mongoose: any = require("mongoose");
-
-	const crypto: any = require("crypto");
-
-	const path: any = require("path");
-
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
-
-	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
-	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
-	const rights: any = require(path.join(models, "platform/plugins/rights/rights"));
 
 	const Schema: any = mongoose.Schema;
 
@@ -39,13 +26,6 @@ namespace ArticleModel {
 		},
 	});
 
-	const setId = (id: string): string => {
-		const idString = id.toString();
-		const shasum = crypto.createHash("sha1");
-		shasum.update(idString);
-		return shasum.digest("hex");
-	};
-
 	const query_by_user_read: any = (user: any, query): any => {
 		return {$and: [{user_id: {$eq: user.user_id}}, query]};
 	};
@@ -53,7 +33,6 @@ namespace ArticleModel {
 	const query_by_user_write: any = (user: any, query): any => {
 		return {$and: [{user_id: {$eq: user.user_id}}, query]};
 	};
-
 
 	// Public data
 	Src.methods.public = function(cb: Callback<any>): any {
