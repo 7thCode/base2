@@ -63,7 +63,6 @@ namespace ArticleModel {
 	Src.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
 		this.user_id = user.user_id;
 		this.content = body.content;
-
 		this.model("Src").findOne(query_by_user_write(user, {"content.src": this.content.src}), (error, instance) => {
 			if (!error) {
 				if (!instance) {
