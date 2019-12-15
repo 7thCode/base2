@@ -6,8 +6,8 @@
 
 "use strict";
 
-import {IAccountModel, IAccountRequest, IJSONResponse, IUpdatableModel,} from "../../../../types/server";
-import {IContent, IQueryOption} from "../../../../types/universe";
+import {IAccountModel, IAccountRequest, IJSONResponse, IUpdatableModel} from "../../../../types/server";
+import {IContent, IErrorObject, IQueryOption} from "../../../../types/universe";
 
 const _: any = require("lodash");
 const SpeakEasy: any = require("speakeasy");
@@ -75,16 +75,24 @@ export class Crawls extends Updatable {
 								}
 
 								const setter = {
-									$set: {
-										"content.id": "",
-										"content.src": src_text,
-										"content.alt": alt_text,
-										"content.url": result.url,
-										"content.description": "",
+									content: {
+										src: src_text,
+										alt: alt_text,
+										url: result.url,
+										description: "",
 									},
 								};
 
-								Src.set(current_user, src_text, setter);
+								const doc = new Src();
+								doc._create(current_user, setter, (error: IErrorObject, object: IUpdatableModel): void => {
+									if (error) {
+										if (error.code === -1) {
+											console.log(error.message);
+										}
+									}
+
+								});
+
 							});
 						}
 						break;

@@ -139,7 +139,7 @@ $ sudo service mongodb restart
 
     $ mongo
     > use admin
-    > db.createUser({user: "admin",pwd: "zz0101",roles:[{role: "userAdminAnyDatabase",db: "admin"}]})
+    > db.createUser({user: "admin",pwd: "aa9999",roles:[{role: "userAdminAnyDatabase",db: "admin"}]})
 
 ##### 個々のDBの認証(auth-dbはtarget-db自体)
 
