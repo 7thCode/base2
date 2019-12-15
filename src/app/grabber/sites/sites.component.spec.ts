@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { GrabberComponent } from "./grabber.component";
+import { SitesComponent } from "./grabber.component";
 
 describe("GrabberComponent", () => {
-  let component: GrabberComponent;
-  let fixture: ComponentFixture<GrabberComponent>;
+  let component: SitesComponent;
+  let fixture: ComponentFixture<SitesComponent>;
 
   beforeEach(async(() => {
 	TestBed.configureTestingModule({
-		declarations: [ GrabberComponent ],
+		declarations: [ SitesComponent ],
 	})
 	.compileComponents();
   }));
 
   beforeEach(() => {
-	fixture = TestBed.createComponent(GrabberComponent);
+	fixture = TestBed.createComponent(SitesComponent);
 	component = fixture.componentInstance;
 	fixture.detectChanges();
   });

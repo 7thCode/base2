@@ -10,11 +10,17 @@ import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {GrabberComponent} from "./grabber.component";
 import {ImagesComponent} from "./images/images.component";
+import {SitesComponent} from "./sites/sites.component";
 
 const routes: Routes = [
-	{path: "sites", component: GrabberComponent},
-	{path: "images", component: ImagesComponent},
+	{
+		path: "grabber", component: GrabberComponent, children: [
+			{path: "sites", component: SitesComponent},
+			{path: "images", component: ImagesComponent},
+		],
+	},
 ];
+
 
 @NgModule({
 	imports: [RouterModule.forRoot(routes)],

@@ -14,10 +14,12 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatProgressSpinnerModule, MatSpinner} from "@angular/material";
 
 import {AppRoutingModule} from "./app-routing.module";
-import {GrabberModule} from "./grabber/grabber.module";
-import {PlatformModule} from "./platform/platform.module";
 
 import {AppComponent} from "./app.component";
+
+
+import {PlatformModule} from "./platform/platform.module";
+import {GrabberModule} from "./grabber/grabber.module";
 
 @NgModule({
 	declarations: [

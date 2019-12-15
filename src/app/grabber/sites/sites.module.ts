@@ -20,16 +20,13 @@ import {
 	MatSnackBarModule,
 } from "@angular/material";
 
-import {ImagesComponent} from "./images.component";
-
-import {FilepathPipe} from "../base/pipes/filepath.pipe";
-import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
+import {SitesComponent} from "./sites.component";
+import {SiteDialogComponent} from "./site-dialog/site-dialog.component";
 
 @NgModule({
 	declarations: [
-		ImagesComponent,
-		UrlDialogComponent,
-		FilepathPipe,
+		SitesComponent,
+		SiteDialogComponent,
 	],
 	imports: [
 		CommonModule,
@@ -50,19 +47,17 @@ import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
 		MatAutocompleteModule,
 		MatProgressSpinnerModule,
 		MatPaginatorModule,
-
 		MatGridListModule,
 		MatSlideToggleModule,
-
 	],
 	exports: [
-		FilepathPipe,
+
 	],
 	bootstrap: [
-		ImagesComponent,
-		UrlDialogComponent,
+		SitesComponent,
+		SiteDialogComponent,
 	],
 })
 
-export class ImagesModule {
+export class SitesModule {
 }
