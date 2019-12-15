@@ -8,7 +8,7 @@
 "use strict";
 
 import {IAccountModel} from "../../../types/server";
-import {Callback, IArticleModelContent, IQueryOption, IRights} from "../../../types/universe";
+import {Callback, IQueryOption, IRights} from "../../../types/universe";
 
 namespace ArticleModel {
 
@@ -34,7 +34,7 @@ namespace ArticleModel {
 		content: {
 			src: {type: String, required: true, index: {unique: true}},
 			alt: {type: String, default: ""},
-			url: {type: String, default: ""},
+			url: [String],
 			description: {type: String, default: ""},
 		},
 	});
@@ -69,7 +69,10 @@ namespace ArticleModel {
 				if (!instance) {
 					this.save(cb);
 				} else {
-					cb({code : -1, message: "alrady found."}, null);
+					const setter = {
+						$push: {"content.url": this.content.url},
+					};
+					this.model("Src").findOneAndUpdate(query_by_user_write(user, {"content.src":  this.content.src}), setter, {upsert: false}, cb);
 				}
 			} else {
 				cb(error, null);
@@ -89,7 +92,7 @@ namespace ArticleModel {
 	Src.statics.update_by_id = function(user: IAccountModel, src: string, content: any, cb: Callback<any>): void {
 		const setter = {
 			$set: {
-				"user_id" : user.user_id,
+				"user_id": user.user_id,
 				"content.src": content.src,
 				"content.alt": content.alt,
 				"content.url": content.url,
@@ -99,12 +102,9 @@ namespace ArticleModel {
 		this.model("Src").findOneAndUpdate(query_by_user_write(user, {"content.src": src}), setter, {upsert: true}, cb);
 	};
 
-
 	Src.statics.remove_by_id = function(user: IAccountModel, id: string, cb: Callback<any>): void {
 		this.model("Src").findOneAndRemove(query_by_user_write(user, {"content.id": id}), cb);
 	};
-
-
 
 	Src.statics.default_find = function(user: IAccountModel, query: object, option: IQueryOption, cb: Callback<any>): void {
 		this.model("Src").find(query_by_user_read(user, query), {}, option, cb);
@@ -113,8 +113,6 @@ namespace ArticleModel {
 	Src.statics.default_count = function(user: IAccountModel, query: object, cb: Callback<any>): void {
 		this.model("Src").countDocuments(query_by_user_read(user, query), cb);
 	};
-
-
 
 	module.exports = mongoose.model("Src", Src);
 }

@@ -78,7 +78,7 @@ export class Crawls extends Updatable {
 									content: {
 										src: src_text,
 										alt: alt_text,
-										url: result.url,
+										url: [result.url],
 										description: "",
 									},
 								};
@@ -87,7 +87,7 @@ export class Crawls extends Updatable {
 								doc._create(current_user, setter, (error: IErrorObject, object: IUpdatableModel): void => {
 									if (error) {
 										if (error.code === -1) {
-											console.log(error.message);
+
 										}
 									}
 
