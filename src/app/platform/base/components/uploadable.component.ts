@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../../../types/universe";
+import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, OnInit} from "@angular/core";

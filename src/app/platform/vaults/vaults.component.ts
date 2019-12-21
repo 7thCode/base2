@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IErrorObject, IVaultModelContent} from "../../../../types/universe";
+import {IErrorObject, IVaultModelContent} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component} from "@angular/core";

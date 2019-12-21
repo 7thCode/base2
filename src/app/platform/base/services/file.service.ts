@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../../types/universe";
+import {Callback, IErrorObject, IQueryOption} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";

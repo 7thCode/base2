@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback} from "../../../../types/universe";
+import {Callback} from "../../../../types/platform/universe";
 
 const cipherCrypto: any = require("crypto");
 const NodeRSA: any = require("node-rsa");

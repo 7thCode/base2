@@ -12,7 +12,7 @@ import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {Callback, IErrorObject} from "../../../../types/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {ConstService} from "../base/services/const.service";
 import {HttpService} from "../base/services/http.service";
 import {PublicKeyService} from "../base/services/publickey.service";

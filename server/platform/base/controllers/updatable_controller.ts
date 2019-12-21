@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
+import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {
 	IAccountModel,
@@ -19,7 +19,7 @@ import {
 	IQueryParam,
 	IQueryRequest,
 	IUpdatableModel,
-} from "../../../../types/server";
+} from "../../../../types/platform/server";
 
 const Wrapper: any = require("./wrapper");
 

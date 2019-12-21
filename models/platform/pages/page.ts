@@ -6,8 +6,8 @@
 
 "use strict";
 
-import {IAccountModel} from "../../../types/server";
-import {Callback, IErrorObject, IPageModelContent, IQueryOption, IRights} from "../../../types/universe";
+import {IAccountModel} from "../../../types/platform/server";
+import {Callback, IErrorObject, IPageModelContent, IQueryOption, IRights} from "../../../types/platform/universe";
 
 namespace PageModel {
 

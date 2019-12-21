@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../../types/universe";
+import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {Component, Inject, Input, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef, MatDividerModule, MatSnackBar} from "@angular/material";

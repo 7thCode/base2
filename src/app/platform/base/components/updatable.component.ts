@@ -11,7 +11,7 @@ import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material";
 
-import {Callback, IContent, IErrorObject} from "../../../../../types/universe";
+import {Callback, IContent, IErrorObject} from "../../../../../types/platform/universe";
 import {SessionService} from "../services/session.service";
 import {InfoDialogComponent} from "./info-dialog/info-dialog.component";
 import {SessionableComponent} from "./sessionable.component";

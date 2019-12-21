@@ -7,8 +7,8 @@
 
 "use strict";
 
-import {IAccountModel} from "../../../types/server";
-import {Callback, IErrorObject, IQueryOption, IRights, IVaultModelContent} from "../../../types/universe";
+import {IAccountModel} from "../../../types/platform/server";
+import {Callback, IErrorObject, IQueryOption, IRights, IVaultModelContent} from "../../../types/platform/universe";
 
 namespace VaultModel {
 

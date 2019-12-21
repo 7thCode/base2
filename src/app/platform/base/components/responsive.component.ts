@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../../types/universe";
+import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {MediaMatcher} from "@angular/cdk/layout";
 import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";

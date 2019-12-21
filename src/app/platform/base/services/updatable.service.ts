@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IContent} from "../../../../../types/universe";
+import {Callback, IContent} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";

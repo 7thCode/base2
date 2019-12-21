@@ -6,9 +6,9 @@
 
 "use strict";
 
-import {IErrorObject, IQueryOption} from "../../../../types/universe";
+import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/server";
+import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/platform/server";
 
 const Updatable = require("./updatable_controller");
 

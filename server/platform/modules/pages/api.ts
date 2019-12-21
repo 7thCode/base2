@@ -6,8 +6,8 @@
 
 "use strict";
 
-import {IAccountModel} from "../../../../types/server";
-import {IErrorObject} from "../../../../types/universe";
+import {IAccountModel} from "../../../../types/platform/server";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router: any = express.Router();

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IJSONResponse} from "../../../../types/server";
+import {IJSONResponse} from "../../../../types/platform/server";
 
 const path: any = require("path");
 

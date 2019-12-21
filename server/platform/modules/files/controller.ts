@@ -6,9 +6,9 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
+import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/server";
+import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");
