@@ -11,10 +11,13 @@ import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
 import {
 	IAccountModel,
 	IDParam,
-	IGetByIDRequest, IJSONResponse,
+	IGetByIDRequest,
+	IJSONResponse,
 	IPostRequest,
-	IPutRequest, IQueryParam,
-	IQueryRequest, ISecureContent,
+	IPutRequest,
+	IQueryParam,
+	IQueryRequest,
+	ISecureContent,
 	ISecureUpdatableModel,
 } from "../../../../types/server";
 

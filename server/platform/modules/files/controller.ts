@@ -40,7 +40,7 @@ export class Files extends Wrapper {
 		super(event);
 	}
 
-	private static toMime(request: {body: {url: string}}): string {
+	private static toMime(request: { body: { url: string } }): string {
 		let type: string = "image/octet-stream";
 		const index: number = request.body.url.indexOf(";");
 		if (index > 0) {
@@ -67,7 +67,7 @@ export class Files extends Wrapper {
 		return MongoClient.connect(connectUrl, options);
 	}
 
-	private fromLocal(pathFrom: string, user: {user_id: string, role: {raw: number}}, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
+	private fromLocal(pathFrom: string, user: { user_id: string, role: { raw: number } }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
 		try {
 			const writestream: any = this.gfs.openUploadStream(name,
 				{
@@ -118,7 +118,7 @@ export class Files extends Wrapper {
 		});
 	}
 
-	private insertFile(request: IPostFile, user: {user_id: string, role: {raw: number}}, name: string, rights: {read: number, write: number} , category: string, description: string, callback: Callback<any>): void {
+	private insertFile(request: IPostFile, user: { user_id: string, role: { raw: number } }, name: string, rights: { read: number, write: number }, category: string, description: string, callback: Callback<any>): void {
 
 		const parseDataURL: any = (dataURL: string): any => {
 			const result: any = {mediaType: null, encoding: null, isBase64: null, data: null};
@@ -189,7 +189,7 @@ export class Files extends Wrapper {
 										return new Promise((resolve: any, reject: any): void => {
 											const path: string = process.cwd() + doc.path;
 											const filename: string = doc.name;
-											const user: {user_id: string, role: {raw: number}} = doc.user;
+											const user: { user_id: string, role: { raw: number } } = doc.user;
 											const mimetype: string = doc.content.type;
 											const category: string = doc.content.category;
 											const description: string = "";
@@ -245,7 +245,7 @@ export class Files extends Wrapper {
 	 * @param user
 	 * @returns none
 	 */
-	private static query_by_user_read(user: {user_id: string, auth: number}, query: object): object {
+	private static query_by_user_read(user: { user_id: string, auth: number }, query: object): object {
 		return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.read": {$gte: user.auth}}]}, query]};
 		// return {$and: [{user_id: user.user_id}, query]};
 	}
@@ -256,7 +256,7 @@ export class Files extends Wrapper {
 	 * @param user
 	 * @returns none
 	 */
-	private static query_by_user_write(user: {user_id: string, auth: number}, query: object): object {
+	private static query_by_user_write(user: { user_id: string, auth: number }, query: object): object {
 		return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.write": {$gte: user.auth}}]}, query]};
 		// return {$and: [{user_id: user.user_id}, query]};
 	}
@@ -393,7 +393,7 @@ export class Files extends Wrapper {
 			};
 
 			const query: object = Files.query_by_user_read(user, {filename: path});
-			this.collection.findOne(query, (error: IErrorObject, item: {_id: object, metadata: {type: string}}): void => {
+			this.collection.findOne(query, (error: IErrorObject, item: { _id: object, metadata: { type: string } }): void => {
 				this.ifSuccess(response, error, (): void => {
 					if (item) {
 						let buffer: Buffer = Buffer.alloc(0);

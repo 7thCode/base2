@@ -13,8 +13,11 @@ import {MatButtonModule, MatCheckboxModule, MatDialogModule} from "@angular/mate
 
 import {InfoDialogComponent} from "./components/info-dialog/info-dialog.component";
 import {EqualsValidator} from "./directives/equals-validator.directive";
+import {HighlightDirective} from "./directives/highlight.directive";
+
 import {AuthcolorPipe} from "./pipes/authcolor.pipe";
 import {ShortnamePipe} from "./pipes/shortname.pipe";
+
 import {ProfileService} from "./services/profile.service";
 import {PublicKeyService} from "./services/publickey.service";
 import {SessionService} from "./services/session.service";
@@ -29,6 +32,7 @@ import {SessionService} from "./services/session.service";
 		ShortnamePipe,
 		AuthcolorPipe,
 		EqualsValidator,
+		HighlightDirective,
 		InfoDialogComponent,
 	],
 	imports: [
@@ -44,6 +48,7 @@ import {SessionService} from "./services/session.service";
 		ShortnamePipe,
 		AuthcolorPipe,
 		EqualsValidator,
+		HighlightDirective,
 		InfoDialogComponent,
 	],
 	bootstrap: [

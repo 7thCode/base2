@@ -38,7 +38,7 @@ export class AccountsService extends QueryableService {
 					callback(result, null);
 				}
 			} else {
-				callback({code: 10000, message: "network error"}, null);
+				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
 			callback({code: -1, message: error.message}, null);

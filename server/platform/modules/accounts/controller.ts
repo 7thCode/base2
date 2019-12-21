@@ -175,7 +175,7 @@ export class Accounts extends Wrapper {
 				if (this.own(current_user, params.username)) {
 					LocalAccount.set_by_name(current_user, params.username, update, (error: IErrorObject, account: IAccountModel): void => {
 						this.ifSuccess(response, error, (): void => {
-					// 		this.SendSuccess(response, object.public(current_user));
+							// 		this.SendSuccess(response, object.public(current_user));
 							this.SendSuccess(response, account.public());
 						});
 					});

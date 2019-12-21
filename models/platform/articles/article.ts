@@ -95,10 +95,14 @@ namespace ArticleModel {
 		this.content = init(this._id, body.content);
 
 		this.model("Article").findOne(query_by_user_write(user, {"content.id": this.content.id}), (error, instance) => {
-			if (!instance) {
-				this.save(cb);
+			if (!error) {
+				if (!instance) {
+					this.save(cb);
+				} else {
+					cb({code: -1, message: "already."}, null);
+				}
 			} else {
-				cb({code: -1, message: "already."}, null);
+				cb(error, null);
 			}
 		});
 	};

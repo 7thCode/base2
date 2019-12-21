@@ -39,24 +39,24 @@ export abstract class HttpService {
 	protected Decode(data: string, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
-		} catch (e) {
-			callback(e, null);
+		} catch (error) {
+			callback(error, null);
 		}
 	}
 
 	protected Encode(data: any, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
-		} catch (e) {
-			callback(e, null);
+		} catch (error) {
+			callback(error, null);
 		}
 	}
 
 	protected Parse(data: string, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, JSON.parse(data));
-		} catch (e) {
-			callback(e, null);
+		} catch (error) {
+			callback(error, null);
 		}
 	}
 

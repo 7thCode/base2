@@ -31,6 +31,12 @@ export class AuthService extends HttpService {
 		super(http, constService);
 	}
 
+	/**
+	 * @param key
+	 * @param plain
+	 * @param callback
+	 * @returns none
+	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
 			const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
@@ -40,6 +46,12 @@ export class AuthService extends HttpService {
 		}
 	}
 
+	/**
+	 * @param key
+	 * @param plain
+	 * @param callback
+	 * @returns none
+	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>) {
 		try {
 			const use_publickey = this.constService.use_publickey;
@@ -59,6 +71,12 @@ export class AuthService extends HttpService {
 		}
 	}
 
+	/**
+	 * @param username
+	 * @param password
+	 * @param callback
+	 * @returns none
+	 */
 	public login(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -67,6 +85,7 @@ export class AuthService extends HttpService {
 						this.http.post(this.endPoint + "/auth/local/login", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 							if (result) {
 								if (result.code === 0) {
+									localStorage.setItem("QR", value);
 									callback(null, result.value);
 								} else {
 									callback(result, null);
@@ -87,6 +106,13 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * @param username
+	 * @param password
+	 * @param code
+	 * @param callback
+	 * @returns none
+	 */
 	public login_totp(username: string, password: string, code: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -115,6 +141,56 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * @param token
+	 * @param callback
+	 * @returns none
+	 */
+	public login_with_token(token: string, callback: Callback<any>): void {
+		this.http.post(this.endPoint + "/auth/local/login", {content: token}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					localStorage.setItem("QR", token);
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message}, null);
+		});
+	}
+
+	/**
+	 * @param callback
+	 * @returns none
+	 */
+	public get_login_token(callback: Callback<any>): void {
+		const value = localStorage.getItem("QR");
+		this.http.get(this.endPoint + "/auth/token/qr/" + encodeURIComponent(value), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message}, null);
+		});
+	}
+
+	/**
+	 * @param username
+	 * @param password
+	 * @param metadata
+	 * @param callback
+	 * @returns none
+	 */
 	public regist(username: string, password: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
@@ -143,6 +219,13 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * @param username
+	 * @param password
+	 * @param metadata
+	 * @param callback
+	 * @returns none
+	 */
 	public regist_immediate(username: string, password: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
@@ -171,6 +254,12 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * @param username
+	 * @param password
+	 * @param callback
+	 * @returns none
+	 */
 	public password(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key): void => {
 			if (!error) {
@@ -199,6 +288,12 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * @param username
+	 * @param password
+	 * @param callback
+	 * @returns none
+	 */
 	public password_immediate(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
@@ -227,10 +322,16 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 *
+	 * @param callback
+	 * @returns none
+	 */
 	public logout(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/auth/logout", this.httpOptions).pipe(retry(3)).subscribe((account: any): void => {
 			if (account) {
 				if (account.code === 0) {
+					localStorage.removeItem("QR");
 					callback(null, account.value);
 				} else {
 					callback(null, null);

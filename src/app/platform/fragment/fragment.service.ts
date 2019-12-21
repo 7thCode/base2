@@ -22,7 +22,7 @@ export class FragmentService extends HttpService {
 
 	constructor(
 		public http: HttpClient,
-		public constService: ConstService
+		public constService: ConstService,
 	) {
 		super(http, constService);
 	}

@@ -14,6 +14,7 @@ const _: any = require("lodash");
 const fs: any = require("graceful-fs");
 const crypto: any = require("crypto");
 const SpeakEasy: any = require("speakeasy");
+const QRCode: any = require("qrcode");
 
 const path: any = require("path");
 
@@ -57,6 +58,40 @@ export class Auth extends Mail {
 			callback(null, Cipher.Decrypt(key, crypted));
 		} catch (e) {
 			callback(e, "");
+		}
+	}
+
+
+	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
+		try {
+			callback(null, Cipher.Encrypt(key, plain));
+		} catch (e) {
+			callback(e, "");
+		}
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param crypted
+	 * @param callback
+	 * @returns none
+	 */
+	public static value_encrypt(key: string, crypted: string, callback: Callback<any>): void {
+		try {
+			if (config.use_publickey) {
+				Auth.publickey_encrypt(key, crypted, (error, crypted): void => {
+					if (!error) {
+						callback(null, crypted);
+					} else {
+						callback({code: 2, message: "no cookie?"}, {});
+					}
+				});
+			} else {
+				callback(null, JSON.parse(crypted));
+			}
+		} catch (error) {
+			callback({code: 3, message: "unknown error."}, {});
 		}
 	}
 
@@ -401,6 +436,101 @@ export class Auth extends Mail {
 			this.SendError(response, {code: 1, message: "already logged in."});
 		}
 	}
+
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 *
+	 * h4Yq7UxXTAYlR3sMGlDEzpMk77D4gEWj8Y%2BA0xXFao7Lz3RYJfM40TIHS1CilQ3pj8M6VxciomXrofl8e6heWXxcFeAnRZP9egev%2BVwv0N9OU8YbsNcXTv9WDhGcJlsS%2B8ojui5svs0S%2BS0GLv%2FCFlNEZP%2FcCjg1UQbeFV8qcqtC%2FfWn8CoonUxA3IdBEOXbHgJonmKwGlvrITk5YSGO%2BoEvx0CHltb7f4gImXJrem9FXuMk%2B4R7Irc3ftutjtAy
+	 */
+	public get_login_token(request: ILoginRequest, response: IJSONResponse): void {
+		if (request.user) {
+			const token = request.params.token;
+			Auth.value_decrypt(config.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
+				this.ifSuccess(response, error, (): void => {
+					LocalAccount.default_find_by_name({}, value.username, (error: IErrorObject, account: any): void => {
+						this.ifSuccess(response, error, (): void => {
+							if (account) {
+								if (account.enabled) {
+									QRCode.toDataURL(token, (error: IErrorObject, qrcode): void => {
+										this.ifSuccess(response, error, (): void => {
+											this.SendRaw(response, qrcode);
+										});
+									});
+								} else {
+									this.SendError(response, {code: 2, message: "account disabled."});
+								}
+							} else {
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+							}
+						});
+					});
+				});
+			});
+		} else {
+			this.SendError(response, {code: 1, message: "already logged in."});
+		}
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public post_token_login(request: ILoginRequest, response: IJSONResponse): void {
+		if (!request.user) {
+			Auth.value_decrypt(config.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
+				this.ifSuccess(response, error, (): void => {
+					request.body.username = value.username; // for multi tenant.;
+					request.body.password = value.password;
+					LocalAccount.default_find_by_name({}, value.username, (error: IErrorObject, account: any): void => {
+						this.ifSuccess(response, error, (): void => {
+							if (account) {
+								if (account.enabled) {
+									this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
+										if (!error) {
+											if (account) {
+												const is_2fa = (account.secret !== "");
+												if (is_2fa) {
+													this.SendSuccess(response, {is_2fa});
+												} else {
+													request.login(account, (error: IErrorObject): void => {
+														if (!error) {
+															// for ws
+															// this.event.emitter.emit("client:send", {username: value.username});
+															this.SendSuccess(response, {is_2fa});
+														} else {
+															this.SendError(response, {code: 4, message: "unknown error."});
+														}
+													});
+												}
+											} else {
+												this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+											}
+										} else {
+											this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+										}
+									})(request, response);
+								} else {
+									this.SendError(response, {code: 2, message: "account disabled."});
+								}
+							} else {
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+							}
+						});
+					});
+				});
+			});
+		} else {
+			this.SendError(response, {code: 1, message: "already logged in."});
+		}
+	}
+
+
 
 	/**
 	 *

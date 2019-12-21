@@ -39,7 +39,7 @@ export class ArticlesComponent extends GridViewComponent {
 		public change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 		protected observableMedia: MediaObserver,
-		protected snackbar: MatSnackBar
+		protected snackbar: MatSnackBar,
 	) {
 		super(session, http, change, matDialog, observableMedia);
 		this.service = new ArticlesService(http, constService);

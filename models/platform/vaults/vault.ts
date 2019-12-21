@@ -109,10 +109,14 @@ namespace VaultModel {
 			this.user_id = user.user_id;
 			this.content = init(this._id, this.user_id, body.content, key);
 			this.model("Vault").findOne(query_by_user_write(user, {"content.id": this.content.id}), (error: IErrorObject, instance: any): void => {
-				if (!instance) {
-					this.save(cb);
+				if (!error) {
+					if (!instance) {
+						this.save(cb);
+					} else {
+						cb({code: -1, message: "already."}, null);
+					}
 				} else {
-					cb({code: -1, message: "already."}, null);
+					cb(error, null);
 				}
 			});
 		} catch (error) {
