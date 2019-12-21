@@ -36,7 +36,7 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
  */
 export class AccountsComponent extends SessionableComponent implements OnInit, AfterContentInit {
 
-	public results: object[];
+	public results: any[];
 
 	public progress: boolean;
 
@@ -92,7 +92,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		public change: ChangeDetectorRef,
 		private observableMedia: MediaObserver,
 		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar
+		protected snackbar: MatSnackBar,
 	) {
 		super(session, change);
 		this.service = new AccountsService(http, constService);
@@ -139,6 +139,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	 */
 	public findByNickname(): void {
 		this.query = {};
+		this.page = 0;
 		if (this.nickname) {
 			this.query = {"content.nickname": {$regex: this.nickname}};
 		}

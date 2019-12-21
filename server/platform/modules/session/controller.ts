@@ -29,7 +29,7 @@ export class Session extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
-	public get(request: {user: any}, response: IJSONResponse): void {
+	public get(request: { user: any }, response: IJSONResponse): void {
 		try {
 			if (request.user) {
 				this.SendSuccess(response, this.Transform(request.user));
@@ -46,9 +46,9 @@ export class Session extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
-	public put(request: {session: any, body: {data: object}}, response: IJSONResponse): void {
+	public put(request: { session: any, body: { data: object } }, response: IJSONResponse): void {
 		try {
-			const user: {data: object} = request.session.req.user;
+			const user: { data: object } = request.session.req.user;
 			if (user) {
 				if (!user.data) {
 					user.data = {};

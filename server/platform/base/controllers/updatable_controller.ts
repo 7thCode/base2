@@ -10,10 +10,13 @@ import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
 
 import {
 	IAccountModel,
-	IDeleteRequest, IDParam,
-	IGetByIDRequest, IJSONResponse,
+	IDeleteRequest,
+	IDParam,
+	IGetByIDRequest,
+	IJSONResponse,
 	IPostRequest,
-	IPutRequest, IQueryParam,
+	IPutRequest,
+	IQueryParam,
 	IQueryRequest,
 	IUpdatableModel,
 } from "../../../../types/server";
@@ -65,11 +68,14 @@ export abstract class Updatable extends Wrapper {
 				if (!error) {
 					if (count === 0) {
 						const promises: object[] = [];
-						objects.forEach((object: {user_id: string}): void => {
+						objects.forEach((object: { user_id: string }): void => {
 							promises.push(new Promise((resolve: any, reject: any): void => {
 								if (object) {
 									const record: IUpdatableModel = new this.Model();
-									record._create(this.default_user({user_id: object.user_id, auth: 1}), object, (error: IErrorObject, object: IUpdatableModel): void => {
+									record._create(this.default_user({
+										user_id: object.user_id,
+										auth: 1
+									}), object, (error: IErrorObject, object: IUpdatableModel): void => {
 										if (!error) {
 											resolve(object);
 										} else {

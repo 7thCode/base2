@@ -12,7 +12,7 @@ import {NgModule} from "@angular/core";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
-	MatButtonModule,
+	MatButtonModule, MatCardModule,
 	MatCheckboxModule,
 	MatDialogModule,
 	MatDividerModule,
@@ -35,15 +35,19 @@ import {PasswordDialogComponent} from "./password-dialog/password-dialog.compone
 import {PasswordDialogDirective} from "./password-dialog/password-dialog.directive";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
+import {LoginQrDialogDirective} from "./login-qr-dialog/login-qr-dialog.directive";
+import {LoginQrDialogComponent} from "./login-qr-dialog/login-qr-dialog.component";
 
 @NgModule({
 	declarations: [
 		LoginDialogDirective,
+		LoginQrDialogDirective,
 		LoginTotpDialogDirective,
 		RegistDialogDirective,
 		PasswordDialogDirective,
 		LogoutDialogDirective,
 		LoginDialogComponent,
+		LoginQrDialogComponent,
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,
@@ -70,9 +74,11 @@ import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
 		MatSelectModule,
 		ReactiveFormsModule,
 		BaseModule,
+		MatCardModule,
 	],
 	exports: [
 		LoginDialogDirective,
+		LoginQrDialogDirective,
 		LoginTotpDialogDirective,
 		RegistDialogDirective,
 		PasswordDialogDirective,
@@ -80,6 +86,7 @@ import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
 	],
 	bootstrap: [
 		LoginDialogComponent,
+		LoginQrDialogComponent,
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,

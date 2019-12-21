@@ -4,7 +4,6 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
 import {IAccountModel} from "../../../types/server";
@@ -101,10 +100,14 @@ namespace PageModel {
 		this.content = init(this._id, body.content);
 
 		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path}), (error, instance) => {
-			if (!instance) {
-				this.save(cb);
+			if (!error) {
+				if (!instance) {
+					this.save(cb);
+				} else {
+					cb({code: -1, message: "already."}, null);
+				}
 			} else {
-				cb({code: -1, message: "already."}, null);
+				cb(error, null);
 			}
 		});
 

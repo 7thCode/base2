@@ -136,6 +136,20 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
+		router.get("/auth/token/qr/:token", [
+			(request: object, response: object): void => {
+				gatekeeper.catch(response, (): void => {
+					auth.get_login_token(request, response);
+				});
+			}]);
+
+		router.post("/auth/token/login", [gatekeeper.guard,
+			(request: object, response: object): void => {
+				gatekeeper.catch(response, (): void => {
+					auth.post_local_login(request, response);
+				});
+			}]);
+
 		router.post("/auth/local/register", [gatekeeper.guard,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
@@ -184,6 +198,8 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 					auth.logout(request, response);
 				});
 			}]);
+
+
 
 		// facebook
 		router.get("/auth/facebook", passport.authenticate("facebook", {scope: ["email"]}));

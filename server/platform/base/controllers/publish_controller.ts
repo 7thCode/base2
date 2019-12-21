@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
+import {IErrorObject, IQueryOption} from "../../../../types/universe";
 
 import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/server";
 

@@ -33,7 +33,7 @@ export class PublicKey extends Wrapper {
 		}
 	}
 
-	public get_public_key(request: {user: {publickey: string}}, response: IJSONResponse): void {
+	public get_public_key(request: { user: { publickey: string } }, response: IJSONResponse): void {
 		if (config.use_publickey) {
 			if (request.user) {
 				this.SendSuccess(response, request.user.publickey);
@@ -45,7 +45,7 @@ export class PublicKey extends Wrapper {
 		}
 	}
 
-	public get_access_token(request: {user: {publickey: string}, session: {id: string}}, response: IJSONResponse): void {
+	public get_access_token(request: { user: { publickey: string }, session: { id: string } }, response: IJSONResponse): void {
 		if (config.use_publickey) {
 			if (request.user) {
 				this.SendSuccess(response, Cipher.FixedCrypt(request.session.id, request.user.publickey));

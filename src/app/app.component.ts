@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
 	}
 
 	private t = 0;
+
 	@HostListener("touchend", ["$event"])
 	public onTouchERnd(event: any): void {
 		const now = new Date().getTime();

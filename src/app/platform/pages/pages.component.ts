@@ -41,7 +41,7 @@ export class PagesComponent extends GridViewComponent {
 		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 		protected observableMedia: MediaObserver,
-		protected snackbar: MatSnackBar
+		protected snackbar: MatSnackBar,
 	) {
 		super(session, http, change, matDialog, observableMedia);
 		this.service = new PagesService(http, constService);
@@ -99,6 +99,7 @@ export class PagesComponent extends GridViewComponent {
 	 */
 	public findByPath(): void {
 		this.query = {};
+		this.page = 0;
 		if (this.path) {
 			this.query = {"content.path": {$regex: this.path}};
 		}

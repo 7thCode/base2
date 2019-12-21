@@ -17,7 +17,7 @@ const path: any = require("path");
 
 const models: string = global._models;
 const controllers: string = global._controllers;
-const library: string =  global._library;
+const library: string = global._library;
 const _config: string = global.__config;
 
 const config: any = require(path.join(_config, "default")).systems;
@@ -87,7 +87,7 @@ export class Cipher {
 	 * @param bits　number
 	 * @returns PublicKey
 	 */
-	public static KeyPair(bits: number): {private: string, public: string} {
+	public static KeyPair(bits: number): { private: string, public: string } {
 		const key: any = new NodeRSA({b: bits});
 		return {private: key.exportKey("pkcs1-private-pem"), public: key.exportKey("pkcs1-public-pem")};
 	}

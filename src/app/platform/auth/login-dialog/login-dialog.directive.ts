@@ -58,6 +58,8 @@ export class LoginDialogDirective {
 				} else {
 					this.complete.emit(result);
 				}
+			} else {
+				this.complete.emit(null);
 			}
 		});
 	}
