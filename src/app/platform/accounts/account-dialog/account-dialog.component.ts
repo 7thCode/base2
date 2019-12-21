@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/universe";
+import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IArticleModel} from "../../../../types/server";
+import {IArticleModel} from "../../../../types/platform/server";
 
 const path: any = require("path");
 

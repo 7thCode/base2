@@ -6,9 +6,9 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IPasswordToken, IUserToken, StatusCallback} from "../../../../types/universe";
+import {Callback, IErrorObject, IPasswordToken, IUserToken, StatusCallback} from "../../../../types/platform/universe";
 
-import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserRequest} from "../../../../types/server";
+import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserRequest} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");

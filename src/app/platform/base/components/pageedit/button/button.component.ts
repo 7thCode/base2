@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IEmit} from "../../../../../../../types/universe";
+import {IEmit} from "../../../../../../../types/platform/universe";
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 

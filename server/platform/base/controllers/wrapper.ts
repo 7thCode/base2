@@ -6,9 +6,9 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject} from "../../../../types/universe";
+import {AuthLevel, Callback, IErrorObject} from "../../../../types/platform/universe";
 
-import {IAccountModel, IJSONResponse} from "../../../../types/server";
+import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 
 const path: any = require("path");
 

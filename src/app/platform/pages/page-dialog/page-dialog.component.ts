@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IEmit} from "../../../../../types/universe";
+import {IEmit} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {FormControl} from "@angular/forms";

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router: any = express.Router();

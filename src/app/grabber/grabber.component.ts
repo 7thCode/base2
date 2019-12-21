@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../types/universe";
+import {Callback, IErrorObject} from "../../../types/platform/universe";
 
 import {MediaMatcher} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";

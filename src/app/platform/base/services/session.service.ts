@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, ISession} from "../../../../../types/universe";
+import {Callback, ISession} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";

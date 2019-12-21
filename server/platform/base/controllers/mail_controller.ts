@@ -6,9 +6,9 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
-import {IJSONResponse} from "../../../../types/server";
+import {IJSONResponse} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");

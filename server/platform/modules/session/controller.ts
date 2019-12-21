@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IJSONResponse} from "../../../../types/server";
+import {IJSONResponse} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
 const path: any = require("path");

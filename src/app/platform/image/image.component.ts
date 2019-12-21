@@ -10,7 +10,7 @@ import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 import {UploadableComponent} from "../base/components/uploadable.component";
 import {ConstService} from "../base/services/const.service";
 import {SessionService} from "../base/services/session.service";

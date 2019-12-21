@@ -7,7 +7,7 @@
 "use strict";
 
 import {Pipe, PipeTransform} from "@angular/core";
-import {AuthLevel} from "../../../../../types/universe";
+import {AuthLevel} from "../../../../../types/platform/universe";
 
 @Pipe({
 	name: "authcolor",

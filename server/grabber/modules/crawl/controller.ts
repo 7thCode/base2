@@ -6,8 +6,8 @@
 
 "use strict";
 
-import {IAccountModel, IAccountRequest, IJSONResponse, IUpdatableModel} from "../../../../types/server";
-import {IContent, IErrorObject, IQueryOption} from "../../../../types/universe";
+import {IAccountModel, IAccountRequest, IJSONResponse, IUpdatableModel} from "../../../../types/platform/server";
+import {IContent, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 const _: any = require("lodash");
 const SpeakEasy: any = require("speakeasy");

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IVaultModel} from "../../../../types/server";
+import {IVaultModel} from "../../../../types/platform/server";
 
 const path: any = require("path");
 

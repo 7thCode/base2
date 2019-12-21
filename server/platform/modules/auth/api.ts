@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IEncoded, IErrorObject} from "../../../../types/universe";
+import {IEncoded, IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router = express.Router();

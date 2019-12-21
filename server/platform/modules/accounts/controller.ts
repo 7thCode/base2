@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IErrorObject, IQueryOption} from "../../../../types/universe";
+import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {
 	IAccountContent,
@@ -16,7 +16,7 @@ import {
 	IQueryParam,
 	IQueryRequest,
 	IUsernameParam,
-} from "../../../../types/server";
+} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
 const SpeakEasy: any = require("speakeasy");

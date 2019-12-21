@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
-import {IArticleModelContent, IErrorObject} from "../../../../types/universe";
+import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 
 import {ConstService} from "../../platform/base/services/const.service";
 import {SessionService} from "../../platform/base/services/session.service";
