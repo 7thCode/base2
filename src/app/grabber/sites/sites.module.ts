@@ -20,8 +20,8 @@ import {
 	MatSnackBarModule,
 } from "@angular/material";
 
-import {SitesComponent} from "./sites.component";
 import {SiteDialogComponent} from "./site-dialog/site-dialog.component";
+import {SitesComponent} from "./sites.component";
 
 @NgModule({
 	declarations: [

@@ -1,5 +1,5 @@
 <div class="fix-action-dialog">
-	<h2 mat-dialog-title>Article</h2>
+	<h2 mat-dialog-title>Site</h2>
 
 	<div mat-dialog-content>
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
@@ -16,9 +16,9 @@
 						matInput
 						type="text"
 						placeholder="Description"
-						[(ngModel)]="content.value.description"
+						[(ngModel)]="content.value.url"
 						#description="ngModel"
-						name="description"
+						name="url"
 						maxlength="1000"
 						cdkTextareaAutosize
 						#autosize="cdkTextareaAutosize"
