@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * This software is released under the MIT License.
+ * opensource.org/licenses/mit-license.php
+ */
+
+"use strict";
+
 import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 
 import {HttpClient} from "@angular/common/http";
@@ -11,6 +19,7 @@ import {SessionService} from "../../platform/base/services/session.service";
 import {SitesService} from "./sites.service";
 
 import {GridViewComponent} from "../../platform/base/components/gridview.component";
+import {SrcsService} from "../srcs/srcs.service";
 import {SiteDialogComponent} from "./site-dialog/site-dialog.component";
 
 @Component({
@@ -35,6 +44,7 @@ export class SitesComponent extends GridViewComponent implements OnInit {
 	}
 
 	protected service: SitesService;
+	protected srcs_service: SrcsService;
 
 	public name = "";
 	public url = "";
@@ -55,6 +65,7 @@ export class SitesComponent extends GridViewComponent implements OnInit {
 	) {
 		super(session, http, change, matDialog, observableMedia);
 		this.service = new SitesService(http, constService);
+		this.srcs_service = new SrcsService(http, constService);
 	}
 
 	protected errorBar(error: IErrorObject): void {

@@ -6,8 +6,6 @@
 
 "use strict";
 
-import {IArticleModel} from "../../../../types/platform/server";
-
 const path: any = require("path");
 
 const controllers: string = global._controllers;
