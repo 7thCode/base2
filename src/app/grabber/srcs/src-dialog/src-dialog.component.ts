@@ -10,9 +10,9 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
-	selector: "url-dialog",
-	styleUrls: ["./url-dialog.component.css"],
-	templateUrl: "./url-dialog.component.html",
+	selector: "src-dialog",
+	styleUrls: ["./src-dialog.component.css"],
+	templateUrl: "./src-dialog.component.html",
 })
 
 /**
@@ -20,7 +20,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
  *
  * @since 0.01
  */
-export class UrlDialogComponent implements OnInit {
+export class SrcDialogComponent implements OnInit {
 
 	get content(): any {
 		return this.data.content;
@@ -29,7 +29,7 @@ export class UrlDialogComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<UrlDialogComponent>) {
+		public matDialogRef: MatDialogRef<SrcDialogComponent>) {
 	}
 
 	public ngOnInit(): void {

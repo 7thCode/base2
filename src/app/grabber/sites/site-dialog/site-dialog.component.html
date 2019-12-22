@@ -4,29 +4,19 @@
 	<div mat-dialog-content>
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 			<mat-form-field>
-				<input matInput type="text" placeholder="Title" [(ngModel)]="content.value.title" #title="ngModel" name="title" required minlength="3" maxlength="255">
+				<input matInput type="text" placeholder="Name" [(ngModel)]="content.name" #name="ngModel" name="name" required minlength="3" maxlength="255">
 				<mat-hint>3文字以上500文字まで</mat-hint>
-				<mat-error *ngIf="title.errors?.required;">入力してください</mat-error>
-				<mat-error *ngIf="title.errors?.maxlength">長すぎます</mat-error>
-				<mat-error *ngIf="title.errors?.minlength">短すぎます</mat-error>
+				<mat-error *ngIf="name.errors?.required;">入力してください</mat-error>
+				<mat-error *ngIf="name.errors?.maxlength">長すぎます</mat-error>
+				<mat-error *ngIf="name.errors?.minlength">短すぎます</mat-error>
 			</mat-form-field>
 
 			<mat-form-field>
-				<textarea
-						matInput
-						type="text"
-						placeholder="Description"
-						[(ngModel)]="content.value.url"
-						#description="ngModel"
-						name="url"
-						maxlength="1000"
-						cdkTextareaAutosize
-						#autosize="cdkTextareaAutosize"
-						cdkAutosizeMinRows="1"
-						cdkAutosizeMaxRows="5"
-				></textarea>
-				<mat-hint>1000文字まで</mat-hint>
-				<mat-error *ngIf="description.errors?.maxlength">長すぎます</mat-error>
+				<input matInput type="text" placeholder="URL" [(ngModel)]="content.url" #url="ngModel" name="url" required minlength="3" maxlength="500">
+				<mat-hint>3文字以上500文字まで</mat-hint>
+				<mat-error *ngIf="url.errors?.required;">入力してください</mat-error>
+				<mat-error *ngIf="url.errors?.maxlength">長すぎます</mat-error>
+				<mat-error *ngIf="url.errors?.minlength">短すぎます</mat-error>
 			</mat-form-field>
 		</form>
 	</div>
@@ -38,5 +28,4 @@
 		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()">OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</div>
-
-
+</div>

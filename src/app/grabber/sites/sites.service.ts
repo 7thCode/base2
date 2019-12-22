@@ -3,13 +3,13 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 import {Callback} from "../../../../types/platform/universe";
 import {ConstService} from "../../platform/base/services/const.service";
-import {QueryableService} from "../../platform/base/services/queryable.service";
+import {UpdatableService} from "../../platform/base/services/updatable.service";
 
 @Injectable({
 	providedIn: "root",
 })
 
-export class SitesService extends QueryableService {
+export class SitesService extends UpdatableService {
 
 	public model: string = "sites";
 

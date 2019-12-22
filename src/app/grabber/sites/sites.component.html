@@ -12,6 +12,7 @@
 			<mat-grid-list #grid cols="4" rowHeight="1:1">
 				<mat-grid-tile class="box-body" *ngFor="let site of results" [colspan]="site.cols" [rowspan]="site.rows">
 					<mat-grid-tile-header>
+						{{site.name}}
 					</mat-grid-tile-header>
 
 					<mat-grid-tile-footer>

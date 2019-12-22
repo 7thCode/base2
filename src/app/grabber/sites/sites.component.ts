@@ -4,14 +4,14 @@ import {HttpClient} from "@angular/common/http";
 import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
-import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 import {ConstService} from "../../platform/base/services/const.service";
 import {SessionService} from "../../platform/base/services/session.service";
 import {SitesService} from "./sites.service";
 
 import {GridViewComponent} from "../../platform/base/components/gridview.component";
-import {ArticleDialogComponent} from "../../platform/articles/article-dialog/article-dialog.component";
+import {SiteDialogComponent} from "./site-dialog/site-dialog.component";
 
 @Component({
 	selector: "app-sites",
@@ -35,6 +35,9 @@ export class SitesComponent extends GridViewComponent implements OnInit {
 	}
 
 	protected service: SitesService;
+
+	public name = "";
+	public url = "";
 
 	protected query: object = {};
 	protected page: number = 0;
@@ -63,25 +66,29 @@ export class SitesComponent extends GridViewComponent implements OnInit {
 	/**
 	 * @returns none
 	 */
+	protected toListView(object: any): any {
+		object.cols = 1;
+		object.rows = 1;
+		return object;
+	}
+
+	/**
+	 * @returns none
+	 */
 	public createDialog(): void {
 
-		const initalData: IArticleModelContent = {
-			id: "",
-			parent_id: "",
-			enabled: true,
-			category: "",
+		const initalData: any = {
+			url: "",
 			status: 0,
-			type: "",
 			name: "",
-			value: {title: "", description: ""},
-			accessory: {},
 		};
 
-		const dialog: any = this.matDialog.open(ArticleDialogComponent, {
+		const dialog: any = this.matDialog.open(SiteDialogComponent, {
 			width: "40vw",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
+
 
 		dialog.beforeClosed().subscribe((result: any): void => {
 			if (result) { // if not cancel then

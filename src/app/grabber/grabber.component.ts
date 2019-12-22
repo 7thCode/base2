@@ -16,13 +16,13 @@ import {MatDialog, MatSidenav, MatSnackBar} from "@angular/material";
 
 import {fadeAnimation} from "../platform/base/library/fade-animation";
 
-import {ImagesComponent} from "./images/images.component";
-import {SitesComponent} from "./sites/sites.component";
 import {AccountsComponent} from "../platform/accounts/accounts.component";
-import {SessionService} from "../platform/base/services/session.service";
-import {ConstService} from "../platform/base/services/const.service";
-import {ResponsiveComponent} from "../platform/base/components/responsive.component";
 import {AccountsService} from "../platform/accounts/accounts.service";
+import {ResponsiveComponent} from "../platform/base/components/responsive.component";
+import {ConstService} from "../platform/base/services/const.service";
+import {SessionService} from "../platform/base/services/session.service";
+import {SitesComponent} from "./sites/sites.component";
+import {SrcsComponent} from "./srcs/srcs.component";
 
 import {AccountDialogComponent} from "../platform/accounts/account-dialog/account-dialog.component";
 
@@ -48,7 +48,7 @@ export class GrabberComponent extends ResponsiveComponent implements OnInit, OnD
 
 	@ViewChild("sidenav", {static: false}) protected sidenav: MatSidenav;
 
-	@ViewChild(ImagesComponent, {static: true}) protected imagesComponent: ImagesComponent;
+	@ViewChild(SrcsComponent, {static: true}) protected imagesComponent: SrcsComponent;
 	@ViewChild(SitesComponent, {static: true}) protected sitesComponent: SitesComponent;
 
 	constructor(

@@ -6,9 +6,6 @@
 
 "use strict";
 
-import {IAccountModel} from "../../../../types/platform/server";
-import {Callback, IContent} from "../../../../types/platform/universe";
-
 const express: any = require("express");
 export const router: any = express.Router();
 
@@ -22,31 +19,33 @@ const _config: string = global.__config;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
-const Crawl: any = require("./controller");
-const crawls: any = new Crawl(module.parent.exports.event);
+const Src: any = require("./controller");
+const srcs: any = new Src(module.parent.exports.event);
 
 router.get("/srcs/auth/query/:query/:option", [
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
-			crawls.query(request, response);
+			srcs.query(request, response);
 		});
 	}]);
 
 router.get("/srcs/auth/count/:query", [
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
-			crawls.count(request, response);
+			srcs.count(request, response);
 		});
 	}]);
 
-router.get("/srcs/crawl", function(request, response, next) {
+router.get("/srcs/crawl/:site_id", [
+	(request, response, next) => {
 
-	response.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
-	response.write("<div>ok</div>");
-	response.end();
+		response.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
+		response.write("<div>ok</div>");
+		response.end();
 
-	crawls.crawl(request, response);
-
-});
+		gatekeeper.catch(response, () => {
+			srcs.crawl(request, response);
+		});
+	}]);
 
 module.exports = router;

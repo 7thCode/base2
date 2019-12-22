@@ -10,7 +10,7 @@
 import {IAccountModel} from "../../../types/platform/server";
 import {Callback, IQueryOption, IRights} from "../../../types/platform/universe";
 
-namespace SrcesModel {
+namespace SrcsModel {
 
 	const mongoose: any = require("mongoose");
 
@@ -19,6 +19,7 @@ namespace SrcesModel {
 	const Src = new Schema({
 		user_id: {type: String, default: ""},
 		content: {
+			site_id: {type: String, default: ""},
 			src: {type: String, required: true, index: {unique: true}},
 			alt: {type: String, default: ""},
 			url: [String],

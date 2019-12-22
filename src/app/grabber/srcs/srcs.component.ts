@@ -8,18 +8,18 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 import {ConstService} from "../../platform/base/services/const.service";
 import {SessionService} from "../../platform/base/services/session.service";
-import {ImagesService} from "./images.service";
+import {SrcsService} from "./srcs.service";
 
 import {GridViewComponent} from "../../platform/base/components/gridview.component";
-import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
+import {SrcDialogComponent} from "./src-dialog/src-dialog.component";
 
 @Component({
-	selector: "app-images",
-	templateUrl: "./images.component.html",
-	styleUrls: ["./images.component.css"],
+	selector: "app-srcs",
+	templateUrl: "./srcs.component.html",
+	styleUrls: ["./srcs.component.css"],
 })
 
-export class ImagesComponent extends GridViewComponent implements OnInit {
+export class SrcsComponent extends GridViewComponent implements OnInit {
 
 	public results: object[];
 
@@ -34,7 +34,7 @@ export class ImagesComponent extends GridViewComponent implements OnInit {
 		this.onProgress.emit(value);
 	}
 
-	protected service: ImagesService;
+	protected service: SrcsService;
 
 	public src = "";
 	public alt = "";
@@ -54,9 +54,8 @@ export class ImagesComponent extends GridViewComponent implements OnInit {
 		protected snackbar: MatSnackBar,
 	) {
 		super(session, http, change, matDialog, observableMedia);
-		this.service = new ImagesService(http, constService);
+		this.service = new SrcsService(http, constService);
 	}
-
 
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
@@ -120,7 +119,7 @@ export class ImagesComponent extends GridViewComponent implements OnInit {
 			description: image.description,
 		};
 
-		const dialog: any = this.matDialog.open(UrlDialogComponent, {
+		const dialog: any = this.matDialog.open(SrcDialogComponent, {
 			width: "40vw",
 			data: {
 				session: this.currentSession,

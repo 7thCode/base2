@@ -24,7 +24,7 @@ const Updatable: any = require(path.join(controllers, "updatable_controller"));
 
 const Crawler = require("../../base/library/crawler").Crawler;
 
-const Src: any = require(path.join(models, "grabber/srces/src"));
+const Src: any = require(path.join(models, "grabber/srcs/src"));
 
 interface IArticleModelContent extends IContent {
 	src: string;
@@ -42,7 +42,7 @@ interface ISrcModel extends IUpdatableModel {
 
 }
 
-export class Crawls extends Updatable {
+export class Srcs extends Updatable {
 
 	protected Model: any;
 
@@ -51,9 +51,11 @@ export class Crawls extends Updatable {
 		this.Model = Src as ISrcModel;
 	}
 
-	public crawl(request: IAccountRequest<any>, response: IJSONResponse): void {
+	public crawl(request: any, response: IJSONResponse): void {
 		const current_user: IAccountModel = this.Transform(request.user);
+		const site_id: string = request.params.site_id;
 		const crawler = new Crawler({ignore_ext: [".jpg", ".jpeg", ".png", ".mp4"], multiplicity: 4});
+
 		crawler.Crawl("https://motociclistagiapponese.com/", (error, result: { event: string, url: string, images: any[], queue: number }) => {
 			if (!error) {
 				switch (result.event) {
@@ -76,6 +78,7 @@ export class Crawls extends Updatable {
 
 								const setter = {
 									content: {
+										site_id,
 										src: src_text,
 										alt: alt_text,
 										url: [result.url],
@@ -108,4 +111,4 @@ export class Crawls extends Updatable {
 
 }
 
-module.exports = Crawls;
+module.exports = Srcs;

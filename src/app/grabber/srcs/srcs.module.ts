@@ -20,15 +20,15 @@ import {
 	MatSnackBarModule,
 } from "@angular/material";
 
-import {ImagesComponent} from "./images.component";
+import {SrcsComponent} from "./srcs.component";
 
 import {FilepathPipe} from "../base/pipes/filepath.pipe";
-import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
+import {SrcDialogComponent} from "./src-dialog/src-dialog.component";
 
 @NgModule({
 	declarations: [
-		ImagesComponent,
-		UrlDialogComponent,
+		SrcsComponent,
+		SrcDialogComponent,
 		FilepathPipe,
 	],
 	imports: [
@@ -59,10 +59,10 @@ import {UrlDialogComponent} from "./url-dialog/url-dialog.component";
 		FilepathPipe,
 	],
 	bootstrap: [
-		ImagesComponent,
-		UrlDialogComponent,
+		SrcsComponent,
+		SrcDialogComponent,
 	],
 })
 
-export class ImagesModule {
+export class SrcsModule {
 }

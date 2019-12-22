@@ -24,18 +24,13 @@ import {take} from "rxjs/operators";
  */
 export class SiteDialogComponent {
 
-	@ViewChild("autosize", {static: false}) public autosize: CdkTextareaAutosize;
-
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<SiteDialogComponent>,
-		private zone: NgZone) {
+	) {
 	}
 
-	public triggerResize() {
-		this.zone.onStable.pipe(take(1)).subscribe(() => this.autosize.resizeToFitContent(true));
-	}
 
 	get content(): any {
 		return this.data.content;

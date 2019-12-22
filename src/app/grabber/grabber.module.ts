@@ -29,12 +29,12 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterModule} from "@angular/router";
 
 import {AceEditorModule} from "ng2-ace-editor";
+import {AuthModule} from "../platform/auth/auth.module";
 import {ErrorModule} from "../platform/error/error.module";
 import {GrabberRoutingModule} from "./grabber-routing.module";
 import {GrabberComponent} from "./grabber.component";
 import {SitesModule} from "./sites/sites.module";
-import {ImagesModule} from "./images/images.module";
-import {AuthModule} from "../platform/auth/auth.module";
+import {SrcsModule} from "./srcs/srcs.module";
 
 @NgModule({
 	declarations: [
@@ -66,7 +66,7 @@ import {AuthModule} from "../platform/auth/auth.module";
 		ErrorModule,
 		AuthModule,
 		SitesModule,
-		ImagesModule,
+		SrcsModule,
 
 	],
 	providers: [],

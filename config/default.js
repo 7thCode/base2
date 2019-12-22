@@ -51,9 +51,17 @@ module.exports = {
 			{
 				type: "required",
 				path: "/grabber/modules/",
-				name: "crawl",
+				name: "sites",
 				description: {
-					display: "Crawl"
+					display: "Sites"
+				}
+			},
+			{
+				type: "required",
+				path: "/grabber/modules/",
+				name: "srcs",
+				description: {
+					display: "Srcs"
 				}
 			}
 		],

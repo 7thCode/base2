@@ -15,7 +15,7 @@ const models: string = global._models;
 
 const Updatable: any = require(path.join(controllers, "updatable_controller"));
 
-const Site: any = require(path.join(models, "platform/grabber/sites/site"));
+const Site: any = require(path.join(models, "grabber/sites/site"));
 
 export class Sites extends Updatable {
 
@@ -23,9 +23,9 @@ export class Sites extends Updatable {
 
 	constructor(event: any) {
 		super(event);
-		this.Model = Site as IArticleModel;
+		this.Model = Site;
 	}
 
 }
 
-module.exports = Site;
+module.exports = Sites;
