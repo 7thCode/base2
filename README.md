@@ -424,9 +424,8 @@ $ sudo ./certbot-auto certonly --nginx -d DOMAIN.co.jp -d www.DOMAIN.co.jp
 #### 更新
 ```bash
 $ cd ~
-$ cd certbot
 $ sudo service nginx stop
-$ sudo ./certbot-auto renew -q --no-self-upgrade
+$ sudo certbot renew -q --no-self-upgrade
 $ sudo service nginx start
 ```
     証明書の取得時に使用したオプションは
