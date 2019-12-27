@@ -21,28 +21,54 @@ const systemsConfig: any = require(path.join(_config, "default")).systems;
 
 export class Gatekeeper {
 
+	/**
+	 * Error
+	 * @param response
+	 * @param error sending error
+	 * @returns none
+	 */
 	public static SendError(response: any, error: IErrorObject): void {
 		if (response) {
 			response.jsonp(new result(error.code, error.message, error));
 		}
 	}
 
+	/**
+	 * Fatal Page
+	 * @param response
+	 * @param error sending error
+	 * @returns none
+	 */
 	public static SendFatal(response: any, error: IErrorObject): void {
 		if (response) {
 			response.status(500).render("error", {message: error.message, status: 500});
 		}
 	}
 
-	public static CorsHeader(response: any, session: any): any {
-		response.header("Access-Control-Allow-Origin", "*");
-		response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-		response.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Access-Control-Allow-Origin");
+	/**
+	 * Extend Header
+	 * @param response
+	 * @param session
+	 * @returns response
+	 */
+	public static ExtendHeader(response: any, session: any): any {
+
+		systemsConfig.extendheader.forEach((header) => {
+			response.header(header[0], header[1]);
+		});
+
 		response.header("Pragma", "no-cache");
 		response.header("Cache-Control", "no-cache");
 		response.contentType("application/json");
 		return response;
 	}
 
+	/**
+	 * Basic Header
+	 * @param response
+	 * @param session
+	 * @returns response
+	 */
 	public static BasicHeader(response: any, session: any): any {
 		response.header("Pragma", "no-cache");
 		response.header("Cache-Control", "no-cache");
@@ -50,14 +76,12 @@ export class Gatekeeper {
 		return response;
 	}
 
-	// public static exception(request: any, response: any, next: any): void {
-	// 	try {
-	// 		next();
-	// 	} catch (e) {
-	// 		Gatekeeper.SendFatal(response, e);
-	// 	}
-	// }
-
+	/**
+	 * Exeption Handler
+	 * @param response
+	 * @param callback
+	 * @returns none
+	 */
 	public static catch(response, callback: () => void): void {
 		try {
 			callback();
@@ -66,9 +90,16 @@ export class Gatekeeper {
 		}
 	}
 
-	public static guard(request: any, response: any, next: any): void {
-		if (systemsConfig.cors_enable) {
-			response = Gatekeeper.CorsHeader(response, "");
+	/**
+	 * default header Handler
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
+	public static default(request: any, response: any, next: any): void {
+		if (systemsConfig.extendheader_enable) {
+			response = Gatekeeper.ExtendHeader(response, "");
 			next();
 		} else {
 			if (request.headers["x-requested-with"] === "XMLHttpRequest") {
@@ -80,6 +111,13 @@ export class Gatekeeper {
 		}
 	}
 
+	/**
+	 * is authenticate Handler
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
 	public static authenticate(request: any, response: any, next: any): void {
 		if (request.user) {
 			switch (request.user.provider) {
@@ -100,6 +138,13 @@ export class Gatekeeper {
 		}
 	}
 
+	/**
+	 * is page Exception Handler
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
 	public static page_catch(request: any, response: any, next: any): void {
 		try {
 			next();
@@ -112,6 +157,13 @@ export class Gatekeeper {
 		}
 	}
 
+	/**
+	 * page header Handler
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
 	public static page_guard(request: any, response: any, next: any): void {
 		try {
 			if (request.user) {

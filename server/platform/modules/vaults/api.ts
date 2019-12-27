@@ -23,42 +23,42 @@ const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const Vaults: any = require("./controller");
 const vaults: any = new Vaults(module.parent.exports.event, systemsConfig.vaultkey);
 
-router.get("/vaults/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/vaults/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			vaults.query(request, response);
 		});
 	}]);
 
-router.get("/vaults/auth/count/:query", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/vaults/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			vaults.count(request, response);
 		});
 	}]);
 
-router.get("/vaults/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/vaults/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			vaults.get(request, response);
 		});
 	}]);
 
-router.post("/vaults/auth", [gatekeeper.guard, gatekeeper.authenticate,
+router.post("/vaults/auth", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			vaults.post(request, response);
 		});
 	}]);
 
-router.put("/vaults/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+router.put("/vaults/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			vaults.put(request, response);
 		});
 	}]);
 
-router.delete("/vaults/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+router.delete("/vaults/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			vaults.delete(request, response);

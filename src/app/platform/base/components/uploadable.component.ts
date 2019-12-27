@@ -11,8 +11,8 @@ import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, OnInit} from "@angular/core";
 
+import {FilesService} from "../../files/files.service";
 import {ConstService} from "../services/const.service";
-import {FileService} from "../services/file.service";
 import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
 
@@ -25,7 +25,7 @@ import {SessionableComponent} from "./sessionable.component";
  */
 export abstract class UploadableComponent extends SessionableComponent implements OnInit {
 
-	protected fileService: FileService;
+	protected filesService: FilesService;
 	protected bodysize: number;
 
 	protected static defaultValue(change, defaultValue): any {
@@ -45,8 +45,8 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		protected change: ChangeDetectorRef,
 	) {
 		super(session, change);
-		this.fileService = new FileService(http, constService);
-		this.endPoint = this.fileService.endPoint;
+		this.filesService = new FilesService(http, constService);
+		this.endPoint = this.filesService.endPoint;
 		this.bodysize = 200 * 1000 * 1000;  // default.
 	}
 
@@ -60,14 +60,14 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * @returns none
 	 */
 	protected delete(name: string, callback: Callback<any>): void {
-		this.fileService.delete(name, callback);
+		this.filesService.delete(name, callback);
 	}
 
 	/**
 	 * @returns none
 	 */
 	protected upload(name: string, url: string, callback: Callback<any>): void {
-		this.fileService.upload(name, this.getCategory(name, ""), url, callback);
+		this.filesService.upload(name, this.getCategory(name, ""), url, callback);
 	}
 
 	/**

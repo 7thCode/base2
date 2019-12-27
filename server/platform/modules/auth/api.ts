@@ -122,77 +122,79 @@ if (usersConfig.initusers) {
 auth.init(init_users, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.post("/auth/local/login", [gatekeeper.guard,
+		router.options("*", [gatekeeper.default]);
+
+		router.post("/auth/local/login", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_login(request, response);
 				});
 			}]);
 
-		router.post("/auth/local/login_totp", [gatekeeper.guard,
+		router.post("/auth/local/login_totp", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_login_totp(request, response);
 				});
 			}]);
 
-		router.get("/auth/token/qr/:token", [
+		router.get("/auth/token/qr/:token", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.get_login_token(request, response);
 				});
 			}]);
 
-		router.post("/auth/token/login", [gatekeeper.guard,
+		router.post("/auth/token/login", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_login(request, response);
 				});
 			}]);
 
-		router.post("/auth/local/register", [gatekeeper.guard,
+		router.post("/auth/local/register", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_register(request, response);
 				});
 			}]);
 
-		router.post("/auth/immediate/register", [gatekeeper.guard, gatekeeper.authenticate,
+		router.post("/auth/immediate/register", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_immediate_register(request, response);
 				});
 			}]);
 
-		router.get("/auth/register/:token", [
+		router.get("/auth/register/:token", [gatekeeper.default,
 			(request: { params: { token: string } }, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.get_register_token(request, response);
 				});
 			}]);
 
-		router.post("/auth/local/password", [gatekeeper.guard,
+		router.post("/auth/local/password", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_password(request, response);
 				});
 			}]);
 
-		router.post("/auth/immediate/password", [gatekeeper.guard, gatekeeper.authenticate,
+		router.post("/auth/immediate/password", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.post_immediate_password(request, response);
 				});
 			}]);
 
-		router.get("/auth/password/:token", [
+		router.get("/auth/password/:token", [gatekeeper.default,
 			(request: { params: { token: string } }, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.get_password_token(request, response);
 				});
 			}]);
 
-		router.get("/auth/logout", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/auth/logout", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.logout(request, response);
@@ -267,7 +269,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 		const TIPV6: any = IPV6;
 		const ipv6: any = TIPV6;
 
-		router.get("/auth/token/make", (request: object, response: any): void => {
+		router.get("/auth/token/make", [gatekeeper.default, (request: object, response: any): void => {
 			gatekeeper.catch(response, (): void => {
 				const key = ipv6.GetIPV6(request); // IP制限の場合
 				const userName = "oda.mikio@gmail.com";
@@ -280,9 +282,9 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			});
 
-		});
+		}]);
 
-		router.get("/auth/token/enc/:token/:plain", (request: { params: { token: string, plain: string } }, response: any): void => {
+		router.get("/auth/token/enc/:token/:plain", [gatekeeper.default, (request: { params: { token: string, plain: string } }, response: any): void => {
 			gatekeeper.catch(response, (): void => {
 				const key: string = ipv6.GetIPV6(request); // IP制限の場合
 				const token: string = request.params.token;
@@ -302,9 +304,9 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			});
 
-		});
+		}]);
 
-		router.get("/auth/token/dec/:token/:cipher", (request: { params: { token: string, cipher: string } }, response: any): void => {
+		router.get("/auth/token/dec/:token/:cipher",[gatekeeper.default, (request: { params: { token: string, cipher: string } }, response: any): void => {
 			gatekeeper.catch(response, (): void => {
 				const key: string = ipv6.GetIPV6(request); // IP制限の場合
 				const token: string = request.params.token;
@@ -323,8 +325,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 					}
 				});
 			});
-
-		});
+		}]);
 
 // api test
 //

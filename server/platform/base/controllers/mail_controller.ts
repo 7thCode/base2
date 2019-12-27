@@ -59,6 +59,12 @@ export class Mail extends Wrapper {
 		}
 	}
 
+	/**
+	 * send mail
+	 * @param mailConfig
+	 * @param response
+	 * @returns status
+	 */
 	protected send_mail(mailConfig: any, response: IJSONResponse): void {
 		fs.readFile(path.join(process.cwd(), mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 			this.ifSuccess(response, error, (): void => {

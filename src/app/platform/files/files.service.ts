@@ -6,24 +6,24 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../../types/platform/universe";
+import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "./const.service";
-import {HttpService} from "./http.service";
+import {ConstService} from "../base/services/const.service";
+import {HttpService} from "../base/services/http.service";
 
 /**
  * ファイル
  *
  * @since 0.01
  */
-export class FileService extends HttpService {
+export class FilesService extends HttpService {
 
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService
+		protected constService: ConstService,
 	) {
 		super(http, constService);
 	}

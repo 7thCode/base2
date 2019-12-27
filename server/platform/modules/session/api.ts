@@ -21,14 +21,14 @@ const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const Session: any = require("./controller");
 const session: any = new Session(module.parent.exports.event);
 
-router.get("/session/auth", [gatekeeper.guard,
+router.get("/session/auth", [gatekeeper.default,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			session.get(request, response);
 		});
 	}]);
 
-router.put("/session/auth", [gatekeeper.guard, gatekeeper.authenticate,
+router.put("/session/auth", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			session.put(request, response);

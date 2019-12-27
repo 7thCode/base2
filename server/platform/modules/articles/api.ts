@@ -31,42 +31,42 @@ const articles: any = new Articles(module.parent.exports.event);
 articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.get("/articles/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/articles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					articles.query(request, response);
 				});
 			}]);
 
-		router.get("/articles/auth/count/:query", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/articles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					articles.count(request, response);
 				});
 			}]);
 
-		router.get("/articles/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 			(request: { params: { id: string } }, response: object): void => {
 				gatekeeper.catch(response, () => {
 					articles.get(request, response);
 				});
 			}]);
 
-		router.post("/articles/auth", [gatekeeper.guard, gatekeeper.authenticate,
+		router.post("/articles/auth", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					articles.post(request, response);
 				});
 			}]);
 
-		router.put("/articles/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+		router.put("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 			(request: { params: { id: string } }, response: object): void => {
 				gatekeeper.catch(response, () => {
 					articles.put(request, response);
 				});
 			}]);
 
-		router.delete("/articles/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+		router.delete("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 			(request: { params: { id: string } }, response: object): void => {
 				gatekeeper.catch(response, () => {
 					articles.delete(request, response);
