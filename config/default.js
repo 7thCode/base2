@@ -30,6 +30,13 @@ module.exports = {
 			expire: 60
 		},
 		sessionname: "base2",
+    extendheader_enable: true,
+    extendheader: [
+      ["Access-Control-Allow-Origin", "http://localhost:5000"],
+      ["Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"],
+      ["Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Access-Control-Allow-Origin"],
+      ["Access-Control-Allow-Credentials", true],
+    ],
 		sessionsecret: "Daisy, Daisy.",
 		tokensecret: "Yes We therefore I think we",
 		key2: "Man is a thinking reed",

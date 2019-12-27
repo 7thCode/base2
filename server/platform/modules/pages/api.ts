@@ -37,49 +37,49 @@ const pages: any = new Pages(module.parent.exports.event);
 pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.get("/pages/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/pages/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					pages.query(request, response);
 				});
 			}]);
 
-		router.get("/pages/auth/count/:query", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/pages/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					pages.count(request, response);
 				});
 			}]);
 
-		router.get("/pages/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					pages.get(request, response);
 				});
 			}]);
 
-		router.post("/pages/auth", [gatekeeper.guard, gatekeeper.authenticate,
+		router.post("/pages/auth", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					pages.post(request, response);
 				});
 			}]);
 
-		router.put("/pages/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+		router.put("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					pages.put(request, response);
 				});
 			}]);
 
-		router.delete("/pages/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
+		router.delete("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, () => {
 					pages.delete(request, response);
 				});
 			}]);
 
-		router.get("/pages/get/*", [(request: { params: string[], query: { u: string, t: string }, user: object }, response: object, next: () => void): void => {
+		router.get("/pages/get/*", [gatekeeper.default,(request: { params: string[], query: { u: string, t: string }, user: object }, response: object, next: () => void): void => {
 			gatekeeper.catch(response, () => {
 				const path: any = request.params[0];
 				const query: { u: string, t: string } = request.query;

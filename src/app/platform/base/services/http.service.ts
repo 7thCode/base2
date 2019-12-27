@@ -25,16 +25,17 @@ export abstract class HttpService {
 		protected constService: ConstService,
 	) {
 		this.endPoint = this.constService.endPoint;
+		this.networkError = {code: 10000, message: "network error"};
 		this.httpOptions = {
 			headers: new HttpHeaders({
 				"Accept": "application/json; charset=utf-8",
 				"Content-Type": "application/json; charset=utf-8",
-				"x-requested-with": "XMLHttpRequest",
 			}),
 			withCredentials: true,
 		};
-		this.networkError = {code: 10000, message: "network error"};
 	}
+
+	// 		"x-requested-with": "XMLHttpRequest",
 
 	protected Decode(data: string, callback: (error: any, result: any) => void): void {
 		try {

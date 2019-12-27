@@ -60,7 +60,7 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 		protected change: ChangeDetectorRef,
 		protected observableMedia: MediaObserver,
 		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar
+		protected snackbar: MatSnackBar,
 	) {
 		super(session, http, constService, change);
 	}
@@ -203,11 +203,11 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	 */
 	public draw(callback: Callback<any>): void {
 		this.Progress(true);
-		this.fileService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
+		this.filesService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
 				const option = {sort: {"content.start": -1}, skip: this.size * this.page, limit: this.size};
-				this.fileService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[]): void => {
+				this.filesService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
 						const filtered: any[] = [];
 						results.forEach((result) => {

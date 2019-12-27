@@ -22,7 +22,7 @@ export class VaultsService extends SecureUpdatableService {
 	constructor(
 		public http: HttpClient,
 		public constService: ConstService,
-		public PublicKey: PublicKeyService
+		public PublicKey: PublicKeyService,
 	) {
 		super(http, constService, "vaults", PublicKey);
 	}

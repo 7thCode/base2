@@ -12,6 +12,11 @@ const v6: any = V6Module.v6;
 
 export class IPV6 {
 
+	/**
+	 * address conv
+	 * @param address V4address
+	 * @returns address V6address
+	 */
 	public static ToIPV6(address: string): string {
 		let result: string = address;
 		const v6Address: any = new v6.Address(result);

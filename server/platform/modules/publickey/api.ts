@@ -21,21 +21,21 @@ const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const PublicKey: any = require("./controller");
 const publickey: any = new PublicKey(module.parent.exports.event);
 
-router.get("/publickey/fixed", [gatekeeper.guard,
+router.get("/publickey/fixed", [gatekeeper.default,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			publickey.get_fixed_public_key(request, response);
 		});
 	}]);
 
-router.get("/publickey/dynamic", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/publickey/dynamic", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			publickey.get_public_key(request, response);
 		});
 	}]);
 
-router.get("/publickey/token", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/publickey/token", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			publickey.get_access_token(request, response);
