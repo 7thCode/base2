@@ -2,17 +2,22 @@ module.exports = {
 	systems: {
 		status: "debug",
 		mode: 1,
-		port: 3000,
-		socket_port: 3001,
-		domain: "localhost:3000",
+
+		port: 4000,
+		domain: "localhost:4000",
 		protocol: "http",
+
+		socket_port: 4001,
+		socket_domain: "localhost:4001",
+		socket_protocol: "ws",
+
 		cache1: "max-age=86400",
 		cache: "no-cache",
 		timeout: 100000,
 		bodysize: "200mb",
 		cors_enable: false,
 		ua: "base2",
-		use_publickey: false,
+		use_publickey: true,
 		dav: false,
 		db: {
 			address: "localhost",
