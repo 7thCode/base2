@@ -14,7 +14,7 @@ import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
-import {ConstService} from "../../platform/base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {SessionService} from "../../platform/base/services/session.service";
 import {SitesService} from "./sites.service";
 

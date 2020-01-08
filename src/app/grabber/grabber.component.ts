@@ -16,10 +16,10 @@ import {MatDialog, MatSidenav, MatSnackBar} from "@angular/material";
 
 import {fadeAnimation} from "../platform/base/library/fade-animation";
 
+import {ConstService} from "../config/const.service";
 import {AccountsComponent} from "../platform/accounts/accounts.component";
 import {AccountsService} from "../platform/accounts/accounts.service";
 import {ResponsiveComponent} from "../platform/base/components/responsive.component";
-import {ConstService} from "../platform/base/services/const.service";
 import {SessionService} from "../platform/base/services/session.service";
 import {SitesComponent} from "./sites/sites.component";
 import {SrcsComponent} from "./srcs/srcs.component";

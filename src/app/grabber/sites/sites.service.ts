@@ -10,7 +10,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 import {Callback} from "../../../../types/platform/universe";
-import {ConstService} from "../../platform/base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {UpdatableService} from "../../platform/base/services/updatable.service";
 
 @Injectable({
