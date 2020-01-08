@@ -9,7 +9,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {UpdatableService} from "../base/services/updatable.service";
 
 @Injectable({

@@ -16,7 +16,7 @@ import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
 import {AuthService} from "../auth/auth.service";
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 import {SessionableComponent} from "../base/components/sessionable.component";
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 import {SessionService} from "../base/services/session.service";
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";

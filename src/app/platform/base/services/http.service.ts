@@ -7,7 +7,7 @@
 "use strict";
 
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ConstService} from "./const.service";
+import {ConstService} from "../../../config/const.service";
 
 /**
  * HTTP

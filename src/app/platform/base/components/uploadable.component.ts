@@ -12,7 +12,7 @@ import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, OnInit} from "@angular/core";
 
 import {FilesService} from "../../files/files.service";
-import {ConstService} from "../services/const.service";
+import {ConstService} from "../../../config/const.service";
 import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
 

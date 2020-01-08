@@ -13,7 +13,7 @@ import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material";
 
 import {UpdatableComponent} from "../base/components/updatable.component";
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
 import {FragmentService} from "./fragment.service";
 

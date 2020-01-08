@@ -47,12 +47,18 @@ export class Gatekeeper {
 
 	/**
 	 * Extend Header
+	 * @param request
 	 * @param response
 	 * @param session
 	 * @returns response
 	 */
-	public static ExtendHeader(response: any, session: any): any {
+	public static ExtendHeader(request: any, response: any, session: any): any {
+		let host = request.headers.origin;
+		if (!host) {
+			host = "http://" + request.headers.host;
+		}
 
+		response.header("Access-Control-Allow-Origin", host);
 		systemsConfig.extendheader.forEach((header) => {
 			response.header(header[0], header[1]);
 		});
@@ -65,11 +71,12 @@ export class Gatekeeper {
 
 	/**
 	 * Basic Header
+	 * @param request
 	 * @param response
 	 * @param session
 	 * @returns response
 	 */
-	public static BasicHeader(response: any, session: any): any {
+	public static BasicHeader(request: any, response: any, session: any): any {
 		response.header("Pragma", "no-cache");
 		response.header("Cache-Control", "no-cache");
 		response.contentType("application/json");
@@ -99,11 +106,11 @@ export class Gatekeeper {
 	 */
 	public static default(request: any, response: any, next: any): void {
 		if (systemsConfig.extendheader_enable) {
-			response = Gatekeeper.ExtendHeader(response, "");
+			response = Gatekeeper.ExtendHeader(request, response, "");
 			next();
 		} else {
 			if (request.headers["x-requested-with"] === "XMLHttpRequest") {
-				response = Gatekeeper.BasicHeader(response, "");
+				response = Gatekeeper.BasicHeader(request, response, "");
 				next();
 			} else {
 				Gatekeeper.SendError(response, {code: -1, message: "CSRF?"});

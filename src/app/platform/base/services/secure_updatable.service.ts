@@ -13,7 +13,7 @@ import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {ConstService} from "./const.service";
+import {ConstService} from "../../../config/const.service";
 import {PublicKeyService} from "./publickey.service";
 import {UpdatableService} from "./updatable.service";
 

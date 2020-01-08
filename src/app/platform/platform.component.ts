@@ -19,7 +19,7 @@ import {AccountsComponent} from "./accounts/accounts.component";
 import {AccountsService} from "./accounts/accounts.service";
 import {ResponsiveComponent} from "./base/components/responsive.component";
 import {fadeAnimation} from "./base/library/fade-animation";
-import {ConstService} from "./base/services/const.service";
+import {ConstService} from "../config/const.service";
 import {SessionService} from "./base/services/session.service";
 import {FilesComponent} from "./files/files.component";
 import {PagesComponent} from "./pages/pages.component";

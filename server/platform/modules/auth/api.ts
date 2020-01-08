@@ -122,6 +122,7 @@ if (usersConfig.initusers) {
 auth.init(init_users, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
+		// for Preflight request. (CORS)
 		router.options("*", [gatekeeper.default]);
 
 		router.post("/auth/local/login", [gatekeeper.default,
