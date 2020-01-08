@@ -8,12 +8,6 @@
 
 import {Injectable} from "@angular/core";
 
-/**
- * HTTP
- *
- * @since 0.01
- */
-
 @Injectable({
 	providedIn: "root",
 })
@@ -21,7 +15,13 @@ import {Injectable} from "@angular/core";
 export class ConstService {
 
 	public endPoint: string = "";
-	public webSocket: string = "ws://127.0.0.1:3001";
+	public webSocket: string = "wss://seventh-code.com/ws";
+
+	public headers: any = {
+		"Accept": "application/json; charset=utf-8",
+		"Content-Type": "application/json; charset=utf-8",
+	};
+
 	public use_publickey: boolean = true;
 	public is_electron: boolean = false;
 

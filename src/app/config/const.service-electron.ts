@@ -14,13 +14,18 @@ import {Injectable} from "@angular/core";
 
 export class ConstService {
 
-	public endPoint: string = "";
-	public webSocket: string = "wss://45.32.57.245:3002";
+	public endPoint: string = "https://seventh-code.com";
+	public webSocket: string = "wss://seventh-code.com/ws";
+
+	public headers: any = {
+		"Accept": "application/json; charset=utf-8",
+		"Content-Type": "application/json; charset=utf-8",
+	};
+
 	public use_publickey: boolean = true;
-	public is_electron: boolean = false;
+	public is_electron: boolean = true;
 
 	constructor() {
-
 	}
 
 }
