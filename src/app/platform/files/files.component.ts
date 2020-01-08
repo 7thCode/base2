@@ -14,7 +14,7 @@ import {MediaChange, MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
 
 @Component({

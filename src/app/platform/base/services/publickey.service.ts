@@ -12,7 +12,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "./const.service";
+import {ConstService} from "../../../config/const.service";
 import {HttpService} from "./http.service";
 
 @Injectable({

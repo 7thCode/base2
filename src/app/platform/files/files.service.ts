@@ -11,7 +11,7 @@ import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/u
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {HttpService} from "../base/services/http.service";
 
 /**

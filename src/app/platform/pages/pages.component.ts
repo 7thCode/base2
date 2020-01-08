@@ -14,7 +14,7 @@ import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {GridViewComponent} from "../base/components/gridview.component";
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
 import {PageDialogComponent} from "./page-dialog/page-dialog.component";
 import {PagesService} from "./pages.service";

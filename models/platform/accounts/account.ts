@@ -7,7 +7,7 @@
 "use strict";
 
 import {IAccountModel} from "../../../types/platform/server";
-import {AuthLevel, Callback, IAccountPublic, IRole, IQueryOption} from "../../../types/platform/universe";
+import {AuthLevel, Callback, IAccountPublic, IQueryOption, IRole} from "../../../types/platform/universe";
 
 namespace AccountModel {
 

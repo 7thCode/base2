@@ -9,7 +9,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 import {SecureUpdatableService} from "../base/services/secure_updatable.service";
 

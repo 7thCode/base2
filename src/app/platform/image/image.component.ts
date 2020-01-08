@@ -12,7 +12,7 @@ import {MatDialog} from "@angular/material";
 
 import {IErrorObject} from "../../../../types/platform/universe";
 import {UploadableComponent} from "../base/components/uploadable.component";
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 

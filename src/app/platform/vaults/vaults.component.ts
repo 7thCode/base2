@@ -14,7 +14,7 @@ import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {GridViewComponent} from "../base/components/gridview.component";
-import {ConstService} from "../base/services/const.service";
+import {ConstService} from "../../config/const.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 import {SessionService} from "../base/services/session.service";
 import {VaultDialogComponent} from "./vault-dialog/vault-dialog.component";
