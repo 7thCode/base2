@@ -55,14 +55,15 @@ export class SrcsComponent extends GridViewComponent implements OnInit {
 	constructor(
 		public session: SessionService,
 		public constService: ConstService,
-		protected http: HttpClient,
+		public srcsService: SrcsService,
+		// protected http: HttpClient,
 		public change: ChangeDetectorRef,
 		public observableMedia: MediaObserver,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, http, change, matDialog, observableMedia);
-		this.service = new SrcsService(http, constService);
+		super(session, change, matDialog, observableMedia);
+		this.service = srcsService; // new SrcsService(http, constService);
 	}
 
 	protected errorBar(error: IErrorObject): void {
