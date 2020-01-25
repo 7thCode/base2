@@ -22,8 +22,9 @@ import {
 	MatSelectModule,
 	MatSnackBarModule,
 } from "@angular/material";
+
 import {BaseModule} from "../base/base.module";
-import {AuthService} from "./auth.service";
+
 import {LoginDialogComponent} from "./login-dialog/login-dialog.component";
 import {LoginDialogDirective} from "./login-dialog/login-dialog.directive";
 import {LoginQrDialogComponent} from "./login-qr-dialog/login-qr-dialog.component";
@@ -36,6 +37,8 @@ import {PasswordDialogComponent} from "./password-dialog/password-dialog.compone
 import {PasswordDialogDirective} from "./password-dialog/password-dialog.directive";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
+
+import {AuthService} from "./auth.service";
 
 @NgModule({
 	declarations: [

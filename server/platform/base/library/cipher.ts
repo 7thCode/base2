@@ -20,7 +20,9 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const config: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
 
 /**
@@ -28,6 +30,9 @@ const LocalAccount: any = require(path.join(models, "platform/accounts/account")
  */
 export class Cipher {
 
+	/**
+	 *
+	 */
 	constructor() {
 	}
 
@@ -114,6 +119,13 @@ export class Cipher {
 		return rsa.decrypt(crypted, "utf8");
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param key
+	 * @param callback
+	 * @constructor
+	 */
 	public Token(username: string, key: string, callback: Callback<any>): void {
 		LocalAccount.findOne({$and: [{provider: "local"}, {username}]}).then((account: any): void => {
 			if (account) {
@@ -128,6 +140,13 @@ export class Cipher {
 		});
 	}
 
+	/**
+	 *
+	 * @param encodedToken
+	 * @param key
+	 * @param callback
+	 * @constructor
+	 */
 	public Account(encodedToken: string, key: string, callback: Callback<any>): void {
 		try {
 			const tokenString: string = Cipher.FixedDecrypt(encodedToken, config.tokensecret);

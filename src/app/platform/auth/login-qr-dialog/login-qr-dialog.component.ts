@@ -9,7 +9,7 @@
 import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {Component, Inject, Input, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatDividerModule, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
 
 import {AuthService} from "../auth.service";
 
@@ -26,30 +26,53 @@ import {AuthService} from "../auth.service";
  */
 export class LoginQrDialogComponent implements OnInit {
 
-	public qr: string = "";
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA)
-		public data: any,
-		public matDialogRef: MatDialogRef<LoginQrDialogComponent>,
-		private snackbar: MatSnackBar,
-		public auth: AuthService) {
-	}
-
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
-	public ngOnInit(): void {
-		this.draw();
+	/**
+	 *
+	 */
+	public qr: string = "";
+
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 * @param snackbar
+	 * @param auth
+	 */
+	constructor(
+		@Inject(MAT_DIALOG_DATA)
+		public data: any,
+		public matDialogRef: MatDialogRef<any>,
+		public snackbar: MatSnackBar,
+		public auth: AuthService) {
 	}
 
+	/**
+	 *
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
 		});
 	}
 
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
+		this.draw();
+	}
+
+	/**
+	 *
+	 */
 	public draw(): void {
 		this.auth.get_login_token((result: any): void => {
 			this.qr = result;

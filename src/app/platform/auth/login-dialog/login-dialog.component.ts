@@ -9,7 +9,7 @@
 import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {Component, Inject, Input, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatDividerModule, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
 
 import {AuthService} from "../auth.service";
 
@@ -26,37 +26,61 @@ import {AuthService} from "../auth.service";
  */
 export class LoginDialogComponent implements OnInit {
 
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
-	}
-
-	public password_visible: boolean;
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA)
-		public data: any,
-		public matDialogRef: MatDialogRef<LoginDialogComponent>,
-		private snackbar: MatSnackBar,
-		public auth: AuthService) {
-	}
-
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
-	public ngOnInit(): void {
-		this.Progress(false);
-		this.password_visible = false;
+	public progress: boolean;
+	public password_visible: boolean;
+
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 * @param snackbar
+	 * @param auth
+	 */
+	constructor(
+		@Inject(MAT_DIALOG_DATA)
+		public data: any,
+		public matDialogRef: MatDialogRef<any>,
+		public snackbar: MatSnackBar,
+		public auth: AuthService) {
 	}
 
+	/**
+	 *
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
 		});
 	}
 
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
+	}
+
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
+		this.Progress(false);
+		this.password_visible = false;
+	}
+
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.Progress(true);
 		this.auth.login(this.content.username, this.content.password, (error: IErrorObject, result: any): void => {

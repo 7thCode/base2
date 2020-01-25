@@ -11,10 +11,11 @@ import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, OnInit} from "@angular/core";
 
-import {FilesService} from "../../files/files.service";
-import {ConstService} from "../../../config/const.service";
-import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
+
+import {ConstService} from "../../../config/const.service";
+import {FilesService} from "../../files/files.service";
+import {SessionService} from "../services/session.service";
 
 /**
  * アップローダブルクラス
@@ -25,18 +26,10 @@ import {SessionableComponent} from "./sessionable.component";
  */
 export abstract class UploadableComponent extends SessionableComponent implements OnInit {
 
+	public endPoint: string;
+
 	protected filesService: FilesService;
 	protected bodysize: number;
-
-	protected static defaultValue(change, defaultValue): any {
-		let result: any = defaultValue;
-		if (change) {
-			result = change.currentValue;
-		}
-		return result;
-	}
-
-	public endPoint: string;
 
 	protected constructor(
 		protected session: SessionService,
@@ -50,10 +43,12 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		this.bodysize = 200 * 1000 * 1000;  // default.
 	}
 
-	public ngOnInit(): void {
-		this.getSession((error: IErrorObject, session: object): void => {
-			this.bodysize = 200 * 1000 * 1000;
-		});
+	protected static defaultValue(change, defaultValue): any {
+		let result: any = defaultValue;
+		if (change) {
+			result = change.currentValue;
+		}
+		return result;
 	}
 
 	/**
@@ -193,6 +188,12 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			}
 		});
 		return result;
+	}
+
+	public ngOnInit(): void {
+		this.getSession((error: IErrorObject, session: object): void => {
+			this.bodysize = 200 * 1000 * 1000;
+		});
 	}
 
 }

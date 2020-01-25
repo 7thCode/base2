@@ -21,6 +21,11 @@ import {HttpService} from "../base/services/http.service";
  */
 export class FilesService extends HttpService {
 
+	/**
+	 *
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -28,6 +33,11 @@ export class FilesService extends HttpService {
 		super(http, constService);
 	}
 
+	/**
+	 *
+	 * @param query
+	 * @param callback
+	 */
 	public count(query: object, callback: Callback<any>): void {
 		this.Encode(query, (error: IErrorObject, queryString: string): void => {
 			if (!error) {
@@ -47,6 +57,12 @@ export class FilesService extends HttpService {
 
 	}
 
+	/**
+	 *
+	 * @param query
+	 * @param option
+	 * @param callback
+	 */
 	public query(query: object, option: IQueryOption, callback: Callback<any[]>): void {
 		this.Encode(query, (error: IErrorObject, queryString: string): void => {
 			if (!error) {
@@ -75,6 +91,13 @@ export class FilesService extends HttpService {
 		});
 	}
 
+	/**
+	 *
+	 * @param filename
+	 * @param category
+	 * @param dataUrl
+	 * @param callback
+	 */
 	public upload(filename: string, category: string, dataUrl: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/files/auth/" + filename, {
 			url: dataUrl,
@@ -94,6 +117,11 @@ export class FilesService extends HttpService {
 		});
 	}
 
+	/**
+	 *
+	 * @param filename
+	 * @param callback
+	 */
 	public download(filename: string, callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/files/auth/" + filename, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -110,6 +138,11 @@ export class FilesService extends HttpService {
 		});
 	}
 
+	/**
+	 *
+	 * @param filename
+	 * @param callback
+	 */
 	public delete(filename: string, callback: Callback<any>): void {
 		this.http.delete(this.endPoint + "/files/auth/" + filename, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {

@@ -16,7 +16,8 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const systemsConfig: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const systemsConfig: any = ConfigModule.systems;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 

@@ -18,6 +18,11 @@ export abstract class Publishable extends Updatable {
 		super(event);
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected publish_query(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			const params: IQueryParam = request.params;
@@ -48,6 +53,11 @@ export abstract class Publishable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected publish_count(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			const params: IQueryParam = request.params;
@@ -65,6 +75,11 @@ export abstract class Publishable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected publish_get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
 			const params: IDParam = request.params;

@@ -24,6 +24,7 @@ import {
 	MatTabsModule,
 	MatToolbarModule,
 } from "@angular/material";
+
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterModule} from "@angular/router";
@@ -38,8 +39,9 @@ import {FilesModule} from "./files/files.module";
 import {ImageModule} from "./image/image.module";
 import {PagesModule} from "./pages/pages.module";
 import {PlatformRoutingModule} from "./platform-routing.module";
-import {PlatformComponent} from "./platform.component";
 import {VaultsModule} from "./vaults/vaults.module";
+
+import {PlatformComponent} from "./platform.component";
 
 @NgModule({
 	declarations: [

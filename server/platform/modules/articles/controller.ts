@@ -21,6 +21,10 @@ export class Articles extends Updatable {
 
 	protected Model: any;
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: any) {
 		super(event);
 		this.Model = Article as IArticleModel;

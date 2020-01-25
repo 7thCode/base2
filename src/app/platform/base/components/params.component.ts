@@ -9,8 +9,9 @@
 import {ChangeDetectorRef, OnInit} from "@angular/core";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 
-import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
+
+import {SessionService} from "../services/session.service";
 
 /**
  * パラメータ付きクラス
@@ -22,7 +23,7 @@ export abstract class ParamsComponent extends SessionableComponent implements On
 	protected constructor(
 		protected session: SessionService,
 		protected change: ChangeDetectorRef,
-		protected route: ActivatedRoute
+		protected route: ActivatedRoute,
 	) {
 		super(session, change);
 	}

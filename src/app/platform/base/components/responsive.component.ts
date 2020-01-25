@@ -9,14 +9,14 @@
 import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {MediaMatcher} from "@angular/cdk/layout";
-import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";
-
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
+import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";
 import {MatSnackBar, MatSpinner} from "@angular/material";
 
-import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
+
+import {SessionService} from "../services/session.service";
 
 /**
  *  * Angilar Material レスポンシブクラス
@@ -25,10 +25,19 @@ import {SessionableComponent} from "./sessionable.component";
  */
 export abstract class ResponsiveComponent extends SessionableComponent implements OnInit, OnDestroy {
 
-	protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
-	protected mobileQueryListener: () => void;
 	public mobileQuery: MediaQueryList;
 
+	protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
+	protected mobileQueryListener: () => void;
+
+	/**
+	 *
+	 * @param session
+	 * @param change
+	 * @param overlay
+	 * @param snackbar
+	 * @param media
+	 */
 	protected constructor(
 		protected session: SessionService,
 		protected change: ChangeDetectorRef,
@@ -43,19 +52,8 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
-	public ngOnInit(): void {
-
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngOnDestroy(): void {
-		this.mobileQuery.removeListener(this.mobileQueryListener);
-	}
-
 	protected cdkSpinnerCreate(): OverlayRef {
 		return this.overlay.create({
 			hasBackdrop: true,
@@ -67,12 +65,21 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 		});
 	}
 
+	/**
+	 *
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 	 	this.snackbar.open(error.message, "Close", {
 	 		duration: 3000,
 	 	});
 	 }
 
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
 	protected Progress(value: boolean): void {
 		if (value) {
 			if (!this.progress) {
@@ -85,5 +92,19 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 				this.progress = false;
 			}
 		}
+	}
+
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
+
+	}
+
+	/**
+	 *
+	 */
+	public ngOnDestroy(): void {
+		this.mobileQuery.removeListener(this.mobileQueryListener);
 	}
 }

@@ -13,6 +13,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 
 import {FormsModule} from "@angular/forms";
 import {BaseModule} from "../base/base.module";
+
 import {FragmentComponent} from "./fragment.component";
 
 @NgModule({

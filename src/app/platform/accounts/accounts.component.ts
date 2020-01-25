@@ -8,20 +8,18 @@
 
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
 import {AfterContentInit, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout"; // for responsive
 import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
 
-import {AuthService} from "../auth/auth.service";
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 import {SessionableComponent} from "../base/components/sessionable.component";
-import {ConstService} from "../../config/const.service";
-import {PublicKeyService} from "../base/services/publickey.service";
-import {SessionService} from "../base/services/session.service";
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
-import {AccountsService} from "./accounts.service";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
+
+import {AuthService} from "../auth/auth.service";
+import {SessionService} from "../base/services/session.service";
+import {AccountsService} from "./accounts.service";
 
 @Component({
 	selector: "accounts",
@@ -36,71 +34,178 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
  */
 export class AccountsComponent extends SessionableComponent implements OnInit, AfterContentInit {
 
-	public results: any[];
-
-	public progress: boolean;
-
+	/**
+	 *
+	 */
 	public get isProgress(): boolean {
 		return this.progress;
 	}
 
-	public Progress(value: boolean): void {
-		this.progress = value;
-		this.onProgress.emit(value);
-	}
+	/**
+	 *
+	 */
+	public results: any[];
 
+	/**
+	 *
+	 */
+	public progress: boolean;
+
+	/**
+	 *
+	 */
 	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
 
 	@ViewChild("grid", {static: true}) public grid: MatGridList;
 
 	public nickname = "";
-
-	protected service: AccountsService;
-	protected auth_service: AuthService;
-
-	protected query: object = {};
-	protected page: number = 0;
 	public size: number = 20;
 	public count: number;
 
 	/**
-	 * @returns none
+	 *
 	 */
-	protected Complete(type: string, value: object): void {
-		this.complete.emit({type, value});
-	}
+	protected service: AccountsService;
 
 	/**
-	 * @returns none
+	 *
 	 */
-	public static confirmToForm(data: object): object {
-		return data;
-	}
+	protected auth_service: AuthService;
 
 	/**
-	 * @returns none
+	 *
 	 */
-	public static confirmToModel(data: object): object {
-		return data;
-	}
+	protected query: object = {};
 
+	/**
+	 *
+	 */
+	protected page: number = 0;
+
+	/**
+	 *
+	 * @param session
+	 * @param authService
+	 * @param accountService
+	 * @param change
+	 * @param observableMedia
+	 * @param matDialog
+	 * @param snackbar
+	 */
 	constructor(
 		public session: SessionService,
-		public constService: ConstService,
-		public publickeyservice: PublicKeyService,
-		protected http: HttpClient,
+		public authService: AuthService,
+		public accountService: AccountsService,
 		public change: ChangeDetectorRef,
 		private observableMedia: MediaObserver,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
 	) {
 		super(session, change);
-		this.service = new AccountsService(http, constService);
-		this.auth_service = new AuthService(http, constService, publickeyservice);
+		this.service = accountService;
+		this.auth_service = authService;
 	}
 
 	/**
-	 * @returns none
+	 * フォームコンバータ
+	 * @param data
+	 */
+	public static confirmToForm(data: object): object {
+		return data;
+	}
+
+	/**
+	 * モデルコンバータ
+	 * @param data
+	 */
+	public static confirmToModel(data: object): object {
+		return data;
+	}
+
+	/**
+	 * アカウント参照
+	 * @param id
+	 * @param callback
+	 */
+	private get(id: string, callback: Callback<object>): void {
+		this.Progress(true);
+		this.service.get(id, (error: IErrorObject, result: object): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 * アカウント更新
+	 * @param id
+	 * @param data
+	 * @param callback
+	 */
+	private update(id: string, data: object, callback: Callback<object>): void {
+		this.Progress(true);
+		this.service.put(id, data, (error: IErrorObject, result: object): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 * アカウント削除
+	 * @param id
+	 * @param callback
+	 */
+	private delete(id: string, callback: Callback<object>): void {
+		this.Progress(true);
+		this.service.delete(id, (error: IErrorObject, result: object): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 * 完了通知
+	 * @param type
+	 * @param value
+	 * @constructor
+	 */
+	protected Complete(type: string, value: object): void {
+		this.complete.emit({type, value});
+	}
+
+	/**
+	 * エラー表示
+	 * @param error
+	 */
+	protected errorBar(error: IErrorObject): void {
+		this.snackbar.open(error.message, "Close", {
+			duration: 3000,
+		});
+	}
+
+	/**
+	 * 処理中
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
+		this.onProgress.emit(value);
+	}
+
+	/**
+	 *
 	 */
 	public ngAfterContentInit(): void {
 		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
@@ -109,7 +214,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public ngOnInit(): void {
 		this.Progress(false);
@@ -128,14 +233,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		});
 	}
 
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
-	}
-
 	/**
-	 * @returns none
+	 *
 	 */
 	public findByNickname(): void {
 		this.query = {};
@@ -153,7 +252,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
-	 * @returns none
+	 * 再描画
+	 * @param callback
 	 */
 	public draw(callback: Callback<object>): void {
 		this.Progress(true);
@@ -184,6 +284,11 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		});
 	}
 
+	/**
+	 * ページ送り
+	 * @param event
+	 * @constructor
+	 */
 	public Page(event): void {
 		this.page = event.pageIndex;
 		this.draw((error: IErrorObject, accounts: object[]): void => {
@@ -195,6 +300,9 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		});
 	}
 
+	/**
+	 * クリエイトダイアログ
+	 */
 	public createDialog(): void {
 		const dialog: any = this.matDialog.open(RegistDialogComponent, {
 			width: "40vw",
@@ -244,6 +352,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
+	 * アップデートダイアログ
 	 * @returns none
 	 */
 	public updateDialog(id: string): void {
@@ -296,6 +405,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
+	 * デリートダイアログ
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
@@ -331,51 +441,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 					this.Progress(false);
 				});
 			}
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	private get(id: string, callback: Callback<object>): void {
-		this.Progress(true);
-		this.service.get(id, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	private update(id: string, data: object, callback: Callback<object>): void {
-		this.Progress(true);
-		this.service.put(id, data, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	private delete(id: string, callback: Callback<object>): void {
-		this.Progress(true);
-		this.service.delete(id, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
 		});
 	}
 

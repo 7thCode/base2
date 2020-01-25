@@ -27,6 +27,7 @@ import {
 import {ImageCropperModule} from "ngx-image-cropper";
 
 import {BaseModule} from "../base/base.module";
+
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 import {ImageComponent} from "./image.component";
 

@@ -12,8 +12,14 @@ const execSync: any = childProcess.execSync;
 
 export class Unix {
 
+	/**
+	 *
+	 */
 	private backupdir: string;
 
+	/**
+	 *
+	 */
 	constructor() {
 		this.backupdir = process.cwd() + "/backup";
 	}

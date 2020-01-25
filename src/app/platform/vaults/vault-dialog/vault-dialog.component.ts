@@ -16,26 +16,41 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 })
 
 /**
- *
+ * Vaultダイアログ
  *
  * @since 0.01
  */
 export class VaultDialogComponent {
 
+	/**
+	 * @constructor
+	 * @param data
+	 * @param matDialogRef
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<VaultDialogComponent>) {
 	}
 
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 * キャンセルクローズ
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 * アクセプトクローズ
+	 * 値を返す
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}

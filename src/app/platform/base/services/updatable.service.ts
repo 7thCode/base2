@@ -21,6 +21,12 @@ import {QueryableService} from "./queryable.service";
  */
 export abstract class UpdatableService extends QueryableService {
 
+	/**
+	 *
+	 * @param http
+	 * @param constService
+	 * @param model
+	 */
 	protected constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -29,6 +35,11 @@ export abstract class UpdatableService extends QueryableService {
 		super(http, constService, model);
 	}
 
+	/**
+	 *
+	 * @param content
+	 * @param callback
+	 */
 	public post(content: IContent, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -45,6 +56,12 @@ export abstract class UpdatableService extends QueryableService {
 		});
 	}
 
+	/**
+	 *
+	 * @param id
+	 * @param content
+	 * @param callback
+	 */
 	public put(id: string, content: IContent, callback: Callback<any>): void {
 		this.http.put(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -77,6 +94,11 @@ export abstract class UpdatableService extends QueryableService {
 	// 	});
 	// }
 
+	/**
+	 *
+	 * @param id
+	 * @param callback
+	 */
 	public delete(id: string, callback: Callback<any>): void {
 		this.http.delete(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {

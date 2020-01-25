@@ -15,7 +15,7 @@ import {
 	MatButtonModule,
 	MatCardModule,
 	MatCheckboxModule,
-	MatDatepickerModule,
+	MatDatepickerModule, MatDialogModule,
 	MatExpansionModule,
 	MatFormFieldModule,
 	MatGridListModule,
@@ -31,9 +31,11 @@ import {
 } from "@angular/material";
 
 import {BaseModule} from "../base/base.module";
-import {SessionService} from "../base/services/session.service";
+
 import {ArticleDialogComponent} from "./article-dialog/article-dialog.component";
 import {ArticlesComponent} from "./articles.component";
+
+import {SessionService} from "../base/services/session.service";
 import {ArticlesService} from "./articles.service";
 
 @NgModule({
@@ -51,6 +53,7 @@ import {ArticlesService} from "./articles.service";
 
 		FlexLayoutModule,
 
+		MatDialogModule,
 		MatCardModule,
 		MatIconModule,
 		MatButtonModule,

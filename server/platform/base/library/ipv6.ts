@@ -32,6 +32,11 @@ export class IPV6 {
 		return result;
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @constructor
+	 */
 	public static GetIPV6(request: any): string {
 		let result: string = "::ffff:0.0.0.0";
 		if (request.headers["x-forwarded-for"]) {
@@ -52,6 +57,10 @@ export class IPV6 {
 		return result;
 	}
 
+	/**
+	 *
+	 * @constructor
+	 */
 	public GetLocalAddress() {
 		const ifacesObj = {ipv4: [], ipv6: []};
 		const interfaces = os.networkInterfaces();

@@ -4,14 +4,14 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
+
+import {AuthLevel, Callback, IErrorObject, IRole} from "../../../../../types/platform/universe";
 
 import {ChangeDetectorRef, EventEmitter, Output} from "@angular/core";
 
 import * as momentNs from "moment-timezone";
 
-import {AuthLevel, Callback, IErrorObject, IRole} from "../../../../../types/platform/universe";
 import {SessionService} from "../services/session.service";
 
 const moment: any = momentNs;
@@ -23,46 +23,16 @@ const moment: any = momentNs;
  */
 export abstract class SessionableComponent {
 
-	private privateCurrentSession: any;
-	public progress: boolean;
-
-	@Output() public onProgress = new EventEmitter<boolean>();
-	@Output() public complete = new EventEmitter<any>();
-
-	protected constructor(
-		protected session: SessionService,
-		protected change: ChangeDetectorRef,
-	) {
-		this.privateCurrentSession = {
-			provider: "",
-			username: "",
-			user_id: "",
-			content: {
-				mails: [],
-				nickname: "",
-				id: "",
-			},
-			enabled: true,
-			role: {},
-		};
-	}
-
-	// event ~
-	protected Complete(type: string, value: any): void {
-		this.complete.emit({type, value});
-	}
-
-	protected Progress(value: boolean): void {
-		this.progress = value;
-		this.onProgress.emit(value);
-	}
-
+	/**
+	 *
+	 */
 	protected get isProgress(): boolean {
 		return this.progress;
 	}
 
-	// ~ event
-
+	/**
+	 *
+	 */
 	public get currentSession(): any {
 		return this.privateCurrentSession;
 	}
@@ -81,12 +51,78 @@ export abstract class SessionableComponent {
 		return result;
 	}
 
+	/**
+	 *
+	 */
 	public get modifyMoment(): object {
 		let result: object = null;
 		if (this.privateCurrentSession) {
 			result = moment(this.privateCurrentSession.modify);
 		}
 		return result;
+	}
+
+	/**
+	 *
+	 */
+	public progress: boolean;
+
+	/**
+	 *
+	 */
+	@Output() public onProgress = new EventEmitter<boolean>();
+
+	/**
+	 *
+	 */
+	@Output() public complete = new EventEmitter<any>();
+
+	/**
+	 *
+	 */
+	private privateCurrentSession: any;
+
+	/**
+	 *
+	 * @param session
+	 * @param change
+	 */
+	protected constructor(
+		protected session: SessionService,
+		protected change: ChangeDetectorRef,
+	) {
+		this.privateCurrentSession = {
+			provider: "",
+			username: "",
+			user_id: "",
+			content: {
+				mails: [],
+				nickname: "",
+				id: "",
+			},
+			enabled: true,
+			role: {},
+		};
+	}
+
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @constructor
+	 */
+	protected Complete(type: string, value: any): void {
+		this.complete.emit({type, value});
+	}
+
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
+	protected Progress(value: boolean): void {
+		this.progress = value;
+		this.onProgress.emit(value);
 	}
 
 	/**
@@ -106,10 +142,9 @@ export abstract class SessionableComponent {
 	}
 
 	/**
-	 * @returns none
 	 *
-	 * data  session.data field
-	 *
+	 * @param data
+	 * @param callback
 	 */
 	protected putSessionData(data: object, callback: Callback<object>): void {
 		this.session.put(data, (error: IErrorObject, result: object): void => {

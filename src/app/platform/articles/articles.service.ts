@@ -18,6 +18,11 @@ import {UpdatableService} from "../base/services/updatable.service";
 
 export class ArticlesService extends UpdatableService {
 
+	/**
+	 *
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		public http: HttpClient,
 		public constService: ConstService,

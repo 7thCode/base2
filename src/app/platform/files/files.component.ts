@@ -14,8 +14,10 @@ import {MediaChange, MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
+
 import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
+
 
 @Component({
 	selector: "files",
@@ -24,35 +26,41 @@ import {SessionService} from "../base/services/session.service";
 })
 
 /**
+ * ファイル
+ *
  * @since 0.01
  */
 export class FilesComponent extends UploadableComponent implements OnInit, OnChanges {
 
 	public results: any[];
-	protected query: object = {};
-	protected page: number = 0;
 
 	@ViewChild("fileInput", {static: true}) public fileInput;
 	@ViewChild("grid", {static: true}) public grid: MatGridList;
+
 
 	public filename: string = "";
 	public size: number = 20;
 	public count: number;
 
+	/**
+	 * グリッド幅
+	 */
 	public gridByBreakpoint: any = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
 
-	@HostListener("dragover", ["$event"])
-	public onDragOver(event: any): void {
-		event.preventDefault();
-	}
 
-	@HostListener("drop", ["$event"])
-	public onDrop(event: any): void {
-		event.preventDefault();
-		const path: string = "";
-		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files));
-	}
+	protected query: object = {};
+	protected page: number = 0;
 
+	/**
+	 *
+	 * @param session
+	 * @param http
+	 * @param constService
+	 * @param change
+	 * @param observableMedia
+	 * @param matDialog
+	 * @param snackbar
+	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
@@ -66,7 +74,50 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param error
+	 */
+	protected errorBar(error: IErrorObject): void {
+		this.snackbar.open(error.message, "Close", {
+			duration: 3000,
+		});
+	}
+
+	/**
+	 *
+	 * @param name 名前
+	 * @param category カテゴリー
+	 */
+	protected getCategory(name: string, category: string): string {
+		let result: string = "";
+		if ((name === "avatar.jpg" || name === "blank.png")) {
+			result = "l";
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 * @param event ウィンドウイベント
+	 */
+	@HostListener("dragover", ["$event"])
+	public onDragOver(event: any): void {
+		event.preventDefault();
+	}
+
+	/**
+	 *
+	 * @param event ウィンドウイベント
+	 */
+	@HostListener("drop", ["$event"])
+	public onDrop(event: any): void {
+		event.preventDefault();
+		const path: string = "";
+		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files));
+	}
+
+	/**
+	 *
 	 */
 	public ngOnInit(): void {
 		super.ngOnInit();
@@ -83,14 +134,10 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 		});
 	}
 
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
-	}
-
 	/**
-	 * @returns none
+	 * ファイルドロップハンドラー
+	 * @param path パス
+	 * @param files ファイルオブジェクト
 	 */
 	public onFileDrop(path: string, files: any[]): void {
 		if (files.length > 0) {
@@ -115,14 +162,14 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public onClickFileInputButton(): void {
 		this.fileInput.nativeElement.click();
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public onChangeFileInput(): void {
 		const files: any[] = this.fileInput.nativeElement.files;
@@ -131,7 +178,7 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public findByFilename(): void {
 		this.query = {};
@@ -151,24 +198,14 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
-	 */
-	protected getCategory(name: string, category: string): string {
-		let result: string = "";
-		if ((name === "avatar.jpg" || name === "blank.png")) {
-			result = "l";
-		}
-		return result;
-	}
-
-	/**
-	 * @returns none
+	 *
+	 * @param changes
 	 */
 	public ngOnChanges(changes: any): void {
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public ngAfterContentInit(): void {
 		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
@@ -177,7 +214,8 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 * ファイル削除
+	 * @param name
 	 */
 	public onDelete(name: string): void {
 		this.Progress(true);
@@ -199,7 +237,8 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 * 再描画
+	 * @param callback
 	 */
 	public draw(callback: Callback<any>): void {
 		this.Progress(true);
@@ -238,7 +277,8 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 * ページ送り
+	 * @param event
 	 */
 	public Page(event): void {
 		this.page = event.pageIndex;

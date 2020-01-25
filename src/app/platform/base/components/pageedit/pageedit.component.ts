@@ -24,30 +24,54 @@ export class PageEditComponent implements OnInit {
 	@Output() public onClick = new EventEmitter<IEmit>();
 	@Output() public onValid = new EventEmitter<IEmit>();
 
+	/**
+	 *
+	 */
 	private changed: any;
 
+	/**
+	 *
+	 */
 	constructor() {
 	}
 
+	/**
+	 *
+	 */
 	public ngOnInit() {
 		this.clear();
 	}
 
+	/**
+	 *
+	 */
 	public clear() {
 		this.changed = {};
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public change(event: IEmit): void {
 		this.changed[event.source.name] = event.value;
 		event.changed = this.changed;
 		this.onChange.emit(event);
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public click(event: IEmit): void {
 		event.changed = this.changed;
 		this.onClick.emit(event);
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public valid(event: IEmit): void {
 		event.changed = this.changed;
 		this.onValid.emit(event);

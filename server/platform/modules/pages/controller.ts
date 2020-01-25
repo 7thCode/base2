@@ -23,11 +23,22 @@ export class Pages extends Updatable {
 
 	protected Model: any;
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: object) {
 		super(event);
 		this.Model = Page as IPageModel;
 	}
 
+	/**
+	 *
+	 * @param user_id
+	 * @param path
+	 * @param object
+	 * @param callback
+	 */
 	protected getPage(user_id: string, path: string, object: any, callback: (error: IErrorObject, result: any, mimetype: string) => void): void {
 		try {
 			this.Model.get_page(user_id, path, object, (error: IErrorObject, result: string, mimetype: string): void => {

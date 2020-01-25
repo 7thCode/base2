@@ -22,9 +22,15 @@ export class BaseComponent implements OnInit {
 	public present_value: string = "";
 	public validators: any = null;
 
+	/**
+	 *
+	 */
 	constructor() {
 	}
 
+	/**
+	 *
+	 */
 	public ngOnInit() {
 		this.value = this.description.value;  // init
 		this.present_value = this.value;
@@ -51,6 +57,9 @@ export class BaseComponent implements OnInit {
 		this.validators = new FormControl("", validators);
 	}
 
+	/**
+	 *
+	 */
 	public ngDoCheck() {
 		if (this.value !== this.present_value) {
 			this.present_value = this.value;

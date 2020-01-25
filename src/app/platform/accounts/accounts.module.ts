@@ -31,12 +31,14 @@ import {
 } from "@angular/material";
 
 import {BaseModule} from "../base/base.module";
-import {SessionService} from "../base/services/session.service";
 import {ImageModule} from "../image/image.module";
+
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts.component";
-import {AccountsService} from "./accounts.service";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
+
+import {SessionService} from "../base/services/session.service";
+import {AccountsService} from "./accounts.service";
 
 @NgModule({
 	declarations: [

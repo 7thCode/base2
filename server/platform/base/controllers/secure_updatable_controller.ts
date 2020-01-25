@@ -31,18 +31,35 @@ const library: string = global._library;
 const _config: string = global.__config;
 
 const Cipher: any = require(path.join(library, "cipher"));
-const config: any = require(path.join(_config, "default")).systems;
 
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
+
+/**
+ *
+ */
 export abstract class SecureUpdatable extends Updatable {
 
 	protected Model: any;
 	protected key: string;
 
+	/**
+	 *
+	 * @param event
+	 * @param key
+	 */
 	constructor(event: any, key: string) {
 		super(event);
 		this.key = key;
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param crypted
+	 * @param callback
+	 */
 	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		try {
 			callback(null, Cipher.Decrypt(key, crypted));
@@ -51,6 +68,12 @@ export abstract class SecureUpdatable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param crypted
+	 * @param callback
+	 */
 	public static value_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		SecureUpdatable.publickey_decrypt(key, crypted, (error: IErrorObject, plain: string): void => {
 			if (!error) {
@@ -102,6 +125,11 @@ export abstract class SecureUpdatable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected count(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			const params: IQueryParam = request.params;
@@ -120,6 +148,11 @@ export abstract class SecureUpdatable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
 			const params: IDParam = request.params;
@@ -138,6 +171,11 @@ export abstract class SecureUpdatable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected post(request: IPostRequest<ISecureContent>, response: IJSONResponse): void {
 		try {
 			const body: ISecureContent = request.body;
@@ -158,6 +196,11 @@ export abstract class SecureUpdatable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected put(request: IPutRequest<ISecureContent>, response: IJSONResponse): void {
 		try {
 			const params: IDParam = request.params;

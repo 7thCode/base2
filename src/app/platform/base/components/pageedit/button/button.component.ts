@@ -22,13 +22,23 @@ export class ButtonComponent implements OnInit {
 
 	@Output() public onClick = new EventEmitter<IEmit>();
 
+	/**
+	 *
+	 */
 	constructor() {
 	}
 
+	/**
+	 *
+	 */
 	public ngOnInit() {
 
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public click(event) {
 		this.onClick.emit({source: this.description, value: true, changed: null});
 	}

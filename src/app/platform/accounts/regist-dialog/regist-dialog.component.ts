@@ -22,46 +22,85 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
  */
 export class RegistDialogComponent implements OnInit {
 
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
+	/**
+	 *
+	 */
+	get user(): any {
+		return this.data.user;
 	}
 
+	/**
+	 *
+	 */
+	get role(): any {
+		return this.data.user.role;
+	}
+
+	/**
+	 *
+	 */
+	get content(): any {
+		return this.data.content;
+	}
+
+	/**
+	 *
+	 */
+	public progress: boolean;
+
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<RegistDialogComponent>) {
 	}
 
-	get user(): any {
-		return this.data.user;
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
 	}
 
-	get role(): any {
-		return this.data.user.role;
-	}
-
-	get content(): any {
-		return this.data.content;
-	}
-
+	/**
+	 *
+	 */
 	public ngOnInit(): void {
 		this.Progress(false);
 	}
 
+	/**
+	 *
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public onProgressed(event): void {
 
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public onUpdateAvatar(event): void {
 
 	}

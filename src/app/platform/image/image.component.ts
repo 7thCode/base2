@@ -6,15 +6,17 @@
 
 "use strict";
 
+import {IErrorObject} from "../../../../types/platform/universe";
+
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material";
 
-import {IErrorObject} from "../../../../types/platform/universe";
 import {UploadableComponent} from "../base/components/uploadable.component";
+import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
+
 import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
-import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 
 @Component({
 	selector: "app-image",
@@ -23,7 +25,7 @@ import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 })
 
 /**
- *
+ *　イメージ
  *
  * @since 0.01
  */
@@ -31,25 +33,70 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 
 	// private results: any[];
 
+	/**
+	 *
+	 */
 	@Input() public width: number;
+
+	/**
+	 *
+	 */
 	@Input() public height: number;
+
+	/**
+	 *
+	 */
 	@Input() public view: string;
+
+	/**
+	 *
+	 */
 	@Input() public fileName: string;
+
+	/**
+	 *
+	 */
 	@Input() public user_id: string;
+
+	/**
+	 *
+	 */
 	@Input() public extensions: string;
 
+	/**
+	 *
+	 */
 	public endPoint = "";
 
+	/**
+	 *
+	 */
 	public style: any;
+
+	/**
+	 *
+	 */
 	public imagePath: string = "";
+
+	/**
+	 *
+	 */
 	public description: string;
 
+	/**
+	 *
+	 * @param session
+	 * @param http
+	 * @param constService
+	 * @param change
+	 * @param matDialog
+	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
 		protected constService: ConstService,
 		protected change: ChangeDetectorRef,
-		protected matDialog: MatDialog
+		protected matDialog: MatDialog,
 	) {
 		super(session, http, constService, change);
 		this.description = "";
@@ -57,6 +104,53 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.imagePath = this.endPoint + "/files/get/blank.png";
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
+	private openUpdateDialog(event: object) {
+		switch (this.view) {
+			case "editable":
+			case "rename":
+				this.updateDialog(event);
+				break;
+			case "visible":
+				break;
+		}
+	}
+
+	/**
+	 *
+	 */
+	private randamString(): string {
+		return "" + Math.random();
+	}
+
+	/**
+	 *
+	 * @param name
+	 */
+	private draw(name: string): void {
+		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.user_id) + "&r=" + this.randamString();
+	}
+
+	/**
+	 *
+	 * @param name
+	 * @param category
+	 */
+	protected getCategory(name: string, category: string): string {
+		let result: string = "";
+		if ((name === "avatar.jpg" || name === "blank.png")) {
+			result = "l";
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 * @param event
+	 */
 	@HostListener("dragover", ["$event"])
 	public onDragOver(event: any): void {
 		switch (this.view) {
@@ -69,6 +163,10 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		}
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	@HostListener("drop", ["$event"])
 	public onDrop(event: any): void {
 		const path: string = "";
@@ -86,27 +184,28 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		}
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	@HostListener("dblclick", ["$event"])
 	public onDoubleClick(event: object): void {
 		this.openUpdateDialog(event);
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	@HostListener("press", ["$event"])
 	public onPress(event: object): void {
 		this.openUpdateDialog(event);
 	}
 
-	private openUpdateDialog(event: object) {
-		switch (this.view) {
-			case "editable":
-			case "rename":
-				this.updateDialog(event);
-				break;
-			case "visible":
-				break;
-		}
-	}
-
+	/**
+	 *
+	 * @param changes
+	 */
 	public ngOnChanges(changes) {
 		this.view = ImageComponent.defaultValue(changes.view, "visible");
 		this.width = ImageComponent.defaultValue(changes.width, 120);
@@ -115,6 +214,9 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.user_id = ImageComponent.defaultValue(changes.user_id, null);
 	}
 
+	/**
+	 *
+	 */
 	public ngOnInit() {
 		super.ngOnInit();
 		this.style = {
@@ -133,6 +235,12 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		});
 	}
 
+	/**
+	 *
+	 * @param path
+	 * @param files
+	 * @param rename
+	 */
 	public onFileDrop(path: string, files: File[], rename: boolean): void {
 		if (files.length > 0) {
 			if (!rename) {
@@ -153,16 +261,9 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param event
 	 */
-	protected getCategory(name: string, category: string): string {
-		let result: string = "";
-		if ((name === "avatar.jpg" || name === "blank.png")) {
-			result = "l";
-		}
-		return result;
-	}
-
 	public updateDialog(event): void {
 
 		const dialog: any = this.matDialog.open(ImageDialogComponent, {
@@ -208,14 +309,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 
 		});
 
-	}
-
-	private randamString(): string {
-		return "" + Math.random();
-	}
-
-	private draw(name: string): void {
-		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.user_id) + "&r=" + this.randamString();
 	}
 
 }

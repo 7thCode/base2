@@ -15,15 +15,29 @@ import {LogoutDialogComponent} from "./logout-dialog.component";
 	selector: "[auth-logout-button]",
 })
 
+/**
+ *
+ */
 export class LogoutDialogDirective {
 
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
+	/**
+	 *
+	 * @param matDialog
+	 */
 	constructor(
 		private matDialog: MatDialog
 	) {
 	}
 
+	/**
+	 *
+	 * @param target
+	 */
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 

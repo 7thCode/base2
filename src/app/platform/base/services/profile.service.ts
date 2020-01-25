@@ -26,6 +26,11 @@ import {HttpService} from "./http.service";
  */
 export class ProfileService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -33,6 +38,11 @@ export class ProfileService extends HttpService {
 		super(http, constService);
 	}
 
+	/**
+	 * ユーザプロファイル参照
+	 *
+	 * @param callback ユーザプロファイルを戻すコールバック
+	 */
 	public get(callback: Callback<any>): any {
 		this.http.get(this.endPoint + "/profile/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -54,7 +64,13 @@ export class ProfileService extends HttpService {
 		});
 	}
 
-	public put(content: object, callback: Callback<any>): any {
+	/**
+	 * ユーザプロファイル更新
+	 * 
+	 * @param content ユーザプロファイル
+	 * @param callback ユーザプロファイルを戻すコールバック
+	 */
+	public put(content: object, callback: Callback<any>): void {
 		this.http.put(this.endPoint + "/profile/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {

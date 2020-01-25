@@ -26,6 +26,12 @@ export class ArticleDialogComponent {
 
 	@ViewChild("autosize", {static: false}) public autosize: CdkTextareaAutosize;
 
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 * @param zone
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
@@ -33,18 +39,30 @@ export class ArticleDialogComponent {
 		private zone: NgZone) {
 	}
 
+	/**
+	 *
+	 */
 	public triggerResize() {
 		this.zone.onStable.pipe(take(1)).subscribe(() => this.autosize.resizeToFitContent(true));
 	}
 
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 *
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}

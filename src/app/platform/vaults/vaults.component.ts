@@ -14,10 +14,11 @@ import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {GridViewComponent} from "../base/components/gridview.component";
+import {VaultDialogComponent} from "./vault-dialog/vault-dialog.component";
+
 import {ConstService} from "../../config/const.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 import {SessionService} from "../base/services/session.service";
-import {VaultDialogComponent} from "./vault-dialog/vault-dialog.component";
 import {VaultsService} from "./vaults.service";
 
 @Component({
@@ -33,20 +34,37 @@ import {VaultsService} from "./vaults.service";
  */
 export class VaultsComponent extends GridViewComponent {
 
+	/**
+	 *
+	 * @param session
+	 * @param http
+	 * @param constService
+	 * @param vaultsService
+	 * @param PublicKey
+	 * @param change
+	 * @param matDialog
+	 * @param observableMedia
+	 * @param snackbar
+	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
 		protected constService: ConstService,
+		protected vaultsService: VaultsService,
 		protected PublicKey: PublicKeyService,
 		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 		protected observableMedia: MediaObserver,
-		protected snackbar: MatSnackBar
+		protected snackbar: MatSnackBar,
 	) {
-		super(session, http, change, matDialog, observableMedia);
-		this.service = new VaultsService(http, constService, PublicKey);
+		super(session, change, matDialog, observableMedia);
+		this.service = vaultsService;
 	}
 
+	/**
+	 *
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
@@ -101,7 +119,8 @@ export class VaultsComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param id
 	 */
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: object): void => {
@@ -134,7 +153,8 @@ export class VaultsComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param id
 	 */
 	public onDelete(id: string): void {
 		this.Progress(true);
@@ -149,7 +169,8 @@ export class VaultsComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param object
 	 */
 	protected toListView(object: any): any {
 		object.cols = 1;

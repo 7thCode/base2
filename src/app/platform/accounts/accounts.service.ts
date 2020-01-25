@@ -22,6 +22,11 @@ export class AccountsService extends QueryableService {
 
 	public model: string = "accounts";
 
+	/**
+	 *
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		public http: HttpClient,
 		public constService: ConstService,
@@ -29,6 +34,12 @@ export class AccountsService extends QueryableService {
 		super(http, constService, "accounts");
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param content
+	 * @param callback
+	 */
 	public put(username: any, content: any, callback: Callback<any>): void {
 		this.http.put(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(username), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -45,6 +56,11 @@ export class AccountsService extends QueryableService {
 		});
 	}
 
+	/**
+	 *
+	 * @param id
+	 * @param callback
+	 */
 	public delete(id: string, callback: Callback<any>): void {
 		this.http.delete(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -61,6 +77,11 @@ export class AccountsService extends QueryableService {
 		});
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param callback
+	 */
 	public is_2fa(username, callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/" + this.model + "/auth/is2fa/" + encodeURIComponent(username), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -77,6 +98,11 @@ export class AccountsService extends QueryableService {
 		});
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param callback
+	 */
 	public set_2fa(username, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth/set2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -93,6 +119,11 @@ export class AccountsService extends QueryableService {
 		});
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param callback
+	 */
 	public reset_2fa(username, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth/reset2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {

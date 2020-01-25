@@ -26,11 +26,17 @@ import {AuthService} from "../auth.service";
  */
 export class RegistDialogComponent implements OnInit {
 
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
+	/**
+	 *
+	 */
+	get content(): any {
+		return this.data.content;
 	}
+
+	/**
+	 *
+	 */
+	public progress: boolean;
 
 
 	// public emailFormControl = new FormControl("", [
@@ -38,30 +44,55 @@ export class RegistDialogComponent implements OnInit {
 	// 	Validators.email,
 	// ]);
 
+	/**
+	 *
+	 */
 	public completeMessage: string;
 
+	/**
+	 * @constructor
+	 * @param data
+	 * @param matDialogRef
+	 * @param snackbar
+	 * @param auth
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<RegistDialogComponent>,
-		private snackbar: MatSnackBar,
+		public matDialogRef: MatDialogRef<any>,
+		public snackbar: MatSnackBar,
 		public auth: AuthService) {
 	}
 
-	get content(): any {
-		return this.data.content;
-	}
-
-	public ngOnInit(): void {
-		this.Progress(false);
-	}
-
+	/**
+	 *
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
 		});
 	}
 
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
+	}
+
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
+		this.Progress(false);
+	}
+
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.Progress(true);
 		const metadata: any = {nickname: this.content.nickname, id: "1"};

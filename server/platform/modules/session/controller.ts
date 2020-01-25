@@ -20,6 +20,10 @@ const Wrapper: any = require(path.join(controllers, "wrapper"));
 
 export class Session extends Wrapper {
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: object) {
 		super(event);
 	}

@@ -34,21 +34,41 @@ const log4js: any = require("log4js");
 log4js.configure(path.join(_config, "platform/logs.json"));
 const logger: any = log4js.getLogger("request");
 
-const config: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const Account: any = require(path.join(models, "platform/accounts/account"));
 
+/**
+ *
+ */
 export abstract class Updatable extends Wrapper {
 
+	/**
+	 *
+	 */
 	protected Model: any;
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event) {
 		super(event);
 	}
 
+	/**
+	 *
+	 * @param user
+	 */
 	protected role(user): object {
 		return Account.Role(user);
 	}
 
+	/**
+	 *
+	 * @param user
+	 */
 	protected default_user(user: any): IAccountModel {
 		let result: any = user;
 		if (result) {
@@ -60,50 +80,6 @@ export abstract class Updatable extends Wrapper {
 			};
 		}
 		return result;
-	}
-
-	public init(objects: object[], callback: Callback<any>): void {
-		if (objects) {
-			this.Model.default_count(this.default_user(null), {}, (error: IErrorObject, count: number) => {
-				if (!error) {
-					if (count === 0) {
-						const promises: object[] = [];
-						objects.forEach((object: { user_id: string }): void => {
-							promises.push(new Promise((resolve: any, reject: any): void => {
-								if (object) {
-									const record: IUpdatableModel = new this.Model();
-									record._create(this.default_user({
-										user_id: object.user_id,
-										auth: 1
-									}), object, (error: IErrorObject, object: IUpdatableModel): void => {
-										if (!error) {
-											resolve(object);
-										} else {
-											reject(error);
-										}
-									});
-								} else {
-									reject({code: -1, message: "?"});
-								}
-							}));
-						});
-
-						Promise.all(promises).then((objects): void => {
-							callback(null, objects);
-						}).catch((error): void => {
-							logger.fatal(error.message);
-							callback(error, null);
-						});
-					} else {
-						callback(null, objects);
-					}
-				} else {
-					callback(error, null);
-				}
-			});
-		} else {
-			callback({code: -1, message: "config error"}, null);
-		}
 	}
 
 	/**
@@ -143,6 +119,11 @@ export abstract class Updatable extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected count(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			const params: IQueryParam = request.params;
@@ -161,6 +142,11 @@ export abstract class Updatable extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
 			const params: IDParam = request.params;
@@ -179,6 +165,11 @@ export abstract class Updatable extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected post(request: IPostRequest<object>, response: IJSONResponse): void {
 		try {
 			const body: object = request.body;
@@ -194,6 +185,11 @@ export abstract class Updatable extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected put(request: IPutRequest<object>, response: IJSONResponse): void {
 		try {
 			const params: IDParam = request.params;
@@ -209,6 +205,11 @@ export abstract class Updatable extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	protected delete(request: IDeleteRequest, response: IJSONResponse): void {
 		try {
 			const params: IDParam = request.params;
@@ -220,6 +221,55 @@ export abstract class Updatable extends Wrapper {
 			});
 		} catch (error) {
 			this.SendError(response, error);
+		}
+	}
+
+	/**
+	 *
+	 * @param objects
+	 * @param callback
+	 */
+	public init(objects: object[], callback: Callback<any>): void {
+		if (objects) {
+			this.Model.default_count(this.default_user(null), {}, (error: IErrorObject, count: number) => {
+				if (!error) {
+					if (count === 0) {
+						const promises: object[] = [];
+						objects.forEach((object: { user_id: string }): void => {
+							promises.push(new Promise((resolve: any, reject: any): void => {
+								if (object) {
+									const record: IUpdatableModel = new this.Model();
+									record._create(this.default_user({
+										user_id: object.user_id,
+										auth: 1,
+									}), object, (error: IErrorObject, object: IUpdatableModel): void => {
+										if (!error) {
+											resolve(object);
+										} else {
+											reject(error);
+										}
+									});
+								} else {
+									reject({code: -1, message: "?"});
+								}
+							}));
+						});
+
+						Promise.all(promises).then((objects): void => {
+							callback(null, objects);
+						}).catch((error): void => {
+							logger.fatal(error.message);
+							callback(error, null);
+						});
+					} else {
+						callback(null, objects);
+					}
+				} else {
+					callback(error, null);
+				}
+			});
+		} else {
+			callback({code: -1, message: "config error"}, null);
 		}
 	}
 }
