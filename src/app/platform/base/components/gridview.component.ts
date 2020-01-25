@@ -6,13 +6,13 @@
 
 "use strict";
 
-import {HttpClient} from "@angular/common/http";
 import {AfterContentInit, ChangeDetectorRef, OnChanges, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatGridList} from "@angular/material";
 
-import {SessionService} from "../services/session.service";
 import {UpdatableComponent} from "./updatable.component";
+
+import {SessionService} from "../services/session.service";
 
 /**
  * Angilar Material グリッドビュー基本
@@ -25,25 +25,32 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 
 	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
 
+	/**
+	 *
+	 * @param session
+	 * @param change
+	 * @param matDialog
+	 * @param observableMedia
+	 */
 	constructor(
 		protected session: SessionService,
-		protected http: HttpClient,
 		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 		protected observableMedia: MediaObserver,
 	) {
-		super(session, http, change, matDialog);
+		super(session, change, matDialog);
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param changes
 	 */
 	public ngOnChanges(changes): void {
 
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public ngAfterContentInit(): void {
 		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive

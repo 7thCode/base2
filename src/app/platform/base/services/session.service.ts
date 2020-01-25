@@ -26,6 +26,11 @@ import {HttpService} from "./http.service";
  */
 export class SessionService extends HttpService {
 
+	/**
+	 *
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -33,6 +38,10 @@ export class SessionService extends HttpService {
 		super(http, constService);
 	}
 
+	/**
+	 *
+	 * @param callback
+	 */
 	public get(callback: Callback<ISession>): void {
 		this.http.get(this.endPoint + "/session/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -49,6 +58,11 @@ export class SessionService extends HttpService {
 		});
 	}
 
+	/**
+	 *
+	 * @param content
+	 * @param callback
+	 */
 	public put(content: object, callback: Callback<ISession>): void {
 		this.http.put(this.endPoint + "/session/auth", {data: content}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {

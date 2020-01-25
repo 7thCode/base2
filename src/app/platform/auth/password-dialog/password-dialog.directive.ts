@@ -18,13 +18,24 @@ import {PasswordDialogComponent} from "./password-dialog.component";
 
 export class PasswordDialogDirective {
 
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
+	/**
+	 *
+	 * @param matDialog
+	 */
 	constructor(
 		private matDialog: MatDialog
 	) {
 	}
 
+	/**
+	 *
+	 * @param target
+	 */
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 

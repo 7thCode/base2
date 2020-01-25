@@ -27,7 +27,9 @@ const log4js: any = require("log4js");
 log4js.configure(path.join(_config, "platform/logs.json"));
 const logger: any = log4js.getLogger("request");
 
-const config = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 
 export class Files extends Wrapper {
@@ -36,10 +38,18 @@ export class Files extends Wrapper {
 	private gfs: any;
 	private collection: any;
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: object) {
 		super(event);
 	}
 
+	/**
+	 *
+	 * @param request
+	 */
 	private static toMime(request: { body: { url: string } }): string {
 		let type: string = "image/octet-stream";
 		const index: number = request.body.url.indexOf(";");
@@ -52,6 +62,9 @@ export class Files extends Wrapper {
 		return type;
 	}
 
+	/**
+	 *
+	 */
 	private static connect(): any {
 		const options: object = {
 			keepAlive: 1,
@@ -67,6 +80,38 @@ export class Files extends Wrapper {
 		return MongoClient.connect(connectUrl, options);
 	}
 
+	/**
+	 *
+	 * @param query
+	 * @param user
+	 * @returns none
+	 */
+	private static query_by_user_read(user: { user_id: string, auth: number }, query: object): object {
+		// return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.read": {$gte: user.auth}}]}, query]};
+		return {$and: [{"metadata.user_id": user.user_id}, {"metadata.rights.read": {$gte: user.auth}}, query]};
+	}
+
+	/**
+	 *
+	 * @param query
+	 * @param user
+	 * @returns none
+	 */
+	private static query_by_user_write(user: { user_id: string, auth: number }, query: object): object {
+		// return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.write": {$gte: user.auth}}]}, query]};
+		return {$and: [{"metadata.user_id": user.user_id}, {"metadata.rights.write": {$gte: user.auth}}, query]};
+	}
+
+	/**
+	 *
+	 * @param pathFrom
+	 * @param user
+	 * @param name
+	 * @param category
+	 * @param description
+	 * @param mimetype
+	 * @param callback
+	 */
 	private fromLocal(pathFrom: string, user: { user_id: string, role: { raw: number } }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
 		try {
 			const writestream: any = this.gfs.openUploadStream(name,
@@ -103,6 +148,14 @@ export class Files extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param gfs
+	 * @param collection
+	 * @param user_id
+	 * @param name
+	 * @param callback
+	 */
 	private resultFile(gfs: any, collection: any, user_id: string, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
 		collection.findOne({$and: [{filename: name}, {"metadata.user_id": user_id}]}, (error: IErrorObject, item: any): void => {
 			if (!error) {
@@ -118,6 +171,16 @@ export class Files extends Wrapper {
 		});
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param user
+	 * @param name
+	 * @param rights
+	 * @param category
+	 * @param description
+	 * @param callback
+	 */
 	private insertFile(request: IPostFile, user: { user_id: string, role: { raw: number } }, name: string, rights: { read: number, write: number }, category: string, description: string, callback: Callback<any>): void {
 
 		const parseDataURL: any = (dataURL: string): any => {
@@ -140,7 +203,7 @@ export class Files extends Wrapper {
 						metadata: {
 							user_id: user.user_id,
 							group: "",
-							rights: rights,  // {read: user.role.raw, write: user.role.raw},
+							rights,  // {read: user.role.raw, write: user.role.raw},
 							type: Files.toMime(request),
 							category,
 							description,
@@ -167,7 +230,8 @@ export class Files extends Wrapper {
 
 	/**
 	 *
-	 * @returns none
+	 * @param initfiles
+	 * @param callback
 	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
@@ -237,28 +301,6 @@ export class Files extends Wrapper {
 		} catch (e) {
 			callback(e, null);
 		}
-	}
-
-	/**
-	 *
-	 * @param query
-	 * @param user
-	 * @returns none
-	 */
-	private static query_by_user_read(user: { user_id: string, auth: number }, query: object): object {
-		return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.read": {$gte: user.auth}}]}, query]};
-		// return {$and: [{user_id: user.user_id}, query]};
-	}
-
-	/**
-	 *
-	 * @param query
-	 * @param user
-	 * @returns none
-	 */
-	private static query_by_user_write(user: { user_id: string, auth: number }, query: object): object {
-		return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.write": {$gte: user.auth}}]}, query]};
-		// return {$and: [{user_id: user.user_id}, query]};
 	}
 
 	/**

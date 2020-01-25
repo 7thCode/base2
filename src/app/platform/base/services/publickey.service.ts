@@ -26,6 +26,11 @@ import {HttpService} from "./http.service";
  */
 export class PublicKeyService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -33,6 +38,11 @@ export class PublicKeyService extends HttpService {
 		super(http, constService);
 	}
 
+	/**
+	 * システム固定公開鍵を返す
+	 *
+	 * @param callback 公開鍵を返すコールバック
+	 */
 	public fixed(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/fixed", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -54,6 +64,11 @@ export class PublicKeyService extends HttpService {
 		});
 	}
 
+	/**
+	 * ユーザごとの公開鍵を返す
+	 *
+	 * @param callback 公開鍵を返すコールバック
+	 */
 	public dynamic(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/dynamic", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -75,6 +90,11 @@ export class PublicKeyService extends HttpService {
 		});
 	}
 
+	/**
+	 * ユーザトークン（テスト)
+	 *
+	 * @param callback
+	 */
 	public token(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/token", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {

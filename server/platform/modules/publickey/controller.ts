@@ -15,16 +15,30 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const config: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 const Cipher: any = require(path.join(library, "cipher"));
 
+/**
+ *
+ */
 export class PublicKey extends Wrapper {
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: object) {
 		super(event);
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public get_fixed_public_key(request: object, response: IJSONResponse): void {
 		if (config.use_publickey) {
 			this.SendSuccess(response, config.publickey);
@@ -33,6 +47,11 @@ export class PublicKey extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public get_public_key(request: { user: { publickey: string } }, response: IJSONResponse): void {
 		if (config.use_publickey) {
 			if (request.user) {
@@ -45,6 +64,11 @@ export class PublicKey extends Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public get_access_token(request: { user: { publickey: string }, session: { id: string } }, response: IJSONResponse): void {
 		if (config.use_publickey) {
 			if (request.user) {

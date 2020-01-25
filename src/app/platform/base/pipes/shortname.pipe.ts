@@ -19,6 +19,11 @@ import {Pipe, PipeTransform} from "@angular/core";
  */
 export class ShortnamePipe implements PipeTransform {
 
+	/**
+	 *
+	 * @param value
+	 * @param args
+	 */
 	public transform(value: any, args?: any): any {
 		let result: string = "";
 		const names: string[] = value.split(":"); // username is mail

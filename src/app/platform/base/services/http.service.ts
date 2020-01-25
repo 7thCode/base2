@@ -10,16 +10,35 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ConstService} from "../../../config/const.service";
 
 /**
- * HTTP
+ * HTTPサービス
+ *
+ * ベースクラス。
+ * 全てのHTTPクライアントはこのサービスを継承する。
  *
  * @since 0.01
  */
 export abstract class HttpService {
 
-	protected httpOptions: any;
-	protected networkError: any;
+	/**
+	 * 共通エンドポイント
+	 */
 	public endPoint: string = "";
 
+	/**
+	 * 共通オプション
+	 */
+	protected httpOptions: any;
+
+	/**
+	 * 共通エラー
+	 */
+	protected networkError: any;
+
+	/**
+	 * @constructor
+	 * @param http 基本HTTP
+	 * @param constService 定数
+	 */
 	constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -35,8 +54,12 @@ export abstract class HttpService {
 		};
 	}
 
-	// 		"x-requested-with": "XMLHttpRequest",
-
+	/**
+	 * URIストリングからオブジェクトにデシリアライズ
+	 *
+	 * @param data デシリアライズされるテキスト
+	 * @param callback オブジェクトを返すコールバック
+	 */
 	protected Decode(data: string, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
@@ -45,7 +68,13 @@ export abstract class HttpService {
 		}
 	}
 
-	protected Encode(data: any, callback: (error: any, result: any) => void): void {
+	/**
+	 * オブジェクトからURIストリングシリアライズ
+	 *
+	 * @param data シリアライズされるオブジェクト
+	 * @param callback シリアライズテキストを返すコールバック
+	 */
+	protected Encode(data: any, callback: (error: any, result: string) => void): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
 		} catch (error) {
@@ -53,6 +82,12 @@ export abstract class HttpService {
 		}
 	}
 
+	/**
+	 * エラー判定付きパース
+	 * 
+	 * @param data　デシリアライズされるテキスト
+	 * @param callback オブジェクトを返すコールバック
+	 */
 	protected Parse(data: string, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, JSON.parse(data));

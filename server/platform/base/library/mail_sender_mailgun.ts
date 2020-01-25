@@ -16,6 +16,11 @@ export class MailSenderMailgun implements IMailModule {
 	private domain: any;
 	private mailgun: any;
 
+	/**
+	 *
+	 * @param mailsetting
+	 * @param mailaccount
+	 */
 	constructor(mailsetting: any, mailaccount: string) {
 		this.account = mailaccount;
 		this.apiKey = mailsetting.api_key;
@@ -23,6 +28,14 @@ export class MailSenderMailgun implements IMailModule {
 		this.mailgun = require("mailgun-js")({apiKey: this.apiKey, domain: this.domain});
 	}
 
+	/**
+	 *
+	 * @param mailAddress
+	 * @param bccAddress
+	 * @param title
+	 * @param message
+	 * @param callback
+	 */
 	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
 
 		const data: IMailSender = {

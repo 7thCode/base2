@@ -18,6 +18,9 @@ import {BaseComponent} from "../base/base.component";
 
 export class InputComponent extends BaseComponent {
 
+	/**
+	 *
+	 */
 	constructor() {
 		super();
 	}

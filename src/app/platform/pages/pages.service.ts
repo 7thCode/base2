@@ -16,8 +16,16 @@ import {UpdatableService} from "../base/services/updatable.service";
 	providedIn: "root",
 })
 
+/**
+ *
+ */
 export class PagesService extends UpdatableService {
 
+	/**
+	 *
+	 * @param http
+	 * @param constService
+	 */
 	constructor(
 		public http: HttpClient,
 		public constService: ConstService,
@@ -25,6 +33,10 @@ export class PagesService extends UpdatableService {
 		super(http, constService, "pages");
 	}
 
+	/**
+	 *
+	 * @param value
+	 */
 	protected decorator(value: any): any {
 		return value;
 	}

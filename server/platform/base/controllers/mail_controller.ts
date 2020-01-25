@@ -26,14 +26,23 @@ const Wrapper: any = require("./wrapper");
 const Mailer: any = require(path.join(library, "mail_sender"));
 const Mailer2: any = require(path.join(library, "mail_sender_2"));
 const MailGun: any = require(path.join(library, "mail_sender_mailgun"));
-const config: any = require(path.join(_config, "default")).systems;
 
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
+/**
+ *
+ */
 export class Mail extends Wrapper {
 
 	protected message: any;
 	private mailer: any = null;
 	private bcc: string | any[] = "";
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: any) {
 		super(event);
 		this.message = config.message;

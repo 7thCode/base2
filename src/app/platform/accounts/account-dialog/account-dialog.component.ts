@@ -24,23 +24,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
  */
 export class AccountDialogComponent implements OnInit {
 
-	public qr: string = "";
-	public is2fa: boolean;
-	public enable: boolean;
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA)
-		public data: any,
-		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngOnInit(): void {
-		this.is2Fa();
-	}
-
 	get session(): ISession {
 		return this.data.session;
 	}
@@ -57,15 +40,25 @@ export class AccountDialogComponent implements OnInit {
 		return this.data.content;
 	}
 
-	public cancel(): void {
-		this.matDialogRef.close(null);
+	public qr: string = "";
+	public is2fa: boolean;
+	public enable: boolean;
+
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 */
+	constructor(
+		@Inject(MAT_DIALOG_DATA)
+		public data: any,
+		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
 	}
 
-	public onAccept(): void {
-		this.data.service = null;
-		this.matDialogRef.close(this.data);
-	}
-
+	/**
+	 *
+	 * @param user
+	 */
 	private auth_to_role(user: { auth: number, provider: string }): IRole {
 		let result: IRole = {
 			login: false,
@@ -102,6 +95,31 @@ export class AccountDialogComponent implements OnInit {
 		return result;
 	}
 
+	/**
+	 * @returns none
+	 */
+	public ngOnInit(): void {
+		this.is2Fa();
+	}
+
+	/**
+	 *
+	 */
+	public cancel(): void {
+		this.matDialogRef.close(null);
+	}
+
+	/**
+	 *
+	 */
+	public onAccept(): void {
+		this.data.service = null;
+		this.matDialogRef.close(this.data);
+	}
+
+	/**
+	 *
+	 */
 	public is2Fa(): void {
 		this.data.service.is_2fa(this.data.user.username, (error: IErrorObject, is2fa: any): void => {
 			if (!error) {
@@ -112,6 +130,9 @@ export class AccountDialogComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 */
 	public onSet2Fa(): void {
 		this.data.service.set_2fa(this.data.user.username, (error: IErrorObject, qr: any): void => {
 			if (!error) {
@@ -123,6 +144,9 @@ export class AccountDialogComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 */
 	public onReset2Fa(): void {
 		this.data.service.reset_2fa(this.data.user.username, (error: IErrorObject, result: any): void => {
 			if (!error) {
@@ -134,10 +158,18 @@ export class AccountDialogComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public onProgressed(event): void {
 
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public onUpdateAvatar(event): void {
 
 	}

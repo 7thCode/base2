@@ -27,7 +27,9 @@ const log4js: any = require("log4js");
 log4js.configure(path.join(_config, "platform/logs.json"));
 const logger: any = log4js.getLogger("request");
 
-const config: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const Cipher: any = require(path.join(library, "cipher"));
 const Mail: any = require(path.join(controllers, "mail_controller"));
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
@@ -37,10 +39,11 @@ export class Auth extends Mail {
 	private content: any = {mails: [], nickname: "", tokens: {}};
 	private passport: any;
 
-	public static error_handler(e) {
-		logger.fatal(e.message);
-	}
-
+	/**
+	 *
+	 * @param event
+	 * @param passport
+	 */
 	constructor(event: object, passport: object) {
 		super(event);
 		this.passport = passport;
@@ -61,13 +64,26 @@ export class Auth extends Mail {
 		}
 	}
 
-
+	/**
+	 *
+	 * @param key
+	 * @param plain
+	 * @param callback
+	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
 			callback(null, Cipher.Encrypt(key, plain));
 		} catch (e) {
 			callback(e, "");
 		}
+	}
+
+	/**
+	 *
+	 * @param e
+	 */
+	public static error_handler(e) {
+		logger.fatal(e.message);
 	}
 
 	/**
@@ -122,6 +138,7 @@ export class Auth extends Mail {
 
 	/**
 	 *
+	 * @param callback
 	 */
 	private init_definition(callback: (error) => void): void {
 		fs.open(path.join(_config, "account_definition.json"), "r", 384, (error, fd) => {
@@ -135,6 +152,75 @@ export class Auth extends Mail {
 				callback(error);
 			}
 		});
+	}
+
+	/**
+	 *
+	 * @param compositeUsername
+	 * @param username
+	 * @param adding_content
+	 * @param auth
+	 * @returns none
+	 */
+	private create_param(compositeUsername: string, username: string, adding_content: object, auth: number): any {
+		const shasum: any = crypto.createHash("sha1"); //
+		shasum.update(compositeUsername);                      // create userid from username.
+		const user_id: string = shasum.digest("hex"); //
+
+		const keypair: { private: string, public: string } = Cipher.KeyPair(512);
+
+		const content = _.cloneDeep(this.content);
+
+		if (adding_content) {
+			_.merge(content, adding_content);
+		}
+
+		content.mails.push(username);
+
+		return {
+			user_id,
+			username: compositeUsername,
+			privatekey: keypair.private,
+			publickey: keypair.public,
+			auth,
+			content,
+		};
+	}
+
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @param param
+	 * @param password
+	 * @param callback
+	 * @returns none
+	 */
+	private register(request: ILoginRequest, response: object, param: { username: string }, password: string, callback: StatusCallback<any>): void {
+		LocalAccount.register(new LocalAccount(param),
+			password,
+			(error: IErrorObject): void => {
+				if (!error) {
+					const user: { username: string; password: string } = request.body;
+					user.username = param.username;
+					user.password = password;
+					this.passport.authenticate("local", (error: IErrorObject, user: any): void => {
+						if (!error) {
+							if (user) {
+								// this.event.emitter.emit("auth:register", {user, user_id: param.user_id, username: user.username});
+								callback(null, user);
+							} else {
+								callback({status: 500, message: "authenticate"}, null);
+							}
+						} else {
+							callback({status: 500, message: "get_register_token " + error.message}, null);
+						}
+					})(request, response);
+				} else {
+					callback({status: 500, message: "get_register_token " + error.message}, null);
+				}
+			});
 	}
 
 	/**
@@ -301,39 +387,6 @@ export class Auth extends Mail {
 		} else {
 			this.SendError(response, {code: 403, message: "Forbidden(8)."});
 		}
-	}
-
-	/**
-	 *
-	 * @param compositeUsername
-	 * @param username
-	 * @param adding_content
-	 * @param auth
-	 * @returns none
-	 */
-	private create_param(compositeUsername: string, username: string, adding_content: object, auth: number): any {
-		const shasum: any = crypto.createHash("sha1"); //
-		shasum.update(compositeUsername);                      // create userid from username.
-		const user_id: string = shasum.digest("hex"); //
-
-		const keypair: { private: string, public: string } = Cipher.KeyPair(512);
-
-		const content = _.cloneDeep(this.content);
-
-		if (adding_content) {
-			_.merge(content, adding_content);
-		}
-
-		content.mails.push(username);
-
-		return {
-			user_id,
-			username: compositeUsername,
-			privatekey: keypair.private,
-			publickey: keypair.public,
-			auth,
-			content,
-		};
 	}
 
 	/**
@@ -528,42 +581,6 @@ export class Auth extends Mail {
 		} else {
 			this.SendError(response, {code: 1, message: "already logged in."});
 		}
-	}
-
-
-	/**
-	 *
-	 * @param request
-	 * @param response
-	 * @param param
-	 * @param password
-	 * @param callback
-	 * @returns none
-	 */
-	private register(request: ILoginRequest, response: object, param: { username: string }, password: string, callback: StatusCallback<any>): void {
-		LocalAccount.register(new LocalAccount(param),
-			password,
-			(error: IErrorObject): void => {
-				if (!error) {
-					const user: { username: string; password: string } = request.body;
-					user.username = param.username;
-					user.password = password;
-					this.passport.authenticate("local", (error: IErrorObject, user: any): void => {
-						if (!error) {
-							if (user) {
-								// this.event.emitter.emit("auth:register", {user, user_id: param.user_id, username: user.username});
-								callback(null, user);
-							} else {
-								callback({status: 500, message: "authenticate"}, null);
-							}
-						} else {
-							callback({status: 500, message: "get_register_token " + error.message}, null);
-						}
-					})(request, response);
-				} else {
-					callback({status: 500, message: "get_register_token " + error.message}, null);
-				}
-			});
 	}
 
 	/**
@@ -1028,7 +1045,6 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public logout(request: { logout: () => void }, response: IJSONResponse): void {
-		// Auth.auth_event("logout:", request.user);
 		request.logout();
 		this.SendSuccess(response, {code: 0, message: ""});
 	}

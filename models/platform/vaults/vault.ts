@@ -59,11 +59,13 @@ namespace VaultModel {
 	};
 
 	const query_by_user_read: any = (user: any, query: object): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
+	// 	return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
 	};
 
 	const query_by_user_write: any = (user: any, query: object): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
+	// 	return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
 	};
 
 	const encode = (object: any, key: string): string => {

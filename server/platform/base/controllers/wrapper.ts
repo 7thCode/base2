@@ -22,17 +22,38 @@ log4js.configure(path.join(_config, "platform/logs.json"));
 const logger: any = log4js.getLogger("request");
 
 const result: any = require(path.join(library, "result"));
-const config: any = require(path.join(_config, "default")).systems;
+
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
 
+/**
+ *
+ */
 export abstract class Wrapper {
 
+	/**
+	 *
+	 */
 	protected event: any;
 
+	/**
+	 *
+	 * @param event
+	 * @constructor
+	 */
 	constructor(event: any) {
 		this.event = event;
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param error
+	 * @param exist
+	 * @param callback
+	 */
 	protected ifExist(response: IJSONResponse, error: IErrorObject, exist: object, callback: Callback<any>): void {
 		if (exist) {
 			callback(null, exist);
@@ -41,6 +62,12 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param error
+	 * @param callback
+	 */
 	protected ifSuccess(response: IJSONResponse, error: IErrorObject, callback: Callback<any>): void {
 		if (!error) {
 			callback(null, response);
@@ -49,6 +76,11 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param error
+	 */
 	protected SendWarn(response: IJSONResponse, error: IErrorObject): void {
 		logger.warn(error.message + " " + error.code);
 		if (response) {
@@ -56,6 +88,11 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param error
+	 */
 	protected SendError(response: IJSONResponse, error: IErrorObject): void {
 		logger.error(error.message + " " + error.code);
 		if (response) {
@@ -63,6 +100,11 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param error
+	 */
 	protected SendFatal(response: IJSONResponse, error: IErrorObject): void {
 		logger.fatal(error.message + " " + error.code);
 		if (response) {
@@ -70,18 +112,32 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param object
+	 */
 	protected SendSuccess(response: IJSONResponse, object: object): void {
 		if (response) {
 			response.jsonp(new result(0, "", object));
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 * @param object
+	 */
 	protected SendRaw(response: IJSONResponse, object: object): void {
 		if (response) {
 			response.jsonp(object);
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 */
 	protected SendForbidden(response: IJSONResponse): void {
 		logger.error("Forbidden");
 		if (response) {
@@ -89,6 +145,10 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param response
+	 */
 	protected SendNotFound(response: IJSONResponse): void {
 		logger.error("notfound");
 		if (response) {
@@ -96,6 +156,11 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param data
+	 * @param callback
+	 */
 	protected Decode(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
@@ -104,6 +169,11 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param data
+	 * @param callback
+	 */
 	protected Encode(data: any, callback: Callback<any>): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
@@ -112,6 +182,12 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param data
+	 * @param callback
+	 * @constructor
+	 */
 	protected Parse(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(data));
@@ -120,6 +196,11 @@ export abstract class Wrapper {
 		}
 	}
 
+	/**
+	 *
+	 * @param user
+	 * @constructor
+	 */
 	protected Transform(user: any): IAccountModel {
 		let result: any = {
 			provider: "",

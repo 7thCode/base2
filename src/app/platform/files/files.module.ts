@@ -28,11 +28,12 @@ import {
 } from "@angular/material";
 
 import {FlexLayoutModule} from "@angular/flex-layout";
-
 import {BaseModule} from "../base/base.module";
-import {SessionService} from "../base/services/session.service";
 import {ImageModule} from "../image/image.module";
+
 import {FilesComponent} from "./files.component";
+
+import {SessionService} from "../base/services/session.service";
 
 @NgModule({
 	declarations: [

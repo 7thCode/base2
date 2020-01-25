@@ -6,13 +6,14 @@
 
 "use strict";
 
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
+
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {ConstService} from "../../config/const.service";
 import {HttpService} from "../base/services/http.service";
 import {PublicKeyService} from "../base/services/publickey.service";
@@ -21,8 +22,19 @@ import {PublicKeyService} from "../base/services/publickey.service";
 	providedIn: "root",
 })
 
+/**
+ * AUTHサービス
+ *
+ *
+ */
 export class AuthService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 * @param constService
+	 * @param PublicKey
+	 */
 	constructor(
 		protected http: HttpClient,
 		public constService: ConstService,
@@ -32,10 +44,11 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param key
-	 * @param plain
-	 * @param callback
-	 * @returns none
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号を返すコールバック
 	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
@@ -47,10 +60,11 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param key
-	 * @param plain
-	 * @param callback
-	 * @returns none
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号を返すコールバック
 	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>) {
 		try {
@@ -72,10 +86,11 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param callback
-	 * @returns none
+	 * ログイン
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
 	 */
 	public login(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
@@ -107,11 +122,12 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param code
-	 * @param callback
-	 * @returns none
+	 * TOTPありログイン
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param code TOTPコード
+	 * @param callback コールバック
 	 */
 	public login_totp(username: string, password: string, code: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
@@ -142,9 +158,10 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param token
-	 * @param callback
-	 * @returns none
+	 * トークンログイン
+	 *
+	 * @param token トークン
+	 * @param callback コールバック
 	 */
 	public login_with_token(token: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/auth/local/login", {content: token}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
@@ -164,8 +181,10 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param callback
-	 * @returns none
+	 * ログイントークン参照
+	 * 自身のログイントークン
+	 *
+	 * @param callback ログイントークンを返すコールバック
 	 */
 	public get_login_token(callback: Callback<any>): void {
 		const value = localStorage.getItem("QR");
@@ -185,11 +204,13 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param metadata
-	 * @param callback
-	 * @returns none
+	 * ユーザ登録
+	 * メール存在確認あり
+	 *
+	 * @param username ユーザ名(メールアドレス)
+	 * @param password パスワード
+	 * @param metadata メタデータ
+	 * @param callback コールバック
 	 */
 	public regist(username: string, password: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
@@ -220,11 +241,13 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param metadata
-	 * @param callback
-	 * @returns none
+	 * 直接ユーザ登録
+	 * メール存在確認なし
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param metadata メタデータ
+	 * @param callback コールバック
 	 */
 	public regist_immediate(username: string, password: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
@@ -255,10 +278,12 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param callback
-	 * @returns none
+	 * パスワード更新
+	 * メール存在確認あり
+	 *
+	 * @param username ユーザ名(メールアドレス)
+	 * @param password パスワード
+	 * @param callback コールバック
 	 */
 	public password(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key): void => {
@@ -289,10 +314,12 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param callback
-	 * @returns none
+	 * パスワード更新
+	 * メール存在確認なし
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
 	 */
 	public password_immediate(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
@@ -323,9 +350,9 @@ export class AuthService extends HttpService {
 	}
 
 	/**
+	 * ログアウト
 	 *
-	 * @param callback
-	 * @returns none
+	 * @param callback コールバック
 	 */
 	public logout(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/auth/logout", this.httpOptions).pipe(retry(3)).subscribe((account: any): void => {

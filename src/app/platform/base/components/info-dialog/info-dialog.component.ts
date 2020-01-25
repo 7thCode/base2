@@ -22,24 +22,41 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
  */
 export class InfoDialogComponent implements OnInit {
 
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<InfoDialogComponent>) {
 	}
 
+	/**
+	 *
+	 */
 	public ngOnInit(): void {
 
 	}
 
+	/**
+	 *
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}

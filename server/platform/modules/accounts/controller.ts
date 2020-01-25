@@ -29,16 +29,30 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const config: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
 
+/**
+ *
+ */
 export class Accounts extends Wrapper {
 
+	/**
+	 *
+	 * @param event
+	 */
 	constructor(event: any) {
 		super(event);
 	}
 
+	/**
+	 *
+	 * @param current
+	 * @param username
+	 */
 	private own(current: any, username: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;

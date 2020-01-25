@@ -18,12 +18,19 @@ import {PublicKeyService} from "./publickey.service";
 import {UpdatableService} from "./updatable.service";
 
 /**
- * 更新サービス
+ * 秘匿更新サービスのベースクラス
  *
  * @since 0.01
  */
 export abstract class SecureUpdatableService extends UpdatableService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 * @param constService
+	 * @param model
+	 * @param PublicKey
+	 */
 	protected constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -33,6 +40,13 @@ export abstract class SecureUpdatableService extends UpdatableService {
 		super(http, constService, model);
 	}
 
+	/**
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号文を返すコールバック
+	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
 			const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
@@ -42,6 +56,13 @@ export abstract class SecureUpdatableService extends UpdatableService {
 		}
 	}
 
+	/**
+	 * 公開鍵暗号化
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号文を返すコールバック
+	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>): void {
 		try {
 			const use_publickey = this.constService.use_publickey;
@@ -61,6 +82,12 @@ export abstract class SecureUpdatableService extends UpdatableService {
 		}
 	}
 
+	/**
+	 * 秘匿更新
+	 *
+	 * @param content
+	 * @param callback
+	 */
 	public post(content: object, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -89,6 +116,13 @@ export abstract class SecureUpdatableService extends UpdatableService {
 		});
 	}
 
+	/**
+	 * 秘匿更新
+	 *
+	 * @param id
+	 * @param content
+	 * @param callback
+	 */
 	public put(id: string, content: object, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {

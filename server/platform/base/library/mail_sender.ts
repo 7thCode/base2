@@ -16,12 +16,25 @@ export class MailSender implements IMailModule {
 	private smtpUser: any;
 	private account: any;
 
+	/**
+	 *
+	 * @param mailsetting
+	 * @param mailaccount
+	 */
 	constructor(mailsetting: any, mailaccount: string) {
 		this.mailer = require("nodemailer");
 		this.account = mailaccount;
 		this.mailsetting = mailsetting;
 	}
 
+	/**
+	 *
+	 * @param mailAddress
+	 * @param bccAddress
+	 * @param title
+	 * @param message
+	 * @param callback
+	 */
 	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
 
 		this.smtpUser = this.mailer.createTransport(this.mailsetting); // SMTPの接続

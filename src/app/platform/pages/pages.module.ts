@@ -34,9 +34,11 @@ import {AceEditorModule} from "ng2-ace-editor";
 
 import {BaseModule} from "../base/base.module";
 import {PageEditModule} from "../base/components/pageedit/pageedit.module";
-import {SessionService} from "../base/services/session.service";
+
 import {PageDialogComponent} from "./page-dialog/page-dialog.component";
 import {PagesComponent} from "./pages.component";
+
+import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
 
 @NgModule({

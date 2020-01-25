@@ -13,7 +13,6 @@ import {FormControl} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
 
-
 @Component({
 	selector: "page-dialog",
 	styleUrls: ["./page-dialog.component.css"],
@@ -21,21 +20,38 @@ import {AngularEditorConfig} from "@kolkov/angular-editor";
 })
 
 /**
- *
+ * ページダイアログ
  *
  * @since 0.01
  */
 export class PageDialogComponent implements OnInit {
 
+	/**
+	 * エディタ
+	 */
 	@ViewChild("editor", {static: true}) public editor;
+
+	/**
+	 * ページテキスト
+	 */
 	public text: string = "";
+
+	/**
+	 * ページ詳細
+	 */
 	public description: any;
 
 	// angular-html-editor
 
+	/**
+	 *
+	 */
 	public pageContent = new FormControl("");
 
 	// angular-html-editor
+	/**
+	 *
+	 */
 	public editorConfig: AngularEditorConfig = {
 		editable: true,
 		spellcheck: true,
@@ -61,6 +77,11 @@ export class PageDialogComponent implements OnInit {
 		],
 	};
 
+	/**
+	 * @constructor
+	 * @param data
+	 * @param matDialogRef
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
@@ -82,11 +103,18 @@ export class PageDialogComponent implements OnInit {
 	// url
 	// week
 	//
+
+	/**
+	 *
+	 */
 	public ngOnInit() {
 		this.description = [];
 		this.text = this.data.content.value;
 	}
 
+	/**
+	 *
+	 */
 	public ngAfterViewInit() {
 		// this.editor.setTheme("Chrome");
 		// this.editor.getEditor().setOptions({
@@ -101,6 +129,9 @@ export class PageDialogComponent implements OnInit {
 		// });
 	}
 
+	/**
+	 *
+	 */
 	public test() {
 
 		// page-edit
@@ -329,27 +360,49 @@ export class PageDialogComponent implements OnInit {
 		};
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public change(event: IEmit): void {
 		// 	console.log(event.value);
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
 	public click(event: IEmit): void {
 		// 	console.log(event.changed);
 	}
 
+	/**
+	 * バリデーション
+	 *
+	 * @param event
+	 */
 	public valid(event: IEmit): void {
 	// 	const errors: any = JSON.stringify(event.value.errors);
 	// 	console.error(event.source.name + " errors :" + errors);
 	}
 
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 * キャンセルクローズ
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 * アクセプトクローズ
+	 */
 	public onAccept(): void {
 		if (this.data.content.category === "HTML") { // :todo categoryの切り替えがいい感じにならない。。。どうしようか。。。
 			this.data.content.value = this.pageContent.value;

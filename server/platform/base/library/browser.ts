@@ -11,8 +11,15 @@
  */
 export class Browser {
 
+	/**
+	 *
+	 */
 	public UserAgent: string;
 
+	/**
+	 *
+	 * @param UserAgent
+	 */
 	constructor(UserAgent: string) {
 		this.UserAgent = UserAgent.toLowerCase();
 	}

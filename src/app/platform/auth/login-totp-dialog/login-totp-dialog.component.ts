@@ -25,12 +25,21 @@ import {AuthService} from "../auth.service";
  */
 export class LoginTotpDialogComponent implements OnInit {
 
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
+	/**
+	 *
+	 */
+	get content(): any {
+		return this.data.content;
 	}
 
+	/**
+	 *
+	 */
+	public progress: boolean;
+
+	/**
+	 *
+	 */
 	public password_visible: boolean;
 
 	// public emailFormControl = new FormControl("", [
@@ -38,29 +47,51 @@ export class LoginTotpDialogComponent implements OnInit {
 	// 	Validators.email,
 	// ]);
 
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 * @param snackbar
+	 * @param auth
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<LoginTotpDialogComponent>,
-		private snackbar: MatSnackBar,
+		public matDialogRef: MatDialogRef<any>,
+		public snackbar: MatSnackBar,
 		public auth: AuthService) {
 	}
 
-	get content(): any {
-		return this.data.content;
-	}
-
-	public ngOnInit(): void {
-		this.Progress(false);
-		this.password_visible = false;
-	}
-
+	/**
+	 *
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
 		});
 	}
 
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
+	}
+
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
+		this.Progress(false);
+		this.password_visible = false;
+	}
+
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.Progress(true);
 		this.auth.login_totp(this.content.username, this.content.password, this.content.code, (error: IErrorObject, result: any): void => {

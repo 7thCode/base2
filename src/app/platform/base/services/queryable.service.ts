@@ -15,12 +15,18 @@ import {ConstService} from "../../../config/const.service";
 import {HttpService} from "./http.service";
 
 /**
- * 参照サービス
+ * 参照サービスのベースクラス
  *
  * @since 0.01
  */
 export abstract class QueryableService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http HTTP
+	 * @param constService 定数
+	 * @param model モデル名
+	 */
 	protected constructor(
 		protected http: HttpClient,
 		protected constService: ConstService,
@@ -29,6 +35,24 @@ export abstract class QueryableService extends HttpService {
 		super(http, constService);
 	}
 
+	/**
+	 * クエリーオブジェクトに対するデコレーター
+	 * 継承先でオーバーライドする
+	 *
+	 * @param value クエリーオブジェクト
+	 * @return any デコレーテッド
+	 */
+	protected decorator(value: object): object {
+		return value;
+	}
+
+	/**
+	 * クエリー
+	 *
+	 * @param query MongoDBのクエリーオブジェクト
+	 * @param option MongoDBのオプションオブジェクト
+	 * @param callback 結果配列を返すコールバック
+	 */
 	public query(query: object, option: IQueryOption, callback: Callback<object[]>): void {
 		this.Encode(query, (error: IErrorObject, queryString: string): void => {
 			if (!error) {
@@ -61,6 +85,12 @@ export abstract class QueryableService extends HttpService {
 		});
 	}
 
+	/**
+	 * カウント
+	 *
+	 * @param query MongoDBのクエリーオブジェクト
+	 * @param callback 結果数を返すコールバック
+	 */
 	public count(query: object, callback: Callback<number>): void {
 		this.Encode(query, (error: IErrorObject, queryString: string): void => {
 			if (!error) {
@@ -79,6 +109,12 @@ export abstract class QueryableService extends HttpService {
 		});
 	}
 
+	/**
+	 * 単一のオブジェクトを返す
+	 *
+	 * @param id オブジェクトID
+	 * @param callback オブジェクトを返すコールバック
+	 */
 	public get(id: string, callback: Callback<object>): void {
 		this.http.get(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -93,10 +129,6 @@ export abstract class QueryableService extends HttpService {
 		}, (error: HttpErrorResponse): void => {
 			callback({code: -1, message: error.message}, null);
 		});
-	}
-
-	protected decorator(value: object): object {
-		return value;
 	}
 
 }

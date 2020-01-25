@@ -8,12 +8,11 @@
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material";
 
 import {UpdatableComponent} from "../base/components/updatable.component";
-import {ConstService} from "../../config/const.service";
+
 import {SessionService} from "../base/services/session.service";
 import {FragmentService} from "./fragment.service";
 
@@ -38,19 +37,25 @@ export class FragmentComponent extends UpdatableComponent implements OnInit {
 	public innerText: string;
 	public service: any;
 
+	/**
+	 *
+	 * @param session
+	 * @param fragmentService
+	 * @param change
+	 * @param matDialog
+	 */
 	constructor(
 		public session: SessionService,
-		public http: HttpClient,
+		public fragmentService: FragmentService,
 		public change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
-		public constService: ConstService
 	) {
-		super(session, http, change, matDialog);
-		this.service = new FragmentService(http, constService);
+		super(session, change, matDialog);
+		this.service = fragmentService;
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public ngOnInit() {
 		this.getSession((error: IErrorObject, session: {user_id}): void => {

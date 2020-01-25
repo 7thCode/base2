@@ -61,13 +61,13 @@ namespace PageModel {
 	};
 
 	const query_by_user_read: any = (user: any, query): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
-		// return {$and: [{user_id: user.user_id}, query]};
+		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: user.user_id}, {"rights.read": {$gte: user.auth}}, query]};
 	};
 
-	const query_by_user_write: any = (user: any, query): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
-		// return {$and: [{user_id: user.user_id}, query]};
+	const query_by_user_write: any = (user: any, query: object): any => {
+		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: user.user_id}, {"rights.write": {$gte: user.auth}}, query]};
 	};
 
 	const init: any = (_id: any, body: any): IPageModelContent => {
@@ -110,7 +110,6 @@ namespace PageModel {
 				cb(error, null);
 			}
 		});
-
 	};
 
 	Page.methods._save = function(cb: Callback<any>): void {

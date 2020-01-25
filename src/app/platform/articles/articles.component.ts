@@ -8,15 +8,14 @@
 
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component} from "@angular/core";
 import {MediaObserver} from "@angular/flex-layout";
 import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {GridViewComponent} from "../base/components/gridview.component";
-import {ConstService} from "../../config/const.service";
-import {SessionService} from "../base/services/session.service";
 import {ArticleDialogComponent} from "./article-dialog/article-dialog.component";
+
+import {SessionService} from "../base/services/session.service";
 import {ArticlesService} from "./articles.service";
 
 @Component({
@@ -26,26 +25,37 @@ import {ArticlesService} from "./articles.service";
 })
 
 /**
- *
+ * アーティクル
  *
  * @since 0.01
  */
 export class ArticlesComponent extends GridViewComponent {
 
+	/**
+	 *
+	 * @param session
+	 * @param articleService
+	 * @param change
+	 * @param matDialog
+	 * @param observableMedia
+	 * @param snackbar
+	 */
 	constructor(
 		public session: SessionService,
-		public http: HttpClient,
-		public constService: ConstService,
+		public articleService: ArticlesService,
 		public change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 		protected observableMedia: MediaObserver,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, http, change, matDialog, observableMedia);
-		this.service = new ArticlesService(http, constService);
+		super(session, change, matDialog, observableMedia);
+		this.service = articleService;
 	}
 
-	// , private snackbar: MatSnackBar
+	/**
+	 * エラー表示
+	 * @param error
+	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
@@ -53,7 +63,17 @@ export class ArticlesComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * リストビューデコレータ
+	 * @param object
+	 */
+	protected toListView(object: any): any {
+		object.cols = 1;
+		object.rows = 1;
+		return object;
+	}
+
+	/**
+	 * クリエイトダイアログ
 	 */
 	public createDialog(): void {
 
@@ -95,7 +115,8 @@ export class ArticlesComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * アップデートダイアログ
+	 * @param id ターゲット
 	 */
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: any): void => {
@@ -128,9 +149,9 @@ export class ArticlesComponent extends GridViewComponent {
 		});
 	}
 
-
 	/**
-	 * @returns none
+	 * 削除
+	 * @param id ターゲット
 	 */
 	public onDelete(id: string): void {
 		this.Progress(true);
@@ -142,15 +163,6 @@ export class ArticlesComponent extends GridViewComponent {
 			}
 			this.Progress(false);
 		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	protected toListView(object: any): any {
-		object.cols = 1;
-		object.rows = 1;
-		return object;
 	}
 
 }

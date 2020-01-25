@@ -30,7 +30,8 @@ const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const Files: any = require("./controller");
 const file: any = new Files(module.parent.exports.event);
 
-const systemsConfig: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const systemsConfig: any = ConfigModule.systems;
 
 const cache_root: string = "files/cache/";
 
@@ -53,7 +54,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			}
 		};
 
-		const chace_delete = (user_id: string, _path: string, callback: (error) => void): void => {
+		const cache_delete = (user_id: string, _path: string, callback: (error) => void): void => {
 			try {
 				const cache_file: string = path.join(process.cwd(), "public", cache_root, user_id, _path);
 				fs.unlink(cache_file, (error) => {
@@ -92,7 +93,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			(request: { user: { user_id: string }, params: string[] }, response: object): void => {
 				const path: string = request.params[0];
 				const user_id = request.user.user_id;
-				chace_delete(user_id, path, (error) => {
+				cache_delete(user_id, path, (error) => {
 					gatekeeper.catch(response, (): void => {
 						file.postFile(request, response);
 					});
@@ -104,7 +105,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			(request: { user: { user_id: string }, params: string[] }, response: object): void => {
 				const path: string = request.params[0];
 				const user_id = request.user.user_id;
-				chace_delete(user_id, path, (error) => {
+				cache_delete(user_id, path, (error) => {
 					gatekeeper.catch(response, (): void => {
 						file.deleteFile(request, response);
 					});
@@ -196,7 +197,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		};
 
-		router.get("/files/get/*", [gatekeeper.default,(request: { params: string[], query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		router.get("/files/get/*", [gatekeeper.default, (request: { params: string[], query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
 			gatekeeper.catch(response, (): void => {
 
 				const path: string = request.params[0];
@@ -218,7 +219,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		}]);
 
-		router.get("/" + cache_root + ":user_id/*", [gatekeeper.default,(request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		router.get("/" + cache_root + ":user_id/*", [gatekeeper.default, (request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
 			gatekeeper.catch(response, (): void => {
 
 				const params = request.params;

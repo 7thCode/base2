@@ -31,9 +31,11 @@ import {
 
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {BaseModule} from "../base/base.module";
-import {SessionService} from "../base/services/session.service";
+
 import {VaultDialogComponent} from "./vault-dialog/vault-dialog.component";
 import {VaultsComponent} from "./vaults.component";
+
+import {SessionService} from "../base/services/session.service";
 import {VaultsService} from "./vaults.service";
 
 @NgModule({

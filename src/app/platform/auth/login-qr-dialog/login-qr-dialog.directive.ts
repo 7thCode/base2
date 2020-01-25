@@ -17,13 +17,24 @@ import {LoginQrDialogComponent} from "./login-qr-dialog.component";
 
 export class LoginQrDialogDirective {
 
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
+	/**
+	 *
+	 * @param matDialog
+	 */
 	constructor(
 		private matDialog: MatDialog,
 	) {
 	}
 
+	/**
+	 *
+	 * @param target
+	 */
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 

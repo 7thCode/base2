@@ -20,6 +20,11 @@ import {AuthLevel} from "../../../../../types/platform/universe";
  */
 export class AuthcolorPipe implements PipeTransform {
 
+	/**
+	 *
+	 * @param value
+	 * @param args
+	 */
 	public transform(value: any, args?: any): any {
 		let result = "#fdfffd";     // public
 		if (value < AuthLevel.manager) {

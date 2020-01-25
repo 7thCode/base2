@@ -16,10 +16,21 @@ const controllers: string = global._controllers;
 const SecureUpdatable: any = require(path.join(controllers, "secure_updatable_controller"));
 const Vault: any = require(path.join(models, "platform/vaults/vault"));
 
+/**
+ *
+ */
 export class Vaults extends SecureUpdatable {
 
+	/**
+	 *
+	 */
 	protected Model: any;
 
+	/**
+	 *
+	 * @param event
+	 * @param key
+	 */
 	constructor(event: object, key: string) {
 		super(event, key);
 		this.Model = Vault as IVaultModel;

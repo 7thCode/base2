@@ -15,8 +15,14 @@ import {LoginTotpDialogComponent} from "./login-totp-dialog.component";
 	selector: "[auth-login-totp-button]",
 })
 
+/**
+ *
+ */
 export class LoginTotpDialogDirective {
 
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
 	constructor(
@@ -24,6 +30,10 @@ export class LoginTotpDialogDirective {
 	) {
 	}
 
+	/**
+	 *
+	 * @param target
+	 */
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
