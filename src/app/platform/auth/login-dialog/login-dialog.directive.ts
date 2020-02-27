@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Input, Output} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
 
 import {LoginTotpDialogComponent} from "../login-totp-dialog/login-totp-dialog.component";
 import {LoginDialogComponent} from "./login-dialog.component";

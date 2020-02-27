@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
 
 import {LogoutDialogComponent} from "./logout-dialog.component";
 

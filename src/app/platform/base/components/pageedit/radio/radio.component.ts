@@ -16,6 +16,11 @@ import {BaseComponent} from "../base/base.component";
 	styleUrls: ["./radio.component.css"],
 })
 
+/**
+ * ラジオ
+ *
+ * @since 0.01
+ */
 export class RadioComponent extends BaseComponent {
 
 	/**

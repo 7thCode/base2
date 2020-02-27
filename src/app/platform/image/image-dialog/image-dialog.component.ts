@@ -7,9 +7,10 @@
 "use strict";
 
 import {Component, Inject, OnInit, ViewChild} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 import {ImageCroppedEvent, ImageCropperComponent} from "ngx-image-cropper";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "image-dialog",
@@ -21,12 +22,12 @@ import {ImageCroppedEvent, ImageCropperComponent} from "ngx-image-cropper";
  * イメージダイアログ
  *
  */
-export class ImageDialogComponent implements OnInit {
+export class ImageDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
 	 */
-	@ViewChild(ImageCropperComponent, {static: true}) public imageCropper: ImageCropperComponent;
+	@ViewChild(ImageCropperComponent) public imageCropper: ImageCropperComponent;
 
 	/**
 	 *
@@ -52,6 +53,7 @@ export class ImageDialogComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<ImageDialogComponent>) {
+		super();
 	}
 
 	/**
@@ -99,6 +101,9 @@ export class ImageDialogComponent implements OnInit {
 			case "png":
 				mime = "image/png";
 				break;
+			case "bmp":
+				mime = "image/bmp";
+				break;
 			case "webp":
 				mime = "image/webp";
 				break;
@@ -119,6 +124,9 @@ export class ImageDialogComponent implements OnInit {
 				break;
 			case "png":
 				result = "png";
+				break;
+			case "bmp":
+				result = "bmp";
 				break;
 			case "webp":
 				result = "webp";
@@ -167,28 +175,28 @@ export class ImageDialogComponent implements OnInit {
 	 *
 	 */
 	public rotateLeft(): void {
-		this.imageCropper.rotateLeft();
+// 		this.imageCropper.rotateLeft();
 	}
 
 	/**
 	 *
 	 */
 	public rotateRight(): void {
-		this.imageCropper.rotateRight();
+// 		this.imageCropper.rotateRight();
 	}
 
 	/**
 	 *
 	 */
 	public flipHorizontal(): void {
-		this.imageCropper.flipHorizontal();
+// 		this.imageCropper.flipHorizontal();
 	}
 
 	/**
 	 *
 	 */
 	public flipVertical(): void {
-		this.imageCropper.flipVertical();
+// 		this.imageCropper.flipVertical();
 	}
 
 	/**
@@ -196,7 +204,7 @@ export class ImageDialogComponent implements OnInit {
 	 * @param event
 	 */
 	public onRotate(event): void {
-		this.imageCropper.rotateRight();
+// 		this.imageCropper.rotateRight();
 	}
 
 }

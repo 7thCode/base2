@@ -17,7 +17,7 @@ import {AbstractControl, FormControl, NG_VALIDATORS, Validator} from "@angular/f
 })
 
 /**
- *
+ * イコール
  *
  * @since 0.01
  */

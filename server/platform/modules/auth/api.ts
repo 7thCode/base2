@@ -31,15 +31,13 @@ const LineStrategy: any = require("passport-line").Strategy;
 const path: any = require("path");
 
 const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
 
-const log4js: any = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
+const event = module.parent.exports.event;
 
-const ConfigModule: any = require(path.join(_config, "default"));
+const logger: any = module.parent.exports.logger;
+
+const ConfigModule: any = module.parent.exports.config;
 const systemsConfig: any = ConfigModule.systems;
 const usersConfig: any = ConfigModule.users;
 
@@ -49,7 +47,7 @@ const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
 
 const Auth: any = require("./controller");
-const auth: any = new Auth(module.parent.exports.event, passport);
+const auth: any = new Auth(event, ConfigModule, logger,  passport);
 
 passport.use(new LocalStrategy(LocalAccount.authenticate()));
 

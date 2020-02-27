@@ -16,19 +16,13 @@ const pug: any = require("pug");
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
 
 const Wrapper: any = require("./wrapper");
 
 const Mailer: any = require(path.join(library, "mail_sender"));
 const Mailer2: any = require(path.join(library, "mail_sender_2"));
 const MailGun: any = require(path.join(library, "mail_sender_mailgun"));
-
-const ConfigModule: any = require(path.join(_config, "default"));
-const config: any = ConfigModule.systems;
 
 /**
  *
@@ -42,11 +36,13 @@ export class Mail extends Wrapper {
 	/**
 	 *
 	 * @param event
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event: any) {
-		super(event);
-		this.message = config.message;
-		const mailerSetting = config.mailer;
+	constructor(event: any, config: any, logger: object) {
+		super(event, config, logger);
+		this.message = this.systemsConfig.message;
+		const mailerSetting = this.systemsConfig.mailer;
 
 		switch (mailerSetting.type) {
 			case "mail":

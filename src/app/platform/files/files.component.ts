@@ -11,13 +11,14 @@ import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, HostListener, OnChanges, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatGridList} from "@angular/material/grid-list";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
 
 import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
-
 
 @Component({
 	selector: "files",
@@ -34,9 +35,8 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 
 	public results: any[];
 
-	@ViewChild("fileInput", {static: true}) public fileInput;
-	@ViewChild("grid", {static: true}) public grid: MatGridList;
-
+	@ViewChild("fileInput") public fileInput;
+	@ViewChild("grid") public grid: MatGridList;
 
 	public filename: string = "";
 	public size: number = 20;
@@ -253,7 +253,7 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 							result.cols = 1;
 							result.rows = 1;
 							result.type = 0;
-							if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,webp")) {
+							if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
 								result.type = 1;
 							} else if (this.hasExtension({name: result.filename}, "svg")) {
 								result.type = 2;

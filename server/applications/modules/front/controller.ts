@@ -8,6 +8,9 @@
 
 export class Front {
 
+	/**
+	 *
+	 */
 	constructor() {
 
 	}

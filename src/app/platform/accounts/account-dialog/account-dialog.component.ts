@@ -9,7 +9,9 @@
 import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "account-dialog",
@@ -22,7 +24,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
  *
  * @since 0.01
  */
-export class AccountDialogComponent implements OnInit {
+export class AccountDialogComponent extends BaseDialogComponent implements OnInit {
 
 	get session(): ISession {
 		return this.data.session;
@@ -45,6 +47,7 @@ export class AccountDialogComponent implements OnInit {
 	public enable: boolean;
 
 	/**
+	 * @constructor
 	 *
 	 * @param data
 	 * @param matDialogRef
@@ -53,11 +56,12 @@ export class AccountDialogComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
+		super();
 	}
 
 	/**
-	 *
-	 * @param user
+	 * Auth to Role
+	 * @param user 対象ユーザ
 	 */
 	private auth_to_role(user: { auth: number, provider: string }): IRole {
 		let result: IRole = {
@@ -118,7 +122,7 @@ export class AccountDialogComponent implements OnInit {
 	}
 
 	/**
-	 *
+	 * ２要素認証か
 	 */
 	public is2Fa(): void {
 		this.data.service.is_2fa(this.data.user.username, (error: IErrorObject, is2fa: any): void => {
@@ -131,7 +135,7 @@ export class AccountDialogComponent implements OnInit {
 	}
 
 	/**
-	 *
+	 * ２要素認証に
 	 */
 	public onSet2Fa(): void {
 		this.data.service.set_2fa(this.data.user.username, (error: IErrorObject, qr: any): void => {
@@ -145,7 +149,7 @@ export class AccountDialogComponent implements OnInit {
 	}
 
 	/**
-	 *
+	 * ２要素認証解除
 	 */
 	public onReset2Fa(): void {
 		this.data.service.reset_2fa(this.data.user.username, (error: IErrorObject, result: any): void => {

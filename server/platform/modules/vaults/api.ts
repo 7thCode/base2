@@ -16,13 +16,14 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const ConfigModule: any = require(path.join(_config, "default"));
-const systemsConfig: any = ConfigModule.systems;
+const event = module.parent.exports.event;
+const logger: any = module.parent.exports.logger;
+const config: any = module.parent.exports.config;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Vaults: any = require("./controller");
-const vaults: any = new Vaults(module.parent.exports.event, systemsConfig.vaultkey);
+const vaults: any = new Vaults(event, config, logger);
 
 router.get("/vaults/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {

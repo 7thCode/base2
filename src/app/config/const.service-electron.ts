@@ -25,6 +25,9 @@ export class ConstService {
 	public use_publickey: boolean = true;
 	public is_electron: boolean = true;
 
+	/**
+	 *
+	 */
 	constructor() {
 	}
 

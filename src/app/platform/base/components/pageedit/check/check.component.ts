@@ -16,6 +16,11 @@ import {BaseComponent} from "../base/base.component";
 	styleUrls: ["./check.component.css"],
 })
 
+/**
+ * チェックボックス
+ *
+ * @since 0.01
+ */
 export class CheckComponent extends BaseComponent {
 
 	/**

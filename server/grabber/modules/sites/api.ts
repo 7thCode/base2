@@ -18,15 +18,15 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const log4js: any = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
+const event = module.parent.exports.event;
+const logger: any = module.parent.exports.logger;
+const ConfigModule: any = module.parent.exports.config;
 
 const usersConfig: any = require(path.join(_config, "default")).users;
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Sites: any = require("./controller");
-const sites: any = new Sites(module.parent.exports.event);
+const sites: any = new Sites(event, ConfigModule, logger);
 
 sites.init(usersConfig.initarticles, (error: IErrorObject, result: any): void => {
 	if (!error) {

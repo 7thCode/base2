@@ -8,9 +8,7 @@
 
 import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 
-import {HttpClient} from "@angular/common/http";
 import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
@@ -21,6 +19,8 @@ import {SitesService} from "./sites.service";
 import {GridViewComponent} from "../../platform/base/components/gridview.component";
 import {SrcsService} from "../srcs/srcs.service";
 import {SiteDialogComponent} from "./site-dialog/site-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
 	selector: "app-sites",

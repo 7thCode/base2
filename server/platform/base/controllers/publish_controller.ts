@@ -14,8 +14,14 @@ const Updatable = require("./updatable_controller");
 
 export abstract class Publishable extends Updatable {
 
-	constructor(event: any) {
-		super(event);
+	/**
+	 *
+	 * @param event
+	 * @param config
+	 * @param logger
+	 */
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
 	}
 
 	/**

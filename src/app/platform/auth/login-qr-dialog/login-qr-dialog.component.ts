@@ -9,9 +9,11 @@
 import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {Component, Inject, Input, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {AuthService} from "../auth.service";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "login-qr-dialog",
@@ -24,7 +26,7 @@ import {AuthService} from "../auth.service";
  *
  * @since 0.01
  */
-export class LoginQrDialogComponent implements OnInit {
+export class LoginQrDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
@@ -51,6 +53,7 @@ export class LoginQrDialogComponent implements OnInit {
 		public matDialogRef: MatDialogRef<any>,
 		public snackbar: MatSnackBar,
 		public auth: AuthService) {
+		super();
 	}
 
 	/**

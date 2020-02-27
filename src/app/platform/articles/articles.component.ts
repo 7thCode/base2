@@ -10,7 +10,8 @@ import {IArticleModelContent, IErrorObject} from "../../../../types/platform/uni
 
 import {ChangeDetectorRef, Component} from "@angular/core";
 import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
 import {ArticleDialogComponent} from "./article-dialog/article-dialog.component";

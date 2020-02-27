@@ -46,10 +46,17 @@ export class Srcs extends Updatable {
 
 	protected Model: any;
 
-	constructor(event: any) {
-		super(event);
+	/**
+	 *
+	 * @param event
+	 * @param config
+	 * @param logger
+	 */
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
 		this.Model = Src as ISrcModel;
 	}
+
 
 	public crawl(request: any, response: IJSONResponse): void {
 		const current_user: IAccountModel = this.Transform(request.user);

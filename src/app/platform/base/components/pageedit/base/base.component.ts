@@ -22,9 +22,6 @@ export class BaseComponent implements OnInit {
 	public present_value: string = "";
 	public validators: any = null;
 
-	/**
-	 *
-	 */
 	constructor() {
 	}
 

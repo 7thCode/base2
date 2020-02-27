@@ -8,7 +8,7 @@
 
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {Component, Inject, NgZone, ViewChild} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {take} from "rxjs/operators";
 
 @Component({
@@ -24,10 +24,10 @@ import {take} from "rxjs/operators";
  */
 export class ArticleDialogComponent {
 
-	@ViewChild("autosize", {static: false}) public autosize: CdkTextareaAutosize;
+	@ViewChild("autosize") public autosize: CdkTextareaAutosize;
 
 	/**
-	 *
+	 * @constructor
 	 * @param data
 	 * @param matDialogRef
 	 * @param zone

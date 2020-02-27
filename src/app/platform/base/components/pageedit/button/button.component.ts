@@ -16,6 +16,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 	styleUrls: ["./button.component.css"],
 })
 
+/**
+ * ボタン
+ *
+ * @since 0.01
+ */
 export class ButtonComponent implements OnInit {
 
 	@Input() public description: any;

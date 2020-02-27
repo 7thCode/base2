@@ -9,7 +9,7 @@
 import {IErrorObject} from "../../../../types/platform/universe";
 
 import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
 
 import {UpdatableComponent} from "../base/components/updatable.component";
 

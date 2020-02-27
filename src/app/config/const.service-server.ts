@@ -12,6 +12,9 @@ import {Injectable} from "@angular/core";
 	providedIn: "root",
 })
 
+/**
+ *
+ */
 export class ConstService {
 
 	public endPoint: string = "";
@@ -25,6 +28,9 @@ export class ConstService {
 	public use_publickey: boolean = true;
 	public is_electron: boolean = false;
 
+	/**
+	 *
+	 */
 	constructor() {
 
 	}

@@ -16,6 +16,11 @@ import {BaseComponent} from "../base/base.component";
 	styleUrls: ["./textarea.component.css"],
 })
 
+/**
+ * テキストエリア
+ *
+ * @since 0.01
+ */
 export class TextareaComponent extends BaseComponent {
 
 	/**

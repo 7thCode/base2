@@ -16,6 +16,11 @@ import {BaseComponent} from "../base/base.component";
 	styleUrls: ["./input.component.css"],
 })
 
+/**
+ * インプット
+ *
+ * @since 0.01
+ */
 export class InputComponent extends BaseComponent {
 
 	/**

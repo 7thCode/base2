@@ -26,16 +26,6 @@ const Wrapper: any = require("./wrapper");
 const path: any = require("path");
 
 const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
-
-const log4js: any = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
-
-const ConfigModule: any = require(path.join(_config, "default"));
-const config: any = ConfigModule.systems;
 
 const Account: any = require(path.join(models, "platform/accounts/account"));
 
@@ -52,9 +42,11 @@ export abstract class Updatable extends Wrapper {
 	/**
 	 *
 	 * @param event
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event) {
-		super(event);
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
 	}
 
 	/**
@@ -75,7 +67,7 @@ export abstract class Updatable extends Wrapper {
 
 		} else {
 			result = {
-				user_id: config.default.user_id,
+				user_id: this.systemsConfig.default.user_id,
 				auth: 1,
 			};
 		}
@@ -258,7 +250,7 @@ export abstract class Updatable extends Wrapper {
 						Promise.all(promises).then((objects): void => {
 							callback(null, objects);
 						}).catch((error): void => {
-							logger.fatal(error.message);
+							this.logger.fatal(error.message);
 							callback(error, null);
 						});
 					} else {

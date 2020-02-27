@@ -16,6 +16,11 @@ import {BaseComponent} from "../base/base.component";
 	styleUrls: ["./select.component.css"],
 })
 
+/**
+ * セレクト
+ *
+ * @since 0.01
+ */
 export class SelectComponent extends BaseComponent {
 
 	/**

@@ -11,27 +11,28 @@ import {NgModule} from "@angular/core";
 
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
-import {
-	MatAutocompleteModule,
-	MatButtonModule,
-	MatCardModule,
-	MatDialogModule,
-	MatFormFieldModule,
-	MatGridListModule,
-	MatIconModule,
-	MatInputModule,
-	MatListModule,
-	MatNativeDateModule,
-	MatPaginatorModule,
-	MatProgressSpinnerModule,
-	MatSelectModule, MatSlideToggleModule,
-	MatSnackBarModule,
-} from "@angular/material";
+
+
 
 import {SrcsComponent} from "./srcs.component";
 
 import {FilepathPipe} from "../base/pipes/filepath.pipe";
 import {SrcDialogComponent} from "./src-dialog/src-dialog.component";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatIconModule} from "@angular/material/icon";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatListModule} from "@angular/material/list";
+import {MatInputModule} from "@angular/material/input";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatCardModule} from "@angular/material/card";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
 	declarations: [

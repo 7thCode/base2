@@ -16,10 +16,14 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
+const event = module.parent.exports.event;
+const config: any = module.parent.exports.config;
+const logger: any = module.parent.exports.logger;
+
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const PublicKey: any = require("./controller");
-const publickey: any = new PublicKey(module.parent.exports.event);
+const publickey: any = new PublicKey(event, config, logger);
 
 router.get("/publickey/fixed", [gatekeeper.default,
 	(request: object, response: object): void => {

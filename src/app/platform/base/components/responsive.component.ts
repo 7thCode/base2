@@ -12,7 +12,8 @@ import {MediaMatcher} from "@angular/cdk/layout";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
 import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";
-import {MatSnackBar, MatSpinner} from "@angular/material";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSpinner} from "@angular/material/progress-spinner";
 
 import {SessionableComponent} from "./sessionable.component";
 
@@ -51,9 +52,6 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 		this.mobileQuery.addListener(this.mobileQueryListener);
 	}
 
-	/**
-	 *
-	 */
 	protected cdkSpinnerCreate(): OverlayRef {
 		return this.overlay.create({
 			hasBackdrop: true,
@@ -76,7 +74,8 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 	 }
 
 	/**
-	 *
+	 * 処理中
+	 * スピナー
 	 * @param value
 	 * @constructor
 	 */
@@ -94,9 +93,6 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 		}
 	}
 
-	/**
-	 *
-	 */
 	public ngOnInit(): void {
 
 	}

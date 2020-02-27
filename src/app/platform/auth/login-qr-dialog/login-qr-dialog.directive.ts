@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Input, Output} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
 
 import {LoginQrDialogComponent} from "./login-qr-dialog.component";
 

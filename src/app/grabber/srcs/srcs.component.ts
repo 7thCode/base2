@@ -8,9 +8,10 @@
 
 import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 
-import {HttpClient} from "@angular/common/http";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
+
 import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
 
 import {IErrorObject} from "../../../../types/platform/universe";
 

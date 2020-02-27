@@ -16,22 +16,19 @@ export const router = express.Router();
 const path: any = require("path");
 const fs: any = require("graceful-fs");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
 
-const log4js = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
+const event = module.parent.exports.event;
+
+const logger: any = module.parent.exports.logger;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
-const Files: any = require("./controller");
-const file: any = new Files(module.parent.exports.event);
-
-const ConfigModule: any = require(path.join(_config, "default"));
+const ConfigModule: any = module.parent.exports.config;
 const systemsConfig: any = ConfigModule.systems;
+
+const Files: any = require("./controller");
+const file: any = new Files(event, ConfigModule, logger);
 
 const cache_root: string = "files/cache/";
 
@@ -140,6 +137,13 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 								end = total - 1;
 								chunksize = (end - start) + 1;
 							}
+
+							// First aid. (for chrome??.)
+							start = 0;
+							end = total - 1;
+							chunksize = (end - start) + 1;
+							// First aid.
+
 							file.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
 								if (!error) {
 									if (result) {

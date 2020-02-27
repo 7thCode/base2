@@ -11,7 +11,9 @@ import {Callback, IErrorObject} from "../../../types/platform/universe";
 import {MediaMatcher} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {MatDialog, MatSidenav, MatSnackBar} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSidenav} from "@angular/material/sidenav";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {AccountDialogComponent} from "./accounts/account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts/accounts.component";
@@ -44,11 +46,11 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	public sock: any;
 	public date: Date;
 
-	@ViewChild("sidenav", {static: false}) protected sidenav: MatSidenav;
-	@ViewChild(AccountsComponent, {static: true}) protected accountsComponent: AccountsComponent;
-	@ViewChild(VaultsComponent, {static: true}) protected vaultsComponent: VaultsComponent;
-	@ViewChild(PagesComponent, {static: true}) protected pagesComponent: PagesComponent;
-	@ViewChild(FilesComponent, {static: true}) protected filesComponent: FilesComponent;
+	@ViewChild("sidenav") protected sidenav: MatSidenav;
+	@ViewChild(AccountsComponent) protected accountsComponent: AccountsComponent;
+	@ViewChild(VaultsComponent) protected vaultsComponent: VaultsComponent;
+	@ViewChild(PagesComponent) protected pagesComponent: PagesComponent;
+	@ViewChild(FilesComponent) protected filesComponent: FilesComponent;
 
 	private accountsService: AccountsService;
 
@@ -81,9 +83,10 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	}
 
 	/**
+	 * アカウント参照
 	 *
-	 * @param id アカウント参照
-	 * @param callback
+	 * @param id アカウントレコードID
+	 * @param callback コールバック
 	 */
 	private get(id: string, callback: Callback<any>): void {
 		this.Progress(true);
@@ -98,10 +101,11 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	}
 
 	/**
+	 * アカウント更新
 	 *
-	 * @param id アカウント更新
-	 * @param data
-	 * @param callback
+	 * @param id アカウントレコードID
+	 * @param data 更新データ
+	 * @param callback コールバック
 	 */
 	private update(id: string, data: object, callback: Callback<any>): void {
 		this.Progress(true);
@@ -143,9 +147,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		// 	console.log(event);
 	}
 
-	/**
-	 *
-	 */
 	public ngOnInit() {
 		this.Progress(true);
 
@@ -177,7 +178,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 
 	/**
 	 *
-	 * @param width
+	 * @param width 幅
 	 */
 	public setWidth(width: string): void {
 	}
@@ -228,7 +229,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	}
 
 	/**
-	 *
+	 * コンプリート
 	 * @param event
 	 */
 	public onComplete(event: any): void {
@@ -251,7 +252,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	}
 
 	/**
-	 *
+	 * 更新ダイアログ
 	 */
 	public updateDialog(): void {
 		const id: string = this.currentSession.username;

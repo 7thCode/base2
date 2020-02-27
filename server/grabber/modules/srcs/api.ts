@@ -17,10 +17,14 @@ const modules: string = global._modules;
 const library: string = global._library;
 const _config: string = global.__config;
 
+const event = module.parent.exports.event;
+const logger: any = module.parent.exports.logger;
+const ConfigModule: any = module.parent.exports.config;
+
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Src: any = require("./controller");
-const srcs: any = new Src(module.parent.exports.event);
+const srcs: any = new Src(event, ConfigModule, logger);
 
 router.get("/srcs/auth/query/:query/:option", [
 	(request: object, response: object): void => {

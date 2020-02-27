@@ -12,7 +12,7 @@ import {MediaMatcher} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {MatDialog, MatSidenav, MatSnackBar} from "@angular/material";
+
 
 import {fadeAnimation} from "../platform/base/library/fade-animation";
 
@@ -25,6 +25,9 @@ import {SitesComponent} from "./sites/sites.component";
 import {SrcsComponent} from "./srcs/srcs.component";
 
 import {AccountDialogComponent} from "../platform/accounts/account-dialog/account-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSidenav} from "@angular/material/sidenav";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
 	selector: "grabber-root",

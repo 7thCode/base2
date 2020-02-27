@@ -22,7 +22,7 @@ import {QueryableService} from "./queryable.service";
 export abstract class UpdatableService extends QueryableService {
 
 	/**
-	 *
+	 * @constructor
 	 * @param http
 	 * @param constService
 	 * @param model
@@ -36,9 +36,10 @@ export abstract class UpdatableService extends QueryableService {
 	}
 
 	/**
+	 * レコードクリエイト
 	 *
-	 * @param content
-	 * @param callback
+	 * @param content　クリエイトデータ
+	 * @param callback コールバック
 	 */
 	public post(content: IContent, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
@@ -57,10 +58,11 @@ export abstract class UpdatableService extends QueryableService {
 	}
 
 	/**
+	 * レコード更新
 	 *
-	 * @param id
-	 * @param content
-	 * @param callback
+	 * @param id レコードID
+	 * @param content 更新内容
+	 * @param callback コールバック
 	 */
 	public put(id: string, content: IContent, callback: Callback<any>): void {
 		this.http.put(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
@@ -95,9 +97,10 @@ export abstract class UpdatableService extends QueryableService {
 	// }
 
 	/**
+	 * レコード削除
 	 *
-	 * @param id
-	 * @param callback
+	 * @param id 削除レコードID
+	 * @param callback コールバック
 	 */
 	public delete(id: string, callback: Callback<any>): void {
 		this.http.delete(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
