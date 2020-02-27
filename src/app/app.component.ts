@@ -15,12 +15,21 @@ import {Component, HostListener, OnInit} from "@angular/core";
 })
 
 /**
- *
+ * アプリケーション
  * @since 0.01
  */
-
 export class AppComponent implements OnInit {
 
+	private t = 0;
+
+	constructor() {
+
+	}
+
+	/**
+	 * タッチタイミング
+	 * @param event
+	 */
 	@HostListener("touchstart", ["$event"])
 	public onTouchStart(event: any): void {
 		if (event.touches.length >= 2) {
@@ -28,8 +37,10 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	private t = 0;
-
+	/**
+	 * タッチタイミング
+	 * @param event
+	 */
 	@HostListener("touchend", ["$event"])
 	public onTouchERnd(event: any): void {
 		const now = new Date().getTime();
@@ -37,10 +48,6 @@ export class AppComponent implements OnInit {
 			event.preventDefault();
 		}
 		this.t = now;
-	}
-
-	constructor() {
-
 	}
 
 	public ngOnInit() {

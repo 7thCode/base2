@@ -10,7 +10,8 @@ import {IErrorObject, IPageModelContent} from "../../../../types/platform/univer
 
 import {ChangeDetectorRef, Component} from "@angular/core";
 import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
 import {PageDialogComponent} from "./page-dialog/page-dialog.component";
@@ -25,7 +26,7 @@ import {PagesService} from "./pages.service";
 })
 
 /**
- *
+ * ページ
  *
  * @since 0.01
  */
@@ -34,7 +35,7 @@ export class PagesComponent extends GridViewComponent {
 	public path = "";
 
 	/**
-	 *
+	 * @constructor
 	 * @param session
 	 * @param pageSerrvice
 	 * @param change
@@ -65,7 +66,7 @@ export class PagesComponent extends GridViewComponent {
 	}
 
 	/**
-	 *
+	 * リストビューデコレータ
 	 * @param object
 	 */
 	protected toListView(object: any): any {
@@ -75,6 +76,7 @@ export class PagesComponent extends GridViewComponent {
 	}
 
 	/**
+	 *
 	 * ページ作成ダイアログ
 	 */
 	public createDialog(): void {
@@ -116,7 +118,7 @@ export class PagesComponent extends GridViewComponent {
 	}
 
 	/**
-	 *
+	 * 検索
 	 */
 	public findByPath(): void {
 		this.query = {};

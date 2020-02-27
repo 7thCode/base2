@@ -1,13 +1,13 @@
 <ng-container>
 	<mat-card style="margin:2rem;">
+		<mat-card-header>
+			<div style="font-size: 32px;font-weight: 900;">Articles</div>
+		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
-				<div style="font-size: 32px;font-weight: 900;">Articles</div>
-				<button mat-fab color="primary" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
-			</div>
-			<div fxLayout="row">
 				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
 				</mat-paginator>
+				<button mat-fab color="primary" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
 			</div>
 			<mat-grid-list #grid cols="4" rowHeight="1:1">
 				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">

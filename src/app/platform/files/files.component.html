@@ -1,8 +1,12 @@
 <ng-container>
 	<mat-card style="margin:2rem;">
+		<mat-card-header>
+			<div style="font-size: 32px;font-weight: 900;">Files</div>
+		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
-				<div style="font-size: 32px;font-weight: 900;">Files</div>
+				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
 				<input type="file" multiple style="display: none" #fileInput (change)="onChangeFileInput()"/>
 				<button mat-fab color="primary" [disabled]="progress" (click)="onClickFileInputButton()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
 			</div>
@@ -13,8 +17,6 @@
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-				<mat-paginator fxFlex="40%" fxFlex.lt-sm="100%" [length]="count" [pageSize]="size" (page)="Page($event)">
-				</mat-paginator>
 			</div>
 			<mat-grid-list #grid cols="4" rowHeight="1:1">
 				<mat-grid-tile class="box-body" [ngSwitch]="file.type" *ngFor="let file of results" [colspan]="file.cols" [rowspan]="file.rows">

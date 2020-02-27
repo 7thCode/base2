@@ -16,6 +16,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 	styleUrls: ["./pageedit.component.css"],
 })
 
+/**
+ * フォームエディタ
+ *
+ * @since 0.01
+ */
 export class PageEditComponent implements OnInit {
 
 	@Input() public description: any;

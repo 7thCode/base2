@@ -25,8 +25,6 @@ const Updatable: any = require("./updatable_controller");
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
@@ -34,7 +32,6 @@ const Cipher: any = require(path.join(library, "cipher"));
 
 const ConfigModule: any = require(path.join(_config, "default"));
 const config: any = ConfigModule.systems;
-
 
 /**
  *
@@ -47,11 +44,12 @@ export abstract class SecureUpdatable extends Updatable {
 	/**
 	 *
 	 * @param event
-	 * @param key
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event: any, key: string) {
-		super(event);
-		this.key = key;
+	constructor(event: any, config, logger) {
+		super(event, config, logger);
+		this.key = this.systemsConfig.vaultkey;
 	}
 
 	/**

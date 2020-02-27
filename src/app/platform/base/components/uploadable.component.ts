@@ -52,6 +52,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * ファイル削除
 	 * @returns none
 	 */
 	protected delete(name: string, callback: Callback<any>): void {
@@ -59,6 +60,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * ファイルアップロード
 	 * @returns none
 	 */
 	protected upload(name: string, url: string, callback: Callback<any>): void {
@@ -73,6 +75,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * 単一ファイルアップロード
 	 * @returns none
 	 */
 	protected uploadFile(dropedFile: File, name: string, callback: Callback<any>): void {
@@ -94,6 +97,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * 複数ファイルアップロード
 	 * @returns none
 	 */
 	protected uploadFiles(path: string, dropedFiles: File[], callback: Callback<any>): void {
@@ -120,6 +124,8 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * ビューデコレータ
+	 *
 	 * @returns none
 	 */
 	protected toView(data: any): any {
@@ -127,12 +133,21 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * トランスフォーマー
+	 *
 	 * @returns none
 	 */
 	protected confirmToModel(data: any): any {
 		return data;
 	}
 
+	/**
+	 * マーシャリング
+	 *
+	 * Files配列？からFiles配列へ。
+	 *
+	 * @returns none
+	 */
 	protected marshallingFiles(files: File[]): File[] { // fileset? to array.
 		const result: File[] = [];
 		for (let index: number = 0; index < files.length; index++) {
@@ -142,6 +157,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 *
 	 * @returns none
 	 */
 	protected parseExtensions(extensions: string): string[] {
@@ -149,7 +165,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
-	 * @returns none
+	 * ファイルエクステンションチエック
+	 *
+	 * @returns エクステンション
 	 */
 	protected hasExtension(file: { name: string }, extensions: string): boolean {
 		let result: boolean = false;
@@ -166,7 +184,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
-	 * @returns none
+	 * ファイルの拡張子
+	 *
+	 * @returns 拡張子
 	 */
 	protected Extension(file: { name: string }): string {
 		let result: string = "";
@@ -178,6 +198,10 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * 拡張子集合に含まれる拡張子を持つファイルだけをフィルタ
+	 *
+	 * @param files ブラウザから渡されるファイル集合
+	 * @param extensions 拡張子集合
 	 * @returns none
 	 */
 	protected filterExtensionFiles(files: File[], extensions: string): File[] {
@@ -190,6 +214,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		return result;
 	}
 
+	/**
+	 * @returns none
+	 */
 	public ngOnInit(): void {
 		this.getSession((error: IErrorObject, session: object): void => {
 			this.bodysize = 200 * 1000 * 1000;

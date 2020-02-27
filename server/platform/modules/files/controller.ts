@@ -18,17 +18,7 @@ const MongoClient: any = require("mongodb").MongoClient;
 
 const path: any = require("path");
 
-const models: string = global._models;
 const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
-
-const log4js: any = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
-
-const ConfigModule: any = require(path.join(_config, "default"));
-const config: any = ConfigModule.systems;
 
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 
@@ -41,9 +31,11 @@ export class Files extends Wrapper {
 	/**
 	 *
 	 * @param event
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event: object) {
-		super(event);
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
 	}
 
 	/**
@@ -65,13 +57,14 @@ export class Files extends Wrapper {
 	/**
 	 *
 	 */
-	private static connect(): any {
+	private static connect(config): any {
 		const options: object = {
 			keepAlive: 1,
 			connectTimeoutMS: 1000000,
-			reconnectTries: 30,
-			reconnectInterval: 2000,
+		// 	reconnectTries: 30,
+		// 	reconnectInterval: 2000,
 			useNewUrlParser: true,
+			useUnifiedTopology: true,
 		};
 		let connectUrl = "mongodb://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 		if (config.db.noauth) {
@@ -235,8 +228,8 @@ export class Files extends Wrapper {
 	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
-			Files.connect().then((client): void => {
-				this.db = client.db(config.db.name);
+			Files.connect(this.systemsConfig).then((client): void => {
+				this.db = client.db(this.systemsConfig.db.name);
 				this.db.collection("fs.files", (error: IErrorObject, collection: object): void => {
 					this.gfs = new mongodb.GridFSBucket(this.db, {});
 					this.collection = collection;
@@ -296,7 +289,7 @@ export class Files extends Wrapper {
 					}
 				});
 			}).catch((error): void => {
-				logger.info("mongo connection error: " + error);
+				this.logger.info("mongo connection error: " + error);
 			});
 		} catch (e) {
 			callback(e, null);
@@ -358,7 +351,7 @@ export class Files extends Wrapper {
 	public brankImage(callback: (error: IErrorObject, result: object, item: string) => void): void {
 		try {
 			// NOT FOUND IMAGE.
-			this.resultFile(this.gfs, this.collection, config.default.user_id, "blank.png", (error, readstream, type: string) => {
+			this.resultFile(this.gfs, this.collection, this.systemsConfig.default.user_id, "blank.png", (error, readstream, type: string) => {
 				// 	item.metadata.type
 				callback(null, readstream, type);
 			});
@@ -452,10 +445,10 @@ export class Files extends Wrapper {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 2, message: "no stream"});
+							this.SendError(response, {code: 2, message: "no stream.(file 1)"});
 						}
 					} else {
-						this.SendError(response, {code: 1, message: "no item"});
+						this.SendError(response, {code: 1, message: "no item.(file 1)"});
 					}
 				});
 			});

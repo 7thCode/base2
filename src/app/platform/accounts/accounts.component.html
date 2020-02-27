@@ -1,10 +1,14 @@
 <ng-container>
     <mat-card style="margin:2rem;">
+		<mat-card-header>
+			<div style="font-size: 32px;font-weight: 900;">Accounts</div>
+		</mat-card-header>
         <mat-card-content>
             <div fxLayout="row" fxLayoutAlign="space-between">
-                <div style="font-size: 32px;font-weight: 900;">Accounts</div>
+				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
                 <button mat-fab color="primary" [disabled]="progress" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
-            </div>
+			</div>
             <div fxLayout="row" fxLayout.lt-sm="column">
                 <mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
                     <input matInput type="text" placeholder="Find by nickname..." [(ngModel)]="nickname" (change)="findByNickname();">
@@ -12,8 +16,6 @@
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
-                <mat-paginator fxFlex="40%" fxFlex.lt-sm="100%" [length]="count" [pageSize]="size" (page)="Page($event)">
-                </mat-paginator>
             </div>
             <mat-grid-list #grid  cols="4" rowHeight="1:1">
                 <mat-grid-tile *ngFor="let account of results" [colspan]="account.cols" [rowspan]="account.rows" [style.background]="account.auth | authcolor">

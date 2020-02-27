@@ -10,8 +10,9 @@ import {IEmit} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {FormControl} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "page-dialog",
@@ -24,12 +25,12 @@ import {AngularEditorConfig} from "@kolkov/angular-editor";
  *
  * @since 0.01
  */
-export class PageDialogComponent implements OnInit {
+export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 * エディタ
 	 */
-	@ViewChild("editor", {static: true}) public editor;
+	@ViewChild("editor") public editor;
 
 	/**
 	 * ページテキスト
@@ -86,6 +87,7 @@ export class PageDialogComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<PageDialogComponent>) {
+		super();
 	}
 
 

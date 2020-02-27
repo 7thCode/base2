@@ -85,8 +85,8 @@ export abstract class SecureUpdatableService extends UpdatableService {
 	/**
 	 * 秘匿更新
 	 *
-	 * @param content
-	 * @param callback
+	 * @param content 更新内容
+	 * @param callback コールバック
 	 */
 	public post(content: object, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
@@ -119,9 +119,9 @@ export abstract class SecureUpdatableService extends UpdatableService {
 	/**
 	 * 秘匿更新
 	 *
-	 * @param id
-	 * @param content
-	 * @param callback
+	 * @param id 更新レコードID
+	 * @param conten 更新内容
+	 * @param callback コールバック
 	 */
 	public put(id: string, content: object, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {

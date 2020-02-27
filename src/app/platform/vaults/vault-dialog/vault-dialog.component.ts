@@ -7,7 +7,9 @@
 "use strict";
 
 import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "vault-dialog",
@@ -20,7 +22,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
  *
  * @since 0.01
  */
-export class VaultDialogComponent {
+export class VaultDialogComponent extends BaseDialogComponent {
 
 	/**
 	 * @constructor
@@ -31,6 +33,7 @@ export class VaultDialogComponent {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<VaultDialogComponent>) {
+		super();
 	}
 
 	/**

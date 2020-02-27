@@ -16,10 +16,14 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
+const event = module.parent.exports.event;
+const logger: any = module.parent.exports.logger;
+const config: any = module.parent.exports.config;
+
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Session: any = require("./controller");
-const session: any = new Session(module.parent.exports.event);
+const session: any = new Session(event, config, logger);
 
 router.get("/session/auth", [gatekeeper.default,
 	(request: object, response: object): void => {

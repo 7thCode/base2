@@ -11,18 +11,21 @@ export const router: any = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
 const modules: string = global._modules;
 const library: string = global._library;
-const _config: string = global.__config;
+
+const event = module.parent.exports.event;
+
+const logger: any = module.parent.exports.logger;
+
+const ConfigModule: any = module.parent.exports.config;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const Auth: any = require(path.join(modules, "auth/controller"));
-const auth: any = new Auth(module.parent.exports.event);
+const auth: any = new Auth(event, ConfigModule, logger);
 
 const Account: any = require("./controller");
-const accounts: any = new Account(module.parent.exports.event);
+const accounts: any = new Account(event, ConfigModule, logger);
 
 router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -101,6 +104,37 @@ router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			accounts.post_reset_secret(request, response);
+		});
+	}]);
+
+
+router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object, next: any): void => {
+		auth.is_own(request, response, next);
+	},
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.get_by_id(request, response);
+		});
+	}]);
+
+router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object, next: any): void => {
+		auth.is_own(request, response, next);
+	},
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.put_by_id(request, response);
+		});
+	}]);
+
+router.delete("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object, next: any): void => {
+		auth.is_manager(request, response, next);
+	},
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.delete_by_id(request, response);
 		});
 	}]);
 

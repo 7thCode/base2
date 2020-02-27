@@ -13,18 +13,9 @@ import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 const path: any = require("path");
 
 const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
-
-const log4js = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
 
 const result: any = require(path.join(library, "result"));
-
-const ConfigModule: any = require(path.join(_config, "default"));
-const config: any = ConfigModule.systems;
 
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
 
@@ -37,14 +28,24 @@ export abstract class Wrapper {
 	 *
 	 */
 	protected event: any;
+	protected config: any;
+	protected systemsConfig: any;
+	protected usersConfig: any;
+	protected logger: any;
 
 	/**
 	 *
 	 * @param event
+	 * @param config
+	 * @param logger
 	 * @constructor
 	 */
-	constructor(event: any) {
+	constructor(event: any, config: any, logger: any) {
 		this.event = event;
+		this.config = config;
+		this.systemsConfig = config.systems;
+		this.usersConfig = config.users;
+		this.logger = logger;
 	}
 
 	/**
@@ -82,7 +83,7 @@ export abstract class Wrapper {
 	 * @param error
 	 */
 	protected SendWarn(response: IJSONResponse, error: IErrorObject): void {
-		logger.warn(error.message + " " + error.code);
+		this.logger.warn(JSON.stringify(error));
 		if (response) {
 			response.jsonp(new result(error.code, error.message, error));
 		}
@@ -94,7 +95,7 @@ export abstract class Wrapper {
 	 * @param error
 	 */
 	protected SendError(response: IJSONResponse, error: IErrorObject): void {
-		logger.error(error.message + " " + error.code);
+		this.logger.error(JSON.stringify(error));
 		if (response) {
 			response.jsonp(new result(error.code, error.message, error));
 		}
@@ -106,7 +107,7 @@ export abstract class Wrapper {
 	 * @param error
 	 */
 	protected SendFatal(response: IJSONResponse, error: IErrorObject): void {
-		logger.fatal(error.message + " " + error.code);
+		this.logger.fatal(JSON.stringify(error));
 		if (response) {
 			response.status(500).render("error", {message: error.message, status: 500});
 		}
@@ -139,7 +140,7 @@ export abstract class Wrapper {
 	 * @param response
 	 */
 	protected SendForbidden(response: IJSONResponse): void {
-		logger.error("Forbidden");
+		this.logger.error("Forbidden");
 		if (response) {
 			response.status(403).render("error", {message: "Forbidden...", status: 403});
 		}
@@ -150,7 +151,7 @@ export abstract class Wrapper {
 	 * @param response
 	 */
 	protected SendNotFound(response: IJSONResponse): void {
-		logger.error("notfound");
+		this.logger.error("notfound");
 		if (response) {
 			response.status(404).render("error", {message: "not found", status: 404});
 		}
@@ -231,13 +232,13 @@ export abstract class Wrapper {
 		if (user) {
 
 			let entryPoint = "";
-			if (config.entry_point) {
-				entryPoint = config.entry_point;
+			if (this.systemsConfig.entry_point) {
+				entryPoint = this.systemsConfig.entry_point;
 			}
 
 			let exitPoint = "";
-			if (config.exit_point) {
-				exitPoint = config.exit_point;
+			if (this.systemsConfig.exit_point) {
+				exitPoint = this.systemsConfig.exit_point;
 			}
 
 			switch (user.provider) {

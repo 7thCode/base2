@@ -10,9 +10,11 @@ import {Component, Inject, OnInit} from "@angular/core";
 
 import {Location} from "@angular/common";
 
-import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {IErrorObject} from "../../../../../types/platform/universe";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {AuthService} from "../auth.service";
 
 @Component({
@@ -29,7 +31,7 @@ import {AuthService} from "../auth.service";
  *
  * @since 0.01
  */
-export class LogoutDialogComponent implements OnInit {
+export class LogoutDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
@@ -37,11 +39,6 @@ export class LogoutDialogComponent implements OnInit {
 	get content(): any {
 		return this.data.content;
 	}
-
-	/**
-	 *
-	 */
-	public progress: boolean;
 
 	/**
 	 *
@@ -57,6 +54,7 @@ export class LogoutDialogComponent implements OnInit {
 		public location: Location,
 		public snackbar: MatSnackBar,
 		public auth: AuthService) {
+		super();
 	}
 
 	/**
@@ -67,15 +65,6 @@ export class LogoutDialogComponent implements OnInit {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
 		});
-	}
-
-	/**
-	 *
-	 * @param value
-	 * @constructor
-	 */
-	public Progress(value: boolean): void {
-		this.progress = value;
 	}
 
 	/**

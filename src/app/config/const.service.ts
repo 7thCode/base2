@@ -8,16 +8,14 @@
 
 import {Injectable} from "@angular/core";
 
-/**
- * HTTP
- *
- * @since 0.01
- */
-
 @Injectable({
 	providedIn: "root",
 })
 
+/**
+ * クライアントサイドの設定値。
+ *
+ */
 export class ConstService {
 
 	public endPoint: string = "";
@@ -31,6 +29,9 @@ export class ConstService {
 	public use_publickey: boolean = true;
 	public is_electron: boolean = false;
 
+	/**
+	 *
+	 */
 	constructor() {
 
 	}

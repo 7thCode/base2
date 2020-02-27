@@ -10,7 +10,7 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";

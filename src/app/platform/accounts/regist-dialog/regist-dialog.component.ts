@@ -7,7 +7,8 @@
 "use strict";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "regist-dialog",
@@ -16,39 +17,35 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 })
 
 /**
- *
+ * ユーザ登録ダイアログ
  *
  * @since 0.01
  */
-export class RegistDialogComponent implements OnInit {
+export class RegistDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
-	 *
+	 * ユーザ
 	 */
 	get user(): any {
 		return this.data.user;
 	}
 
 	/**
-	 *
+	 * ロール
 	 */
 	get role(): any {
 		return this.data.user.role;
 	}
 
 	/**
-	 *
+	 * コンテント
 	 */
 	get content(): any {
 		return this.data.content;
 	}
 
 	/**
-	 *
-	 */
-	public progress: boolean;
-
-	/**
+	 * @constructor
 	 *
 	 * @param data
 	 * @param matDialogRef
@@ -57,16 +54,9 @@ export class RegistDialogComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<RegistDialogComponent>) {
+		super();
 	}
 
-	/**
-	 *
-	 * @param value
-	 * @constructor
-	 */
-	public Progress(value: boolean): void {
-		this.progress = value;
-	}
 
 	/**
 	 *
@@ -76,7 +66,7 @@ export class RegistDialogComponent implements OnInit {
 	}
 
 	/**
-	 *
+	 * キャンセル
 	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);

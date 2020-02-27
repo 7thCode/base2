@@ -29,10 +29,11 @@ export class Vaults extends SecureUpdatable {
 	/**
 	 *
 	 * @param event
-	 * @param key
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event: object, key: string) {
-		super(event, key);
+	constructor(event: object, config: object, logger: object) {
+		super(event, config, logger);
 		this.Model = Vault as IVaultModel;
 	}
 

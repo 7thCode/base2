@@ -9,8 +9,10 @@
 import {IErrorObject} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {AuthService} from "../auth.service";
 
 @Component({
@@ -24,7 +26,7 @@ import {AuthService} from "../auth.service";
  *
  * @since 0.01
  */
-export class PasswordDialogComponent implements OnInit {
+export class PasswordDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
@@ -32,11 +34,6 @@ export class PasswordDialogComponent implements OnInit {
 	get content(): any {
 		return this.data.content;
 	}
-
-	/**
-	 *
-	 */
-	public progress: boolean;
 
 	/**
 	 *
@@ -56,6 +53,7 @@ export class PasswordDialogComponent implements OnInit {
 		public matDialogRef: MatDialogRef<any>,
 		public snackbar: MatSnackBar,
 		public auth: AuthService) {
+		super();
 	}
 
 	/**
@@ -66,15 +64,6 @@ export class PasswordDialogComponent implements OnInit {
 		this.snackbar.open(error.message, "Close", {
 			duration: 3000,
 		});
-	}
-
-	/**
-	 *
-	 * @param value
-	 * @constructor
-	 */
-	public Progress(value: boolean): void {
-		this.progress = value;
 	}
 
 	/**

@@ -22,11 +22,12 @@ export class Articles extends Updatable {
 	protected Model: any;
 
 	/**
-	 *
 	 * @param event
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event: any) {
-		super(event);
+	constructor(event: any, config: object, logger: object) {
+		super(event, config, logger);
 		this.Model = Article as IArticleModel;
 	}
 

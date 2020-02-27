@@ -7,10 +7,12 @@
 "use strict";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {IErrorObject} from "../../../../../types/platform/universe";
 import {AuthService} from "../auth.service";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "login-totp-dialog",
@@ -23,7 +25,7 @@ import {AuthService} from "../auth.service";
  *
  * @since 0.01
  */
-export class LoginTotpDialogComponent implements OnInit {
+export class LoginTotpDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
@@ -60,6 +62,7 @@ export class LoginTotpDialogComponent implements OnInit {
 		public matDialogRef: MatDialogRef<any>,
 		public snackbar: MatSnackBar,
 		public auth: AuthService) {
+		super();
 	}
 
 	/**

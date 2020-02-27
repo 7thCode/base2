@@ -84,6 +84,10 @@ export interface IUsernameParam {
 	username: string;
 }
 
+export interface IUserIDParam {
+	user_id: string;
+}
+
 export interface IUpdatableModel {
 
 	public(): any;
@@ -209,7 +213,7 @@ export interface IGetByIDRequest {
 }
 
 export interface IAccountRequest<CONTENT> {
-	params: IUsernameParam;
+	params: IUsernameParam & IUserIDParam;
 	user: object;
 	body?: {content: CONTENT};
 }

@@ -15,6 +15,7 @@ import {
 	IJSONResponse,
 	IQueryParam,
 	IQueryRequest,
+	IUserIDParam,
 	IUsernameParam,
 } from "../../../../types/platform/server";
 
@@ -26,11 +27,6 @@ const path: any = require("path");
 
 const models: string = global._models;
 const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
-
-const ConfigModule: any = require(path.join(_config, "default"));
-const config: any = ConfigModule.systems;
 
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
@@ -43,9 +39,11 @@ export class Accounts extends Wrapper {
 	/**
 	 *
 	 * @param event
+	 * @param config
+	 * @param logger
 	 */
-	constructor(event: any) {
-		super(event);
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
 	}
 
 	/**
@@ -60,6 +58,22 @@ export class Accounts extends Wrapper {
 			readable = true;
 		} else {
 			readable = (current.username === username); // is self?
+		}
+		return readable;
+	}
+
+	/**
+	 *
+	 * @param current
+	 * @param username
+	 */
+	private own_by_id(current: any, user_id: string): boolean {
+		// マネージャ以上は、自分以外のアカウントを変更できる。
+		let readable: boolean = false;
+		if (current.role.manager) { // is not manager?
+			readable = true;
+		} else {
+			readable = (current.user_id === user_id); // is self?
 		}
 		return readable;
 	}
@@ -151,10 +165,10 @@ export class Accounts extends Wrapper {
 						});
 					});
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable."});
+					this.SendError(response, {code: 2, message: "unreadable.(account 2)"});
 				}
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in"});
+				this.SendError(response, {code: 1, message: "not logged in.(account 1)"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -194,10 +208,10 @@ export class Accounts extends Wrapper {
 						});
 					});
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable."});
+					this.SendError(response, {code: 2, message: "unreadable.(account 1)"});
 				}
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in."});
+				this.SendError(response, {code: 1, message: "not logged in.(account 2)"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -227,7 +241,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			} else {
-				this.SendError(response, {code: 2, message: "unreadable."});
+				this.SendError(response, {code: 2, message: "unreadable.(account 2)"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -254,7 +268,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			} else {
-				this.SendError(response, {code: 2, message: "unreadable"});
+				this.SendError(response, {code: 2, message: "unreadable.(account 3)"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -285,7 +299,7 @@ export class Accounts extends Wrapper {
 							const secret: any = SpeakEasy.generateSecret({
 								length: 20,
 								name: params_username,
-								issuer: config.ua,
+								issuer: this.systemsConfig.ua,
 							});
 							const update: object = {
 								secret: secret.base32,
@@ -294,7 +308,7 @@ export class Accounts extends Wrapper {
 							const qr_url: string = SpeakEasy.otpauthURL({ // data url encode of secret QR code.
 								secret: secret.ascii,
 								label: encodeURIComponent(usernameToMail(params_username)),
-								issuer: config.ua,
+								issuer: this.systemsConfig.ua,
 							});
 
 							LocalAccount.set_by_name(current_user, params_username, update, (error: IErrorObject, account: object): void => {
@@ -310,7 +324,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			} else {
-				this.SendError(response, {code: 2, message: "unreadable."});
+				this.SendError(response, {code: 2, message: "unreadable.(account 4)"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -339,12 +353,120 @@ export class Accounts extends Wrapper {
 					});
 				});
 			} else {
-				this.SendError(response, {code: 2, message: "unreadable."});
+				this.SendError(response, {code: 2, message: "unreadable.(account 5)"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
 		}
 	}
+
+	/**
+	 * アカウントゲット
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public get_by_id(request: IAccountRequest<any>, response: IJSONResponse): void {
+		try {
+			if (request.user) {
+				const params: IUserIDParam = request.params;
+				const current_user: IAccountModel = this.Transform(request.user);
+
+				if (this.own_by_id(current_user, params.user_id)) {
+					LocalAccount.default_find_by_id(current_user, params.user_id, (error: IErrorObject, account: IAccountModel): void => {
+						this.ifSuccess(response, error, (): void => {
+							if (account) {
+								// this.SendSuccess(response, account.public(current_user));
+								this.SendSuccess(response, account.public());
+							} else {
+								this.SendWarn(response, {code: 3, message: "not found"});
+							}
+						});
+					});
+				} else {
+					this.SendError(response, {code: 2, message: "unreadable.(account 6)"});
+				}
+			} else {
+				this.SendError(response, {code: 1, message: "not logged in.(account 3)"});
+			}
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
+
+	/**
+	 * アカウントプット
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public put_by_id(request: IAccountRequest<IAccountContent>, response: IJSONResponse): void {
+		try {
+			if (request.user) {
+				const params: IUserIDParam = request.params;
+				const current_user: IAccountModel = this.Transform(request.user);
+				const content: IAccountContent = request.body.content;
+
+				const update: any = {
+					"content.mails": content.mails,
+					"content.nickname": content.nickname,
+					"content.id": content.id,
+					"content.description": content.description,
+				};
+
+				if (current_user.role.raw <= content.auth) {
+					update.auth = content.auth;
+					update.enabled = content.enabled;
+				}
+
+				if (this.own_by_id(current_user, params.user_id)) {
+					LocalAccount.set_by_id(current_user, params.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
+						this.ifSuccess(response, error, (): void => {
+							// 		this.SendSuccess(response, object.public(current_user));
+							this.SendSuccess(response, account.public());
+						});
+					});
+				} else {
+					this.SendError(response, {code: 2, message: "unreadable.(account 7)"});
+				}
+			} else {
+				this.SendError(response, {code: 1, message: "not logged in.(account 1)"});
+			}
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
+
+	/**
+	 * アカウント削除
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public delete_by_id(request: IAccountRequest<any>, response: IJSONResponse): void {
+		try {
+			const params: IUserIDParam = request.params;
+			const current_user: IAccountModel = this.Transform(request.user);
+
+			if (this.own_by_id(current_user, params.user_id)) {
+				LocalAccount.default_find_by_id(current_user, params.user_id, (error: IErrorObject, account: IAccountModel): void => {
+					this.ifSuccess(response, error, (): void => {
+						LocalAccount.remove_by_id(current_user, params.user_id, (error: IErrorObject): void => {
+							this.ifSuccess(response, error, (): void => {
+								// this.event.emitter.emit("account:delete", {user: current_user, user_id: object.user_id, username: object.username});
+								this.SendSuccess(response, {});
+							});
+						});
+					});
+				});
+			} else {
+				this.SendError(response, {code: 2, message: "unreadable.(account 8)"});
+			}
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
+
 
 }
 

@@ -9,7 +9,7 @@
 import {Callback, IContent, IErrorObject} from "../../../../../types/platform/universe";
 
 import {ChangeDetectorRef, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "./info-dialog/info-dialog.component";
 import {SessionableComponent} from "./sessionable.component";
@@ -23,9 +23,6 @@ import {SessionService} from "../services/session.service";
  */
 export abstract class UpdatableComponent extends SessionableComponent implements OnInit {
 
-	/**
-	 *
-	 */
 	public size: number = 20;
 	public count: number;
 	public results: any[];
@@ -35,7 +32,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	protected page: number = 0;
 
 	/**
-	 *
+	 * @constructor
 	 * @param session
 	 * @param change
 	 * @param matDialog
@@ -62,6 +59,8 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	}
 
 	/**
+	 * インフォダイアログ
+	 *
 	 * @returns none
 	 */
 	protected infoDialog(title: string, message: string, callback: () => void): void {
@@ -78,34 +77,36 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	}
 
 	/**
+	 * リストビューデコレータ
 	 *
-	 * @param object
+	 * @param object デコレーション対象
 	 */
 	protected toListView(object: any): any {
 		return object;
 	}
 
 	/**
+	 * ビューデコレータ
 	 *
-	 * @param data
+	 * @param data デコレーション対象
 	 */
 	protected toView(data: any): any {
 		return data;
 	}
 
 	/**
-	 *
-	 * @param data
+	 * トランスフォーマー
+	 * @param data トランスフォーム対象
 	 */
 	protected confirmToModel(data: any): any {
 		return data;
 	}
 
 	/**
-	 *
-	 * @params id
-	 * @params callback
-	 * @returns none
+	 * 取得
+	 * @params id 取得対象レコードID
+	 * @params callback コールバック
+	 * @returns none なし
 	 */
 	protected get(id: string, callback: Callback<any>): void {
 		this.service.get(id, (error: IErrorObject, result: any): void => {
@@ -120,8 +121,8 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	/**
 	 * 作成
 	 * @params data 初期データ
-	 * @params callback
-	 * @returns none
+	 * @params callback コールバック
+	 * @returns none なし
 	 */
 	protected create(content: IContent, callback: Callback<any>): void {
 		this.service.post(content, (error: IErrorObject, result: any): void => {
@@ -141,10 +142,11 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	}
 
 	/**
+	 * 更新
 	 *
-	 * @param id
-	 * @param content
-	 * @param callback
+	 * @param id 更新対象レコードID
+	 * @param content 更新内容
+	 * @param callback コールバック
 	 */
 	protected update(id: string, content: any, callback: Callback<any>): void {
 		this.service.put(id, content, (error: IErrorObject, result: any): void => {
@@ -164,10 +166,11 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	}
 
 	/**
+	 * セット
 	 *
-	 * @param id
-	 * @param command
-	 * @param data
+	 * @param id 対象レコードID
+	 * @param command　コマンド
+	 * @param data 更新内容
 	 * @param callback
 	 */
 	protected set(id: string, command: string, data: any, callback: Callback<any>): void {
@@ -188,9 +191,10 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	}
 
 	/**
+	 * 削除
 	 *
-	 * @param id
-	 * @param callback
+	 * @param id 対象レコードID
+	 * @param callback コールバック
 	 */
 	protected delete(id: string, callback: Callback<any>): void {
 		this.service.delete(id, (error: IErrorObject, result: any): void => {
@@ -209,13 +213,9 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 		});
 	}
 
-	/**
-	 *
-	 */
 	public ngOnInit(): void {
 		this.page = 0;
 		this.query = {};
-
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
 			this.draw((error: IErrorObject, filtered: object[]): void => {
@@ -231,7 +231,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 
 	/**
 	 * 再描画
-	 * @param callback
+	 * @param callback コールバック
 	 */
 	public draw(callback: Callback<any>): void {
 		this.service.count(this.query, (error: IErrorObject, result: any): void => {

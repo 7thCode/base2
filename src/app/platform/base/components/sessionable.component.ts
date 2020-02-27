@@ -24,14 +24,14 @@ const moment: any = momentNs;
 export abstract class SessionableComponent {
 
 	/**
-	 *
+	 * @returns 処理中か。
 	 */
 	protected get isProgress(): boolean {
 		return this.progress;
 	}
 
 	/**
-	 *
+	 *  @returns 現行のセッション。
 	 */
 	public get currentSession(): any {
 		return this.privateCurrentSession;
@@ -39,7 +39,7 @@ export abstract class SessionableComponent {
 
 	/**
 	 * ロール取得
-	 * @returns none
+	 * @returns アカウントのロール
 	 */
 	public get role(): IRole {
 		let result: IRole = {login: false, system: false, manager: false, user: false, public: false, categoly: 0, raw: AuthLevel.public};
@@ -54,13 +54,13 @@ export abstract class SessionableComponent {
 	/**
 	 *
 	 */
-	public get modifyMoment(): object {
-		let result: object = null;
-		if (this.privateCurrentSession) {
-			result = moment(this.privateCurrentSession.modify);
-		}
-		return result;
-	}
+	// public get modifyMoment(): object {
+	// 	let result: object = null;
+	// 	if (this.privateCurrentSession) {
+	// 		result = moment(this.privateCurrentSession.modify);
+	// 	}
+	// 	return result;
+	// }
 
 	/**
 	 *
@@ -83,7 +83,7 @@ export abstract class SessionableComponent {
 	private privateCurrentSession: any;
 
 	/**
-	 *
+	 * @constructor
 	 * @param session
 	 * @param change
 	 */
@@ -116,9 +116,8 @@ export abstract class SessionableComponent {
 	}
 
 	/**
-	 *
-	 * @param value
-	 * @constructor
+	 * 動作中
+	 * @param value 動作中
 	 */
 	protected Progress(value: boolean): void {
 		this.progress = value;
@@ -127,8 +126,9 @@ export abstract class SessionableComponent {
 
 	/**
 	 * セッション取得
-	 * @param callback
-	 * @returns none
+	 *
+	 * @param callback コールバック
+	 * @returns none なし
 	 */
 	protected getSession(callback: Callback<object>): void {
 		this.session.get((error: IErrorObject, result: object): void => {
@@ -142,9 +142,10 @@ export abstract class SessionableComponent {
 	}
 
 	/**
+	 * セッションに任意のオブジェクト追加
 	 *
-	 * @param data
-	 * @param callback
+	 * @param data 追加データ
+	 * @param callback コールバック
 	 */
 	protected putSessionData(data: object, callback: Callback<object>): void {
 		this.session.put(data, (error: IErrorObject, result: object): void => {

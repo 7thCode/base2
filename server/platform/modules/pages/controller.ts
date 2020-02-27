@@ -26,9 +26,11 @@ export class Pages extends Updatable {
 	/**
 	 *
 	 * @param event
+	 *  @param config
+	 *   @param logger
 	 */
-	constructor(event: object) {
-		super(event);
+	constructor(event: object, config: object, logger: object) {
+		super(event, config, logger);
 		this.Model = Page as IPageModel;
 	}
 

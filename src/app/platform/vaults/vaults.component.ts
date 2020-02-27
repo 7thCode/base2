@@ -11,7 +11,8 @@ import {IErrorObject, IVaultModelContent} from "../../../../types/platform/unive
 import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component} from "@angular/core";
 import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
 import {VaultDialogComponent} from "./vault-dialog/vault-dialog.component";
@@ -28,13 +29,14 @@ import {VaultsService} from "./vaults.service";
 })
 
 /**
- *
+ * 秘匿データレコード
  *
  * @since 0.01
  */
 export class VaultsComponent extends GridViewComponent {
 
 	/**
+	 * @constructor
 	 *
 	 * @param session
 	 * @param http
@@ -72,7 +74,18 @@ export class VaultsComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * リストビューデコレータ
+	 * @param object
+	 */
+	protected toListView(object: any): any {
+		object.cols = 1;
+		object.rows = 1;
+		return object;
+	}
+
+	/**
+	 * 新規作成
+	 * @returns none なし
 	 */
 	public createDialog(): void {
 
@@ -119,8 +132,8 @@ export class VaultsComponent extends GridViewComponent {
 	}
 
 	/**
-	 *
-	 * @param id
+	 * 更新ダイアログ
+	 * @param id 更新対象レコードID
 	 */
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: object): void => {
@@ -153,8 +166,8 @@ export class VaultsComponent extends GridViewComponent {
 	}
 
 	/**
-	 *
-	 * @param id
+	 * 削除
+	 * @param id 削除対象レコードID
 	 */
 	public onDelete(id: string): void {
 		this.Progress(true);
@@ -166,16 +179,6 @@ export class VaultsComponent extends GridViewComponent {
 			}
 			this.Progress(false);
 		});
-	}
-
-	/**
-	 *
-	 * @param object
-	 */
-	protected toListView(object: any): any {
-		object.cols = 1;
-		object.rows = 1;
-		return object;
 	}
 
 }

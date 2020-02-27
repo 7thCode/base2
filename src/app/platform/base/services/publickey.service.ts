@@ -93,7 +93,7 @@ export class PublicKeyService extends HttpService {
 	/**
 	 * ユーザトークン（テスト)
 	 *
-	 * @param callback
+	 * @param callback コールバック
 	 */
 	public token(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/token", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {

@@ -8,6 +8,7 @@
 
 import {IAccountModel} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
+import {ajaxGet} from "rxjs/internal-compatibility";
 
 const express: any = require("express");
 export const router: any = express.Router();
@@ -19,18 +20,23 @@ const controllers: string = global._controllers;
 const library: string = global._library;
 const _config: string = global.__config;
 
-const log4js: any = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
+// const log4js: any = require("log4js");
+// log4js.configure(path.join(_config, "platform/logs.json"));
+// const logger: any = log4js.getLogger("request");
 
-const ConfigModule: any = require(path.join(_config, "default"));
+const event = module.parent.exports.event;
+
+const logger: any = module.parent.exports.logger;
+
+const ConfigModule: any = module.parent.exports.config;
+// const ConfigModule: any = require(path.join(_config, "default"));
 const systemsConfig: any = ConfigModule.systems;
 const usersConfig: any = ConfigModule.users;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Pages: any = require("./controller");
-const pages: any = new Pages(module.parent.exports.event);
+const pages: any = new Pages(event, ConfigModule, logger);
 
 // initialize
 
@@ -96,7 +102,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 						if (result) {
 							pages.SendSuccess(response, result);
 						} else {
-							pages.SendError(response, {code: -1, message: ""});
+							pages.SendError(response, {code: -1, message: "(page 1)"});
 						}
 					} else {
 						pages.SendError(response, error);

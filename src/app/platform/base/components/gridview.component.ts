@@ -8,7 +8,8 @@
 
 import {AfterContentInit, ChangeDetectorRef, OnChanges, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatGridList} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatGridList} from "@angular/material/grid-list";
 
 import {UpdatableComponent} from "./updatable.component";
 
@@ -21,7 +22,7 @@ import {SessionService} from "../services/session.service";
  */
 export abstract class GridViewComponent extends UpdatableComponent implements OnInit, OnChanges, AfterContentInit {
 
-	@ViewChild("grid", {static: true}) public grid: MatGridList;
+	@ViewChild("grid") public grid: MatGridList;
 
 	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
 

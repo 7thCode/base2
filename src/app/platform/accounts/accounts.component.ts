@@ -10,7 +10,9 @@ import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {AfterContentInit, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
 import {MediaChange, MediaObserver} from "@angular/flex-layout"; // for responsive
-import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
+import {MatDialog} from "@angular/material/dialog";
+import {MatGridList} from "@angular/material/grid-list";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 import {SessionableComponent} from "../base/components/sessionable.component";
@@ -28,58 +30,31 @@ import {AccountsService} from "./accounts.service";
 })
 
 /**
- *
+ * アカウントレコード
  *
  * @since 0.01
  */
 export class AccountsComponent extends SessionableComponent implements OnInit, AfterContentInit {
 
-	/**
-	 *
-	 */
 	public get isProgress(): boolean {
 		return this.progress;
 	}
 
-	/**
-	 *
-	 */
 	public results: any[];
 
-	/**
-	 *
-	 */
 	public progress: boolean;
 
-	/**
-	 *
-	 */
 	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
 
-	@ViewChild("grid", {static: true}) public grid: MatGridList;
+	@ViewChild("grid") public grid: MatGridList;
 
 	public nickname = "";
 	public size: number = 20;
 	public count: number;
 
-	/**
-	 *
-	 */
 	protected service: AccountsService;
-
-	/**
-	 *
-	 */
 	protected auth_service: AuthService;
-
-	/**
-	 *
-	 */
 	protected query: object = {};
-
-	/**
-	 *
-	 */
 	protected page: number = 0;
 
 	/**

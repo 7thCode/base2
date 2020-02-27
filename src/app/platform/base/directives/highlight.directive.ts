@@ -8,15 +8,15 @@
 
 import {Directive, ElementRef, HostListener, Input} from "@angular/core";
 
-/**
- *
- */
 @Directive({
 	selector: "[highlight]",
 })
 
 /**
  *
+ * マウス検知ハイライト
+ *
+ * @since 0.01
  */
 export class HighlightDirective {
 
