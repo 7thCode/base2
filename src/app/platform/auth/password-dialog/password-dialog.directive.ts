@@ -43,6 +43,7 @@ export class PasswordDialogDirective {
 
 		const dialog: any = this.matDialog.open(PasswordDialogComponent, {
 			width: "40vw",
+			height: "fit-content",
 			data: {
 				content: {
 					title: "Password",

@@ -260,6 +260,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 			if (!error) {
 				const dialog: any = this.matDialog.open(AccountDialogComponent, {
 					width: "90vw",
+					height: "fit-content",
 					data: {
 						session: this.currentSession,
 						user: result,

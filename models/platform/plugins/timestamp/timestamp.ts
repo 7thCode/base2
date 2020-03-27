@@ -4,7 +4,13 @@
  * opensource.org/licenses/mit-license.php
  */
 
+const moment: any = require("moment-timezone");
+
 module.exports = exports = function lastModifiedPlugin(schema: any, options: any) {
+
+	const localtime = () => {
+		return moment().add(options.offset, 'hours');
+	};
 
 	schema.add({create: Date});
 	schema.add({modify: Date});
@@ -25,10 +31,12 @@ module.exports = exports = function lastModifiedPlugin(schema: any, options: any
 
 	schema.pre("save", function(next: () => void) {
 		if (!this.create) {
-			this.create = new Date();
+		// 	this.create = new Date();
+		 	this.create = localtime();
 		}
 
-		this.modify = new Date();
+	 // 	this.modify = new Date();
+	 	this.modify = localtime();
 		next();
 	});
 
@@ -36,7 +44,8 @@ module.exports = exports = function lastModifiedPlugin(schema: any, options: any
 	});
 
 	schema.pre("update", function(next: () => void) {
-		this.update({}, {$set: {modify: new Date()}});
+	// 	this.update({}, {$set: {modify: new Date()}});
+	 	this.update({}, {$set: {modify: localtime()}});
 		next();
 	});
 
@@ -44,7 +53,8 @@ module.exports = exports = function lastModifiedPlugin(schema: any, options: any
 	});
 
 	schema.pre(["updateOne", "findOneAndUpdate"], function(next: () => void) {
-		this.update({}, {$set: {modify: new Date()}});
+ 	// 	this.update({}, {$set: {modify: new Date()}});
+	 	this.update({}, {$set: {modify: localtime()}});
 		next();
 	});
 

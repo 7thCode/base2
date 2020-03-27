@@ -46,6 +46,7 @@ export class RegistDialogDirective {
 
 		const dialog: any = this.matDialog.open(RegistDialogComponent, {
 			width: "40vw",
+			height: "fit-content",
 			data: {
 				content: {
 					title: "Regist",
@@ -61,6 +62,7 @@ export class RegistDialogDirective {
 			if (result) {
 				const dialog: any = this.matDialog.open(InfoDialogComponent, {
 					width: "40vw",
+					height: "fit-content",
 					data: {content: resultDialogContent},
 					disableClose: true,
 				});

@@ -67,7 +67,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 		const dialog: any = this.matDialog.open(InfoDialogComponent, {
 			data: {content: {title, message}},
 			width: "90vw",
-			height: "90vh",
+			height: "fit-content",
 			disableClose: true,
 		});
 

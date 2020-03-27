@@ -30,6 +30,7 @@ export class LoginDialogDirective {
 
 		const dialog: any = this.matDialog.open(LoginDialogComponent, {
 			width: "40vw",
+			height: "fit-content",
 			data: {
 				content: {
 					title: "Login",

@@ -4,6 +4,10 @@ var sourcemaps = require('gulp-sourcemaps');
 
 var rimraf = require('rimraf');
 
+gulp.task('dry', function(cb) {
+	gulp.src(['backup','dist','dmg','documentation','logs/*.log','out-tsc','product','public'], {read: false}).pipe(rimraf());
+});
+
 gulp.task('clean', function(cb) {
 	rimraf('product', cb);
 });
@@ -14,6 +18,7 @@ gulp.task('compile', function(){
 		'app.ts',
 		'main.ts',
 		'models/**/*.ts',
+		'bridge/**/*.ts',
 		'server/**/*.ts',
 		'types/**/*.ts'
 	], { base: './' })
@@ -39,6 +44,7 @@ gulp.task('build', function () {
 		'public/**/*.html',
 		'public/images/*.*',
 		'public/favicon/*.*',
+		'bridge/**/*.js',
 		'server/**/*.js',
 		'server/**/*.pug',
 		'server/platform/**/*.js',

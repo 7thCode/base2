@@ -95,6 +95,7 @@ export class PagesComponent extends GridViewComponent {
 
 		const dialog: any = this.matDialog.open(PageDialogComponent, {
 			width: "90vw",
+			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
@@ -146,6 +147,7 @@ export class PagesComponent extends GridViewComponent {
 			if (!error) {
 				const dialog = this.matDialog.open(PageDialogComponent, {
 					width: "90vw",
+					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,
 				});

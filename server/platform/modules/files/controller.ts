@@ -324,6 +324,32 @@ export class Files extends Wrapper {
 
 	/**
 	 *
+	 * @param user_id
+	 * @param name
+	 * @param callback
+	 * @returns none
+	 */
+	public getRecordById(_id: string, callback: Callback<any>): void {
+		try {
+			const id = new mongodb.ObjectId(_id);
+			this.collection.findOne({_id: id}, (error: IErrorObject, item: object): void => {
+				if (!error) {
+					if (item) {
+						callback(null, item);
+					} else {
+						callback({code: -1, message: "no item"}, null);
+					}
+				} else {
+					callback(error, null);
+				}
+			});
+		} catch (e) {
+			callback(e, null);
+		}
+	}
+
+	/**
+	 *
 	 * @param _id
 	 * @param start
 	 * @param end

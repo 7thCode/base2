@@ -102,6 +102,7 @@ export class VaultsComponent extends GridViewComponent {
 
 		const dialog: any = this.matDialog.open(VaultDialogComponent, {
 			width: "40vw",
+			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
@@ -140,6 +141,7 @@ export class VaultsComponent extends GridViewComponent {
 			if (!error) {
 				const dialog: any = this.matDialog.open(VaultDialogComponent, {
 					width: "40vw",
+					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,
 				});

@@ -11,15 +11,17 @@ import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatSpinner} from "@angular/material/progress-spinner";
 
 import {AppRoutingModule} from "./app-routing.module";
 
-import {AppComponent} from "./app.component";
-
-
 import {PlatformModule} from "./platform/platform.module";
 import {GrabberModule} from "./grabber/grabber.module";
-import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-spinner";
+
+import {AppComponent} from "./app.component";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
 	declarations: [
@@ -33,6 +35,7 @@ import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-s
 		OverlayModule,
 		PlatformModule,
 		GrabberModule,
+		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 	],
 	providers: [],
 	bootstrap: [AppComponent],

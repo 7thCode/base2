@@ -45,7 +45,7 @@ namespace ArticleModel {
 	});
 
 	Article.plugin(rights);
-	Article.plugin(timestamp);
+	Article.plugin(timestamp, { offset: 9 });
 	Article.plugin(grouped);
 
 	Article.index({"user_id": 1, "content.id": 1}, {unique: true});
