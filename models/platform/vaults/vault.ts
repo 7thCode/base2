@@ -46,7 +46,7 @@ namespace VaultModel {
 	});
 
 	Vault.plugin(rights);
-	Vault.plugin(timestamp);
+	Vault.plugin(timestamp, { offset: 9 });
 	Vault.plugin(grouped);
 
 	Vault.index({"user_id": 1, "content.id": 1}, {unique: true});

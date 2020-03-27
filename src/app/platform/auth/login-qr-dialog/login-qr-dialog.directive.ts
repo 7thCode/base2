@@ -40,6 +40,7 @@ export class LoginQrDialogDirective {
 
 		const dialog: any = this.matDialog.open(LoginQrDialogComponent, {
 			width: "90vw",
+			height: "fit-content",
 			data: {
 				content: {
 					title: "Login-qr",

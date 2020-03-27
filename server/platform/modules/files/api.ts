@@ -4,7 +4,6 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
 import {IAccountModel} from "../../../../types/platform/server";
@@ -110,65 +109,112 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
+		const render = (response: any, next: () => void, result: any, file: any, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
+
+			const mimetype: string = result.metadata.type;
+			const total: number = result.length;
+
+			let start: number = 0;
+			let end: number = 0;
+			let chunksize: number = 0;
+			let command = command_string;
+
+
+			// Safari
+			if (range) {　// with [Range Request] for Large Stream seeking. (ex Video,Sound...)
+				const parts: string[] = range.replace(/bytes=/, "").split("-");
+				const partialstart: string = parts[0];
+				const partialend: string = parts[1];
+
+				start = parseInt(partialstart, 10);
+				end = partialend ? parseInt(partialend, 10) : total - 1;
+				chunksize = (end - start) + 1;
+				command = "";
+			} else { // Full Data.
+				start = 0;
+				end = total - 1;
+				chunksize = (end - start) + 1;
+			}
+
+
+			// First aid. (for chrome??.)
+			start = 0;
+			end = total - 1;
+			chunksize = (end - start) + 1;
+			// First aid.
+
+			file.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					if (result) {
+						response.status(200);
+						response.type(mimetype);
+						response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+						response.set("Accept-Ranges", "bytes");
+						response.set("Content-Length", chunksize);
+
+						// c=[{"c":"resize","p":{"width":300,"height":100}}]
+						file.effect(mimetype, query, command, result, (error: any, result: any): void => {
+							if (!error) {
+								result.pipe(response);
+								callback(result);
+							} else {
+								next();
+							}
+						});
+					} else {
+						next();
+					}
+				} else {
+					next();
+				}
+			});
+
+		};
+
+		const render_id = (response: any, next: () => void, file: any, _id: string, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
+			file.getRecordById(_id, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					if (result) {
+						if (result.metadata.rights.read === AuthLevel.public) {
+							render(response, next, result, file, query, range, command_string, callback);
+						} else {
+							response.status(403).render("error", {message: "Forbidden...", status: 403});
+						}
+					} else {
+						next();
+					}
+				} else {
+					file.brankImage((error: IErrorObject, result: any, item: any): void => {
+						if (!error) {
+							// const mimetype = item.metadata.type;
+							const mimetype: string = "image/png";
+							const total: number = item.length;
+							const start: number = 0;
+							const end: number = total - 1;
+							const chunksize: number = (end - start) + 1;
+
+							response.status(200);
+							response.type(mimetype);
+							response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+							response.set("Accept-Ranges", "bytes");
+							response.set("Content-Length", chunksize);
+
+							result.pipe(response);
+							callback(result);
+						} else {
+							next();
+						}
+					});
+				}
+			});
+		};
+
 		const render_file = (response: any, next: () => void, file: any, user_id: string, path: string, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
 			file.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						const mimetype: string = result.metadata.type;
-						const total: number = result.length;
-
 						if (result.metadata.rights.read === AuthLevel.public) {
-							let start: number = 0;
-							let end: number = 0;
-							let chunksize: number = 0;
-							let command = command_string;
-
-							if (range) {　// with [Range Request] for Large Stream seeking. (ex Video,Sound...)
-								const parts: string[] = range.replace(/bytes=/, "").split("-");
-								const partialstart: string = parts[0];
-								const partialend: string = parts[1];
-
-								start = parseInt(partialstart, 10);
-								end = partialend ? parseInt(partialend, 10) : total - 1;
-								chunksize = (end - start) + 1;
-								command = "";
-							} else { // Full Data.
-								start = 0;
-								end = total - 1;
-								chunksize = (end - start) + 1;
-							}
-
-							// First aid. (for chrome??.)
-							start = 0;
-							end = total - 1;
-							chunksize = (end - start) + 1;
-							// First aid.
-
-							file.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
-								if (!error) {
-									if (result) {
-										response.status(200);
-										response.type(mimetype);
-										response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
-										response.set("Accept-Ranges", "bytes");
-										response.set("Content-Length", chunksize);
-
-										// c=[{"c":"resize","p":{"width":300,"height":100}}]
-										file.effect(mimetype, query, command, result, (error: any, result: any): void => {
-											if (!error) {
-												result.pipe(response);
-												callback(result);
-											} else {
-												next();
-											}
-										});
-									} else {
-										next();
-									}
-								} else {
-									next();
-								}
-							});
+							render(response, next, result, file, query, range, command_string, callback);
 						} else {
 							response.status(403).render("error", {message: "Forbidden...", status: 403});
 						}
@@ -220,6 +266,21 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				render_file(response, next, file, user_id, path, query, range, command_string, (result) => {
 
 				});
+			});
+		}]);
+
+		router.get("/files/getid/:id", [gatekeeper.default, (request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+			gatekeeper.catch(response, (): void => {
+				const _id = request.params.id;
+				const query: { u: string, c: string } = request.query;
+
+				const range: string = request.headers.range;
+				const command_string: string = query.c || "";
+
+				render_id(response, next, file, _id, query, range, command_string, (result) => {
+
+				});
+
 			});
 		}]);
 

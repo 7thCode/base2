@@ -92,6 +92,7 @@ export class ArticlesComponent extends GridViewComponent {
 
 		const dialog: any = this.matDialog.open(ArticleDialogComponent, {
 			width: "40vw",
+			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
@@ -124,7 +125,7 @@ export class ArticlesComponent extends GridViewComponent {
 			if (!error) {
 				const dialog: any = this.matDialog.open(ArticleDialogComponent, {
 					width: "40vw",
-					height: "40vh",
+					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,
 				});

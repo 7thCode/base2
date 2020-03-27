@@ -268,8 +268,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 
 		const dialog: any = this.matDialog.open(ImageDialogComponent, {
 			data: {content: event.target, filename: this.fileName},
-			height: "90vh",
 			width: "90vw",
+			height: "fit-content",
 			disableClose: true,
 		});
 

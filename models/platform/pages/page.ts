@@ -48,7 +48,7 @@ namespace PageModel {
 	});
 
 	Page.plugin(rights);
-	Page.plugin(timestamp);
+	Page.plugin(timestamp, { offset: 9 });
 	Page.plugin(grouped);
 
 	Page.index({"user_id": 1, "content.path": 1}, {unique: true});

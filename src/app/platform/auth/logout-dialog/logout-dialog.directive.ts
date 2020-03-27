@@ -43,6 +43,7 @@ export class LogoutDialogDirective {
 
 		const dialog: any = this.matDialog.open(LogoutDialogComponent, {
 			width: "40vw",
+			height: "fit-content",
 			data: {content: {title: "Logout"}},
 			disableClose: true,
 		});

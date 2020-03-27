@@ -18,6 +18,8 @@ import {AppRoutingModule} from "./app-routing.module";
 import {PlatformModule} from "./platform/platform.module";
 
 import {AppComponent} from "./app.component";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
 	declarations: [
@@ -30,6 +32,7 @@ import {AppComponent} from "./app.component";
 		MatProgressSpinnerModule,
 		OverlayModule,
 		PlatformModule,
+		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 	],
 	providers: [],
 	bootstrap: [AppComponent],
