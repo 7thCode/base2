@@ -10,7 +10,7 @@ import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types
 
 import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
 
-const _: any = require("lodash");
+// const _: any = require("lodash");
 const fs: any = require("graceful-fs");
 const sharp: any = require("sharp");
 const mongodb: any = require("mongodb");
@@ -61,12 +61,10 @@ export class Files extends Wrapper {
 		const options: object = {
 			keepAlive: 1,
 			connectTimeoutMS: 1000000,
-		// 	reconnectTries: 30,
-		// 	reconnectInterval: 2000,
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 		};
-		let connectUrl = "mongodb://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
+		let connectUrl: string = "mongodb://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 		if (config.db.noauth) {
 			connectUrl = "mongodb://" + config.db.address + "/" + config.db.name;
 		}
@@ -104,6 +102,7 @@ export class Files extends Wrapper {
 	 * @param description
 	 * @param mimetype
 	 * @param callback
+	 * @returns none
 	 */
 	private fromLocal(pathFrom: string, user: { user_id: string, role: { raw: number } }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
 		try {
@@ -148,6 +147,7 @@ export class Files extends Wrapper {
 	 * @param user_id
 	 * @param name
 	 * @param callback
+	 * @returns none
 	 */
 	private resultFile(gfs: any, collection: any, user_id: string, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
 		collection.findOne({$and: [{filename: name}, {"metadata.user_id": user_id}]}, (error: IErrorObject, item: any): void => {
@@ -156,7 +156,7 @@ export class Files extends Wrapper {
 					const readstream: any = gfs.openDownloadStream(item._id);
 					callback(null, readstream, item);
 				} else {
-					callback({code: -1, message: "not found."}, null, "");
+					callback({code: -1, message: "not found." + " 2010"}, null, "");
 				}
 			} else {
 				callback(error, null, "");
@@ -173,6 +173,7 @@ export class Files extends Wrapper {
 	 * @param category
 	 * @param description
 	 * @param callback
+	 * @returns none
 	 */
 	private insertFile(request: IPostFile, user: { user_id: string, role: { raw: number } }, name: string, rights: { read: number, write: number }, category: string, description: string, callback: Callback<any>): void {
 
@@ -211,13 +212,13 @@ export class Files extends Wrapper {
 					writestream.write(chunk);
 					writestream.end();
 				} else {
-					callback({code: 42, message: "stream not open"}, null);
+					callback({code: 42, message: "stream not open" + " 471"}, null);
 				}
 			} else {
-				callback({code: 41, message: "no chunk"}, null);
+				callback({code: 41, message: "no chunk" + " 6500"}, null);
 			}
 		} else {
-			callback({code: 40, message: "no data"}, null);
+			callback({code: 40, message: "no data" + " 7643"}, null);
 		}
 	}
 
@@ -225,6 +226,7 @@ export class Files extends Wrapper {
 	 *
 	 * @param initfiles
 	 * @param callback
+	 * @returns none
 	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
@@ -311,7 +313,7 @@ export class Files extends Wrapper {
 					if (item) {
 						callback(null, item);
 					} else {
-						callback({code: -1, message: "no item"}, null);
+						callback({code: -1, message: "no item" + " 148"}, null);
 					}
 				} else {
 					callback(error, null);
@@ -337,7 +339,7 @@ export class Files extends Wrapper {
 					if (item) {
 						callback(null, item);
 					} else {
-						callback({code: -1, message: "no item"}, null);
+						callback({code: -1, message: "no item" + " 5629"}, null);
 					}
 				} else {
 					callback(error, null);
@@ -362,7 +364,7 @@ export class Files extends Wrapper {
 			if (readstream) {
 				callback(null, readstream);
 			} else {
-				callback({code: -1, message: "stream not found."}, null);
+				callback({code: -1, message: "stream not found." + " 6058"}, null);
 			}
 		} catch (e) {
 			callback(e, null);
@@ -471,10 +473,10 @@ export class Files extends Wrapper {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 2, message: "no stream.(file 1)"});
+							this.SendError(response, {code: 2, message: "no stream.(file 1)" + " 7191"});
 						}
 					} else {
-						this.SendError(response, {code: 1, message: "no item.(file 1)"});
+						this.SendError(response, {code: 1, message: "no item.(file 1)" + " 6086"});
 					}
 				});
 			});
@@ -521,7 +523,7 @@ export class Files extends Wrapper {
 					});
 				});
 			} else {
-				this.SendWarn(response, {code: 1, message: "no name"});
+				this.SendWarn(response, {code: 1, message: "no name" + " 3964"});
 			}
 		} catch (e) {
 			this.SendFatal(response, e);
@@ -540,19 +542,19 @@ export class Files extends Wrapper {
 			const user: IAccountModel = this.Transform(request.user);
 
 			const query: object = Files.query_by_user_write(user, {filename: path});
-			this.collection.findOne(query, (error: IErrorObject, item: object): void => {
+			// 		this.collection.findOne(query, (error: IErrorObject, item: object): void => {
+			// 			this.ifSuccess(response, error, (): void => {
+			// 				if (item) {
+			this.collection.findOneAndDelete(query, (error): void => {
 				this.ifSuccess(response, error, (): void => {
-					if (item) {
-						this.collection.deleteOne(query, (error): void => {
-							this.ifSuccess(response, error, (): void => {
-								this.SendSuccess(response, {});
-							});
-						});
-					} else {
-						this.SendWarn(response, {code: 1, message: "not found"});
-					}
+					this.SendSuccess(response, {});
 				});
 			});
+			// 				} else {
+			// 					this.SendWarn(response, {code: 1, message: "not found"});
+			// 				}
+			// 			});
+			// 		});
 		} catch (e) {
 			this.SendFatal(response, e);
 		}
@@ -663,7 +665,7 @@ export class Files extends Wrapper {
 								}
 							});
 						} else {
-							callback({code: -1, message: "invalid command."}, stream);
+							callback({code: -1, message: "invalid command." + " 5962"}, stream);
 						}
 					} finally {
 						callback(null, stream);
@@ -687,109 +689,109 @@ export class Files extends Wrapper {
 
 	// {"c":"resize","p":{"width":100,"height":100}};
 	public resize(parameter, result): object {
-		const resizer: object = sharp().resize(parameter);
+		const resizer: WritableStream = sharp().resize(parameter);
 		return result.pipe(resizer);
 	}
 
 	// {"c":"extend","p":{"top":100,"bottom":200,"left":100,"right":100,"background":{"r":100,"g":100,"b":0,"alpha":1}}}
 	public extend(parameter, result): object {
-		const resizer: object = sharp().extend(parameter);
+		const resizer: WritableStream = sharp().extend(parameter);
 		return result.pipe(resizer);
 	}
 
 	//  {"c": "extract", "p":{ "left": 50, "top": 10, "width": 30, "height": 40 }}
 	public extract(parameter, result): object {
-		const resizer: object = sharp().extract(parameter);
+		const resizer: WritableStream = sharp().extract(parameter);
 		return result.pipe(resizer);
 	}
 
 	// {"c": "rotate", "p": { "angle": 45}};
 	public rotate(parameter, result): object {
-		const angle = parameter.angle || 90;
+		const angle: WritableStream = parameter.angle || 90;
 		const resizer: object = sharp().rotate(angle);
 		return result.pipe(resizer);
 	}
 
 	// {"c": "flip", "p": {}};
 	public flip(parameter, result): object {
-		const resizer: object = sharp().flip();
+		const resizer: WritableStream = sharp().flip();
 		return result.pipe(resizer);
 	}
 
 	// {"c": "flop", "p": {}};
 	public flop(parameter, result): object {
-		const resizer: object = sharp().flop();
+		const resizer: WritableStream = sharp().flop();
 		return result.pipe(resizer);
 	}
 
 	// {"c": "sharpen", "p": {"sigma":1.2}};
 	public sharpen(parameter, result): object {
 		const sigma: number = parameter.sigma || 10;
-		const resizer: object = sharp().sharpen(Math.min(1000, Math.max(sigma, 0.3)));
+		const resizer: WritableStream = sharp().sharpen(Math.min(1000, Math.max(sigma, 0.3)));
 		return result.pipe(resizer);
 	}
 
 	// {"c": "median", "p": {"size":10}};
 	public median(parameter, result): object {
 		const size: number = parameter.size || 3;
-		const resizer: object = sharp().median(size);
+		const resizer: WritableStream = sharp().median(size);
 		return result.pipe(resizer);
 	}
 
 	// {"c": "blur", "p": {"sigma":1.2}};
 	public blur(parameter, result): object {
 		const sigma: number = parameter.sigma || 10;
-		const resizer: object = sharp().blur(Math.min(1000, Math.max(sigma, 0.3)));
+		const resizer: WritableStream = sharp().blur(Math.min(1000, Math.max(sigma, 0.3)));
 		return result.pipe(resizer);
 	}
 
 	public flatten(parameter, result): object {
-		const resizer: object = sharp().flatten(parameter);
+		const resizer: WritableStream = sharp().flatten(parameter);
 		return result.pipe(resizer);
 	}
 
 	public gamma(parameter, result): object {
-		const resizer: object = sharp().gamma(parameter);
+		const resizer: WritableStream = sharp().gamma(parameter);
 		return result.pipe(resizer);
 	}
 
 	public negate(parameter, result): object {
-		const resizer: object = sharp().negate(parameter);
+		const resizer: WritableStream = sharp().negate(parameter);
 		return result.pipe(resizer);
 	}
 
 	public normalise(parameter, result): object {
-		const resizer: object = sharp().normalise(parameter);
+		const resizer: WritableStream = sharp().normalise(parameter);
 		return result.pipe(resizer);
 	}
 
 	public threshold(parameter, result): object {
-		const resizer: object = sharp().threshold(parameter);
+		const resizer: WritableStream = sharp().threshold(parameter);
 		return result.pipe(resizer);
 	}
 
 	public boolean(parameter, result): object {
-		const resizer: object = sharp().boolean(parameter);
+		const resizer: WritableStream = sharp().boolean(parameter);
 		return result.pipe(resizer);
 	}
 
 	public linear(parameter, result): object {
-		const resizer: object = sharp().linear(parameter);
+		const resizer: WritableStream = sharp().linear(parameter);
 		return result.pipe(resizer);
 	}
 
 	public recomb(parameter, result): object {
-		const resizer: object = sharp().recomb(parameter);
+		const resizer: WritableStream = sharp().recomb(parameter);
 		return result.pipe(resizer);
 	}
 
 	public tint(parameter, result): object {
-		const resizer: object = sharp().tint(parameter);
+		const resizer: WritableStream = sharp().tint(parameter);
 		return result.pipe(resizer);
 	}
 
 	public greyscale(parameter, result): object {
-		const resizer: object = sharp().greyscale(parameter);
+		const resizer: WritableStream = sharp().greyscale(parameter);
 		return result.pipe(resizer);
 	}
 

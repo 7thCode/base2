@@ -14,7 +14,8 @@ import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {ConstService} from "../../config/const.service";
+import { environment } from '../../../environments/environment';
+
 import {HttpService} from "../base/services/http.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 
@@ -32,15 +33,13 @@ export class AuthService extends HttpService {
 	/**
 	 * @constructor
 	 * @param http
-	 * @param constService
 	 * @param PublicKey
 	 */
 	constructor(
 		protected http: HttpClient,
-		public constService: ConstService,
 		private PublicKey: PublicKeyService,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
 	/**
@@ -52,7 +51,7 @@ export class AuthService extends HttpService {
 	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-			const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			callback(null, rsa.encrypt(plain, "base64"));
 		} catch (e) {
 			callback(e, "");
@@ -68,7 +67,7 @@ export class AuthService extends HttpService {
 	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>) {
 		try {
-			const use_publickey = this.constService.use_publickey;
+			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
 				AuthService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
 					if (!error) {
@@ -83,6 +82,27 @@ export class AuthService extends HttpService {
 		} catch (error) {
 			callback(error, "");
 		}
+	}
+
+	/**
+	 * ログイン済み?
+	 *
+	 * @param callback コールバック
+	 */
+	public is_logged_in(callback: Callback<any>): void {
+		this.http.get(this.endPoint + "/auth/local/is_logged_in", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 229"}, null);
+		});
 	}
 
 	/**
@@ -109,7 +129,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 1019"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -145,7 +165,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 7241"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -176,7 +196,7 @@ export class AuthService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 8923"}, null);
 		});
 	}
 
@@ -187,7 +207,7 @@ export class AuthService extends HttpService {
 	 * @param callback ログイントークンを返すコールバック
 	 */
 	public get_login_token(callback: Callback<any>): void {
-		const value = localStorage.getItem("QR");
+		const value: any = localStorage.getItem("QR");
 		this.http.get(this.endPoint + "/auth/token/qr/" + encodeURIComponent(value), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -199,7 +219,7 @@ export class AuthService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 7995"}, null);
 		});
 	}
 
@@ -228,7 +248,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 2761"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -265,7 +285,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 5714"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -301,7 +321,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 6193"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -337,7 +357,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 7291"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -367,7 +387,7 @@ export class AuthService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 2555"}, null);
 		});
 	}
 

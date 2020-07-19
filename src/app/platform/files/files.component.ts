@@ -9,44 +9,35 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component, HostListener, OnChanges, OnInit, ViewChild} from "@angular/core";
-import {MediaChange, MediaObserver} from "@angular/flex-layout";
+import {Component, HostListener, OnInit, ViewChild} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
-import {MatGridList} from "@angular/material/grid-list";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
 
-import {ConstService} from "../../config/const.service";
 import {SessionService} from "../base/services/session.service";
-
-@Component({
-	selector: "files",
-	templateUrl: "./files.component.html",
-	styleUrls: ["./files.component.css"],
-})
 
 /**
  * ファイル
  *
  * @since 0.01
  */
-export class FilesComponent extends UploadableComponent implements OnInit, OnChanges {
-
-	public results: any[];
+@Component({
+	selector: "files",
+	templateUrl: "./files.component.html",
+	styleUrls: ["./files.component.css"],
+})
+export class FilesComponent extends UploadableComponent implements OnInit {
 
 	@ViewChild("fileInput") public fileInput;
-	@ViewChild("grid") public grid: MatGridList;
+
+	public results: any[];
 
 	public filename: string = "";
 	public size: number = 20;
 	public count: number;
 
-	/**
-	 * グリッド幅
-	 */
-	public gridByBreakpoint: any = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
-
+	public breakpoint: number = 4;
 
 	protected query: object = {};
 	protected page: number = 0;
@@ -55,22 +46,33 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	 *
 	 * @param session
 	 * @param http
-	 * @param constService
 	 * @param change
-	 * @param observableMedia
 	 * @param matDialog
 	 * @param snackbar
 	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
-		protected constService: ConstService,
-		protected change: ChangeDetectorRef,
-		protected observableMedia: MediaObserver,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, http, constService, change);
+		super(session, http);
+	}
+
+	private widthToColumns(width: number): number {
+		let result: number = 4;
+		if (width < 600) {
+			result = 1;  // xs,
+		} else if (width < 960) {
+			result = 2;  // sm,
+		} else if (width < 1280) {
+			result = 4;  // md,
+		} else if (width < 1920) {
+			result = 6; // lg,
+		} else {
+			result = 8; // xl,
+		}
+		return result;
 	}
 
 	/**
@@ -124,6 +126,7 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 		this.page = 0;
 		this.query = {};
 		this.results = [];
+		this.breakpoint =  this.widthToColumns(window.innerWidth);
 
 		this.draw((error: IErrorObject, filtered: any): void => {
 			if (!error) {
@@ -132,6 +135,10 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 				this.Complete("error", error);
 			}
 		});
+	}
+
+	public onResize(event: any): void {
+		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
 	/**
@@ -194,22 +201,6 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 			} else {
 				this.Complete("error", error);
 			}
-		});
-	}
-
-	/**
-	 *
-	 * @param changes
-	 */
-	public ngOnChanges(changes: any): void {
-	}
-
-	/**
-	 *
-	 */
-	public ngAfterContentInit(): void {
-		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
-			this.grid.cols = this.gridByBreakpoint[change.mqAlias];
 		});
 	}
 

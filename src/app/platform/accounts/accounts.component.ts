@@ -8,10 +8,8 @@
 
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
-import {AfterContentInit, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
-import {MediaChange, MediaObserver} from "@angular/flex-layout"; // for responsive
+import {Component, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
-import {MatGridList} from "@angular/material/grid-list";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
@@ -23,18 +21,17 @@ import {AuthService} from "../auth/auth.service";
 import {SessionService} from "../base/services/session.service";
 import {AccountsService} from "./accounts.service";
 
-@Component({
-	selector: "accounts",
-	templateUrl: "./accounts.component.html",
-	styleUrls: ["./accounts.component.css"],
-})
-
 /**
  * アカウントレコード
  *
  * @since 0.01
  */
-export class AccountsComponent extends SessionableComponent implements OnInit, AfterContentInit {
+@Component({
+	selector: "accounts",
+	templateUrl: "./accounts.component.html",
+	styleUrls: ["./accounts.component.css"],
+})
+export class AccountsComponent extends SessionableComponent implements OnInit {
 
 	public get isProgress(): boolean {
 		return this.progress;
@@ -44,13 +41,11 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 
 	public progress: boolean;
 
-	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
-
-	@ViewChild("grid") public grid: MatGridList;
-
 	public nickname = "";
 	public size: number = 20;
 	public count: number;
+
+	public breakpoint: number = 4;
 
 	protected service: AccountsService;
 	protected auth_service: AuthService;
@@ -62,8 +57,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	 * @param session
 	 * @param authService
 	 * @param accountService
-	 * @param change
-	 * @param observableMedia
 	 * @param matDialog
 	 * @param snackbar
 	 */
@@ -71,12 +64,10 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		public session: SessionService,
 		public authService: AuthService,
 		public accountService: AccountsService,
-		public change: ChangeDetectorRef,
-		private observableMedia: MediaObserver,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, change);
+		super(session);
 		this.service = accountService;
 		this.auth_service = authService;
 	}
@@ -95,6 +86,22 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	 */
 	public static confirmToModel(data: object): object {
 		return data;
+	}
+
+	private widthToColumns(width: number): number {
+		let result: number = 4;
+		if (width < 600) {
+			result = 1;  // xs,
+		} else if (width < 960) {
+			result = 2;  // sm,
+		} else if (width < 1280) {
+			result = 4;  // md,
+		} else if (width < 1920) {
+			result = 6; // lg,
+		} else {
+			result = 8; // xl,
+		}
+		return result;
 	}
 
 	/**
@@ -182,19 +189,12 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	/**
 	 *
 	 */
-	public ngAfterContentInit(): void {
-		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
-			this.grid.cols = this.gridByBreakpoint[change.mqAlias];
-		});
-	}
-
-	/**
-	 *
-	 */
 	public ngOnInit(): void {
 		this.Progress(false);
 		this.page = 0;
 		this.query = {};
+
+		this.breakpoint =  this.widthToColumns(window.innerWidth);
 
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
@@ -206,6 +206,13 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 				}
 			});
 		});
+	}
+
+	/**
+	 *
+	 */
+	public onResize(event: any): void {
+		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
 	/**
@@ -386,7 +393,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
-		const resultDialogContent: any = {title: "User", message: "Delete User?."};
+		const resultDialogContent: any = {title: "User", message: "Delete User?." + " 4118"};
 
 		const dialog: any = this.matDialog.open(InfoDialogComponent, {
 			width: "40vw",
@@ -421,5 +428,4 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 			}
 		});
 	}
-
 }

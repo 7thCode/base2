@@ -10,13 +10,8 @@ import {IJSONResponse} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const models: string = global._models;
 const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
-
-// const ConfigModule: any = require(path.join(_config, "default"));
-// const config: any = ConfigModule.systems;
 
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 const Cipher: any = require(path.join(library, "cipher"));
@@ -31,6 +26,7 @@ export class PublicKey extends Wrapper {
 	 * @param event
 	 * @param config
 	 * @param logger
+	 * @constructor
 	 */
 	 constructor(event: object, config: any, logger: object) {
 	 	super(event, config, logger);
@@ -40,6 +36,7 @@ export class PublicKey extends Wrapper {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	public get_fixed_public_key(request: object, response: IJSONResponse): void {
 		if (this.systemsConfig.use_publickey) {
@@ -53,6 +50,7 @@ export class PublicKey extends Wrapper {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	public get_public_key(request: { user: { publickey: string } }, response: IJSONResponse): void {
 		if (this.systemsConfig.use_publickey) {
@@ -70,6 +68,7 @@ export class PublicKey extends Wrapper {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	public get_access_token(request: { user: { publickey: string }, session: { id: string } }, response: IJSONResponse): void {
 		if (this.systemsConfig.use_publickey) {

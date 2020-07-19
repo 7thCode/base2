@@ -5,21 +5,21 @@
 		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
-				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				<mat-paginator  [length]="count" [pageSize]="size" (page)="Page($event)">
 				</mat-paginator>
-				<button mat-fab color="primary" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+				<button mat-fab color="primary" (click)="createDialog()" class="fab-center">+</button>
 			</div>
-			<mat-grid-list #grid cols="4" rowHeight="1:1">
+			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
 				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
 					<mat-grid-tile-header>
 						<div class="box-header">{{resource.id}}</div>
 					</mat-grid-tile-header>
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-						<button mat-icon-button (click)="updateDialog(resource.parent_id)">
-							<mat-icon class="material-icons" style="color:#b2ebf2;">edit</mat-icon>
+						<button mat-icon-button (click)="updateDialog(resource)">
+							<mat-icon color="primary">edit</mat-icon>
 						</button>
-						<button mat-icon-button color="accent" (click)="onDelete(resource.parent_id)">
-							<mat-icon class="material-icons">delete_sweep</mat-icon>
+						<button mat-icon-button color="accent" (click)="onDelete(resource)">
+							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
 					</mat-grid-tile-footer>
 				</mat-grid-tile>

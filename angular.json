@@ -35,7 +35,15 @@
 						"styles": [
 							"src/styles.css"
 						],
-						"scripts": []
+						"scripts": [],
+						"allowedCommonJsDependencies": [
+							"lodash",
+							"moment-timezone",
+							"node-rsa",
+							"crypto",
+							"asn1",
+							"hammerjs"
+						]
 					},
 					"configurations": {
 						"production": {
@@ -69,10 +77,6 @@
 								{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.prod.ts"
-								},
-								{
-									"replace": "src/app/config/const.service.ts",
-									"with": "src/app/config/const.service-server.ts"
 								}
 							],
 							"optimization": true,

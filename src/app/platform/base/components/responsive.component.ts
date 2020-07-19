@@ -8,10 +8,10 @@
 
 import {IErrorObject} from "../../../../../types/platform/universe";
 
-import {MediaMatcher} from "@angular/cdk/layout";
+import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
-import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";
+import {Directive, OnDestroy, OnInit} from "@angular/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatSpinner} from "@angular/material/progress-spinner";
 
@@ -24,32 +24,31 @@ import {SessionService} from "../services/session.service";
  *
  * @since 0.01
  */
+
+@Directive()
+
 export abstract class ResponsiveComponent extends SessionableComponent implements OnInit, OnDestroy {
 
-	public mobileQuery: MediaQueryList;
+	public isHandset: any;
+	public isTablet: any;
+	public isDesktop: any;
 
 	protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
-	protected mobileQueryListener: () => void;
 
 	/**
 	 *
 	 * @param session
-	 * @param change
 	 * @param overlay
 	 * @param snackbar
-	 * @param media
+	 * @param breakpointObserver
 	 */
 	protected constructor(
 		protected session: SessionService,
-		protected change: ChangeDetectorRef,
 		protected overlay: Overlay,
 		protected snackbar: MatSnackBar,
-		protected media: MediaMatcher,
+		protected breakpointObserver: BreakpointObserver
 	) {
-		super(session, change);
-		this.mobileQuery = media.matchMedia("(max-width: 600px)");
-		this.mobileQueryListener = () => change.detectChanges();
-		this.mobileQuery.addListener(this.mobileQueryListener);
+		super(session);
 	}
 
 	protected cdkSpinnerCreate(): OverlayRef {
@@ -94,13 +93,21 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 	}
 
 	public ngOnInit(): void {
-
+		this.isHandset = this.breakpointObserver.observe([
+			Breakpoints.HandsetPortrait,
+		]);
+		this.isTablet = this.breakpointObserver.observe([
+			Breakpoints.TabletPortrait,
+		]);
+		this.isDesktop = this.breakpointObserver.observe([
+			Breakpoints.Web,
+		]);
 	}
 
 	/**
 	 *
 	 */
 	public ngOnDestroy(): void {
-		this.mobileQuery.removeListener(this.mobileQueryListener);
+	// 	this.mobileQuery.removeListener(this.mobileQueryListener);
 	}
 }

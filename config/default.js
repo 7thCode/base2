@@ -1,24 +1,33 @@
 module.exports = {
 	systems: {
-		status: "debug",
+		status: "production",
 		mode: 1,
+
+		is_cluster: true,
+
+		timezone: "Asia/Tokyo",
+
 		port: 3000,
-		socket_port: 3001,
 		domain: "localhost:3000",
 		protocol: "http",
+
+		socket_port: 3001,
+		socket_domain: "localhost:3001",
+		socket_protocol: "ws",
+
 		cache1: "max-age=86400",
 		cache: "no-cache",
 		timeout: 100000,
 		bodysize: "200mb",
-		cors_enable: false,
-		ua: "base2",
+
+		ua: "base1",
 		use_publickey: false,
 		dav: false,
 		db: {
 			address: "localhost",
-			user: "base2master",
+			user: "base1master",
 			password: "33550336",
-			name: "base2",
+			name: "base1",
 			backup: {
 				hour: 0,
 				minute: 0
@@ -29,14 +38,13 @@ module.exports = {
 			member: true,
 			expire: 60
 		},
-		sessionname: "base2",
-    extendheader_enable: true,
-    extendheader: [
-      ["Access-Control-Allow-Origin", "http://localhost:5000"],
-      ["Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"],
-      ["Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Access-Control-Allow-Origin"],
-      ["Access-Control-Allow-Credentials", true],
-    ],
+		sessionname: "base1",
+		extendheader_enable: true,
+		extendheader: [
+			["Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"],
+			["Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Access-Control-Allow-Origin"],
+			["Access-Control-Allow-Credentials", true],
+		],
 		sessionsecret: "Daisy, Daisy.",
 		tokensecret: "Yes We therefore I think we",
 		key2: "Man is a thinking reed",
@@ -120,7 +128,7 @@ module.exports = {
 		initfiles: [
 			{
 				type: 0,
-				user: {user_id: "000000000000000000000000",role: {raw: 100000} },
+				user: {user_id: "000000000000000000000000", role: {raw: 100000}},
 				path: "/server/platform/assets/img",
 				name: "blank.png",
 				content: {
@@ -143,10 +151,10 @@ module.exports = {
 			enable: "true",
 			redirect: "/",
 			key: {
-				clientID: "1676184429271661",
-				clientSecret: "f3a9ad16cf0d73cd38dfc3aa0843c2fe",
+				clientID: "2881565078637042",
+				clientSecret: "d9803a8acf05e4dd11dc487e006167c2",
 				callbackURL: "http://localhost:3000/auth/facebook/callback",
-				profileFields: ['id', 'emails', 'name']
+				profileFields: ['id', 'name', 'email']
 			},
 		},
 		apple1: {
@@ -197,7 +205,7 @@ module.exports = {
 				"callbackURL": "https://seventh-code.com/auth/googleplus/callback"
 			}
 		},
-		mailer: {
+		mailer1: {
 			type: "mail",
 			account: "postmaster@seventh-code.com",
 			setting: {
@@ -209,7 +217,7 @@ module.exports = {
 				}
 			}
 		},
-		mailer2: {
+		mailer: {
 			type: "mailgun",
 			account: "postmaster@seventh-code.com",
 			setting: {

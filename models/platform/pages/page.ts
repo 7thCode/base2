@@ -104,7 +104,7 @@ namespace PageModel {
 				if (!instance) {
 					this.save(cb);
 				} else {
-					cb({code: -1, message: "already."}, null);
+					cb({code: -1, message: "already." + " 3257"}, null);
 				}
 			} else {
 				cb(error, null);
@@ -141,7 +141,7 @@ namespace PageModel {
 					}
 					cb(null, doc, type);
 				} else {
-					cb({code: -1, message: "not found"}, null, "");
+					cb({code: -1, message: "not found" + " 633"}, null, "");
 				}
 			} else {
 				cb(error, null, "");

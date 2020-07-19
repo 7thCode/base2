@@ -15,21 +15,13 @@ export const router: any = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
-
-// const log4js: any = require("log4js");
-// log4js.configure(path.join(_config, "platform/logs.json"));
-// const logger: any = log4js.getLogger("request");
 
 const event = module.parent.exports.event;
 
 const logger: any = module.parent.exports.logger;
 
 const ConfigModule: any = module.parent.exports.config;
-// const ConfigModule: any = require(path.join(_config, "default"));
 const systemsConfig: any = ConfigModule.systems;
 const usersConfig: any = ConfigModule.users;
 
@@ -92,7 +84,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 				const user: IAccountModel = pages.Transform(request.user);
 				const systems: any = systemsConfig.default;
 
-				let user_id = query.u || systems.user_id;
+				let user_id: string = query.u || systems.user_id;
 				if (user) {
 					user_id = query.u || user.user_id || systems.user_id;
 				}

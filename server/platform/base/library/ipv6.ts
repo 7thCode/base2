@@ -35,7 +35,7 @@ export class IPV6 {
 	/**
 	 *
 	 * @param request
-	 * @constructor
+	 * @returns ipv6
 	 */
 	public static GetIPV6(request: any): string {
 		let result: string = "::ffff:0.0.0.0";
@@ -59,9 +59,9 @@ export class IPV6 {
 
 	/**
 	 *
-	 * @constructor
+	 *
 	 */
-	public GetLocalAddress() {
+	public GetLocalAddress(): any {
 		const ifacesObj = {ipv4: [], ipv6: []};
 		const interfaces = os.networkInterfaces();
 

@@ -10,17 +10,16 @@ import {IEmit} from "../../../../../../types/platform/universe";
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 
-@Component({
-	selector: "page-edit",
-	templateUrl: "./pageedit.component.html",
-	styleUrls: ["./pageedit.component.css"],
-})
-
 /**
  * フォームエディタ
  *
  * @since 0.01
  */
+@Component({
+	selector: "page-edit",
+	templateUrl: "./pageedit.component.html",
+	styleUrls: ["./pageedit.component.css"],
+})
 export class PageEditComponent implements OnInit {
 
 	@Input() public description: any;
@@ -43,7 +42,7 @@ export class PageEditComponent implements OnInit {
 	/**
 	 *
 	 */
-	public ngOnInit() {
+	public ngOnInit(): void {
 		this.clear();
 	}
 

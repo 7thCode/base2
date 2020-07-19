@@ -8,8 +8,10 @@
 
 import {IEmit} from "../../../../../../../types/platform/universe";
 
-import {EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Directive, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {FormControl, Validators} from "@angular/forms";
+
+@Directive()
 
 export class BaseComponent implements OnInit {
 
@@ -28,7 +30,7 @@ export class BaseComponent implements OnInit {
 	/**
 	 *
 	 */
-	public ngOnInit() {
+	public ngOnInit(): void {
 		this.value = this.description.value;  // init
 		this.present_value = this.value;
 		const validators: any[] = [];

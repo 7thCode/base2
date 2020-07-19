@@ -52,6 +52,7 @@ export abstract class Updatable extends Wrapper {
 	/**
 	 *
 	 * @param user
+	 * @returns role
 	 */
 	protected role(user): object {
 		return Account.Role(user);
@@ -60,6 +61,7 @@ export abstract class Updatable extends Wrapper {
 	/**
 	 *
 	 * @param user
+	 * @returns user
 	 */
 	protected default_user(user: any): IAccountModel {
 		let result: any = user;
@@ -148,7 +150,7 @@ export abstract class Updatable extends Wrapper {
 					if (object) {
 						this.SendSuccess(response, object.public());
 					} else {
-						this.SendWarn(response, {code: 1, message: "not found"});
+						this.SendWarn(response, {code: 1, message: "not found" + " 8035"});
 					}
 				});
 			});
@@ -242,7 +244,7 @@ export abstract class Updatable extends Wrapper {
 										}
 									});
 								} else {
-									reject({code: -1, message: "?"});
+									reject({code: -1, message: "?" + " 2303"});
 								}
 							}));
 						});
@@ -261,7 +263,7 @@ export abstract class Updatable extends Wrapper {
 				}
 			});
 		} else {
-			callback({code: -1, message: "config error"}, null);
+			callback({code: -1, message: "config error" + " 6744"}, null);
 		}
 	}
 }

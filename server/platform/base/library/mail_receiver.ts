@@ -30,7 +30,7 @@ export class MailReceiver {
 	 */
 	public connect(receiverSetting: any, connect: (error: IErrorObject) => {}, receive: (message: any, body: any) => {}): void {
 
-		let imap: any;
+		let imap: any = null;
 
 		if (receiverSetting.type === "imap") {
 			imap = this.inbox.createConnection(

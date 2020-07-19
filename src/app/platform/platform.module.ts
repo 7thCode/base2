@@ -41,7 +41,6 @@ import {VaultsModule} from "./vaults/vaults.module";
 
 import {PlatformComponent} from "./platform.component";
 
-
 @NgModule({
 	declarations: [
 		PlatformComponent,
@@ -77,7 +76,6 @@ import {PlatformComponent} from "./platform.component";
 		ImageModule,
 		VaultsModule,
 		FilesModule,
-
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],

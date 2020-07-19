@@ -10,17 +10,16 @@ import {Component} from "@angular/core";
 
 import {BaseComponent} from "../base/base.component";
 
-@Component({
-	selector: "textarea-element",
-	templateUrl: "./textarea.component.html",
-	styleUrls: ["./textarea.component.css"],
-})
-
 /**
  * テキストエリア
  *
  * @since 0.01
  */
+@Component({
+	selector: "textarea-element",
+	templateUrl: "./textarea.component.html",
+	styleUrls: ["./textarea.component.css"],
+})
 export class TextareaComponent extends BaseComponent {
 
 	/**

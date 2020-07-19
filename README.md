@@ -4,6 +4,8 @@ $ mongo
 > use base1
 > db.createUser({user:"base1master", pwd:"33550336", roles:[ "readWrite", "dbOwner" ]})
 ```
+
+
 ## 1.sudoでパスが通らない場合
 
     /etc/sudoers
@@ -24,6 +26,12 @@ $ sudo apt-get update
 $ sudo apt-get install build-essential
 $ sudo apt-get install python
 ```
+
+## 3.タイムゾーン
+```bash
+$ timedatectl set-timezone Asia/Tokyo
+```
+
 ## USER追加
 ```bash
 $ adduser USER
@@ -60,29 +68,6 @@ $ export PATH=$HOME/.nodebrew/current/bin:$PATH
 $ nodebrew install-binary v6.X.0
 $ nodebrew use v6.X.0
 ```
-#### npmのパーミッションを設定(必ず)
-
-    ”sudo npm install xxx"だとうまくいかない場合があるので、npmのパーミッション変えて"npm install xxx"するための設定。
-    (https://docs.npmjs.com/getting-started/fixing-npm-permissions)
-
-
-    ホームディレクトリにnpmディレクトリ作る。
-
-    > mkdir ~/.npm-global
-
-
-    npmの設定
-
-    > npm config set prefix '~/.npm-global'
-
-
-    パス追加（~/.profile）
-
-    > export PATH=~/.npm-global/bin:$PATH
-    > source ~/.profile
-
-## Windows
-    see http://qiita.com/takuyakojima/items/780b3b3133a17cceb175
 
 ## mongodbインストール
 ### Ubuntu
@@ -90,6 +75,7 @@ $ nodebrew use v6.X.0
     > sudo apt install mongo-tools
 ### Mac(Homebrew)
     > brew install mongodb-community
+    > brew install mongo-tools
 ### Windows
 
     see http://qiita.com/moto_pipedo/items/c3bb40370ba2792143ad

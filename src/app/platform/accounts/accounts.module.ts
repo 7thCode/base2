@@ -39,7 +39,7 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
 import {AccountsService} from "./accounts.service";
-
+import {BasePipeModule} from "../base/pipes/base-pipe.module";
 
 @NgModule({
 	declarations: [
@@ -76,8 +76,10 @@ import {AccountsService} from "./accounts.service";
 		MatPaginatorModule,
 		MatSlideToggleModule,
 
-		BaseModule,
 		ImageModule,
+		BasePipeModule,
+		BaseModule,
+
 	],
 	exports: [
 		AccountsComponent,

@@ -10,7 +10,7 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 import {IJSONResponse} from "../../../../types/platform/server";
 
-const _: any = require("lodash");
+// const _: any = require("lodash");
 const fs: any = require("graceful-fs");
 const pug: any = require("pug");
 
@@ -38,6 +38,7 @@ export class Mail extends Wrapper {
 	 * @param event
 	 * @param config
 	 * @param logger
+	 * @constructor
 	 */
 	constructor(event: any, config: any, logger: object) {
 		super(event, config, logger);

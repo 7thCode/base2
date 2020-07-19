@@ -3,13 +3,13 @@
 
 	<div mat-dialog-content fxLayout="column">
 		<mat-card fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around" style="height:200px;width:200px;padding:10px;">
-			<img *ngIf="qr != ''" style="height:180px;width:180px;border-style: solid; border-color: #505050;" [src]="qr">
+			<img *ngIf="qr != ''" style="height:180px;width:180px;border-style: solid; border-color: #505050;" [src]="qr" alt="qr code">
 		</mat-card>
 	</div>
 
 	<div mat-dialog-actions fxLayout="column">
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-			<button mat-stroked-button color="warn" mat-dialog-close="">Close</button>
+			<button mat-stroked-button color="warn" mat-dialog-close="" cdkFocusInitial>Close</button>
 		</div>
 	</div>
 </div>

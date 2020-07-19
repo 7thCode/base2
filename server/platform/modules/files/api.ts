@@ -111,42 +111,44 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 
 		const render = (response: any, next: () => void, result: any, file: any, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
 
+			let command: string = command_string;
+
 			const mimetype: string = result.metadata.type;
 			const total: number = result.length;
+
+			let status: number = 200;
 
 			let start: number = 0;
 			let end: number = 0;
 			let chunksize: number = 0;
-			let command = command_string;
 
+			/*
+			* HTTP/1.1： 範囲要請
+			* RFC 7233, Range Requests
+			* https://triple-underscore.github.io/RFC7233-ja.html
+			 */
+			if (range) {　    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
+				command = "";
 
-			// Safari
-			if (range) {　// with [Range Request] for Large Stream seeking. (ex Video,Sound...)
 				const parts: string[] = range.replace(/bytes=/, "").split("-");
 				const partialstart: string = parts[0];
 				const partialend: string = parts[1];
 
-				start = parseInt(partialstart, 10);
+				status = 206;	// Partial Content
+				start = partialstart ? parseInt(partialstart, 10) : 0;
 				end = partialend ? parseInt(partialend, 10) : total - 1;
-				chunksize = (end - start) + 1;
-				command = "";
-			} else { // Full Data.
+			} else { 			// Full Data.
+				status = 200;	// Full Content
 				start = 0;
 				end = total - 1;
-				chunksize = (end - start) + 1;
 			}
 
-
-			// First aid. (for chrome??.)
-			start = 0;
-			end = total - 1;
 			chunksize = (end - start) + 1;
-			// First aid.
 
 			file.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						response.status(200);
+						response.status(status);
 						response.type(mimetype);
 						response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
 						response.set("Accept-Ranges", "bytes");
@@ -255,7 +257,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				const user: IAccountModel = file.Transform(request.user);
 				const systems: any = systemsConfig.default;
 
-				let user_id = query.u || systems.user_id;
+				let user_id: string = query.u || systems.user_id;
 				if (user) {
 					user_id = query.u || user.user_id || systems.user_id;
 				}

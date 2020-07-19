@@ -117,7 +117,7 @@ export class Gatekeeper {
 				response = Gatekeeper.BasicHeader(request, response, "");
 				next();
 			} else {
-				Gatekeeper.SendError(response, {code: -1, message: "CSRF?"});
+				Gatekeeper.SendError(response, {code: -1, message: "CSRF?" + " 28466"});
 			}
 		}
 	}
@@ -136,7 +136,7 @@ export class Gatekeeper {
 					if (request.isAuthenticated()) {
 						next();
 					} else {
-						Gatekeeper.SendError(response, {code: -2, message: "no auth."});
+						Gatekeeper.SendError(response, {code: -2, message: "no auth. " + "3827"});
 					}
 					break;
 				case "facebook":
@@ -181,10 +181,10 @@ export class Gatekeeper {
 				if (request.isAuthenticated()) {
 					next();
 				} else {
-					response.status(403).render("error", {status: 403, message: "Forbidden.", url: request.url});
+					response.status(403).render("error", {status: 403, message: "Forbidden." + " 1926", url: request.url});
 				}
 			} else {
-				response.status(403).render("error", {status: 403, message: "Forbidden.", url: request.url});
+				response.status(403).render("error", {status: 403, message: "Forbidden." + " 5206", url: request.url});
 			}
 		} catch (e) {
 			response.status(500).render("error", {

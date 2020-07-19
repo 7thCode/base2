@@ -13,17 +13,16 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
-@Component({
-	selector: "account-dialog",
-	styleUrls: ["./account-dialog.component.css"],
-	templateUrl: "./account-dialog.component.html",
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "account-dialog",
+	styleUrls: ["./account-dialog.component.css"],
+	templateUrl: "./account-dialog.component.html",
+})
 export class AccountDialogComponent extends BaseDialogComponent implements OnInit {
 
 	get session(): ISession {

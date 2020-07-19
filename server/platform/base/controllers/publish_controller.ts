@@ -19,6 +19,7 @@ export abstract class Publishable extends Updatable {
 	 * @param event
 	 * @param config
 	 * @param logger
+	 * @constructor
 	 */
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
@@ -28,6 +29,7 @@ export abstract class Publishable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected publish_query(request: IQueryRequest, response: IJSONResponse): void {
 		try {
@@ -63,6 +65,7 @@ export abstract class Publishable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected publish_count(request: IQueryRequest, response: IJSONResponse): void {
 		try {
@@ -85,6 +88,7 @@ export abstract class Publishable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected publish_get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
@@ -94,7 +98,7 @@ export abstract class Publishable extends Updatable {
 					if (object) {
 						this.SendSuccess(response, object);
 					} else {
-						this.SendWarn(response, {code: 2, message: "not found"});
+						this.SendWarn(response, {code: 2, message: "not found" + " 7606"});
 					}
 				});
 			});

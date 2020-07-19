@@ -115,14 +115,14 @@ namespace VaultModel {
 					if (!instance) {
 						this.save(cb);
 					} else {
-						cb({code: -1, message: "already."}, null);
+						cb({code: -1, message: "already." + " 253"}, null);
 					}
 				} else {
 					cb(error, null);
 				}
 			});
 		} catch (error) {
-			cb({code: -2, message: "encode."}, null);
+			cb({code: -2, message: "encode." + " 2133"}, null);
 		}
 	};
 
@@ -151,7 +151,7 @@ namespace VaultModel {
 
 			this.model("Vault").findOneAndUpdate(query_by_user_write(user, {"content.parent_id": id}), setter, {upsert: false}, cb);
 		} catch (error) {
-			cb({code: -2, message: "encode."}, null);
+			cb({code: -2, message: "encode." + " 5045"}, null);
 		}
 	};
 

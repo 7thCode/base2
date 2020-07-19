@@ -14,17 +14,16 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
-@Component({
-	selector: "page-dialog",
-	styleUrls: ["./page-dialog.component.css"],
-	templateUrl: "./page-dialog.component.html",
-})
-
 /**
  * ページダイアログ
  *
  * @since 0.01
  */
+@Component({
+	selector: "page-dialog",
+	styleUrls: ["./page-dialog.component.css"],
+	templateUrl: "./page-dialog.component.html",
+})
 export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
@@ -109,7 +108,7 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	/**
 	 *
 	 */
-	public ngOnInit() {
+	public ngOnInit(): void {
 		this.description = [];
 		this.text = this.data.content.value;
 	}

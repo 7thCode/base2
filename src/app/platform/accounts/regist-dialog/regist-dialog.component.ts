@@ -10,17 +10,16 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
-@Component({
-	selector: "regist-dialog",
-	styleUrls: ["./regist-dialog.component.css"],
-	templateUrl: "./regist-dialog.component.html",
-})
-
 /**
  * ユーザ登録ダイアログ
  *
  * @since 0.01
  */
+@Component({
+	selector: "regist-dialog",
+	styleUrls: ["./regist-dialog.component.css"],
+	templateUrl: "./regist-dialog.component.html",
+})
 export class RegistDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

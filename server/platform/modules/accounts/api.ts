@@ -27,6 +27,9 @@ const auth: any = new Auth(event, ConfigModule, logger);
 const Account: any = require("./controller");
 const accounts: any = new Account(event, ConfigModule, logger);
 
+/*
+*
+*/
 router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
@@ -37,6 +40,9 @@ router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeepe
 		});
 	}]);
 
+/*
+*
+*/
 router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
@@ -47,6 +53,9 @@ router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authen
 		});
 	}]);
 
+/*
+*
+*/
 router.get("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -57,6 +66,9 @@ router.get("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authentic
 		});
 	}]);
 
+/*
+*
+*/
 router.put("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -67,6 +79,9 @@ router.put("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authentic
 		});
 	}]);
 
+/*
+*
+*/
 router.delete("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
@@ -77,6 +92,9 @@ router.delete("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authen
 		});
 	}]);
 
+/*
+*
+*/
 router.get("/accounts/auth/is2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -87,6 +105,9 @@ router.get("/accounts/auth/is2fa/:username", [gatekeeper.default, gatekeeper.aut
 		});
 	}]);
 
+/*
+*
+*/
 router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -97,6 +118,9 @@ router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.a
 		});
 	}]);
 
+/*
+*
+*/
 router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -107,7 +131,9 @@ router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper
 		});
 	}]);
 
-
+/*
+*
+*/
 router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -118,6 +144,9 @@ router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 		});
 	}]);
 
+/*
+*
+*/
 router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own(request, response, next);
@@ -128,6 +157,9 @@ router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 		});
 	}]);
 
+/*
+*
+*/
 router.delete("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);

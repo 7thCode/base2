@@ -20,6 +20,7 @@ export class MailSender implements IMailModule {
 	 *
 	 * @param mailsetting
 	 * @param mailaccount
+	 * @constructor
 	 */
 	constructor(mailsetting: any, mailaccount: string) {
 		this.mailer = require("nodemailer");
@@ -34,6 +35,7 @@ export class MailSender implements IMailModule {
 	 * @param title
 	 * @param message
 	 * @param callback
+	 * @returns none
 	 */
 	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
 
@@ -57,7 +59,7 @@ export class MailSender implements IMailModule {
 				callback(e);
 			}
 		} else {
-			callback({code: -1, message: "send error"});
+			callback({code: -1, message: "send error" + " 4002"});
 		}
 	}
 }

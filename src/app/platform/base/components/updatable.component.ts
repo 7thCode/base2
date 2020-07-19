@@ -8,7 +8,7 @@
 
 import {Callback, IContent, IErrorObject} from "../../../../../types/platform/universe";
 
-import {ChangeDetectorRef, OnInit} from "@angular/core";
+import {Directive, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "./info-dialog/info-dialog.component";
@@ -21,6 +21,8 @@ import {SessionService} from "../services/session.service";
  *
  * @since 0.01
  */
+@Directive()
+
 export abstract class UpdatableComponent extends SessionableComponent implements OnInit {
 
 	public size: number = 20;
@@ -29,20 +31,19 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 
 	protected service: any;
 	protected query: object = {};
+	protected sort: object = {};
 	protected page: number = 0;
 
 	/**
 	 * @constructor
 	 * @param session
-	 * @param change
 	 * @param matDialog
 	 */
 	protected constructor(
 		protected session: SessionService,
-		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 	) {
-		super(session, change);
+		super(session);
 	}
 
 	/**
@@ -237,7 +238,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 		this.service.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
-				const option = {sort: {}, skip: this.size * this.page, limit: this.size};
+				const option = {sort: this.sort, skip: this.size * this.page, limit: this.size};
 				this.service.query(this.query, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
 						const filtered: any[] = [];

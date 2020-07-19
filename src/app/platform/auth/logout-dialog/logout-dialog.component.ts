@@ -17,6 +17,11 @@ import {IErrorObject} from "../../../../../types/platform/universe";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {AuthService} from "../auth.service";
 
+/**
+ *
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "logout-dialog",
 	styleUrls: ["../auth.component.css"],
@@ -25,12 +30,6 @@ import {AuthService} from "../auth.service";
 		Location,
 	],
 })
-
-/**
- *
- *
- * @since 0.01
- */
 export class LogoutDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

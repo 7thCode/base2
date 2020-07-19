@@ -61,50 +61,11 @@ export class Auth extends Mail {
 
 	/**
 	 *
-	 * @param key
-	 * @param plain
-	 * @param callback
-	 */
-	// private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
-	// 	try {
-	// 		callback(null, Cipher.Encrypt(key, plain));
-	// 	} catch (e) {
-	// 		callback(e, "");
-	// 	}
-	// }
-
-	/**
-	 *
 	 * @param e
 	 */
 	public static error_handler(e) {
 		this.logger.fatal(e.message);
 	}
-
-	/**
-	 *
-	 * @param key
-	 * @param crypted
-	 * @param callback
-	 * @returns none
-	 */
-	// public static value_encrypt(use_publickey: boolean, key: string, crypted: string, callback: Callback<any>): void {
-	// 	try {
-	// 		if (use_publickey) {
-	// 			Auth.publickey_encrypt(key, crypted, (error, crypted): void => {
-	// 				if (!error) {
-	// 					callback(null, crypted);
-	// 				} else {
-	// 					callback({code: 2, message: "no cookie?"}, {});
-	// 				}
-	// 			});
-	// 		} else {
-	// 			callback(null, JSON.parse(crypted));
-	// 		}
-	// 	} catch (error) {
-	// 		callback({code: 3, message: "unknown error."}, {});
-	// 	}
-	// }
 
 	/**
 	 *
@@ -121,14 +82,14 @@ export class Auth extends Mail {
 					if (!error) {
 						callback(null, JSON.parse(plain));
 					} else {
-						callback({code: 2, message: "no cookie?"}, {});
+						callback({code: 2, message: "no cookie?" + " 5977"}, {});
 					}
 				});
 			} else {
 				callback(null, JSON.parse(crypted));
 			}
 		} catch (error) {
-			callback({code: 3, message: "unknown error."}, {});
+			callback({code: 3, message: "unknown error." + " 7713"}, {});
 		}
 	}
 
@@ -158,7 +119,7 @@ export class Auth extends Mail {
 	 * @param auth
 	 * @returns none
 	 */
-	private create_param(compositeUsername: string, username: string, adding_content: object, auth: number): any {
+	private create_param(compositeUsername: string, username: string, adding_content: any, auth: number): any {
 		const shasum: any = crypto.createHash("sha1"); //
 		shasum.update(compositeUsername);                      // create userid from username.
 		const user_id: string = shasum.digest("hex"); //
@@ -168,6 +129,19 @@ export class Auth extends Mail {
 		const content = _.cloneDeep(this.content);
 
 		if (adding_content) {
+
+			if (adding_content.username) {
+				delete adding_content.username;
+			}
+
+			if (adding_content.password) {
+				delete adding_content.password;
+			}
+
+			if (adding_content.confirm_password) {
+				delete adding_content.confirm_password;
+			}
+
 			_.merge(content, adding_content);
 		}
 
@@ -182,7 +156,6 @@ export class Auth extends Mail {
 			content,
 		};
 	}
-
 
 	/**
 	 *
@@ -207,14 +180,14 @@ export class Auth extends Mail {
 								// this.event.emitter.emit("auth:register", {user, user_id: param.user_id, username: user.username});
 								callback(null, user);
 							} else {
-								callback({status: 500, message: "authenticate"}, null);
+								callback({status: 500, message: "authenticate" + " 3701"}, null);
 							}
 						} else {
-							callback({status: 500, message: "get_register_token " + error.message}, null);
+							callback({status: 500, message: "get_register_token " + error.message + " 913"}, null);
 						}
 					})(request, response);
 				} else {
-					callback({status: 500, message: "get_register_token " + error.message}, null);
+					callback({status: 500, message: "get_register_token " + error.message + " 9774"}, null);
 				}
 			});
 	}
@@ -230,7 +203,7 @@ export class Auth extends Mail {
 			if (!error) {
 				if (initusers) {
 					const promises: any = [];
-					_.forEach(initusers, (user: any): void => {
+					initusers.forEach((user: any): void => {
 						promises.push(new Promise((resolve: any, reject: any): void => {
 							if (user) {
 								const auth: number = user.auth;
@@ -281,7 +254,7 @@ export class Auth extends Mail {
 									}
 								});
 							} else {
-								reject({code: -1, message: "no user."});
+								reject({code: -1, message: "no user." + " 4902"});
 							}
 						}));
 					});
@@ -295,7 +268,7 @@ export class Auth extends Mail {
 					callback(error, null);
 				}
 			} else {
-				callback({code: -1, message: "init error"}, null);
+				callback({code: -1, message: "init error" + " 6988"}, null);
 			}
 		});
 	}
@@ -308,20 +281,24 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public is_own(request: { params: { username: string }, user: object }, response: IJSONResponse, next: () => void): void {
-		const params: { username: string } = request.params;
-		const user: { username: string, role: any } = this.Transform(request.user);
-		if (user) {
-			if (user.role.manager) {
-				next();
-			} else {
-				if (user.username === params.username) {
+		if (request.user) {
+			const params: { username: string } = request.params;
+			const user: { username: string, role: any } = this.Transform(request.user);
+			if (user) {
+				if (user.role.manager) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden.(auth 1)"});
+					if (user.username === params.username) {
+						next();
+					} else {
+						this.SendError(response, {code: 403, message: "Forbidden.(auth 1)" + " 7795"});
+					}
 				}
+			} else {
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 2)" + " 927"});
 			}
-		} else {
-			this.SendError(response, {code: 403, message: "Forbidden.(auth 2)"});
+		}else {
+			this.SendError(response, {code: 403, message: "Not Logged in." + " 1924"});
 		}
 	}
 
@@ -333,15 +310,19 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public is_system(request: IUserRequest, response: IJSONResponse, next: () => void): void {
-		const user: IAccountModel = this.Transform(request.user);
-		if (user) {
-			if (user.role.system) {
-				next();
+		if (request.user) {
+			const user: IAccountModel = this.Transform(request.user);
+			if (user) {
+				if (user.role.system) {
+					next();
+				} else {
+					this.SendError(response, {code: 403, message: "Forbidden.(auth 3)" + " 9578"});
+				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 3)"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 4)" + " 9742"});
 			}
-		} else {
-			this.SendError(response, {code: 403, message: "Forbidden.(auth 4)"});
+		}else {
+			this.SendError(response, {code: 403, message: "Not Logged in." + " 7789"});
 		}
 	}
 
@@ -353,15 +334,19 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public is_manager(request: IUserRequest, response: IJSONResponse, next: () => void): void {
-		const user: IAccountModel = this.Transform(request.user);
-		if (user) {
-			if (user.role.manager) {
-				next();
+		if (request.user) {
+			const user: IAccountModel = this.Transform(request.user);
+			if (user) {
+				if (user.role.manager) {
+					next();
+				} else {
+					this.SendError(response, {code: 403, message: "Forbidden.(auth 5)" + " 7896"});
+				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 5)"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 6)" + " 2656"});
 			}
-		} else {
-			this.SendError(response, {code: 403, message: "Forbidden.(auth 6)"});
+		}else {
+			this.SendError(response, {code: 403, message: "Not Logged in." + " 5227"});
 		}
 	}
 
@@ -373,15 +358,34 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public is_user(request: IUserRequest, response: IJSONResponse, next: () => void): void {
-		const user: IAccountModel = this.Transform(request.user);
-		if (user) {
-			if (user.role.user) {
-				next();
+		if (request.user) {
+			const user: IAccountModel = this.Transform(request.user);
+			if (user) {
+				if (user.role.user) {
+					next();
+				} else {
+					this.SendError(response, {code: 403, message: "Forbidden.(auth 7)" + " 5081"});
+				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 7)"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 8)" + " 4026"});
 			}
-		} else {
-			this.SendError(response, {code: 403, message: "Forbidden.(auth 8)"});
+		}else {
+			this.SendError(response, {code: 403, message: "Not Logged in." + "  8094"});
+		}
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
+	public is_logged_in(request: IUserRequest, response: IJSONResponse): void {
+		if (request.user) {
+			this.SendRaw(response, {code: 1, message: "logged in" + " 3804"});
+		}else {
+			this.SendRaw(response, {code: 0, message: "not logged in" + " 1463"});
 		}
 	}
 
@@ -414,29 +418,29 @@ export class Auth extends Mail {
 															// this.event.emitter.emit("client:send", {username: value.username});
 															this.SendSuccess(response, {is_2fa});
 														} else {
-															this.SendError(response, {code: 4, message: "unknown error.(auth 1)"});
+															this.SendError(response, {code: 4, message: "unknown error.(auth 1)" + " 723"});
 														}
 													});
 												}
 											} else {
-												this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+												this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 930"});
 											}
 										} else {
-											this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+											this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 1038"});
 										}
 									})(request, response);
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 1)"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 1)" + " 3194"});
 								}
 							} else {
-								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 3643"});
 							}
 						});
 					});
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 1)"});
+			this.SendError(response, {code: 1, message: "already logged in.(auth 1)" + " 5144"});
 		}
 	}
 
@@ -456,7 +460,7 @@ export class Auth extends Mail {
 						this.ifSuccess(response, error, (): void => {
 							if (account) {
 								if (account.enabled) {
-									let verified = true;
+									let verified: boolean = true;
 									if (account.secret) {
 										verified = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
 									}
@@ -465,27 +469,26 @@ export class Auth extends Mail {
 											if (!error) {
 												this.SendSuccess(response, {});
 											} else {
-												this.SendError(response, {code: 4, message: "unknown error.(auth 1)"});
+												this.SendError(response, {code: 4, message: "unknown error.(auth 1)" + " 7710"});
 											}
 										});
 									} else {
-										this.SendError(response, {code: 5, message: "code missmatch.(auth 1)"});
+										this.SendError(response, {code: 5, message: "code missmatch.(auth 1)" + " 8212"});
 									}
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 1)"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 1)" + " 7087"});
 								}
 							} else {
-								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 963"});
 							}
 						});
 					});
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 2)"});
+			this.SendError(response, {code: 1, message: "already logged in.(auth 2)" + " 9286"});
 		}
 	}
-
 
 	/**
 	 *
@@ -510,17 +513,17 @@ export class Auth extends Mail {
 										});
 									});
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 2)"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 2)" + " 618"});
 								}
 							} else {
-								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 226"});
 							}
 						});
 					});
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 3)"});
+			this.SendError(response, {code: 1, message: "not logged in.(auth 3)" + " 5325"});
 		}
 	}
 
@@ -553,29 +556,29 @@ export class Auth extends Mail {
 															// this.event.emitter.emit("client:send", {username: value.username});
 															this.SendSuccess(response, {is_2fa});
 														} else {
-															this.SendError(response, {code: 4, message: "unknown error.(auth 3)"});
+															this.SendError(response, {code: 4, message: "unknown error.(auth 3)" + " 7573"});
 														}
 													});
 												}
 											} else {
-												this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+												this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 6405"});
 											}
 										} else {
-											this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+											this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 691"});
 										}
 									})(request, response);
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 4)"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 4)" + " 4470"});
 								}
 							} else {
-								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 5442"});
 							}
 						});
 					});
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 5)"});
+			this.SendError(response, {code: 1, message: "already logged in.(auth 5)" + " 6635"});
 		}
 	}
 
@@ -666,7 +669,7 @@ export class Auth extends Mail {
 								response.redirect(target);
 							}
 						} else {
-							response.status(500).render("error", {status: 500, message: "get_register_token " + error.message});
+							response.status(500).render("error", {status: 500, message: "get_register_token " + error.message  + " 610"});
 						}
 					});
 				} else {

@@ -20,6 +20,7 @@ export class MailSenderMailgun implements IMailModule {
 	 *
 	 * @param mailsetting
 	 * @param mailaccount
+	 * @constructor
 	 */
 	constructor(mailsetting: any, mailaccount: string) {
 		this.account = mailaccount;
@@ -35,6 +36,7 @@ export class MailSenderMailgun implements IMailModule {
 	 * @param title
 	 * @param message
 	 * @param callback
+	 * @returns none
 	 */
 	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
 

@@ -9,26 +9,26 @@
 import {IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
+import {Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 
-import {ConstService} from "../../config/const.service";
-import {SessionService} from "../base/services/session.service";
+import { environment } from '../../../environments/environment';
 
-@Component({
-	selector: "app-image",
-	templateUrl: "./image.component.html",
-	styleUrls: ["./image.component.css"],
-})
+import {SessionService} from "../base/services/session.service";
 
 /**
  *　イメージ
  *
  * @since 0.01
  */
+@Component({
+	selector: "app-image",
+	templateUrl: "./image.component.html",
+	styleUrls: ["./image.component.css"],
+})
 export class ImageComponent extends UploadableComponent implements OnInit, OnChanges {
 
 	// private results: any[];
@@ -87,20 +87,17 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 *
 	 * @param session
 	 * @param http
-	 * @param constService
 	 * @param change
 	 * @param matDialog
 	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
-		protected constService: ConstService,
-		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 	) {
-		super(session, http, constService, change);
+		super(session, http);
 		this.description = "";
-		this.endPoint = constService.endPoint;
+		this.endPoint = environment.endPoint;
 		this.imagePath = this.endPoint + "/files/get/blank.png";
 	}
 
@@ -217,7 +214,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	/**
 	 *
 	 */
-	public ngOnInit() {
+	public ngOnInit(): void {
 		super.ngOnInit();
 		this.style = {
 			"width": this.width + "px",

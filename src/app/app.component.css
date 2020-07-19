@@ -3,19 +3,6 @@
     height: 100%;
 }
 
-.fc-view-container {
-    overflow-x: scroll;
-}
-
-.fc-view.fc-agendaDay-view.fc-agenda-view {
-    width: 200%;
-}
-
-/* **For 2 day view** */
-.fc-view.fc-agendaTwoDay-view.fc-agenda-view {
-    width: 200%;
-}
-
 #progress {
     background-color: #ffffff00;
     height: 140px;

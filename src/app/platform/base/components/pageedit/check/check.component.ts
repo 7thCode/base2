@@ -10,17 +10,16 @@ import {Component} from "@angular/core";
 
 import {BaseComponent} from "../base/base.component";
 
-@Component({
-	selector: "check-element",
-	templateUrl: "./check.component.html",
-	styleUrls: ["./check.component.css"],
-})
-
 /**
  * チェックボックス
  *
  * @since 0.01
  */
+@Component({
+	selector: "check-element",
+	templateUrl: "./check.component.html",
+	styleUrls: ["./check.component.css"],
+})
 export class CheckComponent extends BaseComponent {
 
 	/**

@@ -13,7 +13,8 @@ import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {ConstService} from "../../../config/const.service";
+import { environment } from '../../../../environments/environment';
+
 import {PublicKeyService} from "./publickey.service";
 import {UpdatableService} from "./updatable.service";
 
@@ -27,17 +28,15 @@ export abstract class SecureUpdatableService extends UpdatableService {
 	/**
 	 * @constructor
 	 * @param http
-	 * @param constService
 	 * @param model
 	 * @param PublicKey
 	 */
 	protected constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 		protected model: string,
 		protected PublicKey: PublicKeyService,
 	) {
-		super(http, constService, model);
+		super(http, model);
 	}
 
 	/**
@@ -49,7 +48,7 @@ export abstract class SecureUpdatableService extends UpdatableService {
 	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-			const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			callback(null, rsa.encrypt(plain, "base64"));
 		} catch (e) {
 			callback(e, "");
@@ -65,7 +64,7 @@ export abstract class SecureUpdatableService extends UpdatableService {
 	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>): void {
 		try {
-			const use_publickey = this.constService.use_publickey;
+			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
 				SecureUpdatableService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
 					if (!error) {
@@ -104,7 +103,7 @@ export abstract class SecureUpdatableService extends UpdatableService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 7408"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -139,7 +138,7 @@ export abstract class SecureUpdatableService extends UpdatableService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 5517"}, null);
 						});
 					} else {
 						callback(error, null);

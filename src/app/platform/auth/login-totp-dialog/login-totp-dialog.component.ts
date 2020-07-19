@@ -14,17 +14,16 @@ import {IErrorObject} from "../../../../../types/platform/universe";
 import {AuthService} from "../auth.service";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
-@Component({
-	selector: "login-totp-dialog",
-	styleUrls: ["../auth.component.css"],
-	templateUrl: "./login-totp-dialog.component.html",
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "login-totp-dialog",
+	styleUrls: ["../auth.component.css"],
+	templateUrl: "./login-totp-dialog.component.html",
+})
 export class LoginTotpDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

@@ -11,17 +11,16 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
-@Component({
-	selector: "vault-dialog",
-	styleUrls: ["./vault-dialog.component.css"],
-	templateUrl: "./vault-dialog.component.html",
-})
-
 /**
  * Vaultダイアログ
  *
  * @since 0.01
  */
+@Component({
+	selector: "vault-dialog",
+	styleUrls: ["./vault-dialog.component.css"],
+	templateUrl: "./vault-dialog.component.html",
+})
 export class VaultDialogComponent extends BaseDialogComponent {
 
 	/**

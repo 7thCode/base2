@@ -9,7 +9,8 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-import {ConstService} from "../../config/const.service";
+import { environment } from '../../../environments/environment';
+
 import {UpdatableService} from "../base/services/updatable.service";
 
 @Injectable({
@@ -24,13 +25,11 @@ export class PagesService extends UpdatableService {
 	/**
 	 *
 	 * @param http
-	 * @param constService
 	 */
 	constructor(
 		public http: HttpClient,
-		public constService: ConstService,
 	) {
-		super(http, constService, "pages");
+		super(http, "pages");
 	}
 
 	/**

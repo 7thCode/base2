@@ -11,7 +11,8 @@ import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/u
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "../../config/const.service";
+import { environment } from '../../../environments/environment';
+
 import {HttpService} from "../base/services/http.service";
 
 /**
@@ -24,13 +25,11 @@ export class FilesService extends HttpService {
 	/**
 	 *
 	 * @param http
-	 * @param constService
 	 */
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
 	/**
@@ -48,10 +47,10 @@ export class FilesService extends HttpService {
 						callback(this.networkError, 0);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message}, null);
+					callback({code: -1, message: error.message + " 1581"}, null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error"}, null);
+				callback({code: -1, message: "query parse error" + " 7611"}, null);
 			}
 		});
 
@@ -73,20 +72,20 @@ export class FilesService extends HttpService {
 								if (Array.isArray(results)) {
 									callback(null, results);
 								} else {
-									callback({code: -1, message: "error"}, null);
+									callback({code: -1, message: "error" + " 7611"}, null);
 								}
 							} else {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 5814"}, null);
 						});
 					} else {
-						callback({code: -1, message: "option parse error"}, null);
+						callback({code: -1, message: "option parse error" + " 9204"}, null);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error"}, null);
+				callback({code: -1, message: "query parse error" + " 7211"}, null);
 			}
 		});
 	}
@@ -113,7 +112,7 @@ export class FilesService extends HttpService {
 				callback({message: "error", code: -1}, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 6677"}, null);
 		});
 	}
 
@@ -134,7 +133,7 @@ export class FilesService extends HttpService {
 				callback({message: "error", code: -1}, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 8199"}, null);
 		});
 	}
 
@@ -153,7 +152,7 @@ export class FilesService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 4155"}, null);
 		});
 	}
 

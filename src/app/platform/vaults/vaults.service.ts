@@ -9,7 +9,8 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-import {ConstService} from "../../config/const.service";
+import { environment } from '../../../environments/environment';
+
 import {PublicKeyService} from "../base/services/publickey.service";
 import {SecureUpdatableService} from "../base/services/secure_updatable.service";
 
@@ -21,10 +22,9 @@ export class VaultsService extends SecureUpdatableService {
 
 	constructor(
 		public http: HttpClient,
-		public constService: ConstService,
 		public PublicKey: PublicKeyService,
 	) {
-		super(http, constService, "vaults", PublicKey);
+		super(http, "vaults", PublicKey);
 	}
 
 	/**

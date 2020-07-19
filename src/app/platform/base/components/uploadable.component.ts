@@ -9,11 +9,10 @@
 import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, OnInit} from "@angular/core";
+import {Directive, OnInit} from "@angular/core";
 
 import {SessionableComponent} from "./sessionable.component";
 
-import {ConstService} from "../../../config/const.service";
 import {FilesService} from "../../files/files.service";
 import {SessionService} from "../services/session.service";
 
@@ -24,6 +23,9 @@ import {SessionService} from "../services/session.service";
  *
  * @since 0.01
  */
+
+@Directive()
+
 export abstract class UploadableComponent extends SessionableComponent implements OnInit {
 
 	public endPoint: string;
@@ -34,11 +36,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	protected constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
-		protected constService: ConstService,
-		protected change: ChangeDetectorRef,
 	) {
-		super(session, change);
-		this.filesService = new FilesService(http, constService);
+		super(session);
+		this.filesService = new FilesService(http);
 		this.endPoint = this.filesService.endPoint;
 		this.bodysize = 200 * 1000 * 1000;  // default.
 	}
@@ -92,7 +92,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			};
 			fileReader.readAsDataURL(dropedFile);
 		} else {
-			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte)"}, null);
+			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte)" + " 8427"}, null);
 		}
 	}
 
