@@ -8,7 +8,7 @@
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
-import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 
 import {UpdatableComponent} from "../base/components/updatable.component";
@@ -16,17 +16,16 @@ import {UpdatableComponent} from "../base/components/updatable.component";
 import {SessionService} from "../base/services/session.service";
 import {FragmentService} from "./fragment.service";
 
-@Component({
-	selector: "fragment",
-	template: "<div [innerHTML]=\"innerText\"></div>",
-	styleUrls: ["./fragment.component.css"],
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "fragment",
+	template: "<div [innerHTML]=\"innerText\"></div>",
+	styleUrls: ["./fragment.component.css"],
+})
 export class FragmentComponent extends UpdatableComponent implements OnInit {
 
 	@Input() public fileName: string;
@@ -47,10 +46,9 @@ export class FragmentComponent extends UpdatableComponent implements OnInit {
 	constructor(
 		public session: SessionService,
 		public fragmentService: FragmentService,
-		public change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
 	) {
-		super(session, change, matDialog);
+		super(session, matDialog);
 		this.service = fragmentService;
 	}
 
@@ -58,6 +56,8 @@ export class FragmentComponent extends UpdatableComponent implements OnInit {
 	 *
 	 */
 	public ngOnInit() {
+		this.sort = {};
+		super.ngOnInit();
 		this.getSession((error: IErrorObject, session: {user_id}): void => {
 			this.service.get("", this.user_id || session.user_id, this.fileName, (error: IErrorObject, result: any) => {
 				if (!error) {

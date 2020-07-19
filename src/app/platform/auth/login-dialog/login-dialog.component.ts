@@ -16,17 +16,16 @@ import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 import {AuthService} from "../auth.service";
 
-@Component({
-	selector: "login-dialog",
-	styleUrls: ["../auth.component.css"],
-	templateUrl: "./login-dialog.component.html",
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "login-dialog",
+	styleUrls: ["../auth.component.css"],
+	templateUrl: "./login-dialog.component.html",
+})
 export class LoginDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

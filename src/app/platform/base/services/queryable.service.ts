@@ -11,7 +11,8 @@ import {Callback, IErrorObject, IQueryOption} from "../../../../../types/platfor
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "../../../config/const.service";
+import { environment } from '../../../../environments/environment';
+
 import {HttpService} from "./http.service";
 
 /**
@@ -19,20 +20,20 @@ import {HttpService} from "./http.service";
  *
  * @since 0.01
  */
+
+
 export abstract class QueryableService extends HttpService {
 
 	/**
 	 * @constructor
 	 * @param http HTTP
-	 * @param constService 定数
 	 * @param model モデル名
 	 */
 	protected constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 		protected model: string,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
 	/**
@@ -58,29 +59,29 @@ export abstract class QueryableService extends HttpService {
 			if (!error) {
 				this.Encode(option, (error: IErrorObject, optionString: string): void => {
 					if (!error) {
-						this.http.get(this.endPoint + "/" + this.model + "/auth/query/" + queryString + "/" + optionString, this.httpOptions).pipe(retry(3)).subscribe((results: ArrayBuffer): void => {
+						this.http.get(this.endPoint + "/" + this.model + "/auth/query/" + queryString + "/" + optionString, this.httpOptions).pipe(retry(3)).subscribe((results: any): void => {
 							if (results) {
 								if (Array.isArray(results)) {
-									const filterd = [];
+									const filterd: any[] = [];
 									results.forEach((result) => {
 										filterd.push(this.decorator(result));
 									});
 									callback(null, filterd);
 								} else {
-									callback({code: -1, message: "error"}, null);
+									callback({code: results.code, message: results.message + " 9674"}, []);
 								}
 							} else {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 918"}, []);
 						});
 					} else {
-						callback({code: -1, message: "option parse error"}, null);
+						callback({code: -1, message: "option parse error" + " 3319"}, []);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error"}, null);
+				callback({code: -1, message: "query parse error" + " 7533"}, []);
 			}
 		});
 	}
@@ -101,10 +102,10 @@ export abstract class QueryableService extends HttpService {
 						callback(this.networkError, 0);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message}, null);
+					callback({code: -1, message: error.message + " 4557"}, null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error"}, null);
+				callback({code: -1, message: "query parse error" + " 5201"}, null);
 			}
 		});
 	}
@@ -127,7 +128,7 @@ export abstract class QueryableService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 8499"}, null);
 		});
 	}
 

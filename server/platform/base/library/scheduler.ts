@@ -22,9 +22,10 @@ export class Scheduler {
 	/**
 	 *
 	 * @param item
-	 * @constructor
+	 * @returns none
+	 *
 	 */
-	public Add(item: any) {
+	public Add(item: any): void {
 		const job = schedule.scheduleJob(item.timing, item.job);
 		this.ScheduledJobs.push(job);
 	}

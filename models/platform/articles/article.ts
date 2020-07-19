@@ -101,7 +101,7 @@ namespace ArticleModel {
 				if (!instance) {
 					this.save(cb);
 				} else {
-					cb({code: -1, message: "already."}, null);
+					cb({code: -1, message: "already." + " 3500"}, null);
 				}
 			} else {
 				cb(error, null);

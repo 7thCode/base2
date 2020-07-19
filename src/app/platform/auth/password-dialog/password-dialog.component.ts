@@ -15,17 +15,16 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {AuthService} from "../auth.service";
 
-@Component({
-	selector: "password-dialog",
-	styleUrls: ["../auth.component.css"],
-	templateUrl: "./password-dialog.component.html",
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "password-dialog",
+	styleUrls: ["../auth.component.css"],
+	templateUrl: "./password-dialog.component.html",
+})
 export class PasswordDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

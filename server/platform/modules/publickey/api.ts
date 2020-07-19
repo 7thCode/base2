@@ -11,10 +11,7 @@ export const router: any = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
 const library: string = global._library;
-const _config: string = global.__config;
 
 const event = module.parent.exports.event;
 const config: any = module.parent.exports.config;

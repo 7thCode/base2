@@ -6,11 +6,16 @@
 
 "use strict";
 
+import {Directive} from "@angular/core";
+
 /**
  *
  *
  * @since 0.01
  */
+
+@Directive()
+
 export abstract class BaseDialogComponent {
 
 	public progress: boolean;

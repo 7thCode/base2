@@ -8,7 +8,7 @@
 
 import {Callback, IErrorObject} from "../../../types/platform/universe";
 
-import {MediaMatcher} from "@angular/cdk/layout";
+import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
@@ -18,39 +18,35 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AccountDialogComponent} from "./accounts/account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts/accounts.component";
 import {ResponsiveComponent} from "./base/components/responsive.component";
-import {FilesComponent} from "./files/files.component";
-import {PagesComponent} from "./pages/pages.component";
-import {VaultsComponent} from "./vaults/vaults.component";
 
-import {ConstService} from "../config/const.service";
+import {environment} from '../../environments/environment';
+
 import {AccountsService} from "./accounts/accounts.service";
 import {SessionService} from "./base/services/session.service";
 
 import {fadeAnimation} from "./base/library/fade-animation";
-
-@Component({
-	selector: "platform-root",
-	templateUrl: "./platform.component.html",
-	styleUrls: ["./platform.component.css"],
-	animations: [fadeAnimation], // register the animation,
-})
 
 /**
  * プラットフォーム
  *
  * @since 0.01
  */
+@Component({
+	selector: "platform-root",
+	templateUrl: "./platform.component.html",
+	styleUrls: ["./platform.component.css"],
+	animations: [fadeAnimation], // register the animation,
+})
 export class PlatformComponent extends ResponsiveComponent implements OnInit, OnDestroy {
 
 	public widthValue: number;
 	public sock: any;
 	public date: Date;
 
+	public device: string;
+
 	@ViewChild("sidenav") protected sidenav: MatSidenav;
 	@ViewChild(AccountsComponent) protected accountsComponent: AccountsComponent;
-	@ViewChild(VaultsComponent) protected vaultsComponent: VaultsComponent;
-	@ViewChild(PagesComponent) protected pagesComponent: PagesComponent;
-	@ViewChild(FilesComponent) protected filesComponent: FilesComponent;
 
 	private accountsService: AccountsService;
 
@@ -58,28 +54,27 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 *
 	 * @param session
 	 * @param accountService
-	 * @param constService
 	 * @param media
 	 * @param change
 	 * @param overlay
 	 * @param snackbar
 	 * @param elementRef
 	 * @param matDialog
+	 * @param breakpointObserver
 	 */
 	constructor(
 		public session: SessionService,
 		public accountService: AccountsService,
-		public constService: ConstService,
-		public media: MediaMatcher,
-		public change: ChangeDetectorRef,
+	 	public change: ChangeDetectorRef,
 		protected overlay: Overlay,
 		protected snackbar: MatSnackBar,
 		private elementRef: ElementRef,
 		private matDialog: MatDialog,
+		protected breakpointObserver: BreakpointObserver
 	) {
-		super(session, change, overlay, snackbar, media);
+		super(session, overlay, snackbar, breakpointObserver);
 		this.accountsService = accountService;
-		this.sock = new WebSocket(constService.webSocket);
+		this.sock = new WebSocket(environment.webSocket);
 	}
 
 	/**
@@ -136,7 +131,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 * @param event
 	 */
 	public onPan(event) {
-		// 	console.log(event);
 	}
 
 	/**
@@ -144,11 +138,30 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 * @param event
 	 */
 	public onTap(event) {
-		// 	console.log(event);
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
+		super.ngOnInit();
+
 		this.Progress(true);
+
+		this.isHandset.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "handset";
+			}
+		});
+
+		this.isTablet.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "tablet";
+			}
+		});
+
+		this.isDesktop.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "desktop";
+			}
+		});
 
 		// for ws
 		this.sock.addEventListener("open", (e) => {

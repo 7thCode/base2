@@ -12,16 +12,15 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ImageCroppedEvent, ImageCropperComponent} from "ngx-image-cropper";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
+/**
+ * イメージダイアログ
+ *
+ */
 @Component({
 	selector: "image-dialog",
 	styleUrls: ["./image-dialog.component.css"],
 	templateUrl: "./image-dialog.component.html",
 })
-
-/**
- * イメージダイアログ
- *
- */
 export class ImageDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

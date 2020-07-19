@@ -11,7 +11,8 @@ import {Callback, IContent} from "../../../../../types/platform/universe";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "../../../config/const.service";
+import { environment } from '../../../../environments/environment';
+
 import {QueryableService} from "./queryable.service";
 
 /**
@@ -24,15 +25,13 @@ export abstract class UpdatableService extends QueryableService {
 	/**
 	 * @constructor
 	 * @param http
-	 * @param constService
 	 * @param model
 	 */
 	protected constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 		protected model: string,
 	) {
-		super(http, constService, model);
+		super(http, model);
 	}
 
 	/**
@@ -53,7 +52,7 @@ export abstract class UpdatableService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 998"}, null);
 		});
 	}
 
@@ -76,7 +75,7 @@ export abstract class UpdatableService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 9449"}, null);
 		});
 	}
 
@@ -114,7 +113,7 @@ export abstract class UpdatableService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 8042"}, null);
 		});
 	}
 

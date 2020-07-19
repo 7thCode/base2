@@ -191,6 +191,9 @@ $ ./certbot-auto certonly --no-self-upgrade -n --standalone  --agree-tos --email
 $ sudo service nginx start
 ```
     -nginxってのが使える？使うと楽？
+    
+# sudo apt-get install python-certbot-nginx
+    
 #### 複数
 ```bash
 $ cd ~

@@ -8,22 +8,21 @@
 
 import {Component, HostListener, OnInit} from "@angular/core";
 
+/**
+ * アプリケーション
+ * @since 0.01
+ */
 @Component({
 	selector: "app-root",
 	templateUrl: "./app.component.html",
 	styleUrls: ["./app.component.css"],
 })
-
-/**
- * アプリケーション
- * @since 0.01
- */
 export class AppComponent implements OnInit {
 
 	private t = 0;
 
-	constructor() {
-
+	constructor(
+	) {
 	}
 
 	/**
@@ -50,7 +49,7 @@ export class AppComponent implements OnInit {
 		this.t = now;
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 	}
 

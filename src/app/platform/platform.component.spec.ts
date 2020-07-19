@@ -1,6 +1,6 @@
 import { async, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { PlatformComponent } from "./app.component";
+import { PlatformComponent } from "./platform.component";
 
 describe("AppComponent", () => {
 	beforeEach(async(() => {

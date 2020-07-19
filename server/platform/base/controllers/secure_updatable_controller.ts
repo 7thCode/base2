@@ -57,6 +57,7 @@ export abstract class SecureUpdatable extends Updatable {
 	 * @param key
 	 * @param crypted
 	 * @param callback
+	 * @returns none
 	 */
 	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		try {
@@ -71,6 +72,7 @@ export abstract class SecureUpdatable extends Updatable {
 	 * @param key
 	 * @param crypted
 	 * @param callback
+	 * @returns none
 	 */
 	public static value_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		SecureUpdatable.publickey_decrypt(key, crypted, (error: IErrorObject, plain: string): void => {
@@ -81,7 +83,7 @@ export abstract class SecureUpdatable extends Updatable {
 					callback(error, {});
 				}
 			} else {
-				callback({code: 2, message: "no cookie?"}, {});
+				callback({code: 2, message: "no cookie?" + " 5433"}, {});
 			}
 		});
 	}
@@ -127,6 +129,7 @@ export abstract class SecureUpdatable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected count(request: IQueryRequest, response: IJSONResponse): void {
 		try {
@@ -150,6 +153,7 @@ export abstract class SecureUpdatable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
@@ -160,7 +164,7 @@ export abstract class SecureUpdatable extends Updatable {
 					if (object) {
 						this.SendSuccess(response, object.public(this.key));
 					} else {
-						this.SendWarn(response, {code: 2, message: "not found"});
+						this.SendWarn(response, {code: 2, message: "not found" + " 6527"});
 					}
 				});
 			});
@@ -173,6 +177,7 @@ export abstract class SecureUpdatable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected post(request: IPostRequest<ISecureContent>, response: IJSONResponse): void {
 		try {
@@ -198,6 +203,7 @@ export abstract class SecureUpdatable extends Updatable {
 	 *
 	 * @param request
 	 * @param response
+	 * @returns none
 	 */
 	protected put(request: IPutRequest<ISecureContent>, response: IJSONResponse): void {
 		try {

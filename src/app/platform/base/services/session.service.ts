@@ -12,7 +12,8 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "../../../config/const.service";
+import { environment } from '../../../../environments/environment';
+
 import {HttpService} from "./http.service";
 
 @Injectable({
@@ -29,13 +30,11 @@ export class SessionService extends HttpService {
 	/**
 	 * @constructor
 	 * @param http
-	 * @param constService
 	 */
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
 	/**
@@ -55,7 +54,7 @@ export class SessionService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 4553"}, null);
 		});
 	}
 
@@ -77,7 +76,7 @@ export class SessionService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 3439"}, null);
 		});
 	}
 

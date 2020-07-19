@@ -54,6 +54,7 @@ export abstract class Wrapper {
 	 * @param error
 	 * @param exist
 	 * @param callback
+	 * @returns none
 	 */
 	protected ifExist(response: IJSONResponse, error: IErrorObject, exist: object, callback: Callback<any>): void {
 		if (exist) {
@@ -68,6 +69,7 @@ export abstract class Wrapper {
 	 * @param response
 	 * @param error
 	 * @param callback
+	 * @returns none
 	 */
 	protected ifSuccess(response: IJSONResponse, error: IErrorObject, callback: Callback<any>): void {
 		if (!error) {
@@ -81,6 +83,7 @@ export abstract class Wrapper {
 	 *
 	 * @param response
 	 * @param error
+	 * @returns none
 	 */
 	protected SendWarn(response: IJSONResponse, error: IErrorObject): void {
 		this.logger.warn(JSON.stringify(error));
@@ -93,6 +96,7 @@ export abstract class Wrapper {
 	 *
 	 * @param response
 	 * @param error
+	 * @returns none
 	 */
 	protected SendError(response: IJSONResponse, error: IErrorObject): void {
 		this.logger.error(JSON.stringify(error));
@@ -105,6 +109,7 @@ export abstract class Wrapper {
 	 *
 	 * @param response
 	 * @param error
+	 * @returns none
 	 */
 	protected SendFatal(response: IJSONResponse, error: IErrorObject): void {
 		this.logger.fatal(JSON.stringify(error));
@@ -117,6 +122,7 @@ export abstract class Wrapper {
 	 *
 	 * @param response
 	 * @param object
+	 * @returns none
 	 */
 	protected SendSuccess(response: IJSONResponse, object: object): void {
 		if (response) {
@@ -128,6 +134,7 @@ export abstract class Wrapper {
 	 *
 	 * @param response
 	 * @param object
+	 * @returns none
 	 */
 	protected SendRaw(response: IJSONResponse, object: object): void {
 		if (response) {
@@ -138,6 +145,7 @@ export abstract class Wrapper {
 	/**
 	 *
 	 * @param response
+	 * @returns none
 	 */
 	protected SendForbidden(response: IJSONResponse): void {
 		this.logger.error("Forbidden");
@@ -149,6 +157,7 @@ export abstract class Wrapper {
 	/**
 	 *
 	 * @param response
+	 * @returns none
 	 */
 	protected SendNotFound(response: IJSONResponse): void {
 		this.logger.error("notfound");
@@ -161,6 +170,7 @@ export abstract class Wrapper {
 	 *
 	 * @param data
 	 * @param callback
+	 * @returns none
 	 */
 	protected Decode(data: string, callback: Callback<any>): void {
 		try {
@@ -174,6 +184,7 @@ export abstract class Wrapper {
 	 *
 	 * @param data
 	 * @param callback
+	 * @returns none
 	 */
 	protected Encode(data: any, callback: Callback<any>): void {
 		try {
@@ -187,7 +198,7 @@ export abstract class Wrapper {
 	 *
 	 * @param data
 	 * @param callback
-	 * @constructor
+	 * @returns none
 	 */
 	protected Parse(data: string, callback: Callback<any>): void {
 		try {
@@ -200,7 +211,7 @@ export abstract class Wrapper {
 	/**
 	 *
 	 * @param user
-	 * @constructor
+	 * @returns account
 	 */
 	protected Transform(user: any): IAccountModel {
 		let result: any = {
@@ -231,12 +242,12 @@ export abstract class Wrapper {
 
 		if (user) {
 
-			let entryPoint = "";
+			let entryPoint: string = "";
 			if (this.systemsConfig.entry_point) {
 				entryPoint = this.systemsConfig.entry_point;
 			}
 
-			let exitPoint = "";
+			let exitPoint: string = "";
 			if (this.systemsConfig.exit_point) {
 				exitPoint = this.systemsConfig.exit_point;
 			}

@@ -19,7 +19,6 @@ import {
 	IUsernameParam,
 } from "../../../../types/platform/server";
 
-const _: any = require("lodash");
 const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
 
@@ -41,6 +40,7 @@ export class Accounts extends Wrapper {
 	 * @param event
 	 * @param config
 	 * @param logger
+	 * @constructor
 	 */
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
@@ -50,6 +50,7 @@ export class Accounts extends Wrapper {
 	 *
 	 * @param current
 	 * @param username
+	 * @returns own
 	 */
 	private own(current: any, username: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
@@ -65,7 +66,8 @@ export class Accounts extends Wrapper {
 	/**
 	 *
 	 * @param current
-	 * @param username
+	 * @param user_id
+	 * @returns own
 	 */
 	private own_by_id(current: any, user_id: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。

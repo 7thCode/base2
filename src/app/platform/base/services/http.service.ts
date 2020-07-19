@@ -7,7 +7,8 @@
 "use strict";
 
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ConstService} from "../../../config/const.service";
+
+import { environment } from '../../../../environments/environment';
 
 /**
  * HTTPサービス
@@ -37,14 +38,12 @@ export abstract class HttpService {
 	/**
 	 * @constructor
 	 * @param http 基本HTTP
-	 * @param constService 定数
 	 */
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 	) {
-		this.endPoint = this.constService.endPoint;
-		this.networkError = {code: 10000, message: "network error"};
+		this.endPoint = environment.endPoint;
+		this.networkError = {code: 10000, message: "network error" + " 7461"};
 		this.httpOptions = {
 			headers: new HttpHeaders({
 				"Accept": "application/json; charset=utf-8",
@@ -84,7 +83,7 @@ export abstract class HttpService {
 
 	/**
 	 * エラー判定付きパース
-	 * 
+	 *
 	 * @param data　デシリアライズされるテキスト
 	 * @param callback オブジェクトを返すコールバック
 	 */

@@ -1,13 +1,8 @@
-<div fxLayout="column" style="height:100%;background-color:#808080;padding:1rem;">
+<div fxLayout="column" fxFill class="background" style="padding:10px;">
 	<h2 mat-dialog-title>Image</h2>
 	<div fxLayout="column" fxLayoutAlign="space-between" style="height:100%;">
-
 		<div fxLayout="column" fxLayoutAlign="start" style="height:100%;">
-
-			<!-- <input type="file" (change)="fileChangeEvent($event)"/> -->
-
 			<div fxLayout="row" style="height:100%;">
-
 				<div fxFlex="80%" fxLayoutAlign="center center" style="padding:1rem;">
 					<image-cropper
 							[imageChangedEvent]="imageChangedEvent"
@@ -21,7 +16,6 @@
 							(rotate)="onRotate($event)">
 					</image-cropper>
 				</div>
-
 				<mat-card fxFlex="20%" fxLayout="column" fxLayoutAlign="center start">
 					<button mat-raised-button color="accent" style="margin:0.6rem auto;" (click)="rotateLeft()">
 						<i class="material-icons">rotate_left</i>
@@ -36,15 +30,11 @@
 						<i class="material-icons">flip</i>
 					</button>
 				</mat-card>
-				<!--   <img [src]="croppedImage"/> -->
-
 			</div>
 		</div>
-
 		<div mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-			<button mat-raised-button color="accent" (click)="onAccept()">OK</button>
+			<button mat-raised-button color="accent" (click)="onAccept()" cdkFocusInitial>OK</button>
 			<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 		</div>
-
 	</div>
 </div>

@@ -9,57 +9,49 @@
 import {IErrorObject, IVaultModelContent} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component} from "@angular/core";
-import {MediaObserver} from "@angular/flex-layout";
+import {Component, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
 import {VaultDialogComponent} from "./vault-dialog/vault-dialog.component";
 
-import {ConstService} from "../../config/const.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 import {SessionService} from "../base/services/session.service";
 import {VaultsService} from "./vaults.service";
-
-@Component({
-	selector: "vaults",
-	templateUrl: "./vaults.component.html",
-	styleUrls: ["./vaults.component.css"],
-})
 
 /**
  * 秘匿データレコード
  *
  * @since 0.01
  */
-export class VaultsComponent extends GridViewComponent {
+@Component({
+	selector: "vaults",
+	templateUrl: "./vaults.component.html",
+	styleUrls: ["./vaults.component.css"],
+})
+export class VaultsComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 * @constructor
 	 *
 	 * @param session
 	 * @param http
-	 * @param constService
 	 * @param vaultsService
 	 * @param PublicKey
 	 * @param change
 	 * @param matDialog
-	 * @param observableMedia
 	 * @param snackbar
 	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
-		protected constService: ConstService,
 		protected vaultsService: VaultsService,
 		protected PublicKey: PublicKeyService,
-		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
-		protected observableMedia: MediaObserver,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, change, matDialog, observableMedia);
+		super(session, matDialog);
 		this.service = vaultsService;
 	}
 
@@ -81,6 +73,11 @@ export class VaultsComponent extends GridViewComponent {
 		object.cols = 1;
 		object.rows = 1;
 		return object;
+	}
+
+	public ngOnInit(): void {
+		this.sort = {};
+		super.ngOnInit();
 	}
 
 	/**
@@ -134,10 +131,10 @@ export class VaultsComponent extends GridViewComponent {
 
 	/**
 	 * 更新ダイアログ
-	 * @param id 更新対象レコードID
+	 * @param resource 更新対象レコード
 	 */
-	public updateDialog(id: string): void {
-		this.get(id, (error: IErrorObject, result: object): void => {
+	public updateDialog(resource: {parent_id: string}): void {
+		this.get(resource.parent_id, (error: IErrorObject, result: object): void => {
 			if (!error) {
 				const dialog: any = this.matDialog.open(VaultDialogComponent, {
 					width: "40vw",
@@ -149,7 +146,7 @@ export class VaultsComponent extends GridViewComponent {
 				dialog.beforeClosed().subscribe((result: {content: object}): void => {
 					if (result) { // if not cancel then
 						this.Progress(true);
-						this.update(id, this.confirmToModel(result.content), (error, result: any): void => {
+						this.update(resource.parent_id, this.confirmToModel(result.content), (error, result: any): void => {
 							if (error) {
 								this.Complete("error", error);
 							}
@@ -169,11 +166,11 @@ export class VaultsComponent extends GridViewComponent {
 
 	/**
 	 * 削除
-	 * @param id 削除対象レコードID
+	 * @param id 削除対象レコード
 	 */
-	public onDelete(id: string): void {
+	public onDelete(resource: {parent_id: string}): void {
 		this.Progress(true);
-		this.delete(id, (error: IErrorObject, result: any): void => {
+		this.delete(resource.parent_id, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.Complete("", result);
 			} else {

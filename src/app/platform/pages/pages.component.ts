@@ -8,8 +8,7 @@
 
 import {IErrorObject, IPageModelContent} from "../../../../types/platform/universe";
 
-import {ChangeDetectorRef, Component} from "@angular/core";
-import {MediaObserver} from "@angular/flex-layout";
+import {Component, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -19,18 +18,17 @@ import {PageDialogComponent} from "./page-dialog/page-dialog.component";
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
 
-@Component({
-	selector: "pages",
-	templateUrl: "./pages.component.html",
-	styleUrls: ["./pages.component.css"],
-})
-
 /**
  * ページ
  *
  * @since 0.01
  */
-export class PagesComponent extends GridViewComponent {
+@Component({
+	selector: "pages",
+	templateUrl: "./pages.component.html",
+	styleUrls: ["./pages.component.css"],
+})
+export class PagesComponent extends GridViewComponent implements OnInit {
 
 	public path = "";
 
@@ -40,18 +38,16 @@ export class PagesComponent extends GridViewComponent {
 	 * @param pageSerrvice
 	 * @param change
 	 * @param matDialog
-	 * @param observableMedia
 	 * @param snackbar
 	 */
 	constructor(
 		protected session: SessionService,
 		protected pageSerrvice: PagesService,
-		protected change: ChangeDetectorRef,
+
 		protected matDialog: MatDialog,
-		protected observableMedia: MediaObserver,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, change, matDialog, observableMedia);
+		super(session, matDialog);
 		this.service = pageSerrvice;
 	}
 
@@ -73,6 +69,11 @@ export class PagesComponent extends GridViewComponent {
 		object.cols = 1;
 		object.rows = 1;
 		return object;
+	}
+
+	public ngOnInit(): void {
+		this.sort = {};
+		super.ngOnInit();
 	}
 
 	/**
@@ -145,7 +146,7 @@ export class PagesComponent extends GridViewComponent {
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
-				const dialog = this.matDialog.open(PageDialogComponent, {
+				const dialog: any = this.matDialog.open(PageDialogComponent, {
 					width: "90vw",
 					height: "fit-content",
 					data: {content: this.toView(result)},

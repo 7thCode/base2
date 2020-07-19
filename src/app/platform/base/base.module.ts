@@ -17,9 +17,6 @@ import {InfoDialogComponent} from "./components/info-dialog/info-dialog.componen
 import {EqualsValidator} from "./directives/equals-validator.directive";
 import {HighlightDirective} from "./directives/highlight.directive";
 
-import {AuthcolorPipe} from "./pipes/authcolor.pipe";
-import {ShortnamePipe} from "./pipes/shortname.pipe";
-
 import {ProfileService} from "./services/profile.service";
 import {PublicKeyService} from "./services/publickey.service";
 import {SessionService} from "./services/session.service";
@@ -31,8 +28,6 @@ import {SessionService} from "./services/session.service";
 		SessionService,
 	],
 	declarations: [
-		ShortnamePipe,
-		AuthcolorPipe,
 		EqualsValidator,
 		HighlightDirective,
 		InfoDialogComponent,
@@ -47,8 +42,6 @@ import {SessionService} from "./services/session.service";
 		FormsModule,
 	],
 	exports: [
-		ShortnamePipe,
-		AuthcolorPipe,
 		EqualsValidator,
 		HighlightDirective,
 		InfoDialogComponent,

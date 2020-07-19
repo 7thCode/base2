@@ -10,17 +10,16 @@ import {IEmit} from "../../../../../../../types/platform/universe";
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 
-@Component({
-	selector: "button-element",
-	templateUrl: "./button.component.html",
-	styleUrls: ["./button.component.css"],
-})
-
 /**
  * ボタン
  *
  * @since 0.01
  */
+@Component({
+	selector: "button-element",
+	templateUrl: "./button.component.html",
+	styleUrls: ["./button.component.css"],
+})
 export class ButtonComponent implements OnInit {
 
 	@Input() public description: any;
@@ -36,7 +35,7 @@ export class ButtonComponent implements OnInit {
 	/**
 	 *
 	 */
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 	}
 

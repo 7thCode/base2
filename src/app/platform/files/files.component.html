@@ -8,17 +8,17 @@
 				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
 				</mat-paginator>
 				<input type="file" multiple style="display: none" #fileInput (change)="onChangeFileInput()"/>
-				<button mat-fab color="primary" [disabled]="progress" (click)="onClickFileInputButton()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+				<button mat-fab color="primary" [disabled]="progress" (click)="onClickFileInputButton()" class="fab-center">+</button>
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
-					<input matInput type="text" placeholder="Find by Filename..." [(ngModel)]="filename" (change)="findByFilename();">
+					<input matInput autocomplete="off" type="text" placeholder="Find by Filename..." [(ngModel)]="filename" (change)="findByFilename();">
 					<button mat-button matSuffix mat-icon-button aria-label="Clear" [disabled]="progress" (click)="filename='';findByFilename();">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 			</div>
-			<mat-grid-list #grid cols="4" rowHeight="1:1">
+			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
 				<mat-grid-tile class="box-body" [ngSwitch]="file.type" *ngFor="let file of results" [colspan]="file.cols" [rowspan]="file.rows">
 					<app-image *ngSwitchCase="1" [user_id]="file.metadata.user_id" [fileName]="file.filename" [view]="'editable'"></app-image>
 					<img *ngSwitchCase="2" style="height: 60%;" src="{{endPoint}}/files/get/{{file.filename}}" alt=""/>
@@ -26,8 +26,8 @@
 						<source src="{{endPoint}}/files/get/{{file.filename}}">
 					</video>
 					<div *ngSwitchDefault [ngSwitch]="file.extension">
-						<i *ngSwitchCase="'zip'" class="material-icons" style="color:#f21411;font-size: 6rem;">insert_drive_file</i>
-						<i *ngSwitchDefault      class="material-icons" style="color:#02f2f2;font-size: 6rem;">insert_drive_file</i>
+						<i *ngSwitchCase="'zip'" class="material-icons" style="color:#ff1744;font-size: 6rem;">insert_drive_file</i>
+						<i *ngSwitchDefault      class="material-icons" style="color:#90caf9;font-size: 6rem;">insert_drive_file</i>
 					</div>
 
 					<!-- <div *ngIf="file.type == 3">
@@ -45,10 +45,10 @@
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
 
 						<a mat-icon-button href="{{endPoint}}/files/get/{{file.filename}}" download>
-							<mat-icon class="material-icons" style="color:#b2ebf2;">cloud_download</mat-icon>
+							<mat-icon color="primary">cloud_download</mat-icon>
 						</a>
-						<button mat-icon-button color="warn" (click)="onDelete(file.filename)">
-							<mat-icon class="material-icons">delete_sweep</mat-icon>
+						<button mat-icon-button (click)="onDelete(file.filename)">
+							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
 
 					</mat-grid-tile-footer>

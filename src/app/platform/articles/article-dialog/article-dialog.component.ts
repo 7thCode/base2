@@ -11,17 +11,16 @@ import {Component, Inject, NgZone, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {take} from "rxjs/operators";
 
-@Component({
-	selector: "article-dialog",
-	styleUrls: ["./article-dialog.component.css"],
-	templateUrl: "./article-dialog.component.html",
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "article-dialog",
+	styleUrls: ["./article-dialog.component.css"],
+	templateUrl: "./article-dialog.component.html",
+})
 export class ArticleDialogComponent {
 
 	@ViewChild("autosize") public autosize: CdkTextareaAutosize;

@@ -15,17 +15,16 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthService} from "../auth.service";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
-@Component({
-	selector: "login-qr-dialog",
-	styleUrls: ["../auth.component.css"],
-	templateUrl: "./login-qr-dialog.component.html",
-})
-
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "login-qr-dialog",
+	styleUrls: ["../auth.component.css"],
+	templateUrl: "./login-qr-dialog.component.html",
+})
 export class LoginQrDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**

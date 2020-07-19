@@ -31,6 +31,7 @@ export class Vaults extends SecureUpdatable {
 	 * @param event
 	 * @param config
 	 * @param logger
+	 * @constructor
 	 */
 	constructor(event: object, config: object, logger: object) {
 		super(event, config, logger);

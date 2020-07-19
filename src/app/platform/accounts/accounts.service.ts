@@ -11,7 +11,7 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import {Callback} from "../../../../types/platform/universe";
-import {ConstService} from "../../config/const.service";
+
 import {QueryableService} from "../base/services/queryable.service";
 
 @Injectable({
@@ -25,13 +25,11 @@ export class AccountsService extends QueryableService {
 	/**
 	 *
 	 * @param http
-	 * @param constService
 	 */
 	constructor(
 		public http: HttpClient,
-		public constService: ConstService,
 	) {
-		super(http, constService, "accounts");
+		super(http, "accounts");
 	}
 
 	/**
@@ -52,7 +50,7 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 9562"}, null);
 		});
 	}
 
@@ -73,7 +71,7 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 7230"}, null);
 		});
 	}
 
@@ -94,7 +92,7 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 464"}, null);
 		});
 	}
 
@@ -115,7 +113,7 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 1860"}, null);
 		});
 	}
 
@@ -136,7 +134,7 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 3179"}, null);
 		});
 	}
 

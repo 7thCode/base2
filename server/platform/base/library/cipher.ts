@@ -31,7 +31,7 @@ const LocalAccount: any = require(path.join(models, "platform/accounts/account")
 export class Cipher {
 
 	/**
-	 *
+	 * @constructor
 	 */
 	constructor() {
 	}
@@ -133,7 +133,7 @@ export class Cipher {
 				const encodedToken: any = Cipher.FixedCrypt(JSON.stringify(tokenObject), config.tokensecret);
 				callback(null, encodedToken);
 			} else {
-				callback({code: 1, message: "account not found."}, null);
+				callback({code: 1, message: "account not found."  + " 2419"}, null);
 			}
 		}).catch((error: any): void => {
 			callback(error, null);
@@ -156,13 +156,13 @@ export class Cipher {
 					if (account) {
 						callback(null, account);
 					} else {
-						callback({code: 1, message: "account not found."}, null);
+						callback({code: 1, message: "account not found." + " 8119"}, null);
 					}
 				}).catch((error: any): void => {
 					callback(error, "");
 				});
 			} else {
-				callback({code: 1, message: "auth fail."}, null);
+				callback({code: 1, message: "auth fail." + " 2691"}, null);
 			}
 		} catch (exept) {
 			callback(exept, null);

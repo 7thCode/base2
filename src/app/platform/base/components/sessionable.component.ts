@@ -8,19 +8,18 @@
 
 import {AuthLevel, Callback, IErrorObject, IRole} from "../../../../../types/platform/universe";
 
-import {ChangeDetectorRef, EventEmitter, Output} from "@angular/core";
-
-import * as momentNs from "moment-timezone";
+import {Directive, EventEmitter, Output} from "@angular/core";
 
 import {SessionService} from "../services/session.service";
-
-const moment: any = momentNs;
 
 /**
  * セッショナブルクラス
  *
  * @since 0.01
  */
+
+@Directive()
+
 export abstract class SessionableComponent {
 
 	/**
@@ -54,17 +53,6 @@ export abstract class SessionableComponent {
 	/**
 	 *
 	 */
-	// public get modifyMoment(): object {
-	// 	let result: object = null;
-	// 	if (this.privateCurrentSession) {
-	// 		result = moment(this.privateCurrentSession.modify);
-	// 	}
-	// 	return result;
-	// }
-
-	/**
-	 *
-	 */
 	public progress: boolean;
 
 	/**
@@ -85,11 +73,9 @@ export abstract class SessionableComponent {
 	/**
 	 * @constructor
 	 * @param session
-	 * @param change
 	 */
 	protected constructor(
 		protected session: SessionService,
-		protected change: ChangeDetectorRef,
 	) {
 		this.privateCurrentSession = {
 			provider: "",

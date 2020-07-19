@@ -8,8 +8,7 @@
 
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 
-import {ChangeDetectorRef, Component} from "@angular/core";
-import {MediaObserver} from "@angular/flex-layout";
+import {Component, OnInit} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -19,18 +18,17 @@ import {ArticleDialogComponent} from "./article-dialog/article-dialog.component"
 import {SessionService} from "../base/services/session.service";
 import {ArticlesService} from "./articles.service";
 
-@Component({
-	selector: "articles",
-	templateUrl: "./articles.component.html",
-	styleUrls: ["./articles.component.css"],
-})
-
 /**
  * アーティクル
  *
  * @since 0.01
  */
-export class ArticlesComponent extends GridViewComponent {
+@Component({
+	selector: "articles",
+	templateUrl: "./articles.component.html",
+	styleUrls: ["./articles.component.css"],
+})
+export class ArticlesComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 *
@@ -38,18 +36,15 @@ export class ArticlesComponent extends GridViewComponent {
 	 * @param articleService
 	 * @param change
 	 * @param matDialog
-	 * @param observableMedia
 	 * @param snackbar
 	 */
 	constructor(
 		public session: SessionService,
 		public articleService: ArticlesService,
-		public change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
-		protected observableMedia: MediaObserver,
 		protected snackbar: MatSnackBar,
 	) {
-		super(session, change, matDialog, observableMedia);
+		super(session, matDialog);
 		this.service = articleService;
 	}
 
@@ -71,6 +66,11 @@ export class ArticlesComponent extends GridViewComponent {
 		object.cols = 1;
 		object.rows = 1;
 		return object;
+	}
+
+	public ngOnInit(): void {
+		this.sort = {};
+		super.ngOnInit();
 	}
 
 	/**

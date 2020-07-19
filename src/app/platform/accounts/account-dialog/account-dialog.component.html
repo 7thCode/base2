@@ -10,11 +10,11 @@
 				<mat-card-content fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between">
 
 					<mat-form-field>
-						<input matInput type="text" placeholder="Nickname" [(ngModel)]="content.nickname" #nickname="ngModel" name="nickname" required minlength="2" maxlength="255">
+						<input matInput autocomplete="off" type="text" placeholder="Nickname" [(ngModel)]="content.nickname" #nickname_field="ngModel" name="nickname" required minlength="2" maxlength="255">
 						<mat-hint>3文字以上500文字まで</mat-hint>
-						<mat-error *ngIf="nickname.errors?.required;">入力してください</mat-error>
-						<mat-error *ngIf="nickname.errors?.maxlength">長すぎます</mat-error>
-						<mat-error *ngIf="nickname.errors?.minlength">短すぎます</mat-error>
+						<mat-error *ngIf="nickname_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="nickname_field.errors?.maxlength">長すぎます</mat-error>
+						<mat-error *ngIf="nickname_field.errors?.minlength">短すぎます</mat-error>
 					</mat-form-field>
 
 					<mat-form-field>
@@ -22,7 +22,7 @@
 					</mat-form-field>
 
 					<div *ngIf="session.role.system || session.role.manager">
-						<mat-slide-toggle class="example-margin" [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
+						<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
 					</div>
 
 				</mat-card-content>
@@ -45,7 +45,7 @@
 				<mat-card-content fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-around">
 					<mat-card style="height:200px;width:200px;padding:10px;">
 						<mat-card-content fxLayout="column" fxLayout.xs="row" fxLayoutAlign="space-around center">
-							<img *ngIf="qr != ''" style="height:180px;width:180px;border-style: solid; border-color: #505050;" [src]="qr">
+							<img *ngIf="qr != ''" style="height:180px;width:180px;border-style: solid; border-color: #505050;" [src]="qr" alt="qr code">
 						</mat-card-content>
 					</mat-card>
 					<mat-card>
@@ -62,7 +62,7 @@
 	<div class="spacer"></div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()">OK</button>
+		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</div>
 </div>

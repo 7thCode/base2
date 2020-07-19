@@ -23,7 +23,7 @@ passport.deserializeUser((user, done): void => {
 
 const LocalStrategy: any = require("passport-local").Strategy;
 const FacebookStrategy: any = require("passport-facebook").Strategy;
-const AppleStrategy: any = require("passport-appleid").Strategy;
+const AppleStrategy: any = require("passport-apple").Strategy;
 const TwitterStrategy: any = require("passport-twitter").Strategy;
 const InstagramStrategy: any = require("passport-instagram").Strategy;
 const LineStrategy: any = require("passport-line").Strategy;
@@ -122,6 +122,13 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 
 		// for Preflight request. (CORS)
 		router.options("*", [gatekeeper.default]);
+
+		router.get("/auth/local/is_logged_in", [gatekeeper.default,
+			(request: object, response: object): void => {
+				gatekeeper.catch(response, (): void => {
+					auth.is_logged_in(request, response);
+				});
+			}]);
 
 		router.post("/auth/local/login", [gatekeeper.default,
 			(request: object, response: object): void => {

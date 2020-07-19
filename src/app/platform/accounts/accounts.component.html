@@ -7,17 +7,17 @@
             <div fxLayout="row" fxLayoutAlign="space-between">
 				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
 				</mat-paginator>
-                <button mat-fab color="primary" [disabled]="progress" (click)="createDialog()" style="position:relative;top:-20px;right:-20px;font-size:20px;font-weight:900;">+</button>
+                <button mat-fab color="primary" [disabled]="progress" (click)="createDialog()" class="fab-center">+</button>
 			</div>
             <div fxLayout="row" fxLayout.lt-sm="column">
                 <mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
-                    <input matInput type="text" placeholder="Find by nickname..." [(ngModel)]="nickname" (change)="findByNickname();">
+                    <input matInput autocomplete="off" type="text" placeholder="Find by nickname..." [(ngModel)]="nickname" (change)="findByNickname();">
                     <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="nickname='';findByNickname();">
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
             </div>
-            <mat-grid-list #grid  cols="4" rowHeight="1:1">
+			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
                 <mat-grid-tile *ngFor="let account of results" [colspan]="account.cols" [rowspan]="account.rows" [style.background]="account.auth | authcolor">
 
                     <mat-grid-tile-header fxLayout="row" fxLayoutAlign="space-between center" style="padding-left:4px;padding-right:4px;line-height:32px;">
@@ -28,7 +28,7 @@
                     </mat-grid-tile-header>
 
                     <div fxLayout="column" style="margin-top:2rem;padding:1rem;overflow: hidden;">
-                        <div style="font-size:0.8rem;font-weight:500;color:#606060;margin:0.5rem auto;">{{account.username}}</div>
+                        <div style="font-size:0.8rem;font-weight:500;color:#505050;margin:0.5rem auto;">{{account.username}}</div>
                         <div class="mat-caption" style="height:4rem;overflow:hidden;">{{account.description}}</div>
                     </div>
                 </mat-grid-tile>

@@ -26,8 +26,9 @@ export class Pages extends Updatable {
 	/**
 	 *
 	 * @param event
-	 *  @param config
-	 *   @param logger
+	 * @param config
+	 * @param logger
+	 * @constructor
 	 */
 	constructor(event: object, config: object, logger: object) {
 		super(event, config, logger);
@@ -40,6 +41,7 @@ export class Pages extends Updatable {
 	 * @param path
 	 * @param object
 	 * @param callback
+	 * @returns none
 	 */
 	protected getPage(user_id: string, path: string, object: any, callback: (error: IErrorObject, result: any, mimetype: string) => void): void {
 		try {
@@ -55,16 +57,6 @@ export class Pages extends Updatable {
 		}
 	}
 
-	// protected default_user(user: IAccountModel): any {
-	// 	let result: any = user;
-	// 	if (!result) {
-	// 		result = {
-	// 			user_id: config.default.user_id,
-	// 			auth: 100000,
-	// 		};
-	// 	}
-	// 	return result;
-	// }
 }
 
 module.exports = Pages;
