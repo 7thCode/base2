@@ -12,8 +12,9 @@ import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const models: string = global._models;
-const library: string = global._library;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const result: any = require(path.join(library, "result"));
 
@@ -162,7 +163,7 @@ export abstract class Wrapper {
 	protected SendNotFound(response: IJSONResponse): void {
 		this.logger.error("notfound");
 		if (response) {
-			response.status(404).render("error", {message: "not found", status: 404});
+			response.status(404).render("error", {message: "Not found.", status: 404});
 		}
 	}
 
@@ -227,10 +228,6 @@ export abstract class Wrapper {
 			},
 			enabled: false,
 			role: {
-				system: false,
-				manager: false,
-				user: false,
-				public: true,
 				categoly: 0,
 				raw: AuthLevel.user,
 				login: false,

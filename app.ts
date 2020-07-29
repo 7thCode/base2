@@ -3,24 +3,7 @@
  * This software is released under the MIT License.
  * //opensource.org/licenses/mit-license.php
  */
-
-// for "global".
-declare namespace NodeJS {
-	// tslint:disable-next-line:interface-name
-	interface Global {
-		__config: string;
-		_models: string;
-		_controllers: string;
-		_modules: string;
-		_library: string;
-	}
-}
-
-global.__config = __dirname + "/config";
-global._models = __dirname + "/models";
-global._controllers = __dirname + "/server/platform/base/controllers";
-global._modules = __dirname + "/server/platform/modules";
-global._library = __dirname + "/server/platform/base/library";
+import {Server} from "http";
 
 const cluster: any = require('cluster');
 const cpu_count: number = require('os').cpus().length;
@@ -42,10 +25,9 @@ const rotatestream: any = require("logrotate-stream");
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
+const _config: string = path.join(project_root, "config");
 
 const _ConfigModule: any = require(path.join(_config, "default"));
 const Scheduler: any = require(path.join(library, "scheduler"));
@@ -60,7 +42,7 @@ try {
 } catch (e) {
 }
 
-const normal = () => {
+const normal: () => void = () => {
 
 	morgan("combined");
 
@@ -79,7 +61,7 @@ const normal = () => {
 		process.env.TZ = config.timezone;
 	}
 
-	const working = () => {
+	const working: () => void = () => {
 		const app: any = express();
 
 		// helmet
@@ -223,7 +205,7 @@ const normal = () => {
 				}),
 			});
 
-			app.session = sessionMiddleware;
+	// 		app.session = sessionMiddleware;
 			app.use(sessionMiddleware);
 
 			// passport
@@ -279,14 +261,6 @@ const normal = () => {
 				{
 					type: "required",
 					path: "/platform/modules/",
-					name: "vaults",
-					description: {
-						display: "Vaults",
-					},
-				},
-				{
-					type: "required",
-					path: "/platform/modules/",
 					name: "pages",
 					description: {
 						display: "page",
@@ -322,7 +296,7 @@ const normal = () => {
 				});
 			}
 
-			const server: any = Serve(config, app);
+			const server: Server = Serve(config, app);
 
 			// io.wait(config, event);
 
@@ -380,34 +354,9 @@ const normal = () => {
 				}, 1500);
 			}
 		});
-
-
 	}
 
-	const is_cluster: boolean = config.is_cluster;
-
-	if (is_cluster) {
-		if (cluster.isMaster) {
-
-			console.group("\u001b[35m" + "Environment" + "\u001b[0m");
-			console.info("TZ  : " + process.env.TZ);
-			console.info("LC_CTYPE  : " + process.env.LC_CTYPE);
-			console.info("PWD       : " + process.env.PWD);
-			console.info("HOME      : " + process.env.HOME);
-			console.info("ENV       : " + process.env.NODE_ENV);
-			console.info("MODE      : " + config.status);
-			console.info("DB ADDRESS: " + config.db.address);
-			console.info("DB NAME   : " + config.db.name);
-			console.groupEnd();
-
-			for (let i: number = 0; i < cpu_count; i++) {
-				cluster.fork();
-			}
-		} else {
-			working();
-		}
-	} else {
-
+	const message = (): void => {
 		console.group("\u001b[35m" + "Environment" + "\u001b[0m");
 		console.info("TZ  : " + process.env.TZ);
 		console.info("LC_CTYPE  : " + process.env.LC_CTYPE);
@@ -418,7 +367,21 @@ const normal = () => {
 		console.info("DB ADDRESS: " + config.db.address);
 		console.info("DB NAME   : " + config.db.name);
 		console.groupEnd();
+	}
 
+	const is_cluster: boolean = config.is_cluster;
+
+	if (is_cluster) {
+		if (cluster.isMaster) {
+			message();
+			for (let i: number = 0; i < cpu_count; i++) {
+				cluster.fork();
+			}
+		} else {
+			working();
+		}
+	} else {
+		message();
 		working();
 	}
 
@@ -443,35 +406,34 @@ const Serve = (config: any, app: any): any => {
 	}
 
 	function onError(error) {
-		if (error.syscall !== "listen") {
+		if (error.syscall === "listen") {
+			const bind: string = typeof port === "string"
+				? "Pipe " + port
+				: "Port " + port;
+			switch (error.code) {
+				case "EACCES":
+					console.error("\u001b[31m" + bind + " requires elevated privileges" + "\u001b[0m");
+					process.exit(1);
+					break;
+				case "EADDRINUSE":
+					console.error("\u001b[31m" + bind + " is already in use" + "\u001b[0m");
+					process.exit(1);
+					break;
+				default:
+					throw error;
+			}
+		} else  {
 			throw error;
-		}
-
-		const bind = typeof port === "string"
-			? "Pipe " + port
-			: "Port " + port;
-
-		switch (error.code) {
-			case "EACCES":
-				console.error("\u001b[31m" + bind + " requires elevated privileges" + "\u001b[0m");
-				process.exit(1);
-				break;
-			case "EADDRINUSE":
-				console.error("\u001b[31m" + bind + " is already in use" + "\u001b[0m");
-				process.exit(1);
-				break;
-			default:
-				throw error;
 		}
 	}
 
 	function onListening() {
-		const addr: any = server.address();
+		/*
+		const addr: string | AddressInfo = server.address();
 		const bind: any = typeof addr === "string"
 			? "pipe " + addr
 			: "port " + addr.port;
-		//   debug('Listening on ' + bind);
-
+*/
 		process.send = process.send || function (message: string): boolean {
 			return true;
 		};  // for pm2 cluster.
@@ -484,7 +446,7 @@ const Serve = (config: any, app: any): any => {
 	const port: any = normalizePort(process.env.PORT || config.port);
 	app.set("port", port);
 
-	let server: any = null;
+	let server: Server = null;
 
 	if (config.ssl) {
 		const ssl: { key: string, cert: string } = config.ssl;

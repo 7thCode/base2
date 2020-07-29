@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Input, Output} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {LoginQrDialogComponent} from "./login-qr-dialog.component";
 
@@ -38,12 +38,13 @@ export class LoginQrDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const dialog: any = this.matDialog.open(LoginQrDialogComponent, {
-			width: "90vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(LoginQrDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
 			data: {
 				content: {
 					title: "Login-qr",
+					description: "Lorem ipsum...",
 					username: "",
 					password: "",
 					code: "",

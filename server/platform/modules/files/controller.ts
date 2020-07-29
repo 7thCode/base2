@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
 
@@ -18,7 +18,8 @@ const MongoClient: any = require("mongodb").MongoClient;
 
 const path: any = require("path");
 
-const controllers: string = global._controllers;
+const project_root: string = process.cwd();
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
 
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 
@@ -246,7 +247,7 @@ export class Files extends Wrapper {
 								if (!error) {
 									const save = (doc: any): Promise<any> => {
 										return new Promise((resolve: any, reject: any): void => {
-											const path: string = process.cwd() + doc.path;
+											const path: string = project_root + doc.path;
 											const filename: string = doc.name;
 											const user: { user_id: string, role: { raw: number } } = doc.user;
 											const mimetype: string = doc.content.type;
@@ -400,8 +401,8 @@ export class Files extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					this.Decode(request.params.option, (error: IErrorObject, option: IQueryOption): void => {
 						this.ifSuccess(response, error, (): void => {
-							const user: IAccountModel = this.Transform(request.user);
-							this.collection.find(Files.query_by_user_read(user, query), option).limit(option.limit).skip(option.skip).toArray((error: IErrorObject, docs: any): void => {
+							const operator: IAccountModel = this.Transform(request.user);
+							this.collection.find(Files.query_by_user_read(operator, query), option).limit(option.limit).skip(option.skip).toArray((error: IErrorObject, docs: any): void => {
 								this.ifSuccess(response, error, (): void => {
 									this.SendRaw(response, docs);
 								});
@@ -425,9 +426,9 @@ export class Files extends Wrapper {
 		try {
 			this.Decode(request.params.query, (error: IErrorObject, query: object): void => {
 				this.ifSuccess(response, error, (): void => {
-					const user: IAccountModel = this.Transform(request.user);
+					const operator: IAccountModel = this.Transform(request.user);
 					// const auth: number = user.auth;
-					this.collection.find(Files.query_by_user_read(user, query)).count((error: IErrorObject, count: number): void => {
+					this.collection.find(Files.query_by_user_read(operator, query)).count((error: IErrorObject, count: number): void => {
 						this.ifSuccess(response, error, (): void => {
 							this.SendSuccess(response, count);
 						});
@@ -449,13 +450,13 @@ export class Files extends Wrapper {
 		try {
 			// const name: string = request.params.name;
 			const path: string = request.params[0];
-			const user: IAccountModel = this.Transform(request.user);
+			const operator: IAccountModel = this.Transform(request.user);
 
 			const BinaryToBase64: any = (str: string): any => {
 				return Buffer.from(str, "binary").toString("base64");
 			};
 
-			const query: object = Files.query_by_user_read(user, {filename: path});
+			const query: object = Files.query_by_user_read(operator, {filename: path});
 			this.collection.findOne(query, (error: IErrorObject, item: { _id: object, metadata: { type: string } }): void => {
 				this.ifSuccess(response, error, (): void => {
 					if (item) {
@@ -495,16 +496,16 @@ export class Files extends Wrapper {
 		try {
 			const path: string = request.params[0];
 			const category: string = request.body.category;
-			const user: IAccountModel = this.Transform(request.user);
-			const rights = {read: AuthLevel.public, write: AuthLevel.user};
+			const operator: IAccountModel = this.Transform(request.user);
+			const rights = {read: 100000, write: 200};
 			const description: string = "";
 
 			if (path) {
-				const query: object = Files.query_by_user_write(user, {filename: path});
+				const query: object = Files.query_by_user_write(operator, {filename: path});
 				this.collection.findOne(query, (error: IErrorObject, item: object): void => {
 					this.ifSuccess(response, error, (): void => {
 						if (!item) {
-							this.insertFile(request, user, path, rights, category, description, (error: IErrorObject, result: object): void => {
+							this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
 								this.ifSuccess(response, error, (): void => {
 									this.SendSuccess(response, result);
 								});
@@ -512,7 +513,7 @@ export class Files extends Wrapper {
 						} else {
 							this.collection.deleteOne(query, (error: IErrorObject): void => {
 								this.ifSuccess(response, error, (): void => {
-									this.insertFile(request, user, path, rights, category, description, (error: IErrorObject, result: object): void => {
+									this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
 										this.ifSuccess(response, error, (): void => {
 											this.SendSuccess(response, result);
 										});
@@ -539,9 +540,9 @@ export class Files extends Wrapper {
 	public deleteFile(request: IDeleteFile, response: IJSONResponse): void {
 		try {
 			const path: string = request.params[0];
-			const user: IAccountModel = this.Transform(request.user);
+			const operator: IAccountModel = this.Transform(request.user);
 
-			const query: object = Files.query_by_user_write(user, {filename: path});
+			const query: object = Files.query_by_user_write(operator, {filename: path});
 			// 		this.collection.findOne(query, (error: IErrorObject, item: object): void => {
 			// 			this.ifSuccess(response, error, (): void => {
 			// 				if (item) {

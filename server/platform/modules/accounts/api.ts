@@ -11,8 +11,9 @@ export const router: any = express.Router();
 
 const path: any = require("path");
 
-const modules: string = global._modules;
-const library: string = global._library;
+const project_root: string = process.cwd();
+const modules: string = path.join(project_root, "server/platform/modules");
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const event = module.parent.exports.event;
 
@@ -56,9 +57,9 @@ router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authen
 /*
 *
 */
-router.get("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate,
+router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -69,9 +70,9 @@ router.get("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authentic
 /*
 *
 */
-router.put("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate,
+router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -82,9 +83,9 @@ router.put("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authentic
 /*
 *
 */
-router.delete("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate,
+router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_manager(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -95,9 +96,9 @@ router.delete("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authen
 /*
 *
 */
-router.get("/accounts/auth/is2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
+router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -110,7 +111,7 @@ router.get("/accounts/auth/is2fa/:username", [gatekeeper.default, gatekeeper.aut
 */
 router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_name(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -123,7 +124,7 @@ router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.a
 */
 router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_name(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -136,7 +137,7 @@ router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper
 */
 router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -149,7 +150,7 @@ router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 */
 router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {

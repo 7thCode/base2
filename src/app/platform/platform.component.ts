@@ -11,7 +11,7 @@ import {Callback, IErrorObject} from "../../../types/platform/universe";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSidenav} from "@angular/material/sidenav";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -54,7 +54,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 *
 	 * @param session
 	 * @param accountService
-	 * @param media
 	 * @param change
 	 * @param overlay
 	 * @param snackbar
@@ -63,14 +62,14 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 * @param breakpointObserver
 	 */
 	constructor(
-		public session: SessionService,
-		public accountService: AccountsService,
-	 	public change: ChangeDetectorRef,
+		protected session: SessionService,
 		protected overlay: Overlay,
 		protected snackbar: MatSnackBar,
+		protected breakpointObserver: BreakpointObserver,
+		private accountService: AccountsService,
+		private change: ChangeDetectorRef,
 		private elementRef: ElementRef,
 		private matDialog: MatDialog,
-		protected breakpointObserver: BreakpointObserver
 	) {
 		super(session, overlay, snackbar, breakpointObserver);
 		this.accountsService = accountService;
@@ -140,6 +139,9 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	public onTap(event) {
 	}
 
+	/**
+	 *
+	 */
 	public ngOnInit(): void {
 		super.ngOnInit();
 
@@ -168,7 +170,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		});
 
 		this.sock.addEventListener("message", (e) => {
-			// 	console.log(JSON.parse(e.data).username);
 		});
 
 		this.sock.addEventListener("close", (e) => {
@@ -271,8 +272,8 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		const id: string = this.currentSession.username;
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(AccountDialogComponent, {
-					width: "90vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
+					width: "fit-content",
 					height: "fit-content",
 					data: {
 						session: this.currentSession,

@@ -20,7 +20,6 @@ import {SessionService} from "../services/session.service";
  */
 
 @Directive()
-
 export abstract class ParamsComponent extends SessionableComponent implements OnInit {
 
 	protected constructor(

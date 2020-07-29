@@ -50,7 +50,7 @@ export class FilesService extends HttpService {
 					callback({code: -1, message: error.message + " 1581"}, null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " 7611"}, null);
+				callback({code: -1, message: "query parse error. 7611"}, null);
 			}
 		});
 
@@ -72,7 +72,7 @@ export class FilesService extends HttpService {
 								if (Array.isArray(results)) {
 									callback(null, results);
 								} else {
-									callback({code: -1, message: "error" + " 7611"}, null);
+									callback({code: -1, message: "error. 7611"}, null);
 								}
 							} else {
 								callback(this.networkError, null);
@@ -81,11 +81,11 @@ export class FilesService extends HttpService {
 							callback({code: -1, message: error.message + " 5814"}, null);
 						});
 					} else {
-						callback({code: -1, message: "option parse error" + " 9204"}, null);
+						callback({code: -1, message: "option parse error. 9204"}, null);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " 7211"}, null);
+				callback({code: -1, message: "query parse error. 7211"}, null);
 			}
 		});
 	}
@@ -106,10 +106,10 @@ export class FilesService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback({message: "error", code: -1}, null);
+					callback({message: "error. 8346", code: -1}, null);
 				}
 			} else {
-				callback({message: "error", code: -1}, null);
+				callback({message: "error. 8176", code: -1}, null);
 			}
 		}, (error: HttpErrorResponse): void => {
 			callback({code: -1, message: error.message + " 6677"}, null);
@@ -127,10 +127,10 @@ export class FilesService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback({message: "error", code: -1}, null);
+					callback({message: "error. 3293", code: -1}, null);
 				}
 			} else {
-				callback({message: "error", code: -1}, null);
+				callback({message: "error. 6565", code: -1}, null);
 			}
 		}, (error: HttpErrorResponse): void => {
 			callback({code: -1, message: error.message + " 8199"}, null);

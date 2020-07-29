@@ -16,7 +16,8 @@ const pug: any = require("pug");
 
 const path: any = require("path");
 
-const library: string = global._library;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const Wrapper: any = require("./wrapper");
 
@@ -72,7 +73,7 @@ export class Mail extends Wrapper {
 	 * @returns status
 	 */
 	protected send_mail(mailConfig: any, response: IJSONResponse): void {
-		fs.readFile(path.join(process.cwd(), mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
+		fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 			this.ifSuccess(response, error, (): void => {
 				const doc: any = pug.render(data, {content: mailConfig.souce_object, link: mailConfig.link});
 				this.mailer.send(mailConfig.address, mailConfig.bcc, mailConfig.title, doc, (error: IErrorObject): void => {

@@ -7,7 +7,7 @@
 "use strict";
 
 import {IAccountModel} from "../../../../types/platform/server";
-import {AuthLevel, IErrorObject} from "../../../../types/platform/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router = express.Router();
@@ -15,9 +15,10 @@ export const router = express.Router();
 const path: any = require("path");
 const fs: any = require("graceful-fs");
 
-const library: string = global._library;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
 
-const event = module.parent.exports.event;
+const event: any = module.parent.exports.event;
 
 const logger: any = module.parent.exports.logger;
 
@@ -36,7 +37,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 
 		const cache_write = (user_id: string, _path: string, input: any, callback: (error) => void): void => {
 			try {
-				const cache_file: string = path.join(process.cwd(), "public", cache_root, user_id, _path);
+				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
 				const cache_dir: string = path.dirname(cache_file);
 				fs.mkdir(cache_dir, {recursive: true}, (error) => {
 					if (!error) {
@@ -52,7 +53,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 
 		const cache_delete = (user_id: string, _path: string, callback: (error) => void): void => {
 			try {
-				const cache_file: string = path.join(process.cwd(), "public", cache_root, user_id, _path);
+				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
 				fs.unlink(cache_file, (error) => {
 					callback(error);
 				});
@@ -177,7 +178,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			file.getRecordById(_id, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						if (result.metadata.rights.read === AuthLevel.public) {
+						if (result.metadata.rights.read === 100000) {
 							render(response, next, result, file, query, range, command_string, callback);
 						} else {
 							response.status(403).render("error", {message: "Forbidden...", status: 403});
@@ -215,7 +216,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			file.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						if (result.metadata.rights.read === AuthLevel.public) {
+						if (result.metadata.rights.read === 100000) {
 							render(response, next, result, file, query, range, command_string, callback);
 						} else {
 							response.status(403).render("error", {message: "Forbidden...", status: 403});

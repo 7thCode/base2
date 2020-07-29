@@ -20,7 +20,6 @@ import {SessionService} from "../services/session.service";
  */
 
 @Directive()
-
 export abstract class GridViewComponent extends UpdatableComponent implements OnInit {
 
 	public breakpoint: number = 4;

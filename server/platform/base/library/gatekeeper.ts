@@ -12,10 +12,8 @@ const path: any = require("path");
 
 const result: any = require("./result");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const _config: string = path.join(project_root, "config");
 
 const ConfigModule: any = require(path.join(_config, "default"));
 const systemsConfig: any = ConfigModule.systems;
@@ -57,7 +55,7 @@ export class Gatekeeper {
 	 * @returns response
 	 */
 	public static ExtendHeader(request: any, response: any, session: any): any {
-		let host = request.headers.origin;
+		let host: string = request.headers.origin;
 		if (!host) {
 			host = "http://" + request.headers.host;
 		}
@@ -117,7 +115,7 @@ export class Gatekeeper {
 				response = Gatekeeper.BasicHeader(request, response, "");
 				next();
 			} else {
-				Gatekeeper.SendError(response, {code: -1, message: "CSRF?" + " 28466"});
+				Gatekeeper.SendError(response, {code: -1, message: "CSRF? 28466"});
 			}
 		}
 	}
@@ -136,7 +134,7 @@ export class Gatekeeper {
 					if (request.isAuthenticated()) {
 						next();
 					} else {
-						Gatekeeper.SendError(response, {code: -2, message: "no auth. " + "3827"});
+						Gatekeeper.SendError(response, {code: -2, message: "no auth. 3827"});
 					}
 					break;
 				case "facebook":
@@ -181,10 +179,10 @@ export class Gatekeeper {
 				if (request.isAuthenticated()) {
 					next();
 				} else {
-					response.status(403).render("error", {status: 403, message: "Forbidden." + " 1926", url: request.url});
+					response.status(403).render("error", {status: 403, message: "Forbidden.", url: request.url});
 				}
 			} else {
-				response.status(403).render("error", {status: 403, message: "Forbidden." + " 5206", url: request.url});
+				response.status(403).render("error", {status: 403, message: "Forbidden.", url: request.url});
 			}
 		} catch (e) {
 			response.status(500).render("error", {

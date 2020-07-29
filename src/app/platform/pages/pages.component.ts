@@ -9,7 +9,7 @@
 import {IErrorObject, IPageModelContent} from "../../../../types/platform/universe";
 
 import {Component, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
@@ -42,10 +42,9 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
-		protected pageSerrvice: PagesService,
-
 		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar,
+		private pageSerrvice: PagesService,
+		private snackbar: MatSnackBar,
 	) {
 		super(session, matDialog);
 		this.service = pageSerrvice;
@@ -57,7 +56,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 
@@ -94,8 +93,8 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 			accessory: {},
 		};
 
-		const dialog: any = this.matDialog.open(PageDialogComponent, {
-			width: "90vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
@@ -146,8 +145,8 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(PageDialogComponent, {
-					width: "90vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
+					width: "fit-content",
 					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,

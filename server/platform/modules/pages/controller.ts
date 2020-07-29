@@ -12,8 +12,9 @@ import {IPageModel} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
 
 const Updatable: any = require(path.join(controllers, "updatable_controller"));
 

@@ -2,6 +2,7 @@
 	<h1 mat-dialog-title>{{content.title}}</h1>
 
 	<div mat-dialog-content fxLayout="column">
+		<div style="margin:6px;">{{content.description}}</div>
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 			<mat-form-field class="form-field">
 				<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">

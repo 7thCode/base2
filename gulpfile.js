@@ -55,7 +55,8 @@ gulp.task('build', function () {
 		'patch.js',
 		'package.json',
 		'htdigest',
-		'cluster.json'
+		'cluster.json',
+		'*.p8'
 	], { base: './', allowEmpty: true })
 		.pipe(gulp.dest('product'));
 

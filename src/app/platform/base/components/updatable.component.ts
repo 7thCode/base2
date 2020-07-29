@@ -9,7 +9,7 @@
 import {Callback, IContent, IErrorObject} from "../../../../../types/platform/universe";
 
 import {Directive, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "./info-dialog/info-dialog.component";
 import {SessionableComponent} from "./sessionable.component";
@@ -22,7 +22,6 @@ import {SessionService} from "../services/session.service";
  * @since 0.01
  */
 @Directive()
-
 export abstract class UpdatableComponent extends SessionableComponent implements OnInit {
 
 	public size: number = 20;
@@ -65,10 +64,10 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	 * @returns none
 	 */
 	protected infoDialog(title: string, message: string, callback: () => void): void {
-		const dialog: any = this.matDialog.open(InfoDialogComponent, {
-			data: {content: {title, message}},
-			width: "90vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
+			data: {content: {title, message}},
 			disableClose: true,
 		});
 
@@ -238,7 +237,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 		this.service.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
-				const option = {sort: this.sort, skip: this.size * this.page, limit: this.size};
+				const option: any = {sort: this.sort, skip: this.size * this.page, limit: this.size};
 				this.service.query(this.query, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
 						const filtered: any[] = [];

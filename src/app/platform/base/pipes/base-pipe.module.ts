@@ -10,20 +10,23 @@ import {AuthcolorPipe} from "./authcolor.pipe";
 import {ToFixedPipe} from "./tofixed.pipe";
 import {TruncatePipe} from "./truncate.pipe";
 import {ShortnamePipe} from "./shortname.pipe";
+import {AuthisPipe} from "./authis.pipe";
 
 @NgModule({
 	declarations: [
 		AuthcolorPipe,
 		ShortnamePipe,
 		TruncatePipe,
-		ToFixedPipe
+		ToFixedPipe,
+		AuthisPipe
 	],
 	imports: [],
 	exports: [
 		AuthcolorPipe,
 		ShortnamePipe,
 		TruncatePipe,
-		ToFixedPipe
+		ToFixedPipe,
+		AuthisPipe
 	],
 	providers: [],
 	bootstrap: [],

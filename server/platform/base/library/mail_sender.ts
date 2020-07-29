@@ -59,7 +59,7 @@ export class MailSender implements IMailModule {
 				callback(e);
 			}
 		} else {
-			callback({code: -1, message: "send error" + " 4002"});
+			callback({code: -1, message: "send error. 4002"});
 		}
 	}
 }

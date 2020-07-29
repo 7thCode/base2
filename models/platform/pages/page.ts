@@ -21,10 +21,8 @@ namespace PageModel {
 
 	const path: any = require("path");
 
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
+	const project_root: string = process.cwd();
+	const models: string = path.join(project_root, "models");
 
 	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
 	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
@@ -104,7 +102,7 @@ namespace PageModel {
 				if (!instance) {
 					this.save(cb);
 				} else {
-					cb({code: -1, message: "already." + " 3257"}, null);
+					cb({code: -1, message: "already. 3257"}, null);
 				}
 			} else {
 				cb(error, null);
@@ -141,7 +139,7 @@ namespace PageModel {
 					}
 					cb(null, doc, type);
 				} else {
-					cb({code: -1, message: "not found" + " 633"}, null, "");
+					cb({code: -1, message: "not found. 633"}, null, "");
 				}
 			} else {
 				cb(error, null, "");

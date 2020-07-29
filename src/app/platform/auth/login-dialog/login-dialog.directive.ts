@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Input, Output} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {LoginTotpDialogComponent} from "../login-totp-dialog/login-totp-dialog.component";
 import {LoginDialogComponent} from "./login-dialog.component";
@@ -28,25 +28,25 @@ export class LoginDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const dialog: any = this.matDialog.open(LoginDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(LoginDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
 			data: {
 				content: {
 					title: "Login",
+					description: "Lorem ipsum...",
 					username: "",
 					password: "",
 					code: "",
 				},
 			},
-
 			disableClose: true,
 		});
 
 		dialog.afterClosed().subscribe((result: any) => {
 			if (result) {
 				if (result.is_2fa) {
-					const dialog: any = this.matDialog.open(LoginTotpDialogComponent, {
+					const dialog: MatDialogRef<any> = this.matDialog.open(LoginTotpDialogComponent, {
 						data: result,
 						disableClose: true,
 					});

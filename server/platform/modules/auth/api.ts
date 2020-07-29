@@ -23,15 +23,16 @@ passport.deserializeUser((user, done): void => {
 
 const LocalStrategy: any = require("passport-local").Strategy;
 const FacebookStrategy: any = require("passport-facebook").Strategy;
-const AppleStrategy: any = require("passport-apple").Strategy;
+const AppleStrategy: any = require("passport-appleid").Strategy;
 const TwitterStrategy: any = require("passport-twitter").Strategy;
 const InstagramStrategy: any = require("passport-instagram").Strategy;
 const LineStrategy: any = require("passport-line").Strategy;
 
 const path: any = require("path");
 
-const models: string = global._models;
-const library: string = global._library;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const event = module.parent.exports.event;
 
@@ -61,7 +62,8 @@ if (systemsConfig.facebook) {
 
 if (systemsConfig.apple) {
 	const config: any = systemsConfig.apple.key;
-	config.privateKeyPath = path.join(__dirname, "");
+	const keyFile: any = systemsConfig.apple.KeyFile;
+	config.privateKeyPath = __dirname + "/" + keyFile;
 	passport.use(new AppleStrategy(config, (accessToken, refreshToken, profile, done): void => {
 		process.nextTick((): void => {
 			done(null, profile);
@@ -222,9 +224,9 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 		router.get("/auth/apple", passport.authenticate("apple", {scope: ["email"]}));
 		router.get("/auth/apple/callback", passport.authenticate("apple", {failureRedirect: "/"}),
 			(request: object, response: object): void => {
-				gatekeeper.catch(response, (): void => {
+			 	gatekeeper.catch(response, (): void => {
 					auth.auth_apple_callback(request, response);
-				});
+			 	});
 			});
 
 		// twitter

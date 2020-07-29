@@ -62,7 +62,7 @@ export class LogoutDialogComponent extends BaseDialogComponent implements OnInit
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 

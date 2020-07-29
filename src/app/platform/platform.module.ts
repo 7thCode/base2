@@ -37,9 +37,8 @@ import {FilesModule} from "./files/files.module";
 import {ImageModule} from "./image/image.module";
 import {PagesModule} from "./pages/pages.module";
 import {PlatformRoutingModule} from "./platform-routing.module";
-import {VaultsModule} from "./vaults/vaults.module";
-
 import {PlatformComponent} from "./platform.component";
+import {BasePipeModule} from "./base/pipes/base-pipe.module";
 
 @NgModule({
 	declarations: [
@@ -74,8 +73,8 @@ import {PlatformComponent} from "./platform.component";
 		PagesModule,
 		AuthModule,
 		ImageModule,
-		VaultsModule,
 		FilesModule,
+		BasePipeModule,
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],

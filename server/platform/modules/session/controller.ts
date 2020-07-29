@@ -11,7 +11,8 @@ import {IJSONResponse} from "../../../../types/platform/server";
 const _: any = require("lodash");
 const path: any = require("path");
 
-const controllers: string = global._controllers;
+const project_root: string = process.cwd();
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
 
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 
@@ -39,7 +40,7 @@ export class Session extends Wrapper {
 			if (request.user) {
 				this.SendSuccess(response, this.Transform(request.user));
 			} else {
-				this.SendError(response, {code: -1, message: "not logged in.(session 1)" + " 3630"});
+				this.SendError(response, {code: -1, message: "not logged in.(session 1) 3630"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -62,7 +63,7 @@ export class Session extends Wrapper {
 				request.session.save();
 				this.SendSuccess(response, user);
 			} else {
-				this.SendError(response, {code: -1, message: "not logged in.(session 2)" + " 7352"});
+				this.SendError(response, {code: -1, message: "not logged in.(session 2) 7352"});
 			}
 		} catch (error) {
 			this.SendError(response, error);

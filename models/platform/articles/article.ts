@@ -18,10 +18,8 @@ namespace ArticleModel {
 
 	const path: any = require("path");
 
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
+	const project_root: string = process.cwd();
+	const models: string = path.join(project_root, "models");
 
 	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
 	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
@@ -95,13 +93,12 @@ namespace ArticleModel {
 	Article.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
 		this.user_id = user.user_id;
 		this.content = init(this._id, body.content);
-
 		this.model("Article").findOne(query_by_user_write(user, {"content.id": this.content.id}), (error, instance) => {
 			if (!error) {
 				if (!instance) {
 					this.save(cb);
 				} else {
-					cb({code: -1, message: "already." + " 3500"}, null);
+					cb({code: -1, message: "already. 3500"}, null);
 				}
 			} else {
 				cb(error, null);

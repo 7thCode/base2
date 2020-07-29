@@ -3,8 +3,6 @@
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
-import {AuthLevel} from "../../../../types/platform/universe";
-
 module.exports = exports = function RightsPlugin(schema: any, options: any) {
 
 	schema.add({rights: {read: Number, write: Number}});
@@ -22,7 +20,7 @@ module.exports = exports = function RightsPlugin(schema: any, options: any) {
 	});
 
 	schema.pre("save", function(next: any) {
-		this.rights = {read: AuthLevel.public, write: AuthLevel.user};
+		this.rights = {read: 100000, write: 200};
 		next();
 	});
 

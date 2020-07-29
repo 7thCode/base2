@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
 	 */
 	@HostListener("touchend", ["$event"])
 	public onTouchERnd(event: any): void {
-		const now = new Date().getTime();
+		const now: number = new Date().getTime();
 		if ((now - this.t) < 350) {
 			event.preventDefault();
 		}

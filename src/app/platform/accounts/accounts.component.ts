@@ -9,7 +9,7 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {Component, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
@@ -47,8 +47,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 	public breakpoint: number = 4;
 
-	protected service: AccountsService;
-	protected auth_service: AuthService;
+// 	protected service: AccountsService;
+// 	protected auth_service: AuthService;
 	protected query: object = {};
 	protected page: number = 0;
 
@@ -61,15 +61,15 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @param snackbar
 	 */
 	constructor(
-		public session: SessionService,
-		public authService: AuthService,
-		public accountService: AccountsService,
-		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar,
+		protected session: SessionService,
+		private authService: AuthService,
+		private accountService: AccountsService,
+		private matDialog: MatDialog,
+		private snackbar: MatSnackBar,
 	) {
 		super(session);
-		this.service = accountService;
-		this.auth_service = authService;
+// 		this.service = accountService;
+// 		this.auth_service = authService;
 	}
 
 	/**
@@ -88,6 +88,9 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		return data;
 	}
 
+	/**
+	 *
+	 */
 	private widthToColumns(width: number): number {
 		let result: number = 4;
 		if (width < 600) {
@@ -111,7 +114,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	private get(id: string, callback: Callback<object>): void {
 		this.Progress(true);
-		this.service.get(id, (error: IErrorObject, result: object): void => {
+		this.accountService.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
 				callback(null, result);
 			} else {
@@ -129,7 +132,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	private update(id: string, data: object, callback: Callback<object>): void {
 		this.Progress(true);
-		this.service.put(id, data, (error: IErrorObject, result: object): void => {
+		this.accountService.put(id, data, (error: IErrorObject, result: object): void => {
 			if (!error) {
 				callback(null, result);
 			} else {
@@ -146,7 +149,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	private delete(id: string, callback: Callback<object>): void {
 		this.Progress(true);
-		this.service.delete(id, (error: IErrorObject, result: object): void => {
+		this.accountService.delete(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
 				callback(null, result);
 			} else {
@@ -172,7 +175,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 
@@ -239,11 +242,11 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	public draw(callback: Callback<object>): void {
 		this.Progress(true);
-		this.service.count(this.query, (error: IErrorObject, result: any): void => {
+		this.accountService.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
 				const option = {sort: {auth: 1}, skip: this.size * this.page, limit: this.size};
-				this.service.query(this.query, option, (error: IErrorObject, results: any[]): void => {
+				this.accountService.query(this.query, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
 						const accounts: object[] = [];
 						results.forEach((result) => {
@@ -286,8 +289,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * クリエイトダイアログ
 	 */
 	public createDialog(): void {
-		const dialog: any = this.matDialog.open(RegistDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,
@@ -297,7 +300,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 					password: "",
 					nickname: "",
 				},
-				service: this.service,
+				service: this.accountService,
 			},
 			disableClose: true,
 		});
@@ -309,7 +312,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				const username: string = content.username;
 				const password: string = content.password;
 				const metadata: {nickname: string, id: string} = {nickname: content.nickname, id: "1"};
-				this.auth_service.regist_immediate(username, password, metadata, (error: IErrorObject, result: object): void => {
+				this.authService.regist_immediate(username, password, metadata, (error: IErrorObject, result: object): void => {
 					if (!error) {
 						this.draw((error: IErrorObject, accounts: object[]): void => {
 							if (!error) {
@@ -342,14 +345,14 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		this.Progress(true);
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(AccountDialogComponent, {
-					width: "90vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
+					width: "fit-content",
 					height: "fit-content",
 					data: {
 						session: this.currentSession,
 						user: result,
 						content: AccountsComponent.confirmToForm(result),
-						service: this.service,
+						service: this.accountService,
 					},
 					disableClose: true,
 				});
@@ -393,10 +396,10 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
-		const resultDialogContent: any = {title: "User", message: "Delete User?." + " 4118"};
+		const resultDialogContent: any = {title: "User", message: "Delete User?. 4118"};
 
-		const dialog: any = this.matDialog.open(InfoDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,

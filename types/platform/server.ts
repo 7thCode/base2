@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * This software is released under the MIT License.
+ * opensource.org/licenses/mit-license.php
+ */
+
 import {
 	Callback,
 	IAccountPublic,
@@ -240,7 +246,7 @@ export interface IUserIDRequest<PARAMS> {
 }
 
 export interface ISecureContent {
-	content: string;
+	content: {value:string};
 }
 
 // Auth
@@ -262,6 +268,8 @@ export interface IContentRequest {
 	body: {
 		content: string;
 	};
+	params: any;
+	user: any;
 }
 
 export interface IUserRequest {
@@ -312,7 +320,7 @@ export interface IFacebookUser {
 		familyName: string;
 		givenName: string;
 	};
-	emails: Array<{ value: string }>;
+	emails: { value: string }[];
 	provider: string;
 }
 

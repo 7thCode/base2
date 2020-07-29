@@ -10,7 +10,7 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
@@ -263,10 +263,10 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 */
 	public updateDialog(event): void {
 
-		const dialog: any = this.matDialog.open(ImageDialogComponent, {
-			data: {content: event.target, filename: this.fileName},
-			width: "90vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
+			data: {content: event.target, filename: this.fileName},
 			disableClose: true,
 		});
 

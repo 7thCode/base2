@@ -11,10 +11,8 @@ export const router = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const event = module.parent.exports.event;
 const logger: any = module.parent.exports.logger;

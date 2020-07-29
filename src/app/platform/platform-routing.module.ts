@@ -14,7 +14,6 @@ import {ArticlesComponent} from "./articles/articles.component";
 import {FilesComponent} from "./files/files.component";
 import {PagesComponent} from "./pages/pages.component";
 import {PlatformComponent} from "./platform.component";
-import {VaultsComponent} from "./vaults/vaults.component";
 import {TopComponent} from "./top/top.component";
 
 const routes: Routes = [
@@ -23,7 +22,6 @@ const routes: Routes = [
 			{path: "", component: TopComponent},
 			{path: "pages", component: PagesComponent},
 			{path: "articles", component: ArticlesComponent},
-			{path: "vaults", component: VaultsComponent},
 			{path: "files", component: FilesComponent},
 			{path: "accounts", component: AccountsComponent},
 		],

@@ -151,17 +151,17 @@ export class BrowserService {
 	public Version(): number {
 		let result: number = 0;
 		if (this.IsIE()) {
-			const verArray = /(msie|rv:?)\s?([0-9]{1,})([\.0-9]{1,})/.exec(this.UserAgent);
+			const verArray: string[] = /(msie|rv:?)\s?([0-9]{1,})([\.0-9]{1,})/.exec(this.UserAgent);
 			if (verArray) {
 				result = parseInt(verArray[2], 10);
 			}
 		} else if (this.IsiOS()) {
-			const verArray = /(os)\s([0-9]{1,})([\_0-9]{1,})/.exec(this.UserAgent);
+			const verArray: string[] = /(os)\s([0-9]{1,})([\_0-9]{1,})/.exec(this.UserAgent);
 			if (verArray) {
 				result = parseInt(verArray[2], 10);
 			}
 		} else if (this.IsAndroid()) {
-			const verArray = /(android)\s([0-9]{1,})([\.0-9]{1,})/.exec(this.UserAgent);
+			const verArray: string[] = /(android)\s([0-9]{1,})([\.0-9]{1,})/.exec(this.UserAgent);
 			if (verArray) {
 				result = parseInt(verArray[2], 10);
 			}

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {
 	IAccountModel,
@@ -25,7 +25,8 @@ const Wrapper: any = require("./wrapper");
 
 const path: any = require("path");
 
-const models: string = global._models;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
 
 const Account: any = require(path.join(models, "platform/accounts/account"));
 
@@ -49,6 +50,41 @@ export abstract class Updatable extends Wrapper {
 		super(event, config, logger);
 	}
 
+
+	/**
+	 *
+	 * @param current
+	 * @param username
+	 * @returns own
+	 */
+	private own_by_name(current: any, username: string): boolean {
+		// マネージャ以上は、自分以外のアカウントを変更できる。
+		let readable: boolean = false;
+		if (current.role.raw <= AuthLevel.manager) { // is not manager?
+			readable = true;
+		} else {
+			readable = (current.username === username); // is self?
+		}
+		return readable;
+	}
+
+	/**
+	 *
+	 * @param current
+	 * @param user_id
+	 * @returns own
+	 */
+	private own_by_id(current: any, user_id: string): boolean {
+		// マネージャ以上は、自分以外のアカウントを変更できる。
+		let readable: boolean = false;
+		if (current.role.raw <= AuthLevel.manager) { // is not manager?
+			readable = true;
+		} else {
+			readable = (current.user_id === user_id); // is self?
+		}
+		return readable;
+	}
+
 	/**
 	 *
 	 * @param user
@@ -65,9 +101,7 @@ export abstract class Updatable extends Wrapper {
 	 */
 	protected default_user(user: any): IAccountModel {
 		let result: any = user;
-		if (result) {
-
-		} else {
+		if (!result) {
 			result = {
 				user_id: this.systemsConfig.default.user_id,
 				auth: 1,
@@ -94,8 +128,8 @@ export abstract class Updatable extends Wrapper {
 									delete option.limit;
 								}
 							}
-							const user: IAccountModel = this.Transform(request.user);
-							this.Model.default_find(user, query, option, (error: IErrorObject, objects: IUpdatableModel[]): void => {
+							const operator: IAccountModel = this.Transform(request.user);
+							this.Model.default_find(operator, query, option, (error: IErrorObject, objects: IUpdatableModel[]): void => {
 								this.ifSuccess(response, error, (): void => {
 									const filtered = [];
 									objects.forEach((object) => {
@@ -123,8 +157,8 @@ export abstract class Updatable extends Wrapper {
 			const params: IQueryParam = request.params;
 			this.Decode(params.query, (error: IErrorObject, query: object): void => {
 				this.ifSuccess(response, error, (): void => {
-					const user: IAccountModel = this.Transform(request.user);
-					this.Model.default_find(user, query, {}, (error: IErrorObject, objects: IUpdatableModel[]): void => {
+					const operator: IAccountModel = this.Transform(request.user);
+					this.Model.default_find(operator, query, {}, (error: IErrorObject, objects: IUpdatableModel[]): void => {
 						this.ifSuccess(response, error, (): void => {
 							this.SendSuccess(response, objects.length);
 						});
@@ -143,14 +177,14 @@ export abstract class Updatable extends Wrapper {
 	 */
 	protected get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
-			const params: IDParam = request.params;
-			const user: IAccountModel = this.Transform(request.user);
-			this.Model.default_find_by_id(user, params.id, (error: IErrorObject, object: IUpdatableModel): void => {
+			const target: IDParam = request.params;
+			const operator: IAccountModel = this.Transform(request.user);
+			this.Model.default_find_by_id(operator, target.id, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
 					if (object) {
 						this.SendSuccess(response, object.public());
 					} else {
-						this.SendWarn(response, {code: 1, message: "not found" + " 8035"});
+						this.SendWarn(response, {code: 1, message: "not found. 8035"});
 					}
 				});
 			});
@@ -167,9 +201,9 @@ export abstract class Updatable extends Wrapper {
 	protected post(request: IPostRequest<object>, response: IJSONResponse): void {
 		try {
 			const body: object = request.body;
-			const user: IAccountModel = this.Transform(request.user);
+			const operator: IAccountModel = this.Transform(request.user);
 			const object: IUpdatableModel = new this.Model();
-			object._create(this.default_user(user), body, (error: IErrorObject, object: IUpdatableModel): void => {
+			object._create(this.default_user(operator), body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
 					this.SendSuccess(response, object.public());
 				});
@@ -186,10 +220,10 @@ export abstract class Updatable extends Wrapper {
 	 */
 	protected put(request: IPutRequest<object>, response: IJSONResponse): void {
 		try {
-			const params: IDParam = request.params;
+			const target: IDParam = request.params;
 			const body: object = request.body;
-			const user: IAccountModel = this.Transform(request.user);
-			this.Model.update_by_id(user, params.id, body, (error: IErrorObject, object: IUpdatableModel): void => {
+			const operator: IAccountModel = this.Transform(request.user);
+			this.Model.update_by_id(operator, target.id, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
 					this.SendSuccess(response, object.public());
 				});
@@ -206,9 +240,9 @@ export abstract class Updatable extends Wrapper {
 	 */
 	protected delete(request: IDeleteRequest, response: IJSONResponse): void {
 		try {
-			const params: IDParam = request.params;
-			const user: IAccountModel = this.Transform(request.user);
-			this.Model.remove_by_id(user, params.id, (error: IErrorObject, object: IUpdatableModel): void => {
+			const target: IDParam = request.params;
+			const operator: IAccountModel = this.Transform(request.user);
+			this.Model.remove_by_id(operator, target.id, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
 					this.SendSuccess(response, {});
 				});
@@ -244,7 +278,7 @@ export abstract class Updatable extends Wrapper {
 										}
 									});
 								} else {
-									reject({code: -1, message: "?" + " 2303"});
+									reject({code: -1, message: "? 2303"});
 								}
 							}));
 						});
@@ -263,7 +297,7 @@ export abstract class Updatable extends Wrapper {
 				}
 			});
 		} else {
-			callback({code: -1, message: "config error" + " 6744"}, null);
+			callback({code: -1, message: "config error. 6744"}, null);
 		}
 	}
 }

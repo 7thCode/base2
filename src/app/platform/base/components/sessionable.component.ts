@@ -19,7 +19,6 @@ import {SessionService} from "../services/session.service";
  */
 
 @Directive()
-
 export abstract class SessionableComponent {
 
 	/**
@@ -41,10 +40,24 @@ export abstract class SessionableComponent {
 	 * @returns アカウントのロール
 	 */
 	public get role(): IRole {
-		let result: IRole = {login: false, system: false, manager: false, user: false, public: false, categoly: 0, raw: AuthLevel.public};
+		let result: IRole = {login: false, categoly: 0, raw: AuthLevel.public};
 		if (this.privateCurrentSession) {
 			if (this.privateCurrentSession.role) {
 				result = this.privateCurrentSession.role;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * プロバイダ取得
+	 * @returns アカウントのロール
+	 */
+	public get provider(): string {
+		let result: string = "";
+		if (this.privateCurrentSession) {
+			if (this.privateCurrentSession.provider) {
+				result = this.privateCurrentSession.provider;
 			}
 		}
 		return result;

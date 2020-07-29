@@ -70,6 +70,6 @@ namespace Electron {
 		},
 	];
 
-	const menu = Menu.buildFromTemplate(templateMenu);
+	const menu: any = Menu.buildFromTemplate(templateMenu);
 	Menu.setApplicationMenu(menu);
 }

@@ -10,8 +10,9 @@ import {IJSONResponse} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const controllers: string = global._controllers;
-const library: string = global._library;
+const project_root: string = process.cwd();
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 const Cipher: any = require(path.join(library, "cipher"));

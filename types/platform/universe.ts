@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * This software is released under the MIT License.
+ * opensource.org/licenses/mit-license.php
+ */
+
 export interface IErrorObject {
 	code: number;
 	message: string;
@@ -59,12 +65,8 @@ export interface IRights {
 }
 
 export interface IRole {
-	system: boolean;
-	manager: boolean;
-	user: boolean;
-	public: boolean;
 	categoly: number;
-	raw: AuthLevel;
+	raw: number;
 	login: boolean;
 }
 
@@ -80,10 +82,6 @@ export interface ISession {
 	};
 	enabled: boolean;
 	role: {
-		system: boolean;
-		manager: boolean;
-		user: boolean;
-		public: boolean;
 		categoly: number;
 		raw: number;
 		login: boolean;
@@ -114,7 +112,7 @@ export interface IPageModelContent extends IContent {
 }
 
 export interface IVaultModelContent extends IContent {
-	value: string;
+	value: {};
 	accessory: {};
 }
 

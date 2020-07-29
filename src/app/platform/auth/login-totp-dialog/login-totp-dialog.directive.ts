@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {LoginTotpDialogComponent} from "./login-totp-dialog.component";
 
@@ -37,10 +37,13 @@ export class LoginTotpDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const dialog: any = this.matDialog.open(LoginTotpDialogComponent, {
+		const dialog: MatDialogRef<any> = this.matDialog.open(LoginTotpDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
 			data: {
 				content: {
 					title: "enter code...",
+					description: "Lorem ipsum...",
 					username: "",
 					password: "",
 					code: "",

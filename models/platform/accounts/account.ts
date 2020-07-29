@@ -16,10 +16,8 @@ namespace AccountModel {
 
 	const path: any = require("path");
 
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
+	const project_root: string = process.cwd();
+	const models: string = path.join(project_root, "models");
 
 	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
 	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
@@ -50,10 +48,6 @@ namespace AccountModel {
 	const role = (user: { auth: number, provider: string }): IRole => {
 		let result: IRole = {
 			login: false,
-			system: false,
-			manager: false,
-			user: false,
-			public: true,
 			categoly: 0,
 			raw: AuthLevel.public,
 		};
@@ -77,10 +71,6 @@ namespace AccountModel {
 			}
 
 			result = {
-				system: (auth < AuthLevel.manager),
-				manager: (auth < AuthLevel.user),
-				user: (auth < AuthLevel.public),
-				public: true,
 				categoly,
 				raw: auth,
 				login: true,

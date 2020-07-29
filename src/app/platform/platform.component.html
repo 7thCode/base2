@@ -7,6 +7,7 @@
 		<span style="color:#fdfdfd;font-weight:400;"><span style="color:#ff9800;font-weight:900;">P</span>latform</span>
 		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;color:#fdfdfd;">Release 0.0.9 :</span>
 
+
 	</div>
 
 	<div *ngIf="role.login">
@@ -45,7 +46,7 @@
 		</div>
 
 		<mat-list>
-			<mat-list-item style="height: 34px;" *ngIf="role.manager">
+			<mat-list-item style="height: 34px;" *ngIf="role | authis: 'manager'">
 				<a mat-button style="color:#fdfdfd;font-size:12px;" routerLink="/platform/accounts">
 					<mat-icon style="color:#b9fad7;font-size:20px;" mat-list-icon>account_circle</mat-icon>
 					Accounts</a>
@@ -69,13 +70,8 @@
 					Articles</a>
 			</mat-list-item>
 
-			<mat-list-item style="height: 34px;">
-				<a mat-button style="color:#fdfdfd;font-size:12px;" routerLink="/platform/vaults">
-					<mat-icon style="color:#f08486;font-size:20px;" mat-list-icon>enhanced_encryption</mat-icon>
-					Vaults</a>
-			</mat-list-item>
 
-			<mat-list-item style="color:#fdfdfd;">
+			<mat-list-item style="color:#fdfdfd;" *ngIf="provider === 'local'">
 				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-password-button (complete)="onPassword($event);">
 					<mat-icon style="font-size:20px;" mat-list-icon>vpn_key</mat-icon>
 					Password

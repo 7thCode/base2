@@ -46,15 +46,14 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 *
 	 * @param session
 	 * @param http
-	 * @param change
 	 * @param matDialog
 	 * @param snackbar
 	 */
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
-		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar,
+		private matDialog: MatDialog,
+		private snackbar: MatSnackBar,
 	) {
 		super(session, http);
 	}
@@ -81,7 +80,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 

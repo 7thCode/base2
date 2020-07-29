@@ -26,7 +26,6 @@ import {SessionService} from "../services/session.service";
  */
 
 @Directive()
-
 export abstract class ResponsiveComponent extends SessionableComponent implements OnInit, OnDestroy {
 
 	public isHandset: any;
@@ -68,7 +67,7 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 	 */
 	protected errorBar(error: IErrorObject): void {
 	 	this.snackbar.open(error.message, "Close", {
-	 		duration: 3000,
+	 		duration: 6000,
 	 	});
 	 }
 

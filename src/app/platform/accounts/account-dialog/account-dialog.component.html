@@ -21,7 +21,7 @@
 						<input matInput type="number" placeholder="Auth" [(ngModel)]="content.auth" name="auth" required>
 					</mat-form-field>
 
-					<div *ngIf="session.role.system || session.role.manager">
+					<div *ngIf="session.role | authis: 'manager'">
 						<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
 					</div>
 

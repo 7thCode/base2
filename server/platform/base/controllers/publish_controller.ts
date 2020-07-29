@@ -92,13 +92,13 @@ export abstract class Publishable extends Updatable {
 	 */
 	protected publish_get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
-			const params: IDParam = request.params;
-			this.Model.publish_find_by_id(params.id, (error: IErrorObject, object: IPublishModel): void => {
+			const target: IDParam = request.params;
+			this.Model.publish_find_by_id(target.id, (error: IErrorObject, object: IPublishModel): void => {
 				this.ifSuccess(response, error, (): void => {
 					if (object) {
 						this.SendSuccess(response, object);
 					} else {
-						this.SendWarn(response, {code: 2, message: "not found" + " 7606"});
+						this.SendWarn(response, {code: 2, message: "not found. 7606"});
 					}
 				});
 			});
@@ -129,5 +129,3 @@ export abstract class Publishable extends Updatable {
 }
 
 module.exports = Publishable;
-
-// db.funds.aggregate([ { $project:{content:1, "order_by_togo": {$divide: ["$content.value.current", "$content.value.target"]}}},     { $sort : { order_by_togo : 1 } }, { $project:{content:1}}]).pretty()

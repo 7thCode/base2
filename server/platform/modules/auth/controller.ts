@@ -6,9 +6,9 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IPasswordToken, IUserToken, StatusCallback} from "../../../../types/platform/universe";
+import {AuthLevel, Callback, IErrorObject, IPasswordToken, IUserToken, StatusCallback} from "../../../../types/platform/universe";
 
-import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserRequest} from "../../../../types/platform/server";
+import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserIDParam, IUsernameParam, IUserRequest} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");
@@ -18,10 +18,11 @@ const QRCode: any = require("qrcode");
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
+const library: string = path.join(project_root, "server/platform/base/library");
+const _config: string = path.join(project_root, "config");
 
 const Cipher: any = require(path.join(library, "cipher"));
 const Mail: any = require(path.join(controllers, "mail_controller"));
@@ -82,14 +83,14 @@ export class Auth extends Mail {
 					if (!error) {
 						callback(null, JSON.parse(plain));
 					} else {
-						callback({code: 2, message: "no cookie?" + " 5977"}, {});
+						callback({code: 2, message: "no cookie? 5977"}, {});
 					}
 				});
 			} else {
 				callback(null, JSON.parse(crypted));
 			}
 		} catch (error) {
-			callback({code: 3, message: "unknown error." + " 7713"}, {});
+			callback({code: 3, message: "unknown error. 7713"}, {});
 		}
 	}
 
@@ -180,7 +181,7 @@ export class Auth extends Mail {
 								// this.event.emitter.emit("auth:register", {user, user_id: param.user_id, username: user.username});
 								callback(null, user);
 							} else {
-								callback({status: 500, message: "authenticate" + " 3701"}, null);
+								callback({status: 500, message: "authenticate. 3701"}, null);
 							}
 						} else {
 							callback({status: 500, message: "get_register_token " + error.message + " 913"}, null);
@@ -190,6 +191,23 @@ export class Auth extends Mail {
 					callback({status: 500, message: "get_register_token " + error.message + " 9774"}, null);
 				}
 			});
+	}
+
+	/**
+	 *
+	 * @param operator
+	 * @param target
+	 * manager以上は任意のユーザのパスワード変更可能
+	 * それ以外は自身のパスワードのみ変更可能
+	 */
+	private permit_for_change_account(operator: any, target: any): boolean {
+		let result: boolean = false;
+		if (operator.auth < AuthLevel.user) {
+			result = true;
+		} else {
+			result = (operator.user_id === target.user_id)
+		}
+		return result;
 	}
 
 	/**
@@ -254,7 +272,7 @@ export class Auth extends Mail {
 									}
 								});
 							} else {
-								reject({code: -1, message: "no user." + " 4902"});
+								reject({code: -1, message: "no user. 4902"});
 							}
 						}));
 					});
@@ -268,7 +286,7 @@ export class Auth extends Mail {
 					callback(error, null);
 				}
 			} else {
-				callback({code: -1, message: "init error" + " 6988"}, null);
+				callback({code: -1, message: "init error. 6988"}, null);
 			}
 		});
 	}
@@ -280,25 +298,54 @@ export class Auth extends Mail {
 	 * @param next
 	 * @returns none
 	 */
-	public is_own(request: { params: { username: string }, user: object }, response: IJSONResponse, next: () => void): void {
+	public is_own_by_name(request: { params: IUsernameParam, user: object }, response: IJSONResponse, next: () => void): void {
 		if (request.user) {
-			const params: { username: string } = request.params;
-			const user: { username: string, role: any } = this.Transform(request.user);
-			if (user) {
-				if (user.role.manager) {
+			const target: IUsernameParam = request.params;
+			const operator: IAccountModel = this.Transform(request.user);
+			if (operator) {
+				if (operator.role.raw <= AuthLevel.manager) {
 					next();
 				} else {
-					if (user.username === params.username) {
+					if (operator.username === target.username) {
 						next();
 					} else {
-						this.SendError(response, {code: 403, message: "Forbidden.(auth 1)" + " 7795"});
+						this.SendError(response, {code: 403, message: "Forbidden.(auth 1) 7795"});
 					}
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 2)" + " 927"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 2) 927"});
 			}
-		}else {
-			this.SendError(response, {code: 403, message: "Not Logged in." + " 1924"});
+		} else {
+			this.SendError(response, {code: 403, message: "Not Logged in. 1924"});
+		}
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
+	public is_own_by_id(request: { params: IUserIDParam, user: object }, response: IJSONResponse, next: () => void): void {
+		if (request.user) {
+			const target: IUserIDParam = request.params;
+			const operator: IAccountModel = this.Transform(request.user);
+			if (operator) {
+				if (operator.role.raw <= AuthLevel.manager) {
+					next();
+				} else {
+					if (operator.user_id === target.user_id) {
+						next();
+					} else {
+						this.SendError(response, {code: 403, message: "Forbidden.(auth 1) 7795"});
+					}
+				}
+			} else {
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 2) 927"});
+			}
+		} else {
+			this.SendError(response, {code: 403, message: "Not Logged in. 1924"});
 		}
 	}
 
@@ -311,18 +358,18 @@ export class Auth extends Mail {
 	 */
 	public is_system(request: IUserRequest, response: IJSONResponse, next: () => void): void {
 		if (request.user) {
-			const user: IAccountModel = this.Transform(request.user);
-			if (user) {
-				if (user.role.system) {
+			const operator: IAccountModel = this.Transform(request.user);
+			if (operator) {
+				if (operator.role.raw <= AuthLevel.system) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden.(auth 3)" + " 9578"});
+					this.SendError(response, {code: 403, message: "Forbidden.(auth 3) 9578"});
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 4)" + " 9742"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 4) 9742"});
 			}
-		}else {
-			this.SendError(response, {code: 403, message: "Not Logged in." + " 7789"});
+		} else {
+			this.SendError(response, {code: 403, message: "Not Logged in. 7789"});
 		}
 	}
 
@@ -335,18 +382,18 @@ export class Auth extends Mail {
 	 */
 	public is_manager(request: IUserRequest, response: IJSONResponse, next: () => void): void {
 		if (request.user) {
-			const user: IAccountModel = this.Transform(request.user);
-			if (user) {
-				if (user.role.manager) {
+			const operator: IAccountModel = this.Transform(request.user);
+			if (operator) {
+				if (operator.role.raw <= AuthLevel.manager) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden.(auth 5)" + " 7896"});
+					this.SendError(response, {code: 403, message: "Forbidden.(auth 5) 7896"});
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 6)" + " 2656"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 6) 2656"});
 			}
-		}else {
-			this.SendError(response, {code: 403, message: "Not Logged in." + " 5227"});
+		} else {
+			this.SendError(response, {code: 403, message: "Not Logged in. 5227"});
 		}
 	}
 
@@ -359,18 +406,18 @@ export class Auth extends Mail {
 	 */
 	public is_user(request: IUserRequest, response: IJSONResponse, next: () => void): void {
 		if (request.user) {
-			const user: IAccountModel = this.Transform(request.user);
-			if (user) {
-				if (user.role.user) {
+			const operator: IAccountModel = this.Transform(request.user);
+			if (operator) {
+				if (operator.role.raw <= AuthLevel.user) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden.(auth 7)" + " 5081"});
+					this.SendError(response, {code: 403, message: "Forbidden.(auth 7) 5081"});
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden.(auth 8)" + " 4026"});
+				this.SendError(response, {code: 403, message: "Forbidden.(auth 8) 4026"});
 			}
-		}else {
-			this.SendError(response, {code: 403, message: "Not Logged in." + "  8094"});
+		} else {
+			this.SendError(response, {code: 403, message: "Not Logged in. 8094"});
 		}
 	}
 
@@ -382,10 +429,14 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public is_logged_in(request: IUserRequest, response: IJSONResponse): void {
+		try {
 		if (request.user) {
-			this.SendRaw(response, {code: 1, message: "logged in" + " 3804"});
-		}else {
-			this.SendRaw(response, {code: 0, message: "not logged in" + " 1463"});
+			this.SendRaw(response, {code: 1, message: "logged in. 3804"});
+		} else {
+			this.SendRaw(response, {code: 0, message: "not logged in. 1463"});
+		}
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
@@ -396,6 +447,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public post_local_login(request: ILoginRequest, response: IJSONResponse): void {
+		try {
 		if (!request.user) {
 			Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
 				this.ifSuccess(response, error, (): void => {
@@ -418,29 +470,32 @@ export class Auth extends Mail {
 															// this.event.emitter.emit("client:send", {username: value.username});
 															this.SendSuccess(response, {is_2fa});
 														} else {
-															this.SendError(response, {code: 4, message: "unknown error.(auth 1)" + " 723"});
+															this.SendError(response, {code: 4, message: "unknown error."});
 														}
 													});
 												}
 											} else {
-												this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 930"});
+												this.SendError(response, {code: 3, message: this.message.usernamenotfound});
 											}
 										} else {
-											this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 1038"});
+											this.SendError(response, {code: 3, message: this.message.usernamenotfound});
 										}
 									})(request, response);
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 1)" + " 3194"});
+									this.SendError(response, {code: 2, message: "account disabled."});
 								}
 							} else {
-								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 3643"});
+								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
 							}
 						});
 					});
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 1)" + " 5144"});
+			this.SendError(response, {code: 1, message: "already logged in."});
+		}
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
@@ -451,6 +506,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public post_local_login_totp(request: ILoginRequest, response: IJSONResponse): void {
+		try {
 		if (!request.user) {
 			Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, code: string }): void => {
 				this.ifSuccess(response, error, (): void => {
@@ -469,14 +525,14 @@ export class Auth extends Mail {
 											if (!error) {
 												this.SendSuccess(response, {});
 											} else {
-												this.SendError(response, {code: 4, message: "unknown error.(auth 1)" + " 7710"});
+												this.SendError(response, {code: 4, message: "unknown error.(auth 1) 7710"});
 											}
 										});
 									} else {
-										this.SendError(response, {code: 5, message: "code missmatch.(auth 1)" + " 8212"});
+										this.SendError(response, {code: 5, message: "code missmatch.(auth 1) 8212"});
 									}
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 1)" + " 7087"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 1) 7087"});
 								}
 							} else {
 								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 963"});
@@ -486,7 +542,10 @@ export class Auth extends Mail {
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 2)" + " 9286"});
+			this.SendError(response, {code: 1, message: "already logged in.(auth 2) 9286"});
+		}
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
@@ -499,6 +558,7 @@ export class Auth extends Mail {
 	 * h4Yq7UxXTAYlR3sMGlDEzpMk77D4gEWj8Y%2BA0xXFao7Lz3RYJfM40TIHS1CilQ3pj8M6VxciomXrofl8e6heWXxcFeAnRZP9egev%2BVwv0N9OU8YbsNcXTv9WDhGcJlsS%2B8ojui5svs0S%2BS0GLv%2FCFlNEZP%2FcCjg1UQbeFV8qcqtC%2FfWn8CoonUxA3IdBEOXbHgJonmKwGlvrITk5YSGO%2BoEvx0CHltb7f4gImXJrem9FXuMk%2B4R7Irc3ftutjtAy
 	 */
 	public get_login_token(request: ILoginRequest, response: IJSONResponse): void {
+		try {
 		if (request.user) {
 			const token = request.params.token;
 			Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
@@ -513,7 +573,7 @@ export class Auth extends Mail {
 										});
 									});
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 2)" + " 618"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 2) 618"});
 								}
 							} else {
 								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 226"});
@@ -523,7 +583,10 @@ export class Auth extends Mail {
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "not logged in.(auth 3)" + " 5325"});
+			this.SendError(response, {code: 1, message: "not logged in.(auth 3) 5325"});
+		}
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
@@ -534,6 +597,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public post_token_login(request: ILoginRequest, response: IJSONResponse): void {
+		try {
 		if (!request.user) {
 			Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
 				this.ifSuccess(response, error, (): void => {
@@ -556,7 +620,7 @@ export class Auth extends Mail {
 															// this.event.emitter.emit("client:send", {username: value.username});
 															this.SendSuccess(response, {is_2fa});
 														} else {
-															this.SendError(response, {code: 4, message: "unknown error.(auth 3)" + " 7573"});
+															this.SendError(response, {code: 4, message: "unknown error.(auth 3) 7573"});
 														}
 													});
 												}
@@ -568,7 +632,7 @@ export class Auth extends Mail {
 										}
 									})(request, response);
 								} else {
-									this.SendError(response, {code: 2, message: "account disabled.(auth 4)" + " 4470"});
+									this.SendError(response, {code: 2, message: "account disabled.(auth 4) 4470"});
 								}
 							} else {
 								this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 5442"});
@@ -578,7 +642,10 @@ export class Auth extends Mail {
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "already logged in.(auth 5)" + " 6635"});
+			this.SendError(response, {code: 1, message: "already logged in.(auth 5) 6635"});
+		}
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
@@ -637,6 +704,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public get_register_token(request: ILoginRequest, response: IRedirectResponse): void {
+		try {
 		this.Parse(Cipher.FixedDecrypt(request.params.token, this.systemsConfig.tokensecret), (error, token) => {
 			if (!error) {
 				const tokenDateTime: any = token.timestamp;
@@ -646,6 +714,7 @@ export class Auth extends Mail {
 				const target: any = token.target;
 				const auth: number = token.auth;
 				const adding_content: any = token.content;
+
 				const nowDate: any = Date.now();
 				if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
 					LocalAccount.default_find_by_name({}, compositeUsername, (error: IErrorObject, account: any): void => {
@@ -669,7 +738,7 @@ export class Auth extends Mail {
 								response.redirect(target);
 							}
 						} else {
-							response.status(500).render("error", {status: 500, message: "get_register_token " + error.message  + " 610"});
+							response.status(500).render("error", {status: 500, message: "get_register_token " + error.message + " 610"});
 						}
 					});
 				} else {
@@ -679,6 +748,9 @@ export class Auth extends Mail {
 				response.status(500).render("error", error);
 			}
 		});
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
 	}
 
 	/**
@@ -733,29 +805,33 @@ export class Auth extends Mail {
 					LocalAccount.default_find_by_name({}, username, (error: IErrorObject, account: IAccountModel): void => {
 						this.ifSuccess(response, error, (): void => {
 							if (account) {
-
-								const tokenValue: IPasswordToken = {
-									username: value.username,
-									password: value.password,
-									target: "/",
-									timestamp: Date.now(),
-								};
-
-								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
-								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
-
-								this.send_mail({
-									address: value.username,
-									bcc: this.bcc,
-									title: this.message.passwordconfirmtext,
-									template_url: "views/platform/auth/mail/mail_template.pug",
-									souce_object: this.message.passwordmail,
-									link,
-									result_object: {code: 0, message: ""},
-								}, response);
-
+								if (account.provider === "local") { // OAuthは除外
+									if (this.permit_for_change_account(request.user, account)) {
+										const tokenValue: IPasswordToken = {
+											username: value.username,
+											password: value.password,
+											target: "/",
+											timestamp: Date.now(),
+										};
+										const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
+										const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
+										this.send_mail({
+											address: value.username,
+											bcc: this.bcc,
+											title: this.message.passwordconfirmtext,
+											template_url: "views/platform/auth/mail/mail_template.pug",
+											souce_object: this.message.passwordmail,
+											link,
+											result_object: {code: 0, message: ""},
+										}, response);
+									} else {
+										this.SendWarn(response, {code: 5, message: "No permission. 4455"});
+									}
+								} else {
+									this.SendWarn(response, {code: 4, message: "Only local account. 4252"});
+								}
 							} else {
-								this.SendWarn(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendWarn(response, {code: 3, message: this.message.usernamenotfound + " 7275"});
 							}
 						});
 					});
@@ -772,7 +848,8 @@ export class Auth extends Mail {
 	 * @param response
 	 * @returns none
 	 */
-	public get_password_token(request: { params: { token: string } }, response: IRedirectResponse): void {
+	public get_password_token(request: IContentRequest, response: IRedirectResponse): void {
+		try {
 		this.Parse(Cipher.FixedDecrypt(request.params.token, this.systemsConfig.tokensecret), (error, token) => {
 			if (!error) {
 				const tokenDateTime: any = token.timestamp;
@@ -782,35 +859,40 @@ export class Auth extends Mail {
 				const nowDate: any = Date.now();
 				if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
 					LocalAccount.default_find_by_name({}, compositeUsername, (error: IErrorObject, account: any): void => {
-						if (!error) {
+						this.ifSuccess(response, error, (): void => {
 							if (account) {
-								account.setPassword(password, (error: IErrorObject): void => {
-									if (!error) {
-										account._save((error: IErrorObject, obj: any): void => {
+								if (account.provider === "local") {　// OAuthは除外
+									account.setPassword(password, (error: IErrorObject): void => {
 											if (!error) {
-												response.redirect(target);
+												account._save((error: IErrorObject, obj: any): void => {
+													if (!error) {
+														response.redirect(target);
+													} else {
+														response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
+													}
+												});
 											} else {
-												response.status(500).render("error", {message: "db error", status: 500}); // timeout
+												response.status(500).render("error", {message: "get_password_token " + error.message, status: 500}); // already
 											}
 										});
-									} else {
-										response.status(500).render("error", {message: "get_password_token " + error.message, status: 500}); // already
-									}
-								});
+								} else {
+									response.status(200).render("error", {message: "Only local accounrt. 3805", status: 200}); // already
+								}
 							} else {
-								response.status(200).render("error", {message: "already", status: 200}); // already
+								response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
 							}
-						} else {
-							response.status(500).render("error", {message: "get_password_token " + error.message, status: 500}); // timeout
-						}
+						});
 					});
 				} else {
-					response.status(200).render("error", {message: "timeout", status: 200}); // timeout
+					response.status(200).render("error", {message: "Timeout", status: 200}); // timeout
 				}
 			} else {
 				response.status(500).render("error", error);
 			}
 		});
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
 	}
 
 	/**
@@ -827,18 +909,26 @@ export class Auth extends Mail {
 					LocalAccount.default_find_by_name({}, username, (error: IErrorObject, account: any): void => {
 						this.ifSuccess(response, error, (): void => {
 							if (account) {
-								const password: string = value.password;
-								account.setPassword(password, (error: IErrorObject): void => {
-									this.ifSuccess(response, error, (): void => {
-										account._save((error, obj): void => {
+								if (account.provider === "local") {　// OAuthは除外
+									if (this.permit_for_change_account(request.user, account)) {
+										const password: string = value.password;
+										account.setPassword(password, (error: IErrorObject): void => {
 											this.ifSuccess(response, error, (): void => {
-												this.SendSuccess(response, {});
+												account._save((error, obj): void => {
+													this.ifSuccess(response, error, (): void => {
+														this.SendSuccess(response, {});
+													});
+												});
 											});
 										});
-									});
-								});
+									} else {
+										this.SendWarn(response, {code: 5, message: "No permission. 2389"});
+									}
+								} else {
+									this.SendWarn(response, {code: 4, message: "Only local account. 2326"});
+								}
 							} else {
-								this.SendWarn(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendWarn(response, {code: 3, message: this.message.usernamenotfound + " 6947"});
 							}
 						});
 					});
@@ -858,20 +948,20 @@ export class Auth extends Mail {
 	public auth_facebook_callback(request: IUserRequest, response: IRedirectResponse): void {
 		try {
 			if (request.user) {
-				const user: IAccountModel = this.Transform(request.user);
-				LocalAccount.default_find_by_name({}, user.username, (error: IErrorObject, account: any): void => {
+				const operator: IAccountModel = this.Transform(request.user);
+				LocalAccount.default_find_by_name({}, operator.username, (error: IErrorObject, account: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						if (!account) {
 							const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 
 							const newAccount: any = new LocalAccount();
-							newAccount.provider = user.provider;
+							newAccount.provider = operator.provider;
 							newAccount.auth = 10000;
-							newAccount.user_id = user.user_id;
-							newAccount.username = user.username;
+							newAccount.user_id = operator.user_id;
+							newAccount.username = operator.username;
 							newAccount.privatekey = keypair.private;
 							newAccount.publickey = keypair.public;
-							newAccount.content = user.content;
+							newAccount.content = operator.content;
 
 							newAccount._save((error: IErrorObject, obj: any): void => {
 								if (!error) {
@@ -898,21 +988,20 @@ export class Auth extends Mail {
 	public auth_apple_callback(request: IUserRequest, response: IRedirectResponse): void {
 		try {
 			if (request.user) {
-				const user: IAccountModel = this.Transform(request.user);
-				LocalAccount.default_find_by_name({}, user.username, (error: IErrorObject, account: any): void => {
+				const operator: IAccountModel = this.Transform(request.user);
+				LocalAccount.default_find_by_name({}, operator.username, (error: IErrorObject, account: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						if (!account) {
 							const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 
 							const newAccount: any = new LocalAccount();
-							newAccount.provider = user.provider;
+							newAccount.provider = operator.provider;
 							newAccount.auth = 10000;
-							newAccount.user_id = user.user_id;
-							newAccount.username = user.username;
+							newAccount.user_id = operator.user_id;
+							newAccount.username = operator.username;
 							newAccount.privatekey = keypair.private;
 							newAccount.publickey = keypair.public;
-							newAccount.content = user.content;
-
+							newAccount.content = operator.content;
 							// newAccount.registerDate = Date.now();
 							newAccount._save((error: IErrorObject, obj: any): void => {
 								if (!error) {
@@ -937,6 +1026,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public auth_twitter_callback(request: IUserRequest, response: IRedirectResponse): void {
+		try {
 		LocalAccount.default_find_by_name({}, request.user.username, (error: IErrorObject, account: any): void => {
 			this.ifSuccess(response, error, (): void => {
 				if (!account) {
@@ -963,6 +1053,9 @@ export class Auth extends Mail {
 				}
 			});
 		});
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
 	}
 
 	/**
@@ -972,6 +1065,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public auth_instagram_callback(request: IUserRequest, response: IRedirectResponse): void {
+		try {
 		LocalAccount.default_find_by_name({}, request.user.username, (error: IErrorObject, account: any): void => {
 			this.ifSuccess(response, error, (): void => {
 				if (!account) {
@@ -999,6 +1093,9 @@ export class Auth extends Mail {
 				}
 			});
 		});
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
 	}
 
 	/**
@@ -1008,6 +1105,7 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public auth_line_callback(request: IUserRequest, response: IRedirectResponse): void {
+		try {
 		const username: string = request.user.username;
 		LocalAccount.default_find_by_name({}, username, (error: IErrorObject, account: any): void => {
 			this.ifSuccess(response, error, (): void => {
@@ -1035,6 +1133,10 @@ export class Auth extends Mail {
 				}
 			});
 		});
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
+
 	}
 
 	/**
@@ -1044,8 +1146,12 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	public logout(request: { logout: () => void }, response: IJSONResponse): void {
+		try {
 		request.logout();
 		this.SendSuccess(response, {code: 0, message: ""});
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
 	}
 
 	/**

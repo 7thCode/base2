@@ -8,6 +8,7 @@
 
 import {Pipe, PipeTransform} from "@angular/core";
 import {AuthLevel} from "../../../../../types/platform/universe";
+// import {AuthLevel} from "../../../../../types/platform/universe";
 
 @Pipe({
 	name: "authcolor",
@@ -25,8 +26,8 @@ export class AuthcolorPipe implements PipeTransform {
 	 * @param value
 	 * @param args
 	 */
-	public transform(value: any, args?: any): any {
-		let result = "#fdfffd";     // public
+	public transform(value: any, args?: any): string {
+		let result:string = "#fdfffd";     // public
 		if (value < AuthLevel.manager) {
 			result = "#e90257";     // system
 		} else if (value < AuthLevel.user) {

@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {LogoutDialogComponent} from "./logout-dialog.component";
 
@@ -41,10 +41,15 @@ export class LogoutDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const dialog: any = this.matDialog.open(LogoutDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(LogoutDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
-			data: {content: {title: "Logout"}},
+			data: {
+				content: {
+					title: "Logout",
+					description: "Lorem ipsum...",
+				}
+			},
 			disableClose: true,
 		});
 

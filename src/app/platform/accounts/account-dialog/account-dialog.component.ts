@@ -65,10 +65,6 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	private auth_to_role(user: { auth: number, provider: string }): IRole {
 		let result: IRole = {
 			login: false,
-			system: false,
-			manager: false,
-			user: false,
-			public: true,
 			categoly: 0,
 			raw: AuthLevel.public,
 		};
@@ -86,10 +82,6 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 			}
 
 			result = {
-				system: (auth < AuthLevel.manager),
-				manager: (auth < AuthLevel.user),
-				user: (auth < AuthLevel.public),
-				public: true,
 				categoly,
 				raw: auth,
 				login: true,
@@ -124,7 +116,7 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 * ２要素認証か
 	 */
 	public is2Fa(): void {
-		this.data.service.is_2fa(this.data.user.username, (error: IErrorObject, is2fa: any): void => {
+		this.data.service.is_2fa(this.data.user.user_id, (error: IErrorObject, is2fa: any): void => {
 			if (!error) {
 				this.is2fa = is2fa;
 			} else {

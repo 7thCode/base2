@@ -25,7 +25,6 @@ import {SessionService} from "../services/session.service";
  */
 
 @Directive()
-
 export abstract class UploadableComponent extends SessionableComponent implements OnInit {
 
 	public endPoint: string;
@@ -92,7 +91,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			};
 			fileReader.readAsDataURL(dropedFile);
 		} else {
-			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte)" + " 8427"}, null);
+			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte) 8427"}, null);
 		}
 	}
 
@@ -101,7 +100,8 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * @returns none
 	 */
 	protected uploadFiles(path: string, dropedFiles: File[], callback: Callback<any>): void {
-		const promises: Array<Promise<any>> = [];
+	// 	const promises: Array<Promise<any>> = [];
+		const promises: Promise<any>[] = [];
 		const files: File[] = this.marshallingFiles(dropedFiles);
 		files.forEach((file: File) => {
 			const promise: Promise<any> = new Promise<any>((resolve, reject): void => {

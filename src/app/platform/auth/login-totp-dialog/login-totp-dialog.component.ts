@@ -70,7 +70,7 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 

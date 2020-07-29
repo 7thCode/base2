@@ -9,7 +9,7 @@
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 
 import {Component, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
@@ -34,15 +34,14 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 *
 	 * @param session
 	 * @param articleService
-	 * @param change
 	 * @param matDialog
 	 * @param snackbar
 	 */
 	constructor(
-		public session: SessionService,
-		public articleService: ArticlesService,
+		protected session: SessionService,
 		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar,
+		private articleService: ArticlesService,
+		private snackbar: MatSnackBar,
 	) {
 		super(session, matDialog);
 		this.service = articleService;
@@ -54,7 +53,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 
@@ -90,8 +89,8 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 			accessory: {},
 		};
 
-		const dialog: any = this.matDialog.open(ArticleDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(ArticleDialogComponent, {
+			width: "fit-content",
 			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
@@ -123,8 +122,8 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(ArticleDialogComponent, {
-					width: "40vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(ArticleDialogComponent, {
+					width: "fit-content",
 					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,

@@ -10,8 +10,9 @@ import {IArticleModel} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const controllers: string = global._controllers;
-const models: string = global._models;
+const project_root: string = process.cwd();
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
+const models: string = path.join(project_root, "models");
 
 const Updatable: any = require(path.join(controllers, "updatable_controller"));
 

@@ -61,7 +61,7 @@ export class LoginQrDialogComponent extends BaseDialogComponent implements OnIni
 	 */
 	protected errorBar(error: IErrorObject): void {
 		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
+			duration: 6000,
 		});
 	}
 
