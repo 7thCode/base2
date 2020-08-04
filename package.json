@@ -74,7 +74,7 @@
     "marked": "^0.7.0",
     "moment-timezone": "^0.5.26",
     "mongodb": "^3.3.2",
-    "mongoose": "^5.7.1",
+    "mongoose": "^5.7.5",
     "morgan": "~1.9.1",
     "ng2-ace-editor": "^0.3.9",
     "ngx-image-cropper": "^1.4.1",
