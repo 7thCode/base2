@@ -42,8 +42,8 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	}
 
 	public qr: string = "";
-	public is2fa: boolean;
-	public enable: boolean;
+	public is2fa: boolean = false;
+	public enable: boolean = false;
 
 	/**
 	 * @constructor
@@ -157,7 +157,7 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 *
 	 * @param event
 	 */
-	public onProgressed(event): void {
+	public onProgressed(event: any): void {
 
 	}
 
@@ -165,7 +165,7 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 *
 	 * @param event
 	 */
-	public onUpdateAvatar(event): void {
+	public onUpdateAvatar(event: any): void {
 
 	}
 

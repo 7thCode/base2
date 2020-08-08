@@ -17,7 +17,7 @@ import {Directive} from "@angular/core";
 @Directive()
 export abstract class BaseDialogComponent {
 
-	public progress: boolean;
+	public progress: boolean = false;
 
 	public Progress(value: boolean): void {
 		this.progress = value;

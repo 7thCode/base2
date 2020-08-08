@@ -42,7 +42,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		this.bodysize = 200 * 1000 * 1000;  // default.
 	}
 
-	protected static defaultValue(change, defaultValue): any {
+	protected static defaultValue(change: any, defaultValue: any): any {
 		let result: any = defaultValue;
 		if (change) {
 			result = change.currentValue;

@@ -36,42 +36,42 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	/**
 	 *
 	 */
-	@Input() public width: number;
+	@Input() public width: number = 0;
 
 	/**
 	 *
 	 */
-	@Input() public height: number;
+	@Input() public height: number = 0;
 
 	/**
 	 *
 	 */
-	@Input() public view: string;
+	@Input() public view: string = "";
 
 	/**
 	 *
 	 */
-	@Input() public fileName: string;
+	@Input() public fileName: string = "";
 
 	/**
 	 *
 	 */
-	@Input() public user_id: string;
+	@Input() public user_id: string = "";
 
 	/**
 	 *
 	 */
-	@Input() public extensions: string;
+	@Input() public extensions: string = "";
 
 	/**
 	 *
 	 */
-	public endPoint = "";
+	public endPoint: string = "";
 
 	/**
 	 *
 	 */
-	public style: any;
+	public style: any = null;
 
 	/**
 	 *
@@ -81,7 +81,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	/**
 	 *
 	 */
-	public description: string;
+	public description: string = "";
 
 	/**
 	 *
@@ -203,7 +203,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 *
 	 * @param changes
 	 */
-	public ngOnChanges(changes) {
+	public ngOnChanges(changes: any): void {
 		this.view = ImageComponent.defaultValue(changes.view, "visible");
 		this.width = ImageComponent.defaultValue(changes.width, 120);
 		this.height = ImageComponent.defaultValue(changes.height, 120);
@@ -222,7 +222,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 			"line-height": this.height + "px",
 		};
 
-		this.getSession((error: IErrorObject, session: {user_id}): void => {
+		this.getSession((error: IErrorObject, session: any): void => {
 			if (session) {
 				if (!this.user_id) {
 					this.user_id = session.user_id;
@@ -261,7 +261,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 *
 	 * @param event
 	 */
-	public updateDialog(event): void {
+	public updateDialog(event: any): void {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
 			width: "fit-content",

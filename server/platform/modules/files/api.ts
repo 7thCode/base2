@@ -7,7 +7,7 @@
 "use strict";
 
 import {IAccountModel} from "../../../../types/platform/server";
-import {IErrorObject} from "../../../../types/platform/universe";
+import {AuthLevel, IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router = express.Router();
@@ -35,11 +35,11 @@ const cache_root: string = "files/cache/";
 file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		const cache_write = (user_id: string, _path: string, input: any, callback: (error) => void): void => {
+		const cache_write = (user_id: string, _path: string, input: any, callback: (error: IErrorObject) => void): void => {
 			try {
 				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
 				const cache_dir: string = path.dirname(cache_file);
-				fs.mkdir(cache_dir, {recursive: true}, (error) => {
+				fs.mkdir(cache_dir, {recursive: true}, (error: IErrorObject) => {
 					if (!error) {
 						const dest = fs.createWriteStream(cache_file);
 						input.pipe(dest);
@@ -51,10 +51,10 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			}
 		};
 
-		const cache_delete = (user_id: string, _path: string, callback: (error) => void): void => {
+		const cache_delete = (user_id: string, _path: string, callback: (error: IErrorObject) => void): void => {
 			try {
 				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
-				fs.unlink(cache_file, (error) => {
+				fs.unlink(cache_file, (error: IErrorObject) => {
 					callback(error);
 				});
 			} catch (error) {
@@ -178,7 +178,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			file.getRecordById(_id, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						if (result.metadata.rights.read === 100000) {
+						if (result.metadata.rights.read === AuthLevel.public) {
 							render(response, next, result, file, query, range, command_string, callback);
 						} else {
 							response.status(403).render("error", {message: "Forbidden...", status: 403});
@@ -216,7 +216,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			file.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						if (result.metadata.rights.read === 100000) {
+						if (result.metadata.rights.read === AuthLevel.public) {
 							render(response, next, result, file, query, range, command_string, callback);
 						} else {
 							response.status(403).render("error", {message: "Forbidden...", status: 403});

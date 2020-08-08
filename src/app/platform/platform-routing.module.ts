@@ -15,6 +15,7 @@ import {FilesComponent} from "./files/files.component";
 import {PagesComponent} from "./pages/pages.component";
 import {PlatformComponent} from "./platform.component";
 import {TopComponent} from "./top/top.component";
+import {PersonalComponent} from "./personal/personal.component";
 
 const routes: Routes = [
 	{
@@ -24,6 +25,7 @@ const routes: Routes = [
 			{path: "articles", component: ArticlesComponent},
 			{path: "files", component: FilesComponent},
 			{path: "accounts", component: AccountsComponent},
+			{path: "personal", component: PersonalComponent},
 		],
 	},
 ];

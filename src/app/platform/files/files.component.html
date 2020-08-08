@@ -12,7 +12,7 @@
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
-					<input matInput autocomplete="off" type="text" placeholder="Find by Filename..." [(ngModel)]="filename" (change)="findByFilename();">
+					<input matInput autocomplete="off" type="text" placeholder="Find by..." [(ngModel)]="filename" (change)="findByFilename();">
 					<button mat-button matSuffix mat-icon-button aria-label="Clear" [disabled]="progress" (click)="filename='';findByFilename();">
 						<mat-icon>close</mat-icon>
 					</button>

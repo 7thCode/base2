@@ -25,10 +25,10 @@ import {SessionService} from "../services/session.service";
 export abstract class UpdatableComponent extends SessionableComponent implements OnInit {
 
 	public size: number = 20;
-	public count: number;
-	public results: any[];
+	public count: number = 0;
+	public results: any[] = [];
 
-	protected service: any;
+	protected service: any = null;
 	protected query: object = {};
 	protected sort: object = {};
 	protected page: number = 0;
@@ -127,10 +127,14 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	protected create(content: IContent, callback: Callback<any>): void {
 		this.service.post(content, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw((error: IErrorObject, result: any): void => {
+				this.draw((error: IErrorObject, result: object[] | null): void => {
 					if (!error) {
-						this.results = result;
-						callback(null, result);
+						if (result) {
+							this.results = result;
+							callback(null, result);
+						} else {
+							callback({code: -1, message: "error."}, null);
+						}
 					} else {
 						callback(error, null);
 					}
@@ -151,10 +155,14 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	protected update(id: string, content: any, callback: Callback<any>): void {
 		this.service.put(id, content, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw((error: IErrorObject, result: any): void => {
+				this.draw((error: IErrorObject, result: object[] | null): void => {
 					if (!error) {
-						this.results = result;
-						callback(null, result);
+						if (result) {
+							this.results = result;
+							callback(null, result);
+						} else {
+							callback({code: -1, message: "error."}, null);
+						}
 					} else {
 						callback(error, null);
 					}
@@ -176,10 +184,14 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	protected set(id: string, command: string, data: any, callback: Callback<any>): void {
 		this.service.set(id, command, data, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw((error: IErrorObject, result: any): void => {
+				this.draw((error: IErrorObject, result: object[] | null): void => {
 					if (!error) {
-						this.results = result;
-						callback(null, result);
+						if (result) {
+							this.results = result;
+							callback(null, result);
+						} else {
+							callback({code: -1, message:"error."}, null);
+						}
 					} else {
 						callback(error, null);
 					}
@@ -199,10 +211,14 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	protected delete(id: string, callback: Callback<any>): void {
 		this.service.delete(id, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw((error: IErrorObject, result: any): void => {
+				this.draw((error: IErrorObject, result: object[] | null): void => {
 					if (!error) {
-						this.results = result;
-						callback(null, result);
+						if (result) {
+							this.results = result;
+							callback(null, result);
+						} else {
+							callback({code: -1, message: "error."}, null);
+						}
 					} else {
 						callback(error, null);
 					}
@@ -217,11 +233,15 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 		this.page = 0;
 		this.query = {};
 		this.results = [];
-		this.getSession((error: IErrorObject, session: object): void => {
-			this.draw((error: IErrorObject, filtered: object[]): void => {
+		this.getSession((error: IErrorObject, session: object | null): void => {
+			this.draw((error: IErrorObject, results: object[] | null): void => {
 				if (!error) {
-					this.results = filtered;
-					this.Complete("", filtered);
+					if (results) {
+						this.results = results;
+						this.Complete("", results);
+					} else {
+						this.Complete("error", {code: -1, message: "error."});
+					}
 				} else {
 					this.Complete("error", error);
 				}
@@ -233,7 +253,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	 * 再描画
 	 * @param callback コールバック
 	 */
-	public draw(callback: Callback<any>): void {
+	public draw(callback: Callback<object[]>): void {
 		this.service.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
@@ -260,11 +280,15 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	 * @param event
 	 * @constructor
 	 */
-	public Page(event): void {
+	public Page(event: any): void {
 		this.page = event.pageIndex;
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
+				if (results) {
+					this.results = results;
+				} else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}

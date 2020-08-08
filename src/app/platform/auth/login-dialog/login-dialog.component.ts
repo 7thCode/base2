@@ -35,7 +35,7 @@ export class LoginDialogComponent extends BaseDialogComponent implements OnInit 
 		return this.data.content;
 	}
 
-	public password_visible: boolean;
+	public password_visible: boolean = false;
 
 	/**
 	 * @constructor
@@ -58,10 +58,12 @@ export class LoginDialogComponent extends BaseDialogComponent implements OnInit 
 	 *
 	 * @param error
 	 */
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 6000,
-		});
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
 	/**

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
 
@@ -58,7 +58,7 @@ export class Files extends Wrapper {
 	/**
 	 *
 	 */
-	private static connect(config): any {
+	private static connect(config: any): any {
 		const options: object = {
 			keepAlive: 1,
 			connectTimeoutMS: 1000000,
@@ -231,7 +231,7 @@ export class Files extends Wrapper {
 	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
-			Files.connect(this.systemsConfig).then((client): void => {
+			Files.connect(this.systemsConfig).then((client: any): void => {
 				this.db = client.db(this.systemsConfig.db.name);
 				this.db.collection("fs.files", (error: IErrorObject, collection: object): void => {
 					this.gfs = new mongodb.GridFSBucket(this.db, {});
@@ -243,7 +243,7 @@ export class Files extends Wrapper {
 							this.collection.createIndex({
 								"filename": 1,
 								"metadata.user_id": 1,
-							}, (error) => {
+							}, (error: IErrorObject) => {
 								if (!error) {
 									const save = (doc: any): Promise<any> => {
 										return new Promise((resolve: any, reject: any): void => {
@@ -291,7 +291,7 @@ export class Files extends Wrapper {
 						}
 					}
 				});
-			}).catch((error): void => {
+			}).catch((error: IErrorObject): void => {
 				this.logger.info("mongo connection error: " + error);
 			});
 		} catch (e) {
@@ -308,7 +308,7 @@ export class Files extends Wrapper {
 	 */
 	public getRecord(user_id: string, name: string, callback: Callback<any>): void {
 		try {
-			const query: object = Files.query_by_user_read({user_id, auth: 100000}, {filename: name});
+			const query: object = Files.query_by_user_read({user_id, auth: AuthLevel.public}, {filename: name});
 			this.collection.findOne(query, (error: IErrorObject, item: object): void => {
 				if (!error) {
 					if (item) {
@@ -463,7 +463,7 @@ export class Files extends Wrapper {
 						let buffer: Buffer = Buffer.alloc(0);
 						const readstream: any = this.gfs.openDownloadStream(item._id);
 						if (readstream) {
-							readstream.on("data", (chunk): void => {
+							readstream.on("data", (chunk: any): void => {
 								buffer = Buffer.concat([buffer, Buffer.from(chunk)]);
 							});
 							readstream.on("end", (): void => {
@@ -497,7 +497,7 @@ export class Files extends Wrapper {
 			const path: string = request.params[0];
 			const category: string = request.body.category;
 			const operator: IAccountModel = this.Transform(request.user);
-			const rights = {read: 100000, write: 200};
+			const rights = {read: AuthLevel.public, write: AuthLevel.user};
 			const description: string = "";
 
 			if (path) {
@@ -546,7 +546,7 @@ export class Files extends Wrapper {
 			// 		this.collection.findOne(query, (error: IErrorObject, item: object): void => {
 			// 			this.ifSuccess(response, error, (): void => {
 			// 				if (item) {
-			this.collection.findOneAndDelete(query, (error): void => {
+			this.collection.findOneAndDelete(query, (error: IErrorObject): void => {
 				this.ifSuccess(response, error, (): void => {
 					this.SendSuccess(response, {});
 				});
@@ -689,109 +689,109 @@ export class Files extends Wrapper {
 	}
 
 	// {"c":"resize","p":{"width":100,"height":100}};
-	public resize(parameter, result): object {
+	public resize(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().resize(parameter);
 		return result.pipe(resizer);
 	}
 
 	// {"c":"extend","p":{"top":100,"bottom":200,"left":100,"right":100,"background":{"r":100,"g":100,"b":0,"alpha":1}}}
-	public extend(parameter, result): object {
+	public extend(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().extend(parameter);
 		return result.pipe(resizer);
 	}
 
 	//  {"c": "extract", "p":{ "left": 50, "top": 10, "width": 30, "height": 40 }}
-	public extract(parameter, result): object {
+	public extract(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().extract(parameter);
 		return result.pipe(resizer);
 	}
 
 	// {"c": "rotate", "p": { "angle": 45}};
-	public rotate(parameter, result): object {
+	public rotate(parameter: any, result: any): object {
 		const angle: WritableStream = parameter.angle || 90;
 		const resizer: object = sharp().rotate(angle);
 		return result.pipe(resizer);
 	}
 
 	// {"c": "flip", "p": {}};
-	public flip(parameter, result): object {
+	public flip(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().flip();
 		return result.pipe(resizer);
 	}
 
 	// {"c": "flop", "p": {}};
-	public flop(parameter, result): object {
+	public flop(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().flop();
 		return result.pipe(resizer);
 	}
 
 	// {"c": "sharpen", "p": {"sigma":1.2}};
-	public sharpen(parameter, result): object {
+	public sharpen(parameter: any, result: any): object {
 		const sigma: number = parameter.sigma || 10;
 		const resizer: WritableStream = sharp().sharpen(Math.min(1000, Math.max(sigma, 0.3)));
 		return result.pipe(resizer);
 	}
 
 	// {"c": "median", "p": {"size":10}};
-	public median(parameter, result): object {
+	public median(parameter: any, result: any): object {
 		const size: number = parameter.size || 3;
 		const resizer: WritableStream = sharp().median(size);
 		return result.pipe(resizer);
 	}
 
 	// {"c": "blur", "p": {"sigma":1.2}};
-	public blur(parameter, result): object {
+	public blur(parameter: any, result: any): object {
 		const sigma: number = parameter.sigma || 10;
 		const resizer: WritableStream = sharp().blur(Math.min(1000, Math.max(sigma, 0.3)));
 		return result.pipe(resizer);
 	}
 
-	public flatten(parameter, result): object {
+	public flatten(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().flatten(parameter);
 		return result.pipe(resizer);
 	}
 
-	public gamma(parameter, result): object {
+	public gamma(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().gamma(parameter);
 		return result.pipe(resizer);
 	}
 
-	public negate(parameter, result): object {
+	public negate(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().negate(parameter);
 		return result.pipe(resizer);
 	}
 
-	public normalise(parameter, result): object {
+	public normalise(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().normalise(parameter);
 		return result.pipe(resizer);
 	}
 
-	public threshold(parameter, result): object {
+	public threshold(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().threshold(parameter);
 		return result.pipe(resizer);
 	}
 
-	public boolean(parameter, result): object {
+	public boolean(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().boolean(parameter);
 		return result.pipe(resizer);
 	}
 
-	public linear(parameter, result): object {
+	public linear(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().linear(parameter);
 		return result.pipe(resizer);
 	}
 
-	public recomb(parameter, result): object {
+	public recomb(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().recomb(parameter);
 		return result.pipe(resizer);
 	}
 
-	public tint(parameter, result): object {
+	public tint(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().tint(parameter);
 		return result.pipe(resizer);
 	}
 
-	public greyscale(parameter, result): object {
+	public greyscale(parameter: any, result: any): object {
 		const resizer: WritableStream = sharp().greyscale(parameter);
 		return result.pipe(resizer);
 	}

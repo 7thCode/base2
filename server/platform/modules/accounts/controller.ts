@@ -8,16 +8,7 @@
 
 import {AuthLevel, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {
-	IAccountContent,
-	IAccountModel,
-	IAccountRequest,
-	IJSONResponse,
-	IQueryParam,
-	IQueryRequest,
-	IUserIDParam,
-	IUsernameParam,
-} from "../../../../types/platform/server";
+import {IAccountContent, IAccountModel, IAccountRequest, IJSONResponse, IQueryParam, IQueryRequest, IUserIDParam, IUsernameParam,} from "../../../../types/platform/server";
 
 const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
@@ -56,7 +47,7 @@ export class Accounts extends Wrapper {
 	private own_by_name(current: any, username: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw <= AuthLevel.manager) { // is not manager?
+		if (current.role.raw < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.username === username); // is self?
@@ -73,7 +64,7 @@ export class Accounts extends Wrapper {
 	private own_by_id(current: any, user_id: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw <= AuthLevel.manager) { // is not manager?
+		if (current.role.raw < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.user_id === user_id); // is self?
@@ -313,7 +304,7 @@ export class Accounts extends Wrapper {
 
 							LocalAccount.set_by_name(operator, target.username, update, (error: IErrorObject, account: object): void => {
 								this.ifSuccess(response, error, (): void => {
-									QRCode.toDataURL(qr_url, (error: IErrorObject, qrcode): void => {
+									QRCode.toDataURL(qr_url, (error: IErrorObject, qrcode: any): void => {
 										this.ifSuccess(response, error, (): void => {
 											this.SendSuccess(response, {qrcode});
 										});
@@ -466,6 +457,65 @@ export class Accounts extends Wrapper {
 		}
 	}
 
+	/**
+	 * アカウントゲット
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public get_self(request: IAccountRequest<any>, response: IJSONResponse): void {
+		try {
+			if (request.user) {
+				const operator: IAccountModel = this.Transform(request.user);　　　　　
+				LocalAccount.default_find_by_id(operator, operator.user_id, (error: IErrorObject, account: IAccountModel): void => {
+					this.ifSuccess(response, error, (): void => {
+						if (account) {
+							this.SendSuccess(response, account.content);
+						} else {
+							this.SendWarn(response, {code: 3, message: "not found. 3403"});
+						}
+					});
+				});
+
+			} else {
+				this.SendError(response, {code: 1, message: "not logged in.(account 1) 3865"});
+			}
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
+
+	/**
+	 * アカウントプット
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public put_self(request: IAccountRequest<IAccountContent>, response: IJSONResponse): void {
+		try {
+			if (request.user) {
+				const operator: IAccountModel = this.Transform(request.user);
+				const content: any = request.body;
+
+				const update: any = {
+					"content.nickname": content.nickname,
+					"content.description": content.description,
+					"content.id": content.id,
+					"content.mails": content.mails,
+				};
+
+				LocalAccount.set_by_id(operator, operator.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
+					this.ifSuccess(response, error, (): void => {
+						this.SendSuccess(response, account.content);
+					});
+				});
+			} else {
+				this.SendError(response, {code: 1, message: "not logged in.(account 2) 8257"});
+			}
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
 
 }
 

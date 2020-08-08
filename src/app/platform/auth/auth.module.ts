@@ -39,7 +39,8 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
 
 import {AuthService} from "./auth.service";
-
+import {WithdrawDialogComponent} from "./withdraw-dialog/withdraw-dialog.component";
+import {WithdrawDialogDirective} from "./withdraw-dialog/withdraw-dialog.directive";
 
 @NgModule({
 	declarations: [
@@ -49,12 +50,14 @@ import {AuthService} from "./auth.service";
 		RegistDialogDirective,
 		PasswordDialogDirective,
 		LogoutDialogDirective,
+		WithdrawDialogDirective,
 		LoginDialogComponent,
 		LoginQrDialogComponent,
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,
 		LogoutDialogComponent,
+		WithdrawDialogComponent,
 
 	],
 	providers: [
@@ -86,6 +89,7 @@ import {AuthService} from "./auth.service";
 		RegistDialogDirective,
 		PasswordDialogDirective,
 		LogoutDialogDirective,
+		WithdrawDialogDirective,
 	],
 	bootstrap: [
 		LoginDialogComponent,
@@ -94,6 +98,7 @@ import {AuthService} from "./auth.service";
 		RegistDialogComponent,
 		PasswordDialogComponent,
 		LogoutDialogComponent,
+		WithdrawDialogComponent,
 	],
 })
 

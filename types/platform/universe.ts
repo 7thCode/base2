@@ -4,12 +4,15 @@
  * opensource.org/licenses/mit-license.php
  */
 
-export interface IErrorObject {
+export interface ErrorObject {
 	code: number;
 	message: string;
 }
 
-export type Callback<T> = (error: IErrorObject | null, results: T | null) => void;
+export type IErrorObject = ErrorObject | null;
+
+export type Callback<T> = (error: IErrorObject, results: T | null) => void;
+
 export type StatusCallback<T> = (error: { status: number, message: string } | null, result: T | null) => void;
 
 export interface IEmit {
@@ -60,7 +63,7 @@ export interface IAccountPublic {
 }
 
 export interface IRights {
-	resad: number;
+	read: number;
 	write: number;
 }
 

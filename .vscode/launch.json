@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "Launch C++",
+            "preLaunchTask": "clang++ build active file",
+            "cwd": "${workspaceFolder}",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch TypeScript",
+            "preLaunchTask": "Compile TypeScript",
+            "cwd": "${workspaceFolder}",
+            "program": "${file}",
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ],
+            "skipFiles": [
+				"<node_internals>/**"
+            ],
+            "outputCapture": "std"
+        }
+    ]
+}

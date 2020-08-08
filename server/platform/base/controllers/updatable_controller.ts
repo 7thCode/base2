@@ -60,7 +60,7 @@ export abstract class Updatable extends Wrapper {
 	private own_by_name(current: any, username: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw <= AuthLevel.manager) { // is not manager?
+		if (current.role.raw < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.username === username); // is self?
@@ -77,7 +77,7 @@ export abstract class Updatable extends Wrapper {
 	private own_by_id(current: any, user_id: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw <= AuthLevel.manager) { // is not manager?
+		if (current.role.raw < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.user_id === user_id); // is self?
@@ -90,7 +90,7 @@ export abstract class Updatable extends Wrapper {
 	 * @param user
 	 * @returns role
 	 */
-	protected role(user): object {
+	protected role(user: any): object {
 		return Account.Role(user);
 	}
 
@@ -131,7 +131,7 @@ export abstract class Updatable extends Wrapper {
 							const operator: IAccountModel = this.Transform(request.user);
 							this.Model.default_find(operator, query, option, (error: IErrorObject, objects: IUpdatableModel[]): void => {
 								this.ifSuccess(response, error, (): void => {
-									const filtered = [];
+									const filtered: any[] = [];
 									objects.forEach((object) => {
 										filtered.push(object.public());
 									});
@@ -263,7 +263,7 @@ export abstract class Updatable extends Wrapper {
 				if (!error) {
 					if (count === 0) {
 						const promises: object[] = [];
-						objects.forEach((object: { user_id: string }): void => {
+						objects.forEach((object: any): void => {
 							promises.push(new Promise((resolve: any, reject: any): void => {
 								if (object) {
 									const record: IUpdatableModel = new this.Model();

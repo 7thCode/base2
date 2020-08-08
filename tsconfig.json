@@ -10,6 +10,8 @@
 		"module": "esnext",
 		"moduleResolution": "node",
 		"importHelpers": true,
+		"strict": true,
+		"strictNullChecks": false,
 		"target": "es5",
 		"typeRoots": [
 			"node_modules/@types"

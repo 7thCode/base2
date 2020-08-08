@@ -46,6 +46,13 @@
 		</div>
 
 		<mat-list>
+
+			<mat-list-item style="height: 34px;">
+				<a mat-button style="color:#fdfdfd;font-size:12px;" routerLink="/platform/personal">
+					<mat-icon style="color:#e5a5ff;font-size:20px;" mat-list-icon>home</mat-icon>
+					Personal</a>
+			</mat-list-item>
+
 			<mat-list-item style="height: 34px;" *ngIf="role | authis: 'manager'">
 				<a mat-button style="color:#fdfdfd;font-size:12px;" routerLink="/platform/accounts">
 					<mat-icon style="color:#b9fad7;font-size:20px;" mat-list-icon>account_circle</mat-icon>
@@ -91,6 +98,13 @@
 					QR Code
 				</button>
 			</mat-list-item>
+
+			<!-- <mat-list-item style="color:#fdfdfd;">
+				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-withdraw-button>
+					<mat-icon style="font-size:20px;" mat-list-icon>exit_to_app</mat-icon>
+					Withdraw
+				</button>
+			</mat-list-item> -->
 
 		</mat-list>
 

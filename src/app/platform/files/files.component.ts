@@ -29,13 +29,13 @@ import {SessionService} from "../base/services/session.service";
 })
 export class FilesComponent extends UploadableComponent implements OnInit {
 
-	@ViewChild("fileInput") public fileInput;
+	@ViewChild("fileInput") public fileInput: any;
 
-	public results: any[];
+	public results: any[] = [];
 
 	public filename: string = "";
 	public size: number = 20;
-	public count: number;
+	public count: number = 0;
 
 	public breakpoint: number = 4;
 
@@ -78,10 +78,12 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 *
 	 * @param error
 	 */
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 6000,
-		});
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
 	/**
@@ -127,9 +129,13 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.results = [];
 		this.breakpoint =  this.widthToColumns(window.innerWidth);
 
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
+				if (results) {
+					this.results = results;
+				} else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}
@@ -150,10 +156,14 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 			this.Progress(true);
 			this.uploadFiles(path, files, (error: IErrorObject, result: any): void => {
 				if (!error) {
-					this.draw((error, filtered) => {
+					this.draw((error, results) => {
 						if (!error) {
-							this.results = filtered;
-							this.Complete("", filtered);
+							if (results) {
+								this.results = results;
+								this.Complete("", results);
+							} else {
+								this.Complete("error", {code: -1, message: "error."});
+							}
 						} else {
 							this.Complete("error", error);
 						}
@@ -193,10 +203,14 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 			this.query = {filename: {$regex: this.filename}};
 		}
 
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
-				this.Complete("", filtered);
+				if (results) {
+					this.results = results;
+					this.Complete("", results);
+				}else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}
@@ -211,10 +225,14 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.Progress(true);
 		this.delete(name, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw((error, filtered) => {
+				this.draw((error, results) => {
 					if (!error) {
-						this.results = filtered;
-						this.Complete("", filtered);
+						if (results) {
+							this.results = results;
+							this.Complete("", results);
+						} else {
+							this.Complete("error", {code: -1, message:"error."});
+						}
 					} else {
 						this.Complete("error", error);
 					}
@@ -230,30 +248,32 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * 再描画
 	 * @param callback
 	 */
-	public draw(callback: Callback<any>): void {
+	public draw(callback: Callback<object[]>): void {
 		this.Progress(true);
 		this.filesService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
 				const option = {sort: {"content.start": -1}, skip: this.size * this.page, limit: this.size};
-				this.filesService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[]): void => {
+				this.filesService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[] | null): void => {
 					if (!error) {
 						const filtered: any[] = [];
-						results.forEach((result) => {
-							result.cols = 1;
-							result.rows = 1;
-							result.type = 0;
-							if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
-								result.type = 1;
-							} else if (this.hasExtension({name: result.filename}, "svg")) {
-								result.type = 2;
-							} else if (this.hasExtension({name: result.filename}, "mpg,mp4,avi,mov,m4v,webm")) {
-								result.type = 3;
-							}
-							result.extension = this.Extension({name: result.filename});
+						if (results) {
+							results.forEach((result) => {
+								result.cols = 1;
+								result.rows = 1;
+								result.type = 0;
+								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
+									result.type = 1;
+								} else if (this.hasExtension({name: result.filename}, "svg")) {
+									result.type = 2;
+								} else if (this.hasExtension({name: result.filename}, "mpg,mp4,avi,mov,m4v,webm")) {
+									result.type = 3;
+								}
+								result.extension = this.Extension({name: result.filename});
 
-							filtered.push(result);
-						});
+								filtered.push(result);
+							});
+						}
 						callback(null, filtered);
 					} else {
 						callback(error, null);
@@ -270,11 +290,15 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * ページ送り
 	 * @param event
 	 */
-	public Page(event): void {
+	public Page(event: any): void {
 		this.page = event.pageIndex;
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
+				if (results) {
+					this.results = results;
+				} else {
+					this.Complete("error", {code: -1, message: "error"});
+				}
 			} else {
 				this.Complete("error", error);
 			}

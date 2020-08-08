@@ -5,6 +5,7 @@
 	<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 		{{content.username}}
 		<mat-form-field class="form-field">
+			<mat-label>Code...</mat-label>
 			<input matInput autocomplete="off" type="text" placeholder="000000" [(ngModel)]="content.code" #code="ngModel" name="code" required minlength="6" maxlength="6">
 			<mat-error *ngIf="code.errors?.required;">入力してください</mat-error>
 			<mat-error *ngIf="code.errors?.maxlength">長すぎます</mat-error>

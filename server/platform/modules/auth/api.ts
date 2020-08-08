@@ -13,17 +13,17 @@ export const router = express.Router();
 
 const passport: any = require("passport");
 
-passport.serializeUser((user: any, done): void => {
+passport.serializeUser((user: any, done: any): void => {
 	done(null, user);
 });
 
-passport.deserializeUser((user, done): void => {
+passport.deserializeUser((user: any, done: any): void => {
 	done(null, user);
 });
 
 const LocalStrategy: any = require("passport-local").Strategy;
 const FacebookStrategy: any = require("passport-facebook").Strategy;
-const AppleStrategy: any = require("passport-appleid").Strategy;
+const AppleStrategy: any = require("passport-apple");
 const TwitterStrategy: any = require("passport-twitter").Strategy;
 const InstagramStrategy: any = require("passport-instagram").Strategy;
 const LineStrategy: any = require("passport-line").Strategy;
@@ -206,6 +206,13 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					auth.logout(request, response);
+				});
+			}]);
+
+		router.post("/auth/local/remove", [gatekeeper.default,
+			(request: object, response: object): void => {
+				gatekeeper.catch(response, (): void => {
+					auth.post_local_remove(request, response);
 				});
 			}]);
 

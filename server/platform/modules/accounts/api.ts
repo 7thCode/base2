@@ -83,6 +83,26 @@ router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 /*
 *
 */
+router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.get_self(request, response);
+		});
+	}]);
+
+/*
+*
+*/
+router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.put_self(request, response);
+		});
+	}]);
+
+/*
+*
+*/
 router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);

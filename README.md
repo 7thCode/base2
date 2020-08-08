@@ -207,3 +207,27 @@ $ sudo service mongodb restart
         }
 
     > sudo pm2 start cluster.json --env production
+
+### Angular + Express
+
+    ng new [PROJECT]
+
+    express [SERVER]
+
+    “package.json”以外を[PROJECT]ディレクトリにコピー
+
+    [SERVER]ディレクトリの”package.json”の[dependencies]の内容を[PROJECT]ディレクトリの”package.json”の[dependencies]に追加
+
+    [SERVER]ディレクトリの”package.json”の[scripts]の[start]を[PROJECT]ディレクトリの”package.json”の[scripts]の[start]に上書き
+
+    中身を詰めて確認
+
+    npm install
+    npm start
+
+    localhost:3000を確認、expressが起動していたらOK
+
+    “Angular.json”ファイルの[projects->[PROJECT]->architect->build->options->outputPath]を”public”に書き換えビルド
+
+    ng build
+

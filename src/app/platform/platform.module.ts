@@ -39,10 +39,15 @@ import {PagesModule} from "./pages/pages.module";
 import {PlatformRoutingModule} from "./platform-routing.module";
 import {PlatformComponent} from "./platform.component";
 import {BasePipeModule} from "./base/pipes/base-pipe.module";
+import { PersonalComponent } from './personal/personal.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
 	declarations: [
 		PlatformComponent,
+		PersonalComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -75,6 +80,9 @@ import {BasePipeModule} from "./base/pipes/base-pipe.module";
 		ImageModule,
 		FilesModule,
 		BasePipeModule,
+		MatFormFieldModule,
+		FormsModule,
+		MatInputModule,
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],

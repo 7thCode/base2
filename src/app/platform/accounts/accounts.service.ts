@@ -55,6 +55,50 @@ export class AccountsService extends QueryableService {
 	}
 
 	/**
+	 * 単一のオブジェクトを返す
+	 *
+	 * @param id オブジェクトID
+	 * @param callback オブジェクトを返すコールバック
+	 */
+	public get_self(callback: Callback<object>): void {
+		this.http.get(this.endPoint + "/" + this.model + "/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null,result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 8419"}, null);
+		});
+	}
+
+	/**
+	 *
+	 * @param username
+	 * @param content
+	 * @param callback
+	 */
+	public put_self(content: any, callback: Callback<any>): void {
+		this.http.put(this.endPoint + "/" + this.model + "/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9262"}, null);
+		});
+	}
+
+	/**
 	 *
 	 * @param id
 	 * @param callback
@@ -77,10 +121,10 @@ export class AccountsService extends QueryableService {
 
 	/**
 	 *
-	 * @param username
+	 * @param user_id
 	 * @param callback
 	 */
-	public is_2fa(user_id, callback: Callback<any>): void {
+	public is_2fa(user_id: string, callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/" + this.model + "/auth/is2fa/" + encodeURIComponent(user_id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -101,7 +145,7 @@ export class AccountsService extends QueryableService {
 	 * @param username
 	 * @param callback
 	 */
-	public set_2fa(username, callback: Callback<any>): void {
+	public set_2fa(username: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth/set2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -122,7 +166,7 @@ export class AccountsService extends QueryableService {
 	 * @param username
 	 * @param callback
 	 */
-	public reset_2fa(username, callback: Callback<any>): void {
+	public reset_2fa(username: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth/reset2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {

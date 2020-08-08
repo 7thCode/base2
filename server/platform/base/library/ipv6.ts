@@ -62,11 +62,11 @@ export class IPV6 {
 	 *
 	 */
 	public GetLocalAddress(): any {
-		const ifacesObj = {ipv4: [], ipv6: []};
+		const ifacesObj: any = {ipv4: [], ipv6: []};
 		const interfaces = os.networkInterfaces();
 
 		for (const dev in interfaces) {
-			interfaces[dev].forEach(function(details) {
+			interfaces[dev].forEach(function(details: any) {
 				if (!details.internal) {
 					switch (details.family) {
 						case "IPv4":

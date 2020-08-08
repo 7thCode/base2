@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IRole} from "../../../../../types/platform/universe";
+import {AuthLevel, Callback, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
 
 import {Directive, EventEmitter, Output} from "@angular/core";
 
@@ -66,7 +66,7 @@ export abstract class SessionableComponent {
 	/**
 	 *
 	 */
-	public progress: boolean;
+	public progress: boolean = false;
 
 	/**
 	 *
@@ -130,7 +130,7 @@ export abstract class SessionableComponent {
 	 * @returns none なし
 	 */
 	protected getSession(callback: Callback<object>): void {
-		this.session.get((error: IErrorObject, result: object): void => {
+		this.session.get((error: IErrorObject, result: ISession): void => {
 			if (!error) {
 				this.privateCurrentSession = result;
 				callback(null, result);
@@ -146,11 +146,15 @@ export abstract class SessionableComponent {
 	 * @param data 追加データ
 	 * @param callback コールバック
 	 */
-	protected putSessionData(data: object, callback: Callback<object>): void {
-		this.session.put(data, (error: IErrorObject, result: object): void => {
+	protected putSessionData(data: object, callback: Callback<ISession>): void {
+		this.session.put(data, (error: IErrorObject, results: ISession | null): void => {
 			if (!error) {
-				this.privateCurrentSession = result;
-				callback(null, result);
+				if (results) {
+					this.privateCurrentSession = results;
+					callback(null, results);
+				} else {
+					callback({code: -1, message:"error."}, null);
+				}
 			} else {
 				callback(error, null);
 			}

@@ -43,7 +43,7 @@ export class ButtonComponent implements OnInit {
 	 *
 	 * @param event
 	 */
-	public click(event) {
+	public click(event: any) {
 		this.onClick.emit({source: this.description, value: true, changed: null});
 	}
 

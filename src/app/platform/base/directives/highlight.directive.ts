@@ -24,7 +24,7 @@ export class HighlightDirective {
 	 *
 	 */
 	@Input("highlight")
-	public highlightColor: string;
+	public highlightColor: string = "";
 	/**
 	 *
 	 * @param el
@@ -52,6 +52,6 @@ export class HighlightDirective {
 	 */
 	@HostListener("mouseleave")
 	public onMouseLeave() {
-		this.highlight(null);
+		this.highlight("");
 	}
 }

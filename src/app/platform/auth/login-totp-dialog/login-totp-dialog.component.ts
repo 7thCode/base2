@@ -36,12 +36,12 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 	/**
 	 *
 	 */
-	public progress: boolean;
+	public progress: boolean = false;
 
 	/**
 	 *
 	 */
-	public password_visible: boolean;
+	public password_visible: boolean = false;
 
 	// public emailFormControl = new FormControl("", [
 	// 	Validators.required,
@@ -68,10 +68,12 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 	 *
 	 * @param error
 	 */
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 6000,
-		});
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
 	/**

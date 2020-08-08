@@ -72,8 +72,24 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		private matDialog: MatDialog,
 	) {
 		super(session, overlay, snackbar, breakpointObserver);
+		this.widthValue = 0;
+		this.sock = null;
+		this.date = new Date();
+		this.device = "";
 		this.accountsService = accountService;
 		this.sock = new WebSocket(environment.webSocket);
+	}
+
+	/*
+	*
+	*
+	* */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
 	/**
@@ -117,7 +133,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 *
 	 * @param opened
 	 */
-	public close(opened) {
+	public close(opened: any): void {
 		if (opened) {
 			this.sidenav.close().then(() => {
 
@@ -129,14 +145,14 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 *
 	 * @param event
 	 */
-	public onPan(event) {
+	public onPan(event: any): void {
 	}
 
 	/**
 	 *
 	 * @param event
 	 */
-	public onTap(event) {
+	public onTap(event: any): void {
 	}
 
 	/**
@@ -166,19 +182,19 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		});
 
 		// for ws
-		this.sock.addEventListener("open", (e) => {
+		this.sock.addEventListener("open", (e: any) => {
 		});
 
-		this.sock.addEventListener("message", (e) => {
+		this.sock.addEventListener("message", (e: any) => {
 		});
 
-		this.sock.addEventListener("close", (e) => {
+		this.sock.addEventListener("close", (e: any) => {
 		});
 
-		this.sock.addEventListener("error", (e) => {
+		this.sock.addEventListener("error", (e: any) => {
 		});
 
-		this.getSession((error: IErrorObject, session: object): void => {
+		this.getSession((error: IErrorObject, session: object | null): void => {
 			this.widthValue = 200;
 			this.Progress(false);
 		});

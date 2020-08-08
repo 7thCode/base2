@@ -51,10 +51,12 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 * エラー表示
 	 * @param error
 	 */
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 6000,
-		});
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
 	/**

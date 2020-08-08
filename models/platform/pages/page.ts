@@ -97,7 +97,7 @@ namespace PageModel {
 		this.user_id = user.user_id;
 		this.content = init(this._id, body.content);
 
-		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path}), (error, instance) => {
+		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path}), (error: IErrorObject, instance: any) => {
 			if (!error) {
 				if (!instance) {
 					this.save(cb);

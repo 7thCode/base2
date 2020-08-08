@@ -55,7 +55,7 @@ namespace ArticleModel {
 		return shasum.digest("hex");
 	};
 
-	const query_by_user_read: any = (user: any, query): any => {
+	const query_by_user_read: any = (user: any, query: object): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
 		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
 	};

@@ -77,7 +77,7 @@ export abstract class HttpService {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
 		} catch (error) {
-			callback(error, null);
+			callback(error, "");
 		}
 	}
 

@@ -391,6 +391,29 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * ログイン
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
+	 */
+	public withdraw(callback: Callback<any>): void {
+		this.http.post(this.endPoint + "/auth/local/remove", {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 1019"}, null);
+		});
+	}
+
 	/*
 		public loginFacebook(callback: Callback<any>): void {
 			this.http.get(this.endPoint + "/auth/facebook", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {

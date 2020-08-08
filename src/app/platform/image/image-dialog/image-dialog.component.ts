@@ -202,7 +202,7 @@ export class ImageDialogComponent extends BaseDialogComponent implements OnInit 
 	 *
 	 * @param event
 	 */
-	public onRotate(event): void {
+	public onRotate(event: any): void {
 // 		this.imageCropper.rotateRight();
 	}
 

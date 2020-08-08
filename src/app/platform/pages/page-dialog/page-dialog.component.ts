@@ -29,7 +29,7 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	/**
 	 * エディタ
 	 */
-	@ViewChild("editor") public editor;
+	@ViewChild("editor") public editor: any;
 
 	/**
 	 * ページテキスト

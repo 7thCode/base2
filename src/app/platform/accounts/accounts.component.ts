@@ -37,18 +37,16 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		return this.progress;
 	}
 
-	public results: any[];
+	public results: any[] = [];
 
-	public progress: boolean;
+	public progress: boolean = false;
 
-	public nickname = "";
+	public nickname: string = "";
 	public size: number = 20;
-	public count: number;
+	public count: number = 0;
 
 	public breakpoint: number = 4;
 
-// 	protected service: AccountsService;
-// 	protected auth_service: AuthService;
 	protected query: object = {};
 	protected page: number = 0;
 
@@ -68,8 +66,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		private snackbar: MatSnackBar,
 	) {
 		super(session);
-// 		this.service = accountService;
-// 		this.auth_service = authService;
 	}
 
 	/**
@@ -173,10 +169,12 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * エラー表示
 	 * @param error
 	 */
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 6000,
-		});
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0
+			});
+		}
 	}
 
 	/**
@@ -201,9 +199,13 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
-			this.draw((error: IErrorObject, accounts: object[]): void => {
+			this.draw((error: IErrorObject, accounts: object[] | null): void => {
 				if (!error) {
-					this.results = accounts;
+					if (accounts) {
+						this.results = accounts;
+					} else {
+						this.errorBar({code: -1, message:"error."});
+					}
 				} else {
 					this.errorBar(error);
 				}
@@ -227,9 +229,13 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		if (this.nickname) {
 			this.query = {"content.nickname": {$regex: this.nickname}};
 		}
-		this.draw((error: IErrorObject, accounts: object[]): void => {
+		this.draw((error: IErrorObject, accounts: object[] | null): void => {
 			if (!error) {
-				this.results = accounts;
+				if (accounts) {
+					this.results = accounts;
+				} else {
+					this.errorBar({code: -1, message:"error."});
+				}
 			} else {
 				this.errorBar(error);
 			}
@@ -240,7 +246,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * 再描画
 	 * @param callback
 	 */
-	public draw(callback: Callback<object>): void {
+	public draw(callback: Callback<object[]>): void {
 		this.Progress(true);
 		this.accountService.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
@@ -274,11 +280,15 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @param event
 	 * @constructor
 	 */
-	public Page(event): void {
+	public Page(event: any): void {
 		this.page = event.pageIndex;
-		this.draw((error: IErrorObject, accounts: object[]): void => {
+		this.draw((error: IErrorObject, accounts: object[] | null): void => {
 			if (!error) {
-				this.results = accounts;
+				if (accounts) {
+					this.results = accounts;
+				} else {
+					this.errorBar({code: -1, message:"error."});
+				}
 			} else {
 				this.errorBar(error);
 			}
@@ -343,46 +353,61 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	public updateDialog(id: string): void {
 		this.Progress(true);
-		this.get(id, (error: IErrorObject, result: object): void => {
+		this.get(id, (error: IErrorObject, result: object | null): void => {
 			if (!error) {
-				const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
-					width: "fit-content",
-					height: "fit-content",
-					data: {
-						session: this.currentSession,
-						user: result,
-						content: AccountsComponent.confirmToForm(result),
-						service: this.accountService,
-					},
-					disableClose: true,
-				});
+				if (result) {
+					const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
+						width: "fit-content",
+						height: "fit-content",
+						data: {
+							session: this.currentSession,
+							user: result,
+							content: AccountsComponent.confirmToForm(result),
+							service: this.accountService,
+						},
+						disableClose: true,
+					});
 
-				dialog.beforeClosed().subscribe((result: object): void => {
-					if (result) { // if not cancel then
-						this.Progress(true);
-						this.update(id, AccountsComponent.confirmToModel(result), (error: IErrorObject, result: object): void => {
-							if (!error) {
-								this.draw((error: IErrorObject, accounts: object[]): void => {
-									if (!error) {
-										this.results = accounts;
-										this.Complete("", result);
+					dialog.beforeClosed().subscribe((result: object): void => {
+						if (result) { // if not cancel then
+							this.Progress(true);
+							this.update(id, AccountsComponent.confirmToModel(result), (error: IErrorObject, result: object | null): void => {
+								if (!error) {
+									if (result) {
+										this.draw((error: IErrorObject, accounts: object[] | null): void => {
+											if (!error) {
+												if (accounts) {
+													this.results = accounts;
+													this.Complete("", result);
+												} else {
+													this.Complete("error", {code: -1, message:"error."});
+													this.errorBar({code: -1, message:"error."});
+												}
+											} else {
+												this.Complete("error", error);
+												this.errorBar(error);
+											}
+										});
 									} else {
-										this.Complete("error", error);
-										this.errorBar(error);
+										this.Complete("error", {code: -1, message:"error."});
+										this.errorBar({code: -1, message:"error."});
 									}
-								});
-							} else {
-								this.Complete("error", error);
-								this.errorBar(error);
-							}
-							this.Progress(false);
-						});
-					}
-				});
+								} else {
+									this.Complete("error", error);
+									this.errorBar(error);
+								}
+								this.Progress(false);
+							});
+						}
+					});
 
-				dialog.afterClosed().subscribe((result: object): void => {
+					dialog.afterClosed().subscribe((result: object): void => {
 
-				});
+					});
+				} else {
+					this.Complete("error", {code: -1, message:"error."});
+					this.errorBar({code: -1, message:"error."});
+				}
 			} else {
 				this.Complete("error", error);
 				this.errorBar(error);
@@ -396,7 +421,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
-		const resultDialogContent: any = {title: "User", message: "Delete User?. 4118"};
+		const resultDialogContent: any = {title: "User", message: "Delete User?."};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "fit-content",
@@ -411,12 +436,17 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		dialog.afterClosed().subscribe((result: object) => {
 			if (result) { // if not cancel then
 				this.Progress(true);
-				this.delete(id, (error: IErrorObject, result: any): void => {
+		 		this.delete(id, (error: IErrorObject, result: any): void => {
 					if (!error) {
-						this.draw((error: IErrorObject, accounts: object[]): void => {
+						this.draw((error: IErrorObject, accounts: object[] | null): void => {
 							if (!error) {
-								this.results = accounts;
-								this.Complete("", result);
+								if (accounts) {
+									this.results = accounts;
+									this.Complete("", result);
+								} else {
+									this.Complete("error", {code: -1, message: "error."});
+									this.errorBar({code: -1, message: "error."});
+								}
 							} else {
 								this.Complete("error", error);
 								this.errorBar(error);

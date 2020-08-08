@@ -54,10 +54,12 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 *
 	 * @param error
 	 */
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 6000,
-		});
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
 	/**
@@ -128,10 +130,14 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 			this.query = {"content.path": {$regex: this.path}};
 		}
 
-		this.draw((error: IErrorObject, filtered: object[]): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
-				this.Complete("", filtered);
+				if (results) {
+					this.results = results;
+					this.Complete("", results);
+				} else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}

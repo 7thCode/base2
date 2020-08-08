@@ -28,11 +28,11 @@ export abstract class Wrapper {
 	/**
 	 *
 	 */
-	protected event: any;
-	protected config: any;
-	protected systemsConfig: any;
-	protected usersConfig: any;
-	protected logger: any;
+	protected readonly event: any;
+	protected readonly config: any;
+	protected readonly systemsConfig: any;
+	protected readonly usersConfig: any;
+	protected readonly logger: any;
 
 	/**
 	 *
@@ -217,7 +217,7 @@ export abstract class Wrapper {
 	protected Transform(user: any): IAccountModel {
 		let result: any = {
 			provider: "",
-			auth: 100000,
+			auth: AuthLevel.public,
 			username: "",
 			user_id: "",
 			content: {
@@ -268,15 +268,15 @@ export abstract class Wrapper {
 					break;
 				case "facebook":
 				case "apple":
-					const compositeUsername: string = user.emails[0].value;
+					const compositeUsername: string = user.id;
 					result = {
 						provider: user.provider,
-						auth: 200,
+						auth: AuthLevel.user,
 						username: compositeUsername,
 						user_id: user.id,
 						content: {mails: [], nickname: user.name.familyName + " " + user.name.givenName, id: "", description: ""},
 						enabled: true,
-						role: LocalAccount.Role({auth: 200, provider: user.provider}),
+						role: LocalAccount.Role({auth: AuthLevel.user, provider: user.provider}),
 						entry: entryPoint,
 						exit: exitPoint,
 						data: {},

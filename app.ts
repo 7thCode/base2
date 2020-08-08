@@ -4,6 +4,7 @@
  * //opensource.org/licenses/mit-license.php
  */
 import {Server} from "http";
+import {IErrorObject} from "./types/platform/universe";
 
 const cluster: any = require('cluster');
 const cpu_count: number = require('os').cpus().length;
@@ -90,7 +91,7 @@ const normal: () => void = () => {
 					// socket.clients.forEach((client: any): void => {
 					if (client) {
 						if (client.readyState === websocket.OPEN) {
-							const r: any = IPV6.ToIPV6(client._socket.remoteAddress);
+						// 	const r: any = IPV6.ToIPV6(client._socket.remoteAddress);
 							client.send(JSON.stringify(data));
 						}
 					}
@@ -100,7 +101,7 @@ const normal: () => void = () => {
 					// 	console.log("open");
 				});
 
-				client.on("message", (data, flags): void => {
+				client.on("message", (data: any, flags: any): void => {
 					// 		console.log(data);
 				});
 
@@ -183,7 +184,7 @@ const normal: () => void = () => {
 				logger.info("reconnected");
 			});
 
-			mongoose.connection.on("error", (error) => {
+			mongoose.connection.on("error", (error: IErrorObject) => {
 				console.error("\u001b[31m" + "Mongoose default connection error" + "\u001b[0m");
 				logger.error("Mongoose default connection error: " + error);
 				process.exit(1);
@@ -215,7 +216,7 @@ const normal: () => void = () => {
 
 			const load_module: any = (root: string, modules: any): void => {
 				if (modules) {
-					modules.forEach((module) => {
+					modules.forEach((module: any) => {
 						const path: string = root + module.path;
 						const name: string = module.name;
 						app.use("/", require(path + name + "/api"));
@@ -301,7 +302,7 @@ const normal: () => void = () => {
 			// io.wait(config, event);
 
 			// error handlers
-			app.use((req, res, next): void => {
+			app.use((req: any, res: any, next: (e: any) => {}): void => {
 				//    res.redirect("/");
 				const err: any = new Error("Not Found");
 				err.status = 404;
@@ -309,7 +310,7 @@ const normal: () => void = () => {
 			});
 
 			if (app.get("env") === "development") {
-				app.use((err, req, res, next): void => {
+				app.use((err: any, req: any, res: any, next: (e: any) => {}): void => {
 					res.status(err.status || 500);
 					res.render("error", {
 						message: err.message,
@@ -318,7 +319,7 @@ const normal: () => void = () => {
 				});
 			}
 
-			app.use((err, req, res, next): void => {
+			app.use((err: any, req: any, res: any, next: (e: any) => {}): void => {
 				if (req.xhr) {
 					res.status(500).send(err);
 				} else {
@@ -333,9 +334,9 @@ const normal: () => void = () => {
 
 		// database
 		mongoose.connect(connect_url, options)
-			.catch((error) => {
-				console.error("\u001b[31m" + "Mongoose exeption " + error.message + "\u001b[0m");
-				logger.fatal("catch Mongoose exeption. ", error.stack);
+			.catch((error: any) => {
+				console.error("\u001b[31m" + "Mongoose exception " + error.message + "\u001b[0m");
+				logger.fatal("catch Mongoose exception. ", error.stack);
 				process.exit(1);
 			});
 
@@ -389,7 +390,7 @@ const normal: () => void = () => {
 
 const Serve = (config: any, app: any): any => {
 
-	function normalizePort(val) {
+	function normalizePort(val: string): any {
 		const port: number = parseInt(val, 10);
 
 		if (isNaN(port)) {
@@ -405,7 +406,7 @@ const Serve = (config: any, app: any): any => {
 		return false;
 	}
 
-	function onError(error) {
+	function onError(error: any): void {
 		if (error.syscall === "listen") {
 			const bind: string = typeof port === "string"
 				? "Pipe " + port
@@ -427,7 +428,7 @@ const Serve = (config: any, app: any): any => {
 		}
 	}
 
-	function onListening() {
+	function onListening(): void {
 		/*
 		const addr: string | AddressInfo = server.address();
 		const bind: any = typeof addr === "string"

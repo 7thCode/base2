@@ -82,7 +82,7 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 	 *
 	 * @param event
 	 */
-	public onProgressed(event): void {
+	public onProgressed(event: any): void {
 
 	}
 
@@ -90,7 +90,7 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 	 *
 	 * @param event
 	 */
-	public onUpdateAvatar(event): void {
+	public onUpdateAvatar(event: any): void {
 
 	}
 

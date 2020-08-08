@@ -11,7 +11,8 @@
 			</div>
             <div fxLayout="row" fxLayout.lt-sm="column">
                 <mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
-                    <input matInput autocomplete="off" type="text" placeholder="Find by nickname..." [(ngModel)]="nickname" (change)="findByNickname();">
+					<mat-label>Nickname...</mat-label>
+                    <input matInput autocomplete="off" type="text" placeholder="Find..." [(ngModel)]="nickname" (change)="findByNickname();">
                     <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="nickname='';findByNickname();">
                         <mat-icon>close</mat-icon>
                     </button>
