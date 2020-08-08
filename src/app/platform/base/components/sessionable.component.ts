@@ -4,34 +4,91 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-import {ChangeDetectorRef, EventEmitter, Output} from "@angular/core";
+import {AuthLevel, Callback, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
 
-import * as momentNs from "moment-timezone";
+import {Directive, EventEmitter, Output} from "@angular/core";
 
-import {AuthLevel, Callback, IErrorObject, IRole} from "../../../../../types/universe";
 import {SessionService} from "../services/session.service";
-
-const moment: any = momentNs;
 
 /**
  * セッショナブルクラス
  *
  * @since 0.01
  */
+
+@Directive()
 export abstract class SessionableComponent {
 
-	private privateCurrentSession: any;
-	public progress: boolean;
+	/**
+	 * @returns 処理中か。
+	 */
+	protected get isProgress(): boolean {
+		return this.progress;
+	}
 
+	/**
+	 *  @returns 現行のセッション。
+	 */
+	public get currentSession(): any {
+		return this.privateCurrentSession;
+	}
+
+	/**
+	 * ロール取得
+	 * @returns アカウントのロール
+	 */
+	public get role(): IRole {
+		let result: IRole = {login: false, categoly: 0, raw: AuthLevel.public};
+		if (this.privateCurrentSession) {
+			if (this.privateCurrentSession.role) {
+				result = this.privateCurrentSession.role;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * プロバイダ取得
+	 * @returns アカウントのロール
+	 */
+	public get provider(): string {
+		let result: string = "";
+		if (this.privateCurrentSession) {
+			if (this.privateCurrentSession.provider) {
+				result = this.privateCurrentSession.provider;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 */
+	public progress: boolean = false;
+
+	/**
+	 *
+	 */
 	@Output() public onProgress = new EventEmitter<boolean>();
+
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
+	/**
+	 *
+	 */
+	private privateCurrentSession: any;
+
+	/**
+	 * @constructor
+	 * @param session
+	 */
 	protected constructor(
 		protected session: SessionService,
-		protected change: ChangeDetectorRef,
 	) {
 		this.privateCurrentSession = {
 			provider: "",
@@ -47,55 +104,33 @@ export abstract class SessionableComponent {
 		};
 	}
 
-	// event ~
+	/**
+	 *
+	 * @param type
+	 * @param value
+	 * @constructor
+	 */
 	protected Complete(type: string, value: any): void {
 		this.complete.emit({type, value});
 	}
 
+	/**
+	 * 動作中
+	 * @param value 動作中
+	 */
 	protected Progress(value: boolean): void {
 		this.progress = value;
 		this.onProgress.emit(value);
 	}
 
-	protected get isProgress(): boolean {
-		return this.progress;
-	}
-
-	// ~ event
-
-	public get currentSession(): any {
-		return this.privateCurrentSession;
-	}
-
-	/**
-	 * ロール取得
-	 * @returns none
-	 */
-	public get role(): IRole {
-		let result: IRole = {login: false, system: false, manager: false, user: false, public: false, categoly: 0, raw: AuthLevel.public};
-		if (this.privateCurrentSession) {
-			if (this.privateCurrentSession.role) {
-				result = this.privateCurrentSession.role;
-			}
-		}
-		return result;
-	}
-
-	public get modifyMoment(): object {
-		let result: object = null;
-		if (this.privateCurrentSession) {
-			result = moment(this.privateCurrentSession.modify);
-		}
-		return result;
-	}
-
 	/**
 	 * セッション取得
-	 * @param callback
-	 * @returns none
+	 *
+	 * @param callback コールバック
+	 * @returns none なし
 	 */
 	protected getSession(callback: Callback<object>): void {
-		this.session.get((error: IErrorObject, result: object): void => {
+		this.session.get((error: IErrorObject, result: ISession): void => {
 			if (!error) {
 				this.privateCurrentSession = result;
 				callback(null, result);
@@ -106,16 +141,20 @@ export abstract class SessionableComponent {
 	}
 
 	/**
-	 * @returns none
+	 * セッションに任意のオブジェクト追加
 	 *
-	 * data  session.data field
-	 *
+	 * @param data 追加データ
+	 * @param callback コールバック
 	 */
-	protected putSessionData(data: object, callback: Callback<object>): void {
-		this.session.put(data, (error: IErrorObject, result: object): void => {
+	protected putSessionData(data: object, callback: Callback<ISession>): void {
+		this.session.put(data, (error: IErrorObject, results: ISession | null): void => {
 			if (!error) {
-				this.privateCurrentSession = result;
-				callback(null, result);
+				if (results) {
+					this.privateCurrentSession = results;
+					callback(null, results);
+				} else {
+					callback({code: -1, message:"error."}, null);
+				}
 			} else {
 				callback(error, null);
 			}

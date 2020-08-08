@@ -6,72 +6,72 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router: any = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
 
-const log4js: any = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
+const event = module.parent.exports.event;
 
-const usersConfig: any = require(path.join(_config, "default")).users;
+const logger: any = module.parent.exports.logger;
+
+const ConfigModule: any = module.parent.exports.config;
+const usersConfig: any = ConfigModule.users;
+
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Articles: any = require("./controller");
-const articles: any = new Articles(module.parent.exports.event);
+const articles: any = new Articles(event, ConfigModule, logger);
 
 articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.get("/articles/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/articles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
-			gatekeeper.catch(response, () => {
-				articles.query(request, response);
-			});
-		}]);
+				gatekeeper.catch(response, () => {
+					articles.query(request, response);
+				});
+			}]);
 
-		router.get("/articles/auth/count/:query", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/articles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
-			gatekeeper.catch(response, () => {
-				articles.count(request, response);
-			});
-		}]);
+				gatekeeper.catch(response, () => {
+					articles.count(request, response);
+				});
+			}]);
 
-		router.get("/articles/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
-			(request: {params: {id: string}}, response: object): void => {
-			gatekeeper.catch(response, () => {
-				articles.get(request, response);
-			});
-		}]);
+		router.get("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+			(request: { params: { id: string } }, response: object): void => {
+				gatekeeper.catch(response, () => {
+					articles.get(request, response);
+				});
+			}]);
 
-		router.post("/articles/auth", [gatekeeper.guard, gatekeeper.authenticate,
+		router.post("/articles/auth", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
-			gatekeeper.catch(response, () => {
-				articles.post(request, response);
-			});
-		}]);
+				gatekeeper.catch(response, () => {
+					articles.post(request, response);
+				});
+			}]);
 
-		router.put("/articles/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
-			(request: {params: {id: string}}, response: object): void => {
-			gatekeeper.catch(response, () => {
-				articles.put(request, response);
-			});
-		}]);
+		router.put("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+			(request: { params: { id: string } }, response: object): void => {
+				gatekeeper.catch(response, () => {
+					articles.put(request, response);
+				});
+			}]);
 
-		router.delete("/articles/auth/:id", [gatekeeper.guard, gatekeeper.authenticate,
-			(request: {params: {id: string}}, response: object): void => {
-			gatekeeper.catch(response, () => {
-				articles.delete(request, response);
-			});
-		}]);
+		router.delete("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+			(request: { params: { id: string } }, response: object): void => {
+				gatekeeper.catch(response, () => {
+					articles.delete(request, response);
+				});
+			}]);
 
 	} else {
 		console.error("init error. (article) " + error.message);

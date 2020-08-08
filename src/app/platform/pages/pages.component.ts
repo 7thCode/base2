@@ -6,55 +6,80 @@
 
 "use strict";
 
-import {IErrorObject, IPageModelContent} from "../../../../types/universe";
+import {IErrorObject, IPageModelContent} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component} from "@angular/core";
-import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
+import {Component, OnInit} from "@angular/core";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
-import {ConstService} from "../base/services/const.service";
-import {SessionService} from "../base/services/session.service";
 import {PageDialogComponent} from "./page-dialog/page-dialog.component";
+
+import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
 
+/**
+ * ページ
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "pages",
 	templateUrl: "./pages.component.html",
 	styleUrls: ["./pages.component.css"],
 })
-
-/**
- *
- *
- * @since 0.01
- */
-export class PagesComponent extends GridViewComponent {
+export class PagesComponent extends GridViewComponent implements OnInit {
 
 	public path = "";
 
+	/**
+	 * @constructor
+	 * @param session
+	 * @param pageSerrvice
+	 * @param change
+	 * @param matDialog
+	 * @param snackbar
+	 */
 	constructor(
 		protected session: SessionService,
-		protected http: HttpClient,
-		protected constService: ConstService,
-		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
-		protected observableMedia: MediaObserver,
-		protected snackbar: MatSnackBar
+		private pageSerrvice: PagesService,
+		private snackbar: MatSnackBar,
 	) {
-		super(session, http, change, matDialog, observableMedia);
-		this.service = new PagesService(http, constService);
-	}
-
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
+		super(session, matDialog);
+		this.service = pageSerrvice;
 	}
 
 	/**
-	 * @returns none
+	 *
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
+	}
+
+	/**
+	 * リストビューデコレータ
+	 * @param object
+	 */
+	protected toListView(object: any): any {
+		object.cols = 1;
+		object.rows = 1;
+		return object;
+	}
+
+	public ngOnInit(): void {
+		this.sort = {};
+		super.ngOnInit();
+	}
+
+	/**
+	 *
+	 * ページ作成ダイアログ
 	 */
 	public createDialog(): void {
 
@@ -70,8 +95,9 @@ export class PagesComponent extends GridViewComponent {
 			accessory: {},
 		};
 
-		const dialog: any = this.matDialog.open(PageDialogComponent, {
-			width: "90vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
@@ -95,18 +121,23 @@ export class PagesComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * 検索
 	 */
 	public findByPath(): void {
 		this.query = {};
+		this.page = 0;
 		if (this.path) {
 			this.query = {"content.path": {$regex: this.path}};
 		}
 
-		this.draw((error: IErrorObject, filtered: object[]): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
-				this.Complete("", filtered);
+				if (results) {
+					this.results = results;
+					this.Complete("", results);
+				} else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}
@@ -114,13 +145,15 @@ export class PagesComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * ページ更新ダイアログ
+	 * @param id ターゲット
 	 */
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
-				const dialog = this.matDialog.open(PageDialogComponent, {
-					width: "90vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
+					width: "fit-content",
+					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,
 				});
@@ -147,7 +180,8 @@ export class PagesComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * ページ削除
+	 * @param id ターゲット
 	 */
 	public onDelete(id: string): void {
 		this.Progress(true);
@@ -159,15 +193,6 @@ export class PagesComponent extends GridViewComponent {
 			}
 			this.Progress(false);
 		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	protected toListView(object: any): any {
-		object.cols = 1;
-		object.rows = 1;
-		return object;
 	}
 
 }

@@ -6,68 +6,134 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../types/universe";
+import {Callback, IErrorObject} from "../../../types/platform/universe";
 
-import {MediaMatcher} from "@angular/cdk/layout";
+import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
-import {HttpClient} from "@angular/common/http";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {MatDialog, MatSidenav, MatSnackBar} from "@angular/material";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatSidenav} from "@angular/material/sidenav";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {AccountDialogComponent} from "./accounts/account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts/accounts.component";
-import {AccountsService} from "./accounts/accounts.service";
 import {ResponsiveComponent} from "./base/components/responsive.component";
-import {fadeAnimation} from "./base/library/fade-animation";
-import {ConstService} from "./base/services/const.service";
-import {SessionService} from "./base/services/session.service";
-import {FilesComponent} from "./files/files.component";
-import {PagesComponent} from "./pages/pages.component";
-import {VaultsComponent} from "./vaults/vaults.component";
 
+import {environment} from '../../environments/environment';
+
+import {AccountsService} from "./accounts/accounts.service";
+import {SessionService} from "./base/services/session.service";
+
+import {fadeAnimation} from "./base/library/fade-animation";
+
+/**
+ * プラットフォーム
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "platform-root",
 	templateUrl: "./platform.component.html",
 	styleUrls: ["./platform.component.css"],
 	animations: [fadeAnimation], // register the animation,
 })
-
-/**
- *
- *
- * @since 0.01
- */
 export class PlatformComponent extends ResponsiveComponent implements OnInit, OnDestroy {
-
-	private accountsService: AccountsService;
 
 	public widthValue: number;
 	public sock: any;
 	public date: Date;
 
-	@ViewChild("sidenav", {static: false}) protected sidenav: MatSidenav;
-	@ViewChild(AccountsComponent, {static: true}) protected accountsComponent: AccountsComponent;
-	@ViewChild(VaultsComponent, {static: true}) protected vaultsComponent: VaultsComponent;
-	@ViewChild(PagesComponent, {static: true}) protected pagesComponent: PagesComponent;
-	@ViewChild(FilesComponent, {static: true}) protected filesComponent: FilesComponent;
+	public device: string;
 
+	@ViewChild("sidenav") protected sidenav: MatSidenav;
+	@ViewChild(AccountsComponent) protected accountsComponent: AccountsComponent;
+
+	private accountsService: AccountsService;
+
+	/**
+	 *
+	 * @param session
+	 * @param accountService
+	 * @param change
+	 * @param overlay
+	 * @param snackbar
+	 * @param elementRef
+	 * @param matDialog
+	 * @param breakpointObserver
+	 */
 	constructor(
-		public session: SessionService,
-		public http: HttpClient,
-		public constService: ConstService,
-		public media: MediaMatcher,
-		public change: ChangeDetectorRef,
+		protected session: SessionService,
 		protected overlay: Overlay,
 		protected snackbar: MatSnackBar,
+		protected breakpointObserver: BreakpointObserver,
+		private accountService: AccountsService,
+		private change: ChangeDetectorRef,
 		private elementRef: ElementRef,
 		private matDialog: MatDialog,
 	) {
-		super(session, change, overlay, snackbar, media);
-		this.accountsService = new AccountsService(http, constService);
-		this.sock = new WebSocket(constService.webSocket);
+		super(session, overlay, snackbar, breakpointObserver);
+		this.widthValue = 0;
+		this.sock = null;
+		this.date = new Date();
+		this.device = "";
+		this.accountsService = accountService;
+		this.sock = new WebSocket(environment.webSocket);
 	}
 
-	public close(opened) {
+	/*
+	*
+	*
+	* */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
+	}
+
+	/**
+	 * アカウント参照
+	 *
+	 * @param id アカウントレコードID
+	 * @param callback コールバック
+	 */
+	private get(id: string, callback: Callback<any>): void {
+		this.Progress(true);
+		this.accountsService.get(id, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 * アカウント更新
+	 *
+	 * @param id アカウントレコードID
+	 * @param data 更新データ
+	 * @param callback コールバック
+	 */
+	private update(id: string, data: object, callback: Callback<any>): void {
+		this.Progress(true);
+		this.accountsService.put(id, data, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 *
+	 * @param opened
+	 */
+	public close(opened: any): void {
 		if (opened) {
 			this.sidenav.close().then(() => {
 
@@ -75,66 +141,127 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		}
 	}
 
-	// test
-	public onPan(event) {
-		// 	console.log(event);
+	/**
+	 *
+	 * @param event
+	 */
+	public onPan(event: any): void {
 	}
 
-	public onTap(event) {
-		// 	console.log(event);
+	/**
+	 *
+	 * @param event
+	 */
+	public onTap(event: any): void {
 	}
 
-	public ngOnInit() {
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
+		super.ngOnInit();
+
 		this.Progress(true);
 
+		this.isHandset.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "handset";
+			}
+		});
+
+		this.isTablet.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "tablet";
+			}
+		});
+
+		this.isDesktop.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "desktop";
+			}
+		});
+
 		// for ws
-		this.sock.addEventListener("open", (e) => {
+		this.sock.addEventListener("open", (e: any) => {
 		});
 
-		this.sock.addEventListener("message", (e) => {
-			// 	console.log(JSON.parse(e.data).username);
+		this.sock.addEventListener("message", (e: any) => {
 		});
 
-		this.sock.addEventListener("close", (e) => {
+		this.sock.addEventListener("close", (e: any) => {
 		});
 
-		this.sock.addEventListener("error", (e) => {
+		this.sock.addEventListener("error", (e: any) => {
 		});
 
-		this.getSession((error: IErrorObject, session: object): void => {
+		this.getSession((error: IErrorObject, session: object | null): void => {
 			this.widthValue = 200;
 			this.Progress(false);
 		});
 	}
 
+	/**
+	 *
+	 */
 	public ngOnDestroy(): void { //
 	}
 
+	/**
+	 *
+	 * @param width 幅
+	 */
 	public setWidth(width: string): void {
 	}
 
+	/**
+	 *
+	 * @param data
+	 */
 	public onRegist(data: any): void { //
 	}
 
+	/**
+	 *
+	 * @param data
+	 */
 	public onPassword(data: any): void { //
 	}
 
+	/**
+	 *
+	 * @param data
+	 */
 	public onLogin(data: any): void {
 		location.reload();
 	}
 
+	/**
+	 *
+	 * @param data
+	 */
 	public onLogout(data: any): void {
 		location.reload();
 	}
 
+	/**
+	 *
+	 */
 	public onUpdateAvatar(): void {
 		this.onComplete({type: "", value: null});
 	}
 
+	/**
+	 *
+	 * @param progress
+	 */
 	public onProgressed(progress: any): void {
 		this.Progress(progress);
 	}
 
+	/**
+	 * コンプリート
+	 * @param event
+	 */
 	public onComplete(event: any): void {
 		switch (event.type) {
 			case "error" :
@@ -147,15 +274,23 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		});
 	}
 
+	/**
+	 *
+	 * @param viewName
+	 */
 	public changeView(viewName: string): void {
 	}
 
+	/**
+	 * 更新ダイアログ
+	 */
 	public updateDialog(): void {
 		const id: string = this.currentSession.username;
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(AccountDialogComponent, {
-					width: "90vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
+					width: "fit-content",
+					height: "fit-content",
 					data: {
 						session: this.currentSession,
 						user: result,
@@ -183,30 +318,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 			} else {
 				this.errorBar(error);
 			}
-		});
-	}
-
-	private get(id: string, callback: Callback<any>): void {
-		this.Progress(true);
-		this.accountsService.get(id, (error: IErrorObject, result: any): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
-		});
-	}
-
-	private update(id: string, data: object, callback: Callback<any>): void {
-		this.Progress(true);
-		this.accountsService.put(id, data, (error: IErrorObject, result: any): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
 		});
 	}
 }

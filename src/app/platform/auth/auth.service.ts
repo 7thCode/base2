@@ -6,14 +6,16 @@
 
 "use strict";
 
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
+
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {Callback, IErrorObject} from "../../../../types/universe";
-import {ConstService} from "../base/services/const.service";
+import { environment } from '../../../environments/environment';
+
 import {HttpService} from "../base/services/http.service";
 import {PublicKeyService} from "../base/services/publickey.service";
 
@@ -21,28 +23,51 @@ import {PublicKeyService} from "../base/services/publickey.service";
 	providedIn: "root",
 })
 
+/**
+ * AUTHサービス
+ *
+ *
+ */
 export class AuthService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 * @param PublicKey
+	 */
 	constructor(
 		protected http: HttpClient,
-		public constService: ConstService,
 		private PublicKey: PublicKeyService,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
+	/**
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号を返すコールバック
+	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-			const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			callback(null, rsa.encrypt(plain, "base64"));
 		} catch (e) {
 			callback(e, "");
 		}
 	}
 
+	/**
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号を返すコールバック
+	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>) {
 		try {
-			const use_publickey = this.constService.use_publickey;
+			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
 				AuthService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
 					if (!error) {
@@ -59,6 +84,34 @@ export class AuthService extends HttpService {
 		}
 	}
 
+	/**
+	 * ログイン済み?
+	 *
+	 * @param callback コールバック
+	 */
+	public is_logged_in(callback: Callback<any>): void {
+		this.http.get(this.endPoint + "/auth/local/is_logged_in", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 229"}, null);
+		});
+	}
+
+	/**
+	 * ログイン
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
+	 */
 	public login(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -67,6 +120,7 @@ export class AuthService extends HttpService {
 						this.http.post(this.endPoint + "/auth/local/login", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 							if (result) {
 								if (result.code === 0) {
+									localStorage.setItem("QR", value);
 									callback(null, result.value);
 								} else {
 									callback(result, null);
@@ -75,7 +129,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 1019"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -87,6 +141,14 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * TOTPありログイン
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param code TOTPコード
+	 * @param callback コールバック
+	 */
 	public login_totp(username: string, password: string, code: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -103,7 +165,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 7241"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -115,6 +177,61 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * トークンログイン
+	 *
+	 * @param token トークン
+	 * @param callback コールバック
+	 */
+	public login_with_token(token: string, callback: Callback<any>): void {
+		this.http.post(this.endPoint + "/auth/local/login", {content: token}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					localStorage.setItem("QR", token);
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 8923"}, null);
+		});
+	}
+
+	/**
+	 * ログイントークン参照
+	 * 自身のログイントークン
+	 *
+	 * @param callback ログイントークンを返すコールバック
+	 */
+	public get_login_token(callback: Callback<any>): void {
+		const value: any = localStorage.getItem("QR");
+		this.http.get(this.endPoint + "/auth/token/qr/" + encodeURIComponent(value), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 7995"}, null);
+		});
+	}
+
+	/**
+	 * ユーザ登録
+	 * メール存在確認あり
+	 *
+	 * @param username ユーザ名(メールアドレス)
+	 * @param password パスワード
+	 * @param metadata メタデータ
+	 * @param callback コールバック
+	 */
 	public regist(username: string, password: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
@@ -131,7 +248,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 2761"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -143,6 +260,15 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * 直接ユーザ登録
+	 * メール存在確認なし
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param metadata メタデータ
+	 * @param callback コールバック
+	 */
 	public regist_immediate(username: string, password: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
@@ -159,7 +285,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 5714"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -171,6 +297,14 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * パスワード更新
+	 * メール存在確認あり
+	 *
+	 * @param username ユーザ名(メールアドレス)
+	 * @param password パスワード
+	 * @param callback コールバック
+	 */
 	public password(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key): void => {
 			if (!error) {
@@ -187,7 +321,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 6193"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -199,6 +333,14 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * パスワード更新
+	 * メール存在確認なし
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
+	 */
 	public password_immediate(username: string, password: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
@@ -215,7 +357,7 @@ export class AuthService extends HttpService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 7291"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -227,10 +369,16 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * ログアウト
+	 *
+	 * @param callback コールバック
+	 */
 	public logout(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/auth/logout", this.httpOptions).pipe(retry(3)).subscribe((account: any): void => {
 			if (account) {
 				if (account.code === 0) {
+					localStorage.removeItem("QR");
 					callback(null, account.value);
 				} else {
 					callback(null, null);
@@ -239,7 +387,30 @@ export class AuthService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 2555"}, null);
+		});
+	}
+
+	/**
+	 * ログイン
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
+	 */
+	public withdraw(callback: Callback<any>): void {
+		this.http.post(this.endPoint + "/auth/local/remove", {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 1019"}, null);
 		});
 	}
 

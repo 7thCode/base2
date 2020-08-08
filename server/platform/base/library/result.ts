@@ -11,6 +11,12 @@ export class Result {
 	private message: string;
 	private value: any;
 
+	/**
+	 *
+	 * @param code
+	 * @param message
+	 * @param value
+	 */
 	constructor(code: number, message: string, value: any) {
 		this.code = code;
 		this.message = message;

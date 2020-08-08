@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback} from "../../../../types/universe";
+import {Callback} from "../../../../types/platform/universe";
 
 const cipherCrypto: any = require("crypto");
 const NodeRSA: any = require("node-rsa");
@@ -15,12 +15,13 @@ const seed: string = "0123456789abcdef";
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string =  global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
+const _config: string = path.join(project_root, "config");
 
-const config: any = require(path.join(_config, "default")).systems;
+const ConfigModule: any = require(path.join(_config, "default"));
+const config: any = ConfigModule.systems;
+
 const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
 
 /**
@@ -28,6 +29,9 @@ const LocalAccount: any = require(path.join(models, "platform/accounts/account")
  */
 export class Cipher {
 
+	/**
+	 * @constructor
+	 */
 	constructor() {
 	}
 
@@ -87,7 +91,7 @@ export class Cipher {
 	 * @param bits　number
 	 * @returns PublicKey
 	 */
-	public static KeyPair(bits: number): {private: string, public: string} {
+	public static KeyPair(bits: number): { private: string, public: string } {
 		const key: any = new NodeRSA({b: bits});
 		return {private: key.exportKey("pkcs1-private-pem"), public: key.exportKey("pkcs1-public-pem")};
 	}
@@ -114,6 +118,13 @@ export class Cipher {
 		return rsa.decrypt(crypted, "utf8");
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param key
+	 * @param callback
+	 * @constructor
+	 */
 	public Token(username: string, key: string, callback: Callback<any>): void {
 		LocalAccount.findOne({$and: [{provider: "local"}, {username}]}).then((account: any): void => {
 			if (account) {
@@ -121,13 +132,20 @@ export class Cipher {
 				const encodedToken: any = Cipher.FixedCrypt(JSON.stringify(tokenObject), config.tokensecret);
 				callback(null, encodedToken);
 			} else {
-				callback({code: 1, message: "account not found."}, null);
+				callback({code: 1, message: "account not found. 2419"}, null);
 			}
 		}).catch((error: any): void => {
 			callback(error, null);
 		});
 	}
 
+	/**
+	 *
+	 * @param encodedToken
+	 * @param key
+	 * @param callback
+	 * @constructor
+	 */
 	public Account(encodedToken: string, key: string, callback: Callback<any>): void {
 		try {
 			const tokenString: string = Cipher.FixedDecrypt(encodedToken, config.tokensecret);
@@ -137,13 +155,13 @@ export class Cipher {
 					if (account) {
 						callback(null, account);
 					} else {
-						callback({code: 1, message: "account not found."}, null);
+						callback({code: 1, message: "account not found. 8119"}, null);
 					}
 				}).catch((error: any): void => {
 					callback(error, "");
 				});
 			} else {
-				callback({code: 1, message: "auth fail."}, null);
+				callback({code: 1, message: "auth fail. 2691"}, null);
 			}
 		} catch (exept) {
 			callback(exept, null);

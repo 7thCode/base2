@@ -11,20 +11,27 @@ export const router: any = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const modules: string = global._modules;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const modules: string = path.join(project_root, "server/platform/modules");
+const library: string = path.join(project_root, "server/platform/base/library");
+
+const event = module.parent.exports.event;
+
+const logger: any = module.parent.exports.logger;
+
+const ConfigModule: any = module.parent.exports.config;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 const Auth: any = require(path.join(modules, "auth/controller"));
-const auth: any = new Auth(module.parent.exports.event);
+const auth: any = new Auth(event, ConfigModule, logger);
 
 const Account: any = require("./controller");
-const accounts: any = new Account(module.parent.exports.event);
+const accounts: any = new Account(event, ConfigModule, logger);
 
-router.get("/accounts/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
@@ -34,7 +41,10 @@ router.get("/accounts/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.
 		});
 	}]);
 
-router.get("/accounts/auth/count/:query", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
@@ -44,9 +54,12 @@ router.get("/accounts/auth/count/:query", [gatekeeper.guard, gatekeeper.authenti
 		});
 	}]);
 
-router.get("/accounts/auth/:username", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -54,9 +67,12 @@ router.get("/accounts/auth/:username", [gatekeeper.guard, gatekeeper.authenticat
 		});
 	}]);
 
-router.put("/accounts/auth/:username", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -64,9 +80,32 @@ router.put("/accounts/auth/:username", [gatekeeper.guard, gatekeeper.authenticat
 		});
 	}]);
 
-router.delete("/accounts/auth/:username", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.get_self(request, response);
+		});
+	}]);
+
+/*
+*
+*/
+router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.put_self(request, response);
+		});
+	}]);
+
+/*
+*
+*/
+router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_manager(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -74,9 +113,12 @@ router.delete("/accounts/auth/:username", [gatekeeper.guard, gatekeeper.authenti
 		});
 	}]);
 
-router.get("/accounts/auth/is2fa/:username", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_id(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -84,9 +126,12 @@ router.get("/accounts/auth/is2fa/:username", [gatekeeper.guard, gatekeeper.authe
 		});
 	}]);
 
-router.post("/accounts/auth/set2fa/:username", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_name(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
@@ -94,13 +139,55 @@ router.post("/accounts/auth/set2fa/:username", [gatekeeper.guard, gatekeeper.aut
 		});
 	}]);
 
-router.post("/accounts/auth/reset2fa/:username", [gatekeeper.guard, gatekeeper.authenticate,
+/*
+*
+*/
+router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own(request, response, next);
+		auth.is_own_by_name(request, response, next);
 	},
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			accounts.post_reset_secret(request, response);
+		});
+	}]);
+
+/*
+*
+*/
+router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object, next: any): void => {
+		auth.is_own_by_id(request, response, next);
+	},
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.get_by_id(request, response);
+		});
+	}]);
+
+/*
+*
+*/
+router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object, next: any): void => {
+		auth.is_own_by_id(request, response, next);
+	},
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.put_by_id(request, response);
+		});
+	}]);
+
+/*
+*
+*/
+router.delete("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object, next: any): void => {
+		auth.is_manager(request, response, next);
+	},
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			accounts.delete_by_id(request, response);
 		});
 	}]);
 

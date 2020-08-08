@@ -12,11 +12,20 @@ export class Scheduler {
 
 	public ScheduledJobs: any;
 
+	/**
+	 *
+	 */
 	constructor() {
 		this.ScheduledJobs = [];
 	}
 
-	public Add(item: any) {
+	/**
+	 *
+	 * @param item
+	 * @returns none
+	 *
+	 */
+	public Add(item: any): void {
 		const job = schedule.scheduleJob(item.timing, item.job);
 		this.ScheduledJobs.push(job);
 	}

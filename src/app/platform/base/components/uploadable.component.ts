@@ -6,15 +6,15 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../../../types/universe";
+import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, OnInit} from "@angular/core";
+import {Directive, OnInit} from "@angular/core";
 
-import {ConstService} from "../services/const.service";
-import {FileService} from "../services/file.service";
-import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
+
+import {FilesService} from "../../files/files.service";
+import {SessionService} from "../services/session.service";
 
 /**
  * アップローダブルクラス
@@ -23,12 +23,26 @@ import {SessionableComponent} from "./sessionable.component";
  *
  * @since 0.01
  */
+
+@Directive()
 export abstract class UploadableComponent extends SessionableComponent implements OnInit {
 
-	protected fileService: FileService;
+	public endPoint: string;
+
+	protected filesService: FilesService;
 	protected bodysize: number;
 
-	protected static defaultValue(change, defaultValue): any {
+	protected constructor(
+		protected session: SessionService,
+		protected http: HttpClient,
+	) {
+		super(session);
+		this.filesService = new FilesService(http);
+		this.endPoint = this.filesService.endPoint;
+		this.bodysize = 200 * 1000 * 1000;  // default.
+	}
+
+	protected static defaultValue(change: any, defaultValue: any): any {
 		let result: any = defaultValue;
 		if (change) {
 			result = change.currentValue;
@@ -36,38 +50,20 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		return result;
 	}
 
-	public endPoint: string;
-
-	protected constructor(
-		protected session: SessionService,
-		protected http: HttpClient,
-		protected constService: ConstService,
-		protected change: ChangeDetectorRef,
-	) {
-		super(session, change);
-		this.fileService = new FileService(http, constService);
-		this.endPoint = this.fileService.endPoint;
-		this.bodysize = 200 * 1000 * 1000;  // default.
-	}
-
-	public ngOnInit(): void {
-		this.getSession((error: IErrorObject, session: object): void => {
-			this.bodysize = 200 * 1000 * 1000;
-		});
-	}
-
 	/**
+	 * ファイル削除
 	 * @returns none
 	 */
 	protected delete(name: string, callback: Callback<any>): void {
-		this.fileService.delete(name, callback);
+		this.filesService.delete(name, callback);
 	}
 
 	/**
+	 * ファイルアップロード
 	 * @returns none
 	 */
 	protected upload(name: string, url: string, callback: Callback<any>): void {
-		this.fileService.upload(name, this.getCategory(name, ""), url, callback);
+		this.filesService.upload(name, this.getCategory(name, ""), url, callback);
 	}
 
 	/**
@@ -78,6 +74,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * 単一ファイルアップロード
 	 * @returns none
 	 */
 	protected uploadFile(dropedFile: File, name: string, callback: Callback<any>): void {
@@ -94,15 +91,17 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			};
 			fileReader.readAsDataURL(dropedFile);
 		} else {
-			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte)"}, null);
+			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte) 8427"}, null);
 		}
 	}
 
 	/**
+	 * 複数ファイルアップロード
 	 * @returns none
 	 */
 	protected uploadFiles(path: string, dropedFiles: File[], callback: Callback<any>): void {
-		const promises: Array<Promise<any>> = [];
+	// 	const promises: Array<Promise<any>> = [];
+		const promises: Promise<any>[] = [];
 		const files: File[] = this.marshallingFiles(dropedFiles);
 		files.forEach((file: File) => {
 			const promise: Promise<any> = new Promise<any>((resolve, reject): void => {
@@ -125,6 +124,8 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * ビューデコレータ
+	 *
 	 * @returns none
 	 */
 	protected toView(data: any): any {
@@ -132,12 +133,21 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * トランスフォーマー
+	 *
 	 * @returns none
 	 */
 	protected confirmToModel(data: any): any {
 		return data;
 	}
 
+	/**
+	 * マーシャリング
+	 *
+	 * Files配列？からFiles配列へ。
+	 *
+	 * @returns none
+	 */
 	protected marshallingFiles(files: File[]): File[] { // fileset? to array.
 		const result: File[] = [];
 		for (let index: number = 0; index < files.length; index++) {
@@ -147,6 +157,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 *
 	 * @returns none
 	 */
 	protected parseExtensions(extensions: string): string[] {
@@ -154,7 +165,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
-	 * @returns none
+	 * ファイルエクステンションチエック
+	 *
+	 * @returns エクステンション
 	 */
 	protected hasExtension(file: { name: string }, extensions: string): boolean {
 		let result: boolean = false;
@@ -171,7 +184,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
-	 * @returns none
+	 * ファイルの拡張子
+	 *
+	 * @returns 拡張子
 	 */
 	protected Extension(file: { name: string }): string {
 		let result: string = "";
@@ -183,6 +198,10 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 * 拡張子集合に含まれる拡張子を持つファイルだけをフィルタ
+	 *
+	 * @param files ブラウザから渡されるファイル集合
+	 * @param extensions 拡張子集合
 	 * @returns none
 	 */
 	protected filterExtensionFiles(files: File[], extensions: string): File[] {
@@ -193,6 +212,15 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			}
 		});
 		return result;
+	}
+
+	/**
+	 * @returns none
+	 */
+	public ngOnInit(): void {
+		this.getSession((error: IErrorObject, session: object): void => {
+			this.bodysize = 200 * 1000 * 1000;
+		});
 	}
 
 }

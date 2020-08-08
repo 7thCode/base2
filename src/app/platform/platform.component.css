@@ -1,10 +1,5 @@
 .container {
     height: calc(100% - 60px);
-    position: absolute;
-    top: 60px;
-    bottom: 60px;
-    left: 0;
-    right: 0;
 }
 
 .sidenav {
@@ -13,8 +8,6 @@
     justify-content: center;
     width: 200px;
 }
-
-
 
 #progress {
     background-color: #ffffff00;

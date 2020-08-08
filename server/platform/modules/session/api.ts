@@ -11,24 +11,26 @@ export const router = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
+
+const event = module.parent.exports.event;
+const logger: any = module.parent.exports.logger;
+const config: any = module.parent.exports.config;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const Session: any = require("./controller");
-const session: any = new Session(module.parent.exports.event);
+const session: any = new Session(event, config, logger);
 
-router.get("/session/auth", [gatekeeper.guard,
+router.get("/session/auth", [gatekeeper.default,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			session.get(request, response);
 		});
 	}]);
 
-router.put("/session/auth", [gatekeeper.guard, gatekeeper.authenticate,
+router.put("/session/auth", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			session.put(request, response);

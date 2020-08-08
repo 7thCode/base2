@@ -6,15 +6,26 @@
 
 import { Subject } from "rxjs";
 
+/**
+ *
+ */
 export class InteractionChannel {
 
 	private subject = new Subject<any>();
 	private event = this.subject.asObservable();
 
+	/**
+	 *
+	 * @param data
+	 */
 	public publish(data: any): void {
 		this.subject.next(data);
 	}
 
+	/**
+	 *
+	 * @param callback
+	 */
 	public subscribe(callback: (data: any) => void): void {
 		this.event.subscribe(callback);
 	}

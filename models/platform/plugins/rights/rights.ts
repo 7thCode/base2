@@ -3,7 +3,7 @@
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
-import {AuthLevel} from "../../../../types/universe";
+import {AuthLevel} from "../../../../types/platform/universe";
 
 module.exports = exports = function RightsPlugin(schema: any, options: any) {
 

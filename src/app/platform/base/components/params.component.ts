@@ -6,31 +6,33 @@
 
 "use strict";
 
-import {ChangeDetectorRef, OnInit} from "@angular/core";
+import {Directive, OnInit} from "@angular/core";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 
-import {SessionService} from "../services/session.service";
 import {SessionableComponent} from "./sessionable.component";
+
+import {SessionService} from "../services/session.service";
 
 /**
  * パラメータ付きクラス
  *
  * @since 0.01
  */
+
+@Directive()
 export abstract class ParamsComponent extends SessionableComponent implements OnInit {
 
 	protected constructor(
 		protected session: SessionService,
-		protected change: ChangeDetectorRef,
-		protected route: ActivatedRoute
+		protected route: ActivatedRoute,
 	) {
-		super(session, change);
+		super(session);
 	}
 
 	/**
 	 * @returns none
 	 */
-	public ngOnInit() {
+	public ngOnInit(): void {
 		this.route.paramMap
 			.subscribe((params: ParamMap) => {
 			});

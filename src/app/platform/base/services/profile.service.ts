@@ -6,13 +6,14 @@
 
 "use strict";
 
-import {Callback} from "../../../../../types/universe";
+import {Callback} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "./const.service";
+import { environment } from '../../../../environments/environment';
+
 import {HttpService} from "./http.service";
 
 @Injectable({
@@ -26,13 +27,21 @@ import {HttpService} from "./http.service";
  */
 export class ProfileService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 */
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
+	/**
+	 * ユーザプロファイル参照
+	 *
+	 * @param callback ユーザプロファイルを戻すコールバック
+	 */
 	public get(callback: Callback<any>): any {
 		this.http.get(this.endPoint + "/profile/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -50,11 +59,17 @@ export class ProfileService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 5222"}, null);
 		});
 	}
 
-	public put(content: object, callback: Callback<any>): any {
+	/**
+	 * ユーザプロファイル更新
+	 *
+	 * @param content ユーザプロファイル
+	 * @param callback ユーザプロファイルを戻すコールバック
+	 */
+	public put(content: object, callback: Callback<any>): void {
 		this.http.put(this.endPoint + "/profile/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -66,7 +81,7 @@ export class ProfileService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 1521"}, null);
 		});
 	}
 

@@ -7,6 +7,6 @@
 	<button-element *ngIf="element.type === 'button'" (onClick)="click($event)" [description]="element"></button-element>
 	<page-edit *ngIf="element.type === 'element'" [fxLayout]="element.layout" (onChange)="change($event)" (onClick)="click($event)" (onValid)="valid($event)" [description]="element"></page-edit>
 	<div *ngIf="element.type === 'div'">{{element.content}}</div>
-	<img *ngIf="element.type === 'img'" [src]="element.content"/>
+	<img *ngIf="element.type === 'img'" [src]="element.content" alt=""/>
 </div>
 

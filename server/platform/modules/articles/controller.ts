@@ -6,12 +6,13 @@
 
 "use strict";
 
-import {IArticleModel} from "../../../../types/server";
+import {IArticleModel} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const controllers: string = global._controllers;
-const models: string = global._models;
+const project_root: string = process.cwd();
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
+const models: string = path.join(project_root, "models");
 
 const Updatable: any = require(path.join(controllers, "updatable_controller"));
 
@@ -21,8 +22,13 @@ export class Articles extends Updatable {
 
 	protected Model: any;
 
-	constructor(event: any) {
-		super(event);
+	/**
+	 * @param event
+	 * @param config
+	 * @param logger
+	 */
+	constructor(event: any, config: object, logger: object) {
+		super(event, config, logger);
 		this.Model = Article as IArticleModel;
 	}
 

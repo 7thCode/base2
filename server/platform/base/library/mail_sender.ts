@@ -6,8 +6,8 @@
 
 "use strict";
 
-import {IMailModule, IMailSender} from "../../../../types/server";
-import {IErrorObject} from "../../../../types/universe";
+import {IMailModule, IMailSender} from "../../../../types/platform/server";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailSender implements IMailModule {
 
@@ -16,12 +16,27 @@ export class MailSender implements IMailModule {
 	private smtpUser: any;
 	private account: any;
 
+	/**
+	 *
+	 * @param mailsetting
+	 * @param mailaccount
+	 * @constructor
+	 */
 	constructor(mailsetting: any, mailaccount: string) {
 		this.mailer = require("nodemailer");
 		this.account = mailaccount;
 		this.mailsetting = mailsetting;
 	}
 
+	/**
+	 *
+	 * @param mailAddress
+	 * @param bccAddress
+	 * @param title
+	 * @param message
+	 * @param callback
+	 * @returns none
+	 */
 	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
 
 		this.smtpUser = this.mailer.createTransport(this.mailsetting); // SMTPの接続
@@ -44,7 +59,7 @@ export class MailSender implements IMailModule {
 				callback(e);
 			}
 		} else {
-			callback({code: -1, message: "send error"});
+			callback({code: -1, message: "send error. 4002"});
 		}
 	}
 }

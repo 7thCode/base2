@@ -6,13 +6,13 @@
 
 "use strict";
 
-import {IMailModule, IMailSender} from "../../../../types/server";
-import {IErrorObject} from "../../../../types/universe";
+import {IMailModule, IMailSender} from "../../../../types/platform/server";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailSender2 implements IMailModule {
 
-	private smtpUser;
-	private account;
+	private smtpUser: any;
+	private account: any;
 
 	constructor(mailsetting: any, mailaccount: string) {
 		const mailer: any = require("nodemailer");
@@ -40,7 +40,7 @@ export class MailSender2 implements IMailModule {
 				callback(e);
 			}
 		} else {
-			callback({code: -1, message: "send error"});
+			callback({code: -1, message: "send error. 2513"});
 		}
 	}
 }

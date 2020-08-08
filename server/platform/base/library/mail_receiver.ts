@@ -6,22 +6,31 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailReceiver {
 
 	private inbox: any;
 	private conv: any;
 
+	/**
+	 *
+	 */
 	constructor() {
 		const iconv = require("iconv");
 		this.conv = new iconv.Iconv("UTF-8", "UTF-8");
 		this.inbox = require("inbox");
 	}
 
+	/**
+	 *
+	 * @param receiverSetting
+	 * @param connect
+	 * @param receive
+	 */
 	public connect(receiverSetting: any, connect: (error: IErrorObject) => {}, receive: (message: any, body: any) => {}): void {
 
-		let imap: any;
+		let imap: any = null;
 
 		if (receiverSetting.type === "imap") {
 			imap = this.inbox.createConnection(

@@ -1,24 +1,33 @@
 module.exports = {
 	systems: {
-		status: "debug",
+		status: "production",
 		mode: 1,
+
+		is_cluster: true,
+
+		timezone: "Asia/Tokyo",
+
 		port: 3000,
-		socket_port: 3001,
 		domain: "localhost:3000",
 		protocol: "http",
+
+		socket_port: 3001,
+		socket_domain: "localhost:3001",
+		socket_protocol: "ws",
+
 		cache1: "max-age=86400",
 		cache: "no-cache",
 		timeout: 100000,
 		bodysize: "200mb",
-		cors_enable: false,
-		ua: "base2",
+
+		ua: "base1",
 		use_publickey: false,
 		dav: false,
 		db: {
 			address: "localhost",
-			user: "base2master",
+			user: "base1master",
 			password: "33550336",
-			name: "base2",
+			name: "base1",
 			backup: {
 				hour: 0,
 				minute: 0
@@ -29,7 +38,13 @@ module.exports = {
 			member: true,
 			expire: 60
 		},
-		sessionname: "base2",
+		sessionname: "base1",
+		extendheader_enable: true,
+		extendheader: [
+			["Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"],
+			["Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Access-Control-Allow-Origin"],
+			["Access-Control-Allow-Credentials", true],
+		],
 		sessionsecret: "Daisy, Daisy.",
 		tokensecret: "Yes We therefore I think we",
 		key2: "Man is a thinking reed",
@@ -113,7 +128,7 @@ module.exports = {
 		initfiles: [
 			{
 				type: 0,
-				user: {user_id: "000000000000000000000000",role: {raw: 100000} },
+				user: {user_id: "000000000000000000000000", role: {raw: 100000}},
 				path: "/server/platform/assets/img",
 				name: "blank.png",
 				content: {
@@ -122,6 +137,23 @@ module.exports = {
 				}
 			}
 		],
+
+		//      passport
+		//      clientID: "1676184429271661"
+		//      clientSecret: "f3a9ad16cf0d73cd38dfc3aa0843c2fe"
+		//
+		//      base1 OK
+		// 		clientID: "1091756834285901",
+		// 		clientSecret: "f26703b087f2c5c3e8c8c4e7fa335793",
+		//
+		//		aig-tokyo NG
+		// 		clientID: "2711714689085104",
+		//		clientSecret: "39914ea6a1a8fcf8561f472d937c20b2",
+		//
+		//		aig1 NG
+		//      clientID: "2881565078637042",
+		//      clientSecret: "d9803a8acf05e4dd11dc487e006167c2",
+		//
 		facebook1: {
 			enable: "true",
 			redirect: "/",
@@ -129,29 +161,29 @@ module.exports = {
 				clientID: "1676184429271661",
 				clientSecret: "f3a9ad16cf0d73cd38dfc3aa0843c2fe",
 				callbackURL: "http://localhost:3000/auth/facebook/callback",
-				profileFields: ['id', 'emails', 'name']
+				profileFields: ['id', 'email', 'name']
 			},
 		},
-		facebook: {
+		facebook: { // base1
 			enable: "true",
 			redirect: "/",
 			key: {
-				clientID: "1676184429271661",
-				clientSecret: "f3a9ad16cf0d73cd38dfc3aa0843c2fe",
+				clientID: "314094379736984",
+				clientSecret: "17e3a37b4e7296c97f43c70acbac00f3",
 				callbackURL: "http://localhost:3000/auth/facebook/callback",
-				profileFields: ['id', 'emails', 'name']
+				profileFields: ['id', 'email', 'name']
 			},
 		},
-		apple1: {
+		apple: {
 			enable: "true",
 			redirect: "/",
+			KeyFile: "authkey.p8",
 			key: {
-				clientID: "APPLE_SERVICE_ID",
+				clientID: "com.aigtokyo.service",
 				callbackURL: "http://localhost:3000/auth/apple/callback",
-				clientSecret: "",
-				teamId: "APPLE_TEAM_ID",
-				keyIdentifier: "",
-				privateKeyPath: ""
+				teamId: "G3L3422HGJ",
+				keyIdentifier: "L822486XZP",
+				privateKeyPath: "",
 			},
 		},
 		twitter1: {
@@ -190,7 +222,7 @@ module.exports = {
 				"callbackURL": "https://seventh-code.com/auth/googleplus/callback"
 			}
 		},
-		mailer: {
+		mailer1: {
 			type: "mail",
 			account: "postmaster@seventh-code.com",
 			setting: {
@@ -202,7 +234,7 @@ module.exports = {
 				}
 			}
 		},
-		mailer2: {
+		mailer: {
 			type: "mailgun",
 			account: "postmaster@seventh-code.com",
 			setting: {

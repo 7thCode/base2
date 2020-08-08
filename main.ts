@@ -2,10 +2,10 @@
 namespace Electron {
 
 	const {app, Menu, BrowserWindow} = require("electron");
-	const url = require("url");
-	const path = require("path");
+	const url: any = require("url");
+	const path: any = require("path");
 
-	let mainWindow;
+	let mainWindow = null;
 
 	function createWindow() {
 		mainWindow = new BrowserWindow({
@@ -70,6 +70,6 @@ namespace Electron {
 		},
 	];
 
-	const menu = Menu.buildFromTemplate(templateMenu);
+	const menu: any = Menu.buildFromTemplate(templateMenu);
 	Menu.setApplicationMenu(menu);
 }

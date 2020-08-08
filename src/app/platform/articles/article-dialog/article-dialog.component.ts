@@ -8,24 +8,29 @@
 
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {Component, Inject, NgZone, ViewChild} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {take} from "rxjs/operators";
-
-@Component({
-	selector: "article-dialog",
-	styleUrls: ["./article-dialog.component.css"],
-	templateUrl: "./article-dialog.component.html",
-})
 
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "article-dialog",
+	styleUrls: ["./article-dialog.component.css"],
+	templateUrl: "./article-dialog.component.html",
+})
 export class ArticleDialogComponent {
 
-	@ViewChild("autosize", {static: false}) public autosize: CdkTextareaAutosize;
+	@ViewChild("autosize") public autosize: CdkTextareaAutosize;
 
+	/**
+	 * @constructor
+	 * @param data
+	 * @param matDialogRef
+	 * @param zone
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
@@ -33,18 +38,30 @@ export class ArticleDialogComponent {
 		private zone: NgZone) {
 	}
 
+	/**
+	 *
+	 */
 	public triggerResize() {
 		this.zone.onStable.pipe(take(1)).subscribe(() => this.autosize.resizeToFitContent(true));
 	}
 
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 *
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}

@@ -11,31 +11,33 @@ export const router: any = express.Router();
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
+
+const event = module.parent.exports.event;
+const config: any = module.parent.exports.config;
+const logger: any = module.parent.exports.logger;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
 const PublicKey: any = require("./controller");
-const publickey: any = new PublicKey(module.parent.exports.event);
+const publickey: any = new PublicKey(event, config, logger);
 
-router.get("/publickey/fixed", [gatekeeper.guard,
+router.get("/publickey/fixed", [gatekeeper.default,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			publickey.get_fixed_public_key(request, response);
 		});
 	}]);
 
-router.get("/publickey/dynamic", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/publickey/dynamic", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			publickey.get_public_key(request, response);
 		});
 	}]);
 
-router.get("/publickey/token", [gatekeeper.guard, gatekeeper.authenticate,
+router.get("/publickey/token", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			publickey.get_access_token(request, response);

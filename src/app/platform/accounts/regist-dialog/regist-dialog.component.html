@@ -8,7 +8,8 @@
 
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 			<mat-form-field class="form-field">
-				<input matInput type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">
+				<mat-label>Mail Address...</mat-label>
+				<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">
 				<mat-error *ngIf="username.errors?.email;">有効なメールアドレスで</mat-error>
 				<mat-error *ngIf="username.errors?.required;">入力してください</mat-error>
 				<mat-error *ngIf="username.errors?.maxlength">長すぎます</mat-error>
@@ -16,7 +17,8 @@
 			</mat-form-field>
 
 			<mat-form-field>
-				<input matInput type="text" placeholder="Nickname" [(ngModel)]="content.nickname" #nickname="ngModel" name="nickname" required minlength="2" maxlength="255">
+				<mat-label>Nickname...</mat-label>
+				<input matInput autocomplete="off" type="text" placeholder="Xxxxxx..." [(ngModel)]="content.nickname" #nickname="ngModel" name="nickname" required minlength="2" maxlength="255">
 				<mat-hint>3文字以上500文字まで</mat-hint>
 				<mat-error *ngIf="nickname.errors?.required;">入力してください</mat-error>
 				<mat-error *ngIf="nickname.errors?.maxlength">長すぎます</mat-error>
@@ -24,7 +26,8 @@
 			</mat-form-field>
 
 			<mat-form-field class="form-field">
-				<input matInput type="password" placeholder="Password" [(ngModel)]="content.password" #password="ngModel" name="password" required minlength="6" maxlength="1000">
+				<mat-label>Password...</mat-label>
+				<input matInput type="password" placeholder="xxxxxx..." [(ngModel)]="content.password" #password="ngModel" name="password" required minlength="6" maxlength="1000">
 				<mat-hint>6文字以上1000文字まで</mat-hint>
 				<mat-error *ngIf="password.errors?.required;">入力してください</mat-error>
 				<mat-error *ngIf="password.errors?.maxlength">長すぎます</mat-error>
@@ -32,7 +35,8 @@
 			</mat-form-field>
 
 			<mat-form-field class="form-field">
-				<input matInput type="password" placeholder="Confirm Password" [(ngModel)]="content.confirm_password" #confirm_password="ngModel" name="confirm_password" required [validateEquals]="password">
+				<mat-label>Password Again...</mat-label>
+				<input matInput type="password" placeholder="xxxxxx..." [(ngModel)]="content.confirm_password" #confirm_password="ngModel" name="confirm_password" required [validateEquals]="password">
 				<mat-hint>6文字以上1000文字まで</mat-hint>
 				<mat-error *ngIf="confirm_password.errors?.required;">確認用パスワードを入力してください</mat-error>
 				<mat-error *ngIf="confirm_password.errors?.validateEquals">確認用パスワードが一致しません</mat-error>
@@ -44,7 +48,7 @@
 	<div class="spacer"></div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()">OK</button>
+		<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
 		<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</div>
 </div>

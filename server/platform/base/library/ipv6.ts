@@ -6,12 +6,19 @@
 
 "use strict";
 
+const os = require("os");
+
 const V6Module: any = require("ipv6");
 
 const v6: any = V6Module.v6;
 
 export class IPV6 {
 
+	/**
+	 * address conv
+	 * @param address V4address
+	 * @returns address V6address
+	 */
 	public static ToIPV6(address: string): string {
 		let result: string = address;
 		const v6Address: any = new v6.Address(result);
@@ -25,6 +32,11 @@ export class IPV6 {
 		return result;
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @returns ipv6
+	 */
 	public static GetIPV6(request: any): string {
 		let result: string = "::ffff:0.0.0.0";
 		if (request.headers["x-forwarded-for"]) {
@@ -43,6 +55,31 @@ export class IPV6 {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 *
+	 *
+	 */
+	public GetLocalAddress(): any {
+		const ifacesObj: any = {ipv4: [], ipv6: []};
+		const interfaces = os.networkInterfaces();
+
+		for (const dev in interfaces) {
+			interfaces[dev].forEach(function(details: any) {
+				if (!details.internal) {
+					switch (details.family) {
+						case "IPv4":
+							ifacesObj.ipv4.push({name: dev, address: details.address});
+							break;
+						case "IPv6":
+							ifacesObj.ipv6.push({name: dev, address: details.address});
+							break;
+					}
+				}
+			});
+		}
+		return ifacesObj;
 	}
 }
 
