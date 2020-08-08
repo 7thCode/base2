@@ -34,7 +34,7 @@ export class BaseComponent implements OnInit {
 		this.value = this.description.value;  // init
 		this.present_value = this.value;
 		const validators: any[] = [];
-		this.description.validators.forEach((validator) => {
+		this.description.validators.forEach((validator: any) => {
 			switch (validator.name) {
 				case "required":
 					validators.push(Validators.required);

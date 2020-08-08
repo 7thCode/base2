@@ -27,7 +27,7 @@ export class EqualsValidator implements Validator {
 
 	@Input() public validateEquals: FormControl;
 
-	public validate(c: AbstractControl): { [key: string]: any } {
+	public validate(c: AbstractControl): { [key: string]: any } | null {
 		if (!this.subscribe) {
 			this.subscribe = true;
 			this.validateEquals.valueChanges.subscribe(() => {

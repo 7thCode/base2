@@ -30,6 +30,7 @@ namespace AccountModel {
 		user_id: {type: String, required: true, index: {unique: true}},
 		username: {type: String, required: true, index: {unique: true}},
 		password: {type: String},
+		relations: {type: [mongoose.Schema.Types.ObjectId], default: []},
 		privatekey: {type: String, default: ""},
 		publickey: {type: String, default: ""},
 		enabled: {type: Boolean, default: true},
@@ -62,11 +63,11 @@ namespace AccountModel {
 					break;
 				case "facebook":
 				case "apple":
-					auth = 200;
+					auth = AuthLevel.user;
 					categoly = 1;
 					break;
 				default:
-					auth = 200;
+					auth = AuthLevel.user;
 					categoly = 1;
 			}
 
@@ -115,7 +116,7 @@ namespace AccountModel {
 		return this.status;
 	};
 
-	Account.methods.set_status = function(status, cb: Callback<any>): void {
+	Account.methods.set_status = function(status: number, cb: Callback<any>): void {
 		this.status = status;
 	};
 
