@@ -2,31 +2,44 @@ var gulp = require('gulp');
 var typescript = require('gulp-typescript');
 var sourcemaps = require('gulp-sourcemaps');
 
+const configured_typescript = typescript.createProject("server_tsconfig.json");
+
 var rimraf = require('rimraf');
 
-gulp.task('clean', function(cb) {
+gulp.task('dry', (cb) => {
+	gulp.src(['backup', 'dist', 'dmg', 'documentation', 'logs/*.log', 'out-tsc', 'product', 'public'], {read: false}).pipe(rimraf());
+});
+
+gulp.task('clean', (cb) => {
 	rimraf('product', cb);
 });
 
-gulp.task('compile', function(){
-
+gulp.task('compile', () => {
 	return gulp.src([
 		'app.ts',
 		'main.ts',
 		'models/**/*.ts',
+		'bridge/**/*.ts',
 		'server/**/*.ts',
 		'types/**/*.ts'
-	], { base: './' })
+	], {base: './'})
 		.pipe(sourcemaps.init())
-		.pipe(typescript({ target: "ES5", removeComments: true }))
+		.pipe(configured_typescript())
 		.js
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('./'));
-
 });
 
-gulp.task('build', function () {
+// switch config
+gulp.task('prebuild', () => {
+	return gulp.src([
+		'defaults/platform/default.js'
+	], {base: './defaults/platform', allowEmpty: true})
+		.pipe(gulp.dest('config'));
+});
 
+// copy
+gulp.task('build', () => {
 	return gulp.src([
 		'config/*.json',
 		'config/platform/logs.json',
@@ -39,6 +52,7 @@ gulp.task('build', function () {
 		'public/**/*.html',
 		'public/images/*.*',
 		'public/favicon/*.*',
+		'bridge/**/*.js',
 		'server/**/*.js',
 		'server/**/*.pug',
 		'server/platform/**/*.js',
@@ -49,12 +63,13 @@ gulp.task('build', function () {
 		'patch.js',
 		'package.json',
 		'htdigest',
-		'cluster.json'
-	], { base: './', allowEmpty: true })
+		'cluster.json',
+		'*.p8'
+	], {base: './', allowEmpty: true})
 		.pipe(gulp.dest('product'));
 
 });
 
-gulp.task('default',gulp.series('clean', 'compile','build'), function(){
+gulp.task('default', gulp.series('clean', 'compile', 'prebuild', 'build'), () => {
 
 });

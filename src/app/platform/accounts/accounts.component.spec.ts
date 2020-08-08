@@ -1,5 +1,4 @@
 import {async, ComponentFixture, TestBed} from "@angular/core/testing";
-import {beforeEach, describe, expect, it} from "@angular/core/testing/src/testing_internal";
 
 import {AccountsComponent} from "./accounts.component";
 

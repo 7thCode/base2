@@ -55,13 +55,13 @@ server/**/*.js
 base1
 src/app/**/*js
 product
-<<<<<<< HEAD
-=======
 base1-darwin-x64
 types/*.js
->>>>>>> 🍀platform
 dmg
 user.json
 temp
 *.map
 *.js
+backup
+config
+*.p8

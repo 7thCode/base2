@@ -7,62 +7,90 @@
 "use strict";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
+/**
+ * ユーザ登録ダイアログ
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "regist-dialog",
 	styleUrls: ["./regist-dialog.component.css"],
 	templateUrl: "./regist-dialog.component.html",
 })
+export class RegistDialogComponent extends BaseDialogComponent implements OnInit {
 
-/**
- *
- *
- * @since 0.01
- */
-export class RegistDialogComponent implements OnInit {
-
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
-	}
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA)
-		public data: any,
-		public matDialogRef: MatDialogRef<RegistDialogComponent>) {
-	}
-
+	/**
+	 * ユーザ
+	 */
 	get user(): any {
 		return this.data.user;
 	}
 
+	/**
+	 * ロール
+	 */
 	get role(): any {
 		return this.data.user.role;
 	}
 
+	/**
+	 * コンテント
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 * @constructor
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 */
+	constructor(
+		@Inject(MAT_DIALOG_DATA)
+		public data: any,
+		public matDialogRef: MatDialogRef<RegistDialogComponent>) {
+		super();
+	}
+
+
+	/**
+	 *
+	 */
 	public ngOnInit(): void {
 		this.Progress(false);
 	}
 
+	/**
+	 * キャンセル
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}
 
-	public onProgressed(event): void {
+	/**
+	 *
+	 * @param event
+	 */
+	public onProgressed(event: any): void {
 
 	}
 
-	public onUpdateAvatar(event): void {
+	/**
+	 *
+	 * @param event
+	 */
+	public onUpdateAvatar(event: any): void {
 
 	}
 

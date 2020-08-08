@@ -6,40 +6,24 @@
 
 "use strict";
 
-import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/universe";
+import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-
-@Component({
-	selector: "account-dialog",
-	styleUrls: ["./account-dialog.component.css"],
-	templateUrl: "./account-dialog.component.html",
-})
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 /**
  *
  *
  * @since 0.01
  */
-export class AccountDialogComponent implements OnInit {
-
-	public qr: string = "";
-	public is2fa: boolean;
-	public enable: boolean;
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA)
-		public data: any,
-		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngOnInit(): void {
-		this.is2Fa();
-	}
+@Component({
+	selector: "account-dialog",
+	styleUrls: ["./account-dialog.component.css"],
+	templateUrl: "./account-dialog.component.html",
+})
+export class AccountDialogComponent extends BaseDialogComponent implements OnInit {
 
 	get session(): ISession {
 		return this.data.session;
@@ -57,22 +41,30 @@ export class AccountDialogComponent implements OnInit {
 		return this.data.content;
 	}
 
-	public cancel(): void {
-		this.matDialogRef.close(null);
+	public qr: string = "";
+	public is2fa: boolean = false;
+	public enable: boolean = false;
+
+	/**
+	 * @constructor
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 */
+	constructor(
+		@Inject(MAT_DIALOG_DATA)
+		public data: any,
+		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
+		super();
 	}
 
-	public onAccept(): void {
-		this.data.service = null;
-		this.matDialogRef.close(this.data);
-	}
-
+	/**
+	 * Auth to Role
+	 * @param user 対象ユーザ
+	 */
 	private auth_to_role(user: { auth: number, provider: string }): IRole {
 		let result: IRole = {
 			login: false,
-			system: false,
-			manager: false,
-			user: false,
-			public: true,
 			categoly: 0,
 			raw: AuthLevel.public,
 		};
@@ -90,10 +82,6 @@ export class AccountDialogComponent implements OnInit {
 			}
 
 			result = {
-				system: (auth < AuthLevel.manager),
-				manager: (auth < AuthLevel.user),
-				user: (auth < AuthLevel.public),
-				public: true,
 				categoly,
 				raw: auth,
 				login: true,
@@ -102,8 +90,33 @@ export class AccountDialogComponent implements OnInit {
 		return result;
 	}
 
+	/**
+	 * @returns none
+	 */
+	public ngOnInit(): void {
+		this.is2Fa();
+	}
+
+	/**
+	 *
+	 */
+	public cancel(): void {
+		this.matDialogRef.close(null);
+	}
+
+	/**
+	 *
+	 */
+	public onAccept(): void {
+		this.data.service = null;
+		this.matDialogRef.close(this.data);
+	}
+
+	/**
+	 * ２要素認証か
+	 */
 	public is2Fa(): void {
-		this.data.service.is_2fa(this.data.user.username, (error: IErrorObject, is2fa: any): void => {
+		this.data.service.is_2fa(this.data.user.user_id, (error: IErrorObject, is2fa: any): void => {
 			if (!error) {
 				this.is2fa = is2fa;
 			} else {
@@ -112,6 +125,9 @@ export class AccountDialogComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * ２要素認証に
+	 */
 	public onSet2Fa(): void {
 		this.data.service.set_2fa(this.data.user.username, (error: IErrorObject, qr: any): void => {
 			if (!error) {
@@ -123,6 +139,9 @@ export class AccountDialogComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * ２要素認証解除
+	 */
 	public onReset2Fa(): void {
 		this.data.service.reset_2fa(this.data.user.username, (error: IErrorObject, result: any): void => {
 			if (!error) {
@@ -134,11 +153,19 @@ export class AccountDialogComponent implements OnInit {
 		});
 	}
 
-	public onProgressed(event): void {
+	/**
+	 *
+	 * @param event
+	 */
+	public onProgressed(event: any): void {
 
 	}
 
-	public onUpdateAvatar(event): void {
+	/**
+	 *
+	 * @param event
+	 */
+	public onUpdateAvatar(event: any): void {
 
 	}
 

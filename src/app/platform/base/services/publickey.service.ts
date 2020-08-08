@@ -6,13 +6,14 @@
 
 "use strict";
 
-import {Callback} from "../../../../../types/universe";
+import {Callback} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import {ConstService} from "./const.service";
+import { environment } from '../../../../environments/environment';
+
 import {HttpService} from "./http.service";
 
 @Injectable({
@@ -26,13 +27,21 @@ import {HttpService} from "./http.service";
  */
 export class PublicKeyService extends HttpService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 */
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 	) {
-		super(http, constService);
+		super(http);
 	}
 
+	/**
+	 * システム固定公開鍵を返す
+	 *
+	 * @param callback 公開鍵を返すコールバック
+	 */
 	public fixed(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/fixed", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -50,10 +59,15 @@ export class PublicKeyService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 5005"}, null);
 		});
 	}
 
+	/**
+	 * ユーザごとの公開鍵を返す
+	 *
+	 * @param callback 公開鍵を返すコールバック
+	 */
 	public dynamic(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/dynamic", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -71,10 +85,15 @@ export class PublicKeyService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 92"}, null);
 		});
 	}
 
+	/**
+	 * ユーザトークン（テスト)
+	 *
+	 * @param callback コールバック
+	 */
 	public token(callback: Callback<any>): void {
 		this.http.get(this.endPoint + "/publickey/token", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
@@ -92,7 +111,7 @@ export class PublicKeyService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 2505"}, null);
 		});
 	}
 

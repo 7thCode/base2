@@ -7,57 +7,83 @@
 "use strict";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
 
-import {IErrorObject} from "../../../../../types/universe";
+import {Location} from "@angular/common";
+
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
+
+import {IErrorObject} from "../../../../../types/platform/universe";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {AuthService} from "../auth.service";
-
-@Component({
-	selector: "logout-dialog",
-	styleUrls: ["../auth.component.css"],
-	templateUrl: "./logout-dialog.component.html",
-})
 
 /**
  *
  *
  * @since 0.01
  */
-export class LogoutDialogComponent implements OnInit {
+@Component({
+	selector: "logout-dialog",
+	styleUrls: ["../auth.component.css"],
+	templateUrl: "./logout-dialog.component.html",
+	providers: [
+		Location,
+	],
+})
+export class LogoutDialogComponent extends BaseDialogComponent implements OnInit {
 
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
-	}
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA)
-		public data: any,
-		public matDialogRef: MatDialogRef<LogoutDialogComponent>,
-		private snackbar: MatSnackBar,
-		public auth: AuthService) {
-	}
-
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 * @param snackbar
+	 * @param auth
+	 */
+	constructor(
+		@Inject(MAT_DIALOG_DATA)
+		public data: any,
+		public matDialogRef: MatDialogRef<any>,
+		public location: Location,
+		public snackbar: MatSnackBar,
+		public auth: AuthService) {
+		super();
+	}
+
+	/**
+	 *
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
+	}
+
+	/**
+	 *
+	 */
 	public ngOnInit(): void {
 		this.Progress(false);
 	}
 
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
-	}
-
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.Progress(true);
 		this.auth.logout((error: IErrorObject, result: any) => {
 			if (!error) {
 				this.matDialogRef.close(this.data);
+				this.location.replaceState("");
 			} else {
 				this.errorBar(error);
 			}

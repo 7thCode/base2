@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {LogoutDialogComponent} from "./logout-dialog.component";
 
@@ -15,21 +15,41 @@ import {LogoutDialogComponent} from "./logout-dialog.component";
 	selector: "[auth-logout-button]",
 })
 
+/**
+ *
+ */
 export class LogoutDialogDirective {
 
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
+	/**
+	 *
+	 * @param matDialog
+	 */
 	constructor(
 		private matDialog: MatDialog
 	) {
 	}
 
+	/**
+	 *
+	 * @param target
+	 */
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const dialog: any = this.matDialog.open(LogoutDialogComponent, {
-			width: "40vw",
-			data: {content: {title: "Logout"}},
+		const dialog: MatDialogRef<any> = this.matDialog.open(LogoutDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
+			data: {
+				content: {
+					title: "Logout",
+					description: "Lorem ipsum...",
+				}
+			},
 			disableClose: true,
 		});
 

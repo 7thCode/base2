@@ -6,38 +6,45 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
-import {IJSONResponse} from "../../../../types/server";
+import {IJSONResponse} from "../../../../types/platform/server";
 
-const _: any = require("lodash");
+// const _: any = require("lodash");
 const fs: any = require("graceful-fs");
 const pug: any = require("pug");
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
 
 const Wrapper: any = require("./wrapper");
 
 const Mailer: any = require(path.join(library, "mail_sender"));
 const Mailer2: any = require(path.join(library, "mail_sender_2"));
 const MailGun: any = require(path.join(library, "mail_sender_mailgun"));
-const config: any = require(path.join(_config, "default")).systems;
 
+/**
+ *
+ */
 export class Mail extends Wrapper {
 
 	protected message: any;
 	private mailer: any = null;
 	private bcc: string | any[] = "";
 
-	constructor(event: any) {
-		super(event);
-		this.message = config.message;
-		const mailerSetting = config.mailer;
+	/**
+	 *
+	 * @param event
+	 * @param config
+	 * @param logger
+	 * @constructor
+	 */
+	constructor(event: any, config: any, logger: object) {
+		super(event, config, logger);
+		this.message = this.systemsConfig.message;
+		const mailerSetting = this.systemsConfig.mailer;
 
 		switch (mailerSetting.type) {
 			case "mail":
@@ -59,8 +66,14 @@ export class Mail extends Wrapper {
 		}
 	}
 
+	/**
+	 * send mail
+	 * @param mailConfig
+	 * @param response
+	 * @returns status
+	 */
 	protected send_mail(mailConfig: any, response: IJSONResponse): void {
-		fs.readFile(path.join(process.cwd(), mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
+		fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 			this.ifSuccess(response, error, (): void => {
 				const doc: any = pug.render(data, {content: mailConfig.souce_object, link: mailConfig.link});
 				this.mailer.send(mailConfig.address, mailConfig.bcc, mailConfig.title, doc, (error: IErrorObject): void => {

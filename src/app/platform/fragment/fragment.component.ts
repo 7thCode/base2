@@ -6,28 +6,26 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {Component, Input, OnInit} from "@angular/core";
+import {MatDialog} from "@angular/material/dialog";
 
 import {UpdatableComponent} from "../base/components/updatable.component";
-import {ConstService} from "../base/services/const.service";
+
 import {SessionService} from "../base/services/session.service";
 import {FragmentService} from "./fragment.service";
-
-@Component({
-	selector: "fragment",
-	template: "<div [innerHTML]=\"innerText\"></div>",
-	styleUrls: ["./fragment.component.css"],
-})
 
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "fragment",
+	template: "<div [innerHTML]=\"innerText\"></div>",
+	styleUrls: ["./fragment.component.css"],
+})
 export class FragmentComponent extends UpdatableComponent implements OnInit {
 
 	@Input() public fileName: string;
@@ -38,21 +36,28 @@ export class FragmentComponent extends UpdatableComponent implements OnInit {
 	public innerText: string;
 	public service: any;
 
+	/**
+	 *
+	 * @param session
+	 * @param fragmentService
+	 * @param change
+	 * @param matDialog
+	 */
 	constructor(
 		public session: SessionService,
-		public http: HttpClient,
-		public change: ChangeDetectorRef,
+		public fragmentService: FragmentService,
 		protected matDialog: MatDialog,
-		public constService: ConstService
 	) {
-		super(session, http, change, matDialog);
-		this.service = new FragmentService(http, constService);
+		super(session, matDialog);
+		this.service = fragmentService;
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public ngOnInit() {
+		this.sort = {};
+		super.ngOnInit();
 		this.getSession((error: IErrorObject, session: {user_id}): void => {
 			this.service.get("", this.user_id || session.user_id, this.fileName, (error: IErrorObject, result: any) => {
 				if (!error) {

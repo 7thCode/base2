@@ -6,12 +6,15 @@
 
 "use strict";
 
+import {Callback} from "../../../../types/platform/universe";
+
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
 import {retry} from "rxjs/operators";
-import {Callback} from "../../../../types/universe";
-import {ConstService} from "../base/services/const.service";
+
+import { environment } from '../../../environments/environment';
+
 import {HttpService} from "../base/services/http.service";
 
 @Injectable({
@@ -22,9 +25,8 @@ export class FragmentService extends HttpService {
 
 	constructor(
 		public http: HttpClient,
-		public constService: ConstService
 	) {
-		super(http, constService);
+		super(http);
 	}
 
 	public get( user_id: string, path: string, callback: Callback<any>): void {
@@ -35,7 +37,7 @@ export class FragmentService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 2059"}, null);
 		});
 	}
 

@@ -6,14 +6,15 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/universe";
+import {IErrorObject} from "../../../../types/platform/universe";
 
-import {IPageModel} from "../../../../types/server";
+import {IPageModel} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
+const project_root: string = process.cwd();
+const models: string = path.join(project_root, "models");
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
 
 const Updatable: any = require(path.join(controllers, "updatable_controller"));
 
@@ -23,11 +24,26 @@ export class Pages extends Updatable {
 
 	protected Model: any;
 
-	constructor(event: object) {
-		super(event);
+	/**
+	 *
+	 * @param event
+	 * @param config
+	 * @param logger
+	 * @constructor
+	 */
+	constructor(event: object, config: object, logger: object) {
+		super(event, config, logger);
 		this.Model = Page as IPageModel;
 	}
 
+	/**
+	 *
+	 * @param user_id
+	 * @param path
+	 * @param object
+	 * @param callback
+	 * @returns none
+	 */
 	protected getPage(user_id: string, path: string, object: any, callback: (error: IErrorObject, result: any, mimetype: string) => void): void {
 		try {
 			this.Model.get_page(user_id, path, object, (error: IErrorObject, result: string, mimetype: string): void => {
@@ -42,16 +58,6 @@ export class Pages extends Updatable {
 		}
 	}
 
-	// protected default_user(user: IAccountModel): any {
-	// 	let result: any = user;
-	// 	if (!result) {
-	// 		result = {
-	// 			user_id: config.default.user_id,
-	// 			auth: 100000,
-	// 		};
-	// 	}
-	// 	return result;
-	// }
 }
 
 module.exports = Pages;

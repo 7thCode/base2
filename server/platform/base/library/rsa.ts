@@ -10,29 +10,53 @@ const NodeRSA: any = require("node-rsa");
 
 export class Rsa {
 
-		private key: any;
+	private key: any;
 
-		constructor(bits: number) {
-				this.key = new NodeRSA({b: bits});
-		}
+	/**
+	 *
+	 * @param bits
+	 */
+	constructor(bits: number) {
+		this.key = new NodeRSA({b: bits});
+	}
 
-		public PrivateKey(): string {
-				return this.key.exportKey("pkcs1-private-pem");
-		}
+	/**
+	 *
+	 * @constructor
+	 */
+	public PrivateKey(): string {
+		return this.key.exportKey("pkcs1-private-pem");
+	}
 
-		public PublicKey(): string {
-				return this.key.exportKey("pkcs1-public-pem");
-		}
+	/**
+	 *
+	 * @constructor
+	 */
+	public PublicKey(): string {
+		return this.key.exportKey("pkcs1-public-pem");
+	}
 
-		public Encrypt(key: string, input: string): string {
-				const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
-				return rsa.encrypt(input, "base64");
-		}
+	/**
+	 *
+	 * @param key
+	 * @param input
+	 * @constructor
+	 */
+	public Encrypt(key: string, input: string): string {
+		const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+		return rsa.encrypt(input, "base64");
+	}
 
-		public Decrypt(key: string, input: string): string {
-				const rsa = new NodeRSA(key, "pkcs1-private-pem", {encryptionScheme: "pkcs1_oaep"});
-				return rsa.decrypt(input, "utf8");
-		}
+	/**
+	 *
+	 * @param key
+	 * @param input
+	 * @constructor
+	 */
+	public Decrypt(key: string, input: string): string {
+		const rsa = new NodeRSA(key, "pkcs1-private-pem", {encryptionScheme: "pkcs1_oaep"});
+		return rsa.decrypt(input, "utf8");
+	}
 
 }
 

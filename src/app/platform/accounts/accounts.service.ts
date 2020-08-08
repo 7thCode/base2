@@ -10,8 +10,8 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import {Callback} from "../../../../types/universe";
-import {ConstService} from "../base/services/const.service";
+import {Callback} from "../../../../types/platform/universe";
+
 import {QueryableService} from "../base/services/queryable.service";
 
 @Injectable({
@@ -22,15 +22,24 @@ export class AccountsService extends QueryableService {
 
 	public model: string = "accounts";
 
+	/**
+	 *
+	 * @param http
+	 */
 	constructor(
 		public http: HttpClient,
-		public constService: ConstService,
 	) {
-		super(http, constService, "accounts");
+		super(http, "accounts");
 	}
 
-	public put(username: any, content: any, callback: Callback<any>): void {
-		this.http.put(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(username), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	/**
+	 *
+	 * @param username
+	 * @param content
+	 * @param callback
+	 */
+	public put(user_id: any, content: any, callback: Callback<any>): void {
+		this.http.put(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(user_id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result);
@@ -38,15 +47,64 @@ export class AccountsService extends QueryableService {
 					callback(result, null);
 				}
 			} else {
-				callback({code: 10000, message: "network error"}, null);
+				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 9562"}, null);
 		});
 	}
 
-	public delete(id: string, callback: Callback<any>): void {
-		this.http.delete(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	/**
+	 * 単一のオブジェクトを返す
+	 *
+	 * @param id オブジェクトID
+	 * @param callback オブジェクトを返すコールバック
+	 */
+	public get_self(callback: Callback<object>): void {
+		this.http.get(this.endPoint + "/" + this.model + "/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null,result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 8419"}, null);
+		});
+	}
+
+	/**
+	 *
+	 * @param username
+	 * @param content
+	 * @param callback
+	 */
+	public put_self(content: any, callback: Callback<any>): void {
+		this.http.put(this.endPoint + "/" + this.model + "/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9262"}, null);
+		});
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @param callback
+	 */
+	public delete(user_id: string, callback: Callback<any>): void {
+		this.http.delete(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(user_id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
@@ -57,12 +115,17 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 7230"}, null);
 		});
 	}
 
-	public is_2fa(username, callback: Callback<any>): void {
-		this.http.get(this.endPoint + "/" + this.model + "/auth/is2fa/" + encodeURIComponent(username), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	/**
+	 *
+	 * @param user_id
+	 * @param callback
+	 */
+	public is_2fa(user_id: string, callback: Callback<any>): void {
+		this.http.get(this.endPoint + "/" + this.model + "/auth/is2fa/" + encodeURIComponent(user_id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value.is_2fa);
@@ -73,11 +136,16 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 464"}, null);
 		});
 	}
 
-	public set_2fa(username, callback: Callback<any>): void {
+	/**
+	 *
+	 * @param username
+	 * @param callback
+	 */
+	public set_2fa(username: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth/set2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -89,11 +157,16 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 1860"}, null);
 		});
 	}
 
-	public reset_2fa(username, callback: Callback<any>): void {
+	/**
+	 *
+	 * @param username
+	 * @param callback
+	 */
+	public reset_2fa(username: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth/reset2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -105,7 +178,7 @@ export class AccountsService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message}, null);
+			callback({code: -1, message: error.message + " 3179"}, null);
 		});
 	}
 

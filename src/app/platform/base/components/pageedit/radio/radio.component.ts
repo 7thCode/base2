@@ -10,14 +10,21 @@ import {Component} from "@angular/core";
 
 import {BaseComponent} from "../base/base.component";
 
+/**
+ * ラジオ
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "radio-element",
 	templateUrl: "./radio.component.html",
 	styleUrls: ["./radio.component.css"],
 })
-
 export class RadioComponent extends BaseComponent {
 
+	/**
+	 *
+	 */
 	constructor() {
 		super();
 	}

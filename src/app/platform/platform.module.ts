@@ -8,25 +8,24 @@
 
 import {HttpClientModule} from "@angular/common/http";
 import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {
-	MatButtonModule,
-	MatButtonToggleModule,
-	MatCardModule,
-	MatIconModule,
-	MatListModule,
-	MatMenuModule,
-	MatProgressSpinnerModule,
-	MatSidenavModule,
-	MatSliderModule,
-	MatSnackBarModule,
-	MatSpinner,
-	MatTabsModule,
-	MatToolbarModule,
-} from "@angular/material";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterModule} from "@angular/router";
+
+import {FlexLayoutModule} from "@angular/flex-layout";
+
+import {MatButtonModule} from "@angular/material/button";
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatListModule} from "@angular/material/list";
+import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-spinner";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatSliderModule} from "@angular/material/slider";
 
 import {AceEditorModule} from "ng2-ace-editor";
 
@@ -39,11 +38,16 @@ import {ImageModule} from "./image/image.module";
 import {PagesModule} from "./pages/pages.module";
 import {PlatformRoutingModule} from "./platform-routing.module";
 import {PlatformComponent} from "./platform.component";
-import {VaultsModule} from "./vaults/vaults.module";
+import {BasePipeModule} from "./base/pipes/base-pipe.module";
+import { PersonalComponent } from './personal/personal.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
 	declarations: [
 		PlatformComponent,
+		PersonalComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -74,9 +78,11 @@ import {VaultsModule} from "./vaults/vaults.module";
 		PagesModule,
 		AuthModule,
 		ImageModule,
-		VaultsModule,
 		FilesModule,
-
+		BasePipeModule,
+		MatFormFieldModule,
+		FormsModule,
+		MatInputModule,
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],

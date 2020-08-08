@@ -4,11 +4,10 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-import {IAccountModel} from "../../../../types/server";
-import {AuthLevel, IErrorObject} from "../../../../types/universe";
+import {IAccountModel} from "../../../../types/platform/server";
+import {AuthLevel, IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router = express.Router();
@@ -16,32 +15,31 @@ export const router = express.Router();
 const path: any = require("path");
 const fs: any = require("graceful-fs");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const library: string = path.join(project_root, "server/platform/base/library");
 
-const log4js = require("log4js");
-log4js.configure(path.join(_config, "platform/logs.json"));
-const logger: any = log4js.getLogger("request");
+const event: any = module.parent.exports.event;
+
+const logger: any = module.parent.exports.logger;
 
 const gatekeeper: any = require(path.join(library, "gatekeeper"));
 
-const Files: any = require("./controller");
-const file: any = new Files(module.parent.exports.event);
+const ConfigModule: any = module.parent.exports.config;
+const systemsConfig: any = ConfigModule.systems;
 
-const systemsConfig: any = require(path.join(_config, "default")).systems;
+const Files: any = require("./controller");
+const file: any = new Files(event, ConfigModule, logger);
 
 const cache_root: string = "files/cache/";
 
 file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		const cache_write = (user_id: string, _path: string, input: any, callback: (error) => void): void => {
+		const cache_write = (user_id: string, _path: string, input: any, callback: (error: IErrorObject) => void): void => {
 			try {
-				const cache_file: string = path.join(process.cwd(), "public", cache_root, user_id, _path);
+				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
 				const cache_dir: string = path.dirname(cache_file);
-				fs.mkdir(cache_dir, {recursive: true}, (error) => {
+				fs.mkdir(cache_dir, {recursive: true}, (error: IErrorObject) => {
 					if (!error) {
 						const dest = fs.createWriteStream(cache_file);
 						input.pipe(dest);
@@ -53,10 +51,10 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			}
 		};
 
-		const chace_delete = (user_id: string, _path: string, callback: (error) => void): void => {
+		const cache_delete = (user_id: string, _path: string, callback: (error: IErrorObject) => void): void => {
 			try {
-				const cache_file: string = path.join(process.cwd(), "public", cache_root, user_id, _path);
-				fs.unlink(cache_file, (error) => {
+				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
+				fs.unlink(cache_file, (error: IErrorObject) => {
 					callback(error);
 				});
 			} catch (error) {
@@ -64,7 +62,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			}
 		};
 
-		router.get("/files/auth/query/:query/:option", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/files/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					file.queryFiles(request, response);
@@ -72,7 +70,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
-		router.get("/files/auth/count/:query", [gatekeeper.guard, gatekeeper.authenticate,
+		router.get("/files/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					file.countFiles(request, response);
@@ -80,7 +78,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
-		router.get("/files/auth/*", [gatekeeper.guard,
+		router.get("/files/auth/*", [gatekeeper.default,
 			(request: object, response: object): void => {
 				gatekeeper.catch(response, (): void => {
 					file.getFile(request, response);
@@ -88,11 +86,11 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
-		router.post("/files/auth/*", [gatekeeper.guard, gatekeeper.authenticate,
+		router.post("/files/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: { user: { user_id: string }, params: string[] }, response: object): void => {
 				const path: string = request.params[0];
 				const user_id = request.user.user_id;
-				chace_delete(user_id, path, (error) => {
+				cache_delete(user_id, path, (error) => {
 					gatekeeper.catch(response, (): void => {
 						file.postFile(request, response);
 					});
@@ -100,11 +98,11 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
-		router.delete("/files/auth/*", [gatekeeper.guard, gatekeeper.authenticate,
+		router.delete("/files/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: { user: { user_id: string }, params: string[] }, response: object): void => {
 				const path: string = request.params[0];
 				const user_id = request.user.user_id;
-				chace_delete(user_id, path, (error) => {
+				cache_delete(user_id, path, (error) => {
 					gatekeeper.catch(response, (): void => {
 						file.deleteFile(request, response);
 					});
@@ -112,58 +110,76 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
-		const render_file = (response: any, next: () => void, file: any, user_id: string, path: string, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
-			file.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
+		const render = (response: any, next: () => void, result: any, file: any, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
+
+			let command: string = command_string;
+
+			const mimetype: string = result.metadata.type;
+			const total: number = result.length;
+
+			let status: number = 200;
+
+			let start: number = 0;
+			let end: number = 0;
+			let chunksize: number = 0;
+
+			/*
+			* HTTP/1.1： 範囲要請
+			* RFC 7233, Range Requests
+			* https://triple-underscore.github.io/RFC7233-ja.html
+			 */
+			if (range) {　    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
+				command = "";
+
+				const parts: string[] = range.replace(/bytes=/, "").split("-");
+				const partialstart: string = parts[0];
+				const partialend: string = parts[1];
+
+				status = 206;	// Partial Content
+				start = partialstart ? parseInt(partialstart, 10) : 0;
+				end = partialend ? parseInt(partialend, 10) : total - 1;
+			} else { 			// Full Data.
+				status = 200;	// Full Content
+				start = 0;
+				end = total - 1;
+			}
+
+			chunksize = (end - start) + 1;
+
+			file.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					if (result) {
-						const mimetype: string = result.metadata.type;
-						const total: number = result.length;
+						response.status(status);
+						response.type(mimetype);
+						response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+						response.set("Accept-Ranges", "bytes");
+						response.set("Content-Length", chunksize);
 
-						if (result.metadata.rights.read === AuthLevel.public) {
-							let start: number = 0;
-							let end: number = 0;
-							let chunksize: number = 0;
-							let command = command_string;
-
-							if (range) {　// with [Range Request] for Large Stream seeking. (ex Video,Sound...)
-								const parts: string[] = range.replace(/bytes=/, "").split("-");
-								const partialstart: string = parts[0];
-								const partialend: string = parts[1];
-
-								start = parseInt(partialstart, 10);
-								end = partialend ? parseInt(partialend, 10) : total - 1;
-								chunksize = (end - start) + 1;
-								command = "";
-							} else { // Full Data.
-								start = 0;
-								end = total - 1;
-								chunksize = (end - start) + 1;
+						// c=[{"c":"resize","p":{"width":300,"height":100}}]
+						file.effect(mimetype, query, command, result, (error: any, result: any): void => {
+							if (!error) {
+								result.pipe(response);
+								callback(result);
+							} else {
+								next();
 							}
-							file.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
-								if (!error) {
-									if (result) {
-										response.status(200);
-										response.type(mimetype);
-										response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
-										response.set("Accept-Ranges", "bytes");
-										response.set("Content-Length", chunksize);
+						});
+					} else {
+						next();
+					}
+				} else {
+					next();
+				}
+			});
 
-										// c=[{"c":"resize","p":{"width":300,"height":100}}]
-										file.effect(mimetype, query, command, result, (error: any, result: any): void => {
-											if (!error) {
-												result.pipe(response);
-												callback(result);
-											} else {
-												next();
-											}
-										});
-									} else {
-										next();
-									}
-								} else {
-									next();
-								}
-							});
+		};
+
+		const render_id = (response: any, next: () => void, file: any, _id: string, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
+			file.getRecordById(_id, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					if (result) {
+						if (result.metadata.rights.read === AuthLevel.public) {
+							render(response, next, result, file, query, range, command_string, callback);
 						} else {
 							response.status(403).render("error", {message: "Forbidden...", status: 403});
 						}
@@ -196,7 +212,45 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		};
 
-		router.get("/files/get/*", [(request: { params: string[], query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		const render_file = (response: any, next: () => void, file: any, user_id: string, path: string, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
+			file.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					if (result) {
+						if (result.metadata.rights.read === AuthLevel.public) {
+							render(response, next, result, file, query, range, command_string, callback);
+						} else {
+							response.status(403).render("error", {message: "Forbidden...", status: 403});
+						}
+					} else {
+						next();
+					}
+				} else {
+					file.brankImage((error: IErrorObject, result: any, item: any): void => {
+						if (!error) {
+							// const mimetype = item.metadata.type;
+							const mimetype: string = "image/png";
+							const total: number = item.length;
+							const start: number = 0;
+							const end: number = total - 1;
+							const chunksize: number = (end - start) + 1;
+
+							response.status(200);
+							response.type(mimetype);
+							response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+							response.set("Accept-Ranges", "bytes");
+							response.set("Content-Length", chunksize);
+
+							result.pipe(response);
+							callback(result);
+						} else {
+							next();
+						}
+					});
+				}
+			});
+		};
+
+		router.get("/files/get/*", [gatekeeper.default, (request: { params: string[], query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
 			gatekeeper.catch(response, (): void => {
 
 				const path: string = request.params[0];
@@ -204,7 +258,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				const user: IAccountModel = file.Transform(request.user);
 				const systems: any = systemsConfig.default;
 
-				let user_id = query.u || systems.user_id;
+				let user_id: string = query.u || systems.user_id;
 				if (user) {
 					user_id = query.u || user.user_id || systems.user_id;
 				}
@@ -218,7 +272,22 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		}]);
 
-		router.get("/" + cache_root + ":user_id/*", [(request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		router.get("/files/getid/:id", [gatekeeper.default, (request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+			gatekeeper.catch(response, (): void => {
+				const _id = request.params.id;
+				const query: { u: string, c: string } = request.query;
+
+				const range: string = request.headers.range;
+				const command_string: string = query.c || "";
+
+				render_id(response, next, file, _id, query, range, command_string, (result) => {
+
+				});
+
+			});
+		}]);
+
+		router.get("/" + cache_root + ":user_id/*", [gatekeeper.default, (request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
 			gatekeeper.catch(response, (): void => {
 
 				const params = request.params;

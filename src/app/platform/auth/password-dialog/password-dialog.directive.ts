@@ -7,7 +7,7 @@
 "use strict";
 
 import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "../../base/components/info-dialog/info-dialog.component";
 import {PasswordDialogComponent} from "./password-dialog.component";
@@ -18,23 +18,36 @@ import {PasswordDialogComponent} from "./password-dialog.component";
 
 export class PasswordDialogDirective {
 
+	/**
+	 *
+	 */
 	@Output() public complete = new EventEmitter<any>();
 
+	/**
+	 *
+	 * @param matDialog
+	 */
 	constructor(
 		private matDialog: MatDialog
 	) {
 	}
 
+	/**
+	 *
+	 * @param target
+	 */
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
 		const resultDialogContent: any = {title: "Check mail", message: "Password Change Mail sent."};
 
-		const dialog: any = this.matDialog.open(PasswordDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(PasswordDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
 			data: {
 				content: {
 					title: "Password",
+					description: "Lorem ipsum...",
 					username: "",
 					password: "",
 					confirm_password: "",
@@ -45,8 +58,9 @@ export class PasswordDialogDirective {
 
 		dialog.afterClosed().subscribe((result: any) => {
 			if (result) {
-				const dialog: any = this.matDialog.open(InfoDialogComponent, {
-					width: "40vw",
+				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+					width: "fit-content",
+					height: "fit-content",
 					data: {content: resultDialogContent},
 					disableClose: true,
 				});

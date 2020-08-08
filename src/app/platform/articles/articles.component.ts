@@ -6,54 +6,76 @@
 
 "use strict";
 
-import {IArticleModelContent, IErrorObject} from "../../../../types/universe";
+import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component} from "@angular/core";
-import {MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatSnackBar} from "@angular/material";
+import {Component, OnInit} from "@angular/core";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
-import {ConstService} from "../base/services/const.service";
-import {SessionService} from "../base/services/session.service";
 import {ArticleDialogComponent} from "./article-dialog/article-dialog.component";
+
+import {SessionService} from "../base/services/session.service";
 import {ArticlesService} from "./articles.service";
 
+/**
+ * アーティクル
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "articles",
 	templateUrl: "./articles.component.html",
 	styleUrls: ["./articles.component.css"],
 })
+export class ArticlesComponent extends GridViewComponent implements OnInit {
 
-/**
- *
- *
- * @since 0.01
- */
-export class ArticlesComponent extends GridViewComponent {
-
+	/**
+	 *
+	 * @param session
+	 * @param articleService
+	 * @param matDialog
+	 * @param snackbar
+	 */
 	constructor(
-		public session: SessionService,
-		public http: HttpClient,
-		public constService: ConstService,
-		public change: ChangeDetectorRef,
+		protected session: SessionService,
 		protected matDialog: MatDialog,
-		protected observableMedia: MediaObserver,
-		protected snackbar: MatSnackBar
+		private articleService: ArticlesService,
+		private snackbar: MatSnackBar,
 	) {
-		super(session, http, change, matDialog, observableMedia);
-		this.service = new ArticlesService(http, constService);
-	}
-
-	// , private snackbar: MatSnackBar
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
+		super(session, matDialog);
+		this.service = articleService;
 	}
 
 	/**
-	 * @returns none
+	 * エラー表示
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
+	}
+
+	/**
+	 * リストビューデコレータ
+	 * @param object
+	 */
+	protected toListView(object: any): any {
+		object.cols = 1;
+		object.rows = 1;
+		return object;
+	}
+
+	public ngOnInit(): void {
+		this.sort = {};
+		super.ngOnInit();
+	}
+
+	/**
+	 * クリエイトダイアログ
 	 */
 	public createDialog(): void {
 
@@ -69,8 +91,9 @@ export class ArticlesComponent extends GridViewComponent {
 			accessory: {},
 		};
 
-		const dialog: any = this.matDialog.open(ArticleDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(ArticleDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
@@ -95,14 +118,15 @@ export class ArticlesComponent extends GridViewComponent {
 	}
 
 	/**
-	 * @returns none
+	 * アップデートダイアログ
+	 * @param id ターゲット
 	 */
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(ArticleDialogComponent, {
-					width: "40vw",
-					height: "40vh",
+				const dialog: MatDialogRef<any> = this.matDialog.open(ArticleDialogComponent, {
+					width: "fit-content",
+					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,
 				});
@@ -128,9 +152,9 @@ export class ArticlesComponent extends GridViewComponent {
 		});
 	}
 
-
 	/**
-	 * @returns none
+	 * 削除
+	 * @param id ターゲット
 	 */
 	public onDelete(id: string): void {
 		this.Progress(true);
@@ -142,15 +166,6 @@ export class ArticlesComponent extends GridViewComponent {
 			}
 			this.Progress(false);
 		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	protected toListView(object: any): any {
-		object.cols = 1;
-		object.rows = 1;
-		return object;
 	}
 
 }

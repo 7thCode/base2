@@ -6,35 +6,55 @@
 
 "use strict";
 
-import {IJSONResponse} from "../../../../types/server";
+import {IJSONResponse} from "../../../../types/platform/server";
 
 const path: any = require("path");
 
-const models: string = global._models;
-const controllers: string = global._controllers;
-const library: string = global._library;
-const _config: string = global.__config;
+const project_root: string = process.cwd();
+const controllers: string = path.join(project_root, "server/platform/base/controllers");
+const library: string = path.join(project_root, "server/platform/base/library");
 
-const config: any = require(path.join(_config, "default")).systems;
 const Wrapper: any = require(path.join(controllers, "wrapper"));
 const Cipher: any = require(path.join(library, "cipher"));
 
+/**
+ *
+ */
 export class PublicKey extends Wrapper {
 
-	constructor(event: object) {
-		super(event);
-	}
+	/**
+	 *
+	 * @param event
+	 * @param config
+	 * @param logger
+	 * @constructor
+	 */
+	 constructor(event: object, config: any, logger: object) {
+	 	super(event, config, logger);
+	 }
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
 	public get_fixed_public_key(request: object, response: IJSONResponse): void {
-		if (config.use_publickey) {
-			this.SendSuccess(response, config.publickey);
+		if (this.systemsConfig.use_publickey) {
+			this.SendSuccess(response, this.systemsConfig.publickey);
 		} else {
 			this.SendSuccess(response, null);
 		}
 	}
 
-	public get_public_key(request: {user: {publickey: string}}, response: IJSONResponse): void {
-		if (config.use_publickey) {
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public get_public_key(request: { user: { publickey: string } }, response: IJSONResponse): void {
+		if (this.systemsConfig.use_publickey) {
 			if (request.user) {
 				this.SendSuccess(response, request.user.publickey);
 			} else {
@@ -45,8 +65,14 @@ export class PublicKey extends Wrapper {
 		}
 	}
 
-	public get_access_token(request: {user: {publickey: string}, session: {id: string}}, response: IJSONResponse): void {
-		if (config.use_publickey) {
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public get_access_token(request: { user: { publickey: string }, session: { id: string } }, response: IJSONResponse): void {
+		if (this.systemsConfig.use_publickey) {
 			if (request.user) {
 				this.SendSuccess(response, Cipher.FixedCrypt(request.session.id, request.user.publickey));
 			} else {

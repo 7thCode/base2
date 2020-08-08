@@ -4,11 +4,10 @@
  * opensource.org/licenses/mit-license.php
  */
 
-
 "use strict";
 
-import {IAccountModel} from "../../../types/server";
-import {Callback, IErrorObject, IPageModelContent, IQueryOption, IRights} from "../../../types/universe";
+import {IAccountModel} from "../../../types/platform/server";
+import {Callback, IErrorObject, IPageModelContent, IQueryOption, IRights} from "../../../types/platform/universe";
 
 namespace PageModel {
 
@@ -22,10 +21,8 @@ namespace PageModel {
 
 	const path: any = require("path");
 
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
+	const project_root: string = process.cwd();
+	const models: string = path.join(project_root, "models");
 
 	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
 	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
@@ -49,7 +46,7 @@ namespace PageModel {
 	});
 
 	Page.plugin(rights);
-	Page.plugin(timestamp);
+	Page.plugin(timestamp, { offset: 9 });
 	Page.plugin(grouped);
 
 	Page.index({"user_id": 1, "content.path": 1}, {unique: true});
@@ -62,13 +59,13 @@ namespace PageModel {
 	};
 
 	const query_by_user_read: any = (user: any, query): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
-		// return {$and: [{user_id: user.user_id}, query]};
+		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: user.user_id}, {"rights.read": {$gte: user.auth}}, query]};
 	};
 
-	const query_by_user_write: any = (user: any, query): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
-		// return {$and: [{user_id: user.user_id}, query]};
+	const query_by_user_write: any = (user: any, query: object): any => {
+		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: user.user_id}, {"rights.write": {$gte: user.auth}}, query]};
 	};
 
 	const init: any = (_id: any, body: any): IPageModelContent => {
@@ -100,14 +97,17 @@ namespace PageModel {
 		this.user_id = user.user_id;
 		this.content = init(this._id, body.content);
 
-		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path}), (error, instance) => {
-			if (!instance) {
-				this.save(cb);
+		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path}), (error: IErrorObject, instance: any) => {
+			if (!error) {
+				if (!instance) {
+					this.save(cb);
+				} else {
+					cb({code: -1, message: "already. 3257"}, null);
+				}
 			} else {
-				cb({code: -1, message: "already."}, null);
+				cb(error, null);
 			}
 		});
-
 	};
 
 	Page.methods._save = function(cb: Callback<any>): void {
@@ -139,7 +139,7 @@ namespace PageModel {
 					}
 					cb(null, doc, type);
 				} else {
-					cb({code: -1, message: "not found"}, null, "");
+					cb({code: -1, message: "not found. 633"}, null, "");
 				}
 			} else {
 				cb(error, null, "");

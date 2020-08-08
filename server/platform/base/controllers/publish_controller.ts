@@ -6,18 +6,31 @@
 
 "use strict";
 
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/universe";
+import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/server";
+import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/platform/server";
 
 const Updatable = require("./updatable_controller");
 
 export abstract class Publishable extends Updatable {
 
-	constructor(event: any) {
-		super(event);
+	/**
+	 *
+	 * @param event
+	 * @param config
+	 * @param logger
+	 * @constructor
+	 */
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
 	protected publish_query(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			const params: IQueryParam = request.params;
@@ -48,6 +61,12 @@ export abstract class Publishable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
 	protected publish_count(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			const params: IQueryParam = request.params;
@@ -65,15 +84,21 @@ export abstract class Publishable extends Updatable {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
 	protected publish_get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
-			const params: IDParam = request.params;
-			this.Model.publish_find_by_id(params.id, (error: IErrorObject, object: IPublishModel): void => {
+			const target: IDParam = request.params;
+			this.Model.publish_find_by_id(target.id, (error: IErrorObject, object: IPublishModel): void => {
 				this.ifSuccess(response, error, (): void => {
 					if (object) {
 						this.SendSuccess(response, object);
 					} else {
-						this.SendWarn(response, {code: 2, message: "not found"});
+						this.SendWarn(response, {code: 2, message: "not found. 7606"});
 					}
 				});
 			});
@@ -104,5 +129,3 @@ export abstract class Publishable extends Updatable {
 }
 
 module.exports = Publishable;
-
-// db.funds.aggregate([ { $project:{content:1, "order_by_togo": {$divide: ["$content.value.current", "$content.value.target"]}}},     { $sort : { order_by_togo : 1 } }, { $project:{content:1}}]).pretty()

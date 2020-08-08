@@ -6,8 +6,8 @@
 
 "use strict";
 
-import {IAccountModel} from "../../../types/server";
-import {AuthLevel, Callback, IAccountPublic, IRole, IQueryOption} from "../../../types/universe";
+import {IAccountModel} from "../../../types/platform/server";
+import {AuthLevel, Callback, IAccountPublic, IQueryOption, IRole} from "../../../types/platform/universe";
 
 namespace AccountModel {
 
@@ -16,10 +16,8 @@ namespace AccountModel {
 
 	const path: any = require("path");
 
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
+	const project_root: string = process.cwd();
+	const models: string = path.join(project_root, "models");
 
 	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
 	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
@@ -32,6 +30,7 @@ namespace AccountModel {
 		user_id: {type: String, required: true, index: {unique: true}},
 		username: {type: String, required: true, index: {unique: true}},
 		password: {type: String},
+		relations: {type: [mongoose.Schema.Types.ObjectId], default: []},
 		privatekey: {type: String, default: ""},
 		publickey: {type: String, default: ""},
 		enabled: {type: Boolean, default: true},
@@ -43,17 +42,13 @@ namespace AccountModel {
 	});
 
 	Account.plugin(passport);
-	Account.plugin(timestamp);
+	Account.plugin(timestamp, { offset: 9 });
 	Account.plugin(grouped);
 
 	// プロバイダー種別とユーザレベル
 	const role = (user: { auth: number, provider: string }): IRole => {
 		let result: IRole = {
 			login: false,
-			system: false,
-			manager: false,
-			user: false,
-			public: true,
 			categoly: 0,
 			raw: AuthLevel.public,
 		};
@@ -68,19 +63,15 @@ namespace AccountModel {
 					break;
 				case "facebook":
 				case "apple":
-					auth = 200;
+					auth = AuthLevel.user;
 					categoly = 1;
 					break;
 				default:
-					auth = 200;
+					auth = AuthLevel.user;
 					categoly = 1;
 			}
 
 			result = {
-				system: (auth < AuthLevel.manager),
-				manager: (auth < AuthLevel.user),
-				user: (auth < AuthLevel.public),
-				public: true,
 				categoly,
 				raw: auth,
 				login: true,
@@ -125,13 +116,11 @@ namespace AccountModel {
 		return this.status;
 	};
 
-	Account.methods.set_status = function(status, cb: Callback<any>): void {
+	Account.methods.set_status = function(status: number, cb: Callback<any>): void {
 		this.status = status;
 	};
 
-	Account.statics.default_find_by_id = function(user: IAccountModel, id: string, cb: Callback<any>): void {
-		this.model("Account").findOne({user_id: id}, cb);
-	};
+
 
 	Account.statics.default_find_by_name = function(user: IAccountModel, name: string, cb: Callback<any>): void {
 		this.model("Account").findOne({username: name}, cb);
@@ -151,6 +140,18 @@ namespace AccountModel {
 
 	Account.statics.remove_by_name = function(user: IAccountModel, name: string, cb: Callback<any>): void {
 		this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {username: name}]}, cb);
+	};
+
+	Account.statics.default_find_by_id = function(user: IAccountModel, id: string, cb: Callback<any>): void {
+		this.model("Account").findOne({user_id: id}, cb);
+	};
+
+	Account.statics.set_by_id = function(user: IAccountModel, id: string, setter: any, cb: Callback<any>): void {
+		this.model("Account").findOneAndUpdate({user_id: id}, {$set: setter}, {upsert: false}, cb);
+	};
+
+	Account.statics.remove_by_id = function(user: IAccountModel, id: string, cb: Callback<any>): void {
+		this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {user_id: id}]}, cb);
 	};
 
 	Account.statics.publish_find = function(query: object, option: IQueryOption, cb: Callback<any>): void {

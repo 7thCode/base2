@@ -12,20 +12,36 @@ const execSync: any = childProcess.execSync;
 
 export class Unix {
 
+	/**
+	 *
+	 */
 	private backupdir: string;
 
+	/**
+	 *
+	 */
 	constructor() {
 		this.backupdir = process.cwd() + "/backup";
 	}
 
+	/**
+	 * DB Full Buckup
+	 * @param config
+	 * @returns status
+	 */
 	public Backup(config: any): string {
-		const backup = "mongodump --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " -o " + '"' + this.backupdir + '"';
+		const backup = "mongodump --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " -o " + "\"" + this.backupdir + "\"";
 		//     console.log(backup);
 		return "" + execSync(backup);
 	}
 
+	/**
+	 * DB Full Restore
+	 * @param config
+	 * @returns status
+	 */
 	public Restore(config: any): string {
-		const restore = "mongorestore --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " " + '"' + this.backupdir + "/" + config.name + '"';
+		const restore = "mongorestore --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " " + "\"" + this.backupdir + "/" + config.name + "\"";
 		//     console.log(restore);
 		return "" + execSync(restore);
 	}

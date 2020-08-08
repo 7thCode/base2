@@ -6,45 +6,65 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../../../types/universe";
+import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
 import * as NodeRSA from "node-rsa";
 
-import {ConstService} from "./const.service";
+import { environment } from '../../../../environments/environment';
+
 import {PublicKeyService} from "./publickey.service";
 import {UpdatableService} from "./updatable.service";
 
 /**
- * 更新サービス
+ * 秘匿更新サービスのベースクラス
  *
  * @since 0.01
  */
 export abstract class SecureUpdatableService extends UpdatableService {
 
+	/**
+	 * @constructor
+	 * @param http
+	 * @param model
+	 * @param PublicKey
+	 */
 	protected constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 		protected model: string,
 		protected PublicKey: PublicKeyService,
 	) {
-		super(http, constService, model);
+		super(http, model);
 	}
 
+	/**
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号文を返すコールバック
+	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-			const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			callback(null, rsa.encrypt(plain, "base64"));
 		} catch (e) {
 			callback(e, "");
 		}
 	}
 
+	/**
+	 * 公開鍵暗号化
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号文を返すコールバック
+	 */
 	private value_encrypt(key: string, plain: object, callback: Callback<any>): void {
 		try {
-			const use_publickey = this.constService.use_publickey;
+			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
 				SecureUpdatableService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
 					if (!error) {
@@ -61,6 +81,12 @@ export abstract class SecureUpdatableService extends UpdatableService {
 		}
 	}
 
+	/**
+	 * 秘匿更新
+	 *
+	 * @param content 更新内容
+	 * @param callback コールバック
+	 */
 	public post(content: object, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -77,7 +103,7 @@ export abstract class SecureUpdatableService extends UpdatableService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 7408"}, null);
 						});
 					} else {
 						callback(error, null);
@@ -89,6 +115,13 @@ export abstract class SecureUpdatableService extends UpdatableService {
 		});
 	}
 
+	/**
+	 * 秘匿更新
+	 *
+	 * @param id 更新レコードID
+	 * @param conten 更新内容
+	 * @param callback コールバック
+	 */
 	public put(id: string, content: object, callback: Callback<any>): void {
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
@@ -105,7 +138,7 @@ export abstract class SecureUpdatableService extends UpdatableService {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message}, null);
+							callback({code: -1, message: error.message + " 5517"}, null);
 						});
 					} else {
 						callback(error, null);

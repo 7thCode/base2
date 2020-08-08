@@ -7,8 +7,8 @@
 
 "use strict";
 
-import {IAccountModel} from "../../../types/server";
-import {Callback, IArticleModelContent, IQueryOption, IRights} from "../../../types/universe";
+import {IAccountModel} from "../../../types/platform/server";
+import {Callback, IArticleModelContent, IQueryOption, IRights} from "../../../types/platform/universe";
 
 namespace ArticleModel {
 
@@ -18,10 +18,8 @@ namespace ArticleModel {
 
 	const path: any = require("path");
 
-	const models: string = global._models;
-	const controllers: string = global._controllers;
-	const library: string = global._library;
-	const _config: string = global.__config;
+	const project_root: string = process.cwd();
+	const models: string = path.join(project_root, "models");
 
 	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
 	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
@@ -45,7 +43,7 @@ namespace ArticleModel {
 	});
 
 	Article.plugin(rights);
-	Article.plugin(timestamp);
+	Article.plugin(timestamp, { offset: 9 });
 	Article.plugin(grouped);
 
 	Article.index({"user_id": 1, "content.id": 1}, {unique: true});
@@ -57,12 +55,14 @@ namespace ArticleModel {
 		return shasum.digest("hex");
 	};
 
-	const query_by_user_read: any = (user: any, query): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
+	const query_by_user_read: any = (user: any, query: object): any => {
+		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
 	};
 
-	const query_by_user_write: any = (user: any, query): any => {
-		return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
+	const query_by_user_write: any = (user: any, query: object): any => {
+		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
+		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
 	};
 
 	const init: any = (_id: any, body: any): IArticleModelContent => {
@@ -93,12 +93,15 @@ namespace ArticleModel {
 	Article.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
 		this.user_id = user.user_id;
 		this.content = init(this._id, body.content);
-
 		this.model("Article").findOne(query_by_user_write(user, {"content.id": this.content.id}), (error, instance) => {
-			if (!instance) {
-				this.save(cb);
+			if (!error) {
+				if (!instance) {
+					this.save(cb);
+				} else {
+					cb({code: -1, message: "already. 3500"}, null);
+				}
 			} else {
-				cb({code: -1, message: "already."}, null);
+				cb(error, null);
 			}
 		});
 	};

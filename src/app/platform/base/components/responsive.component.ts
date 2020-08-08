@@ -6,54 +6,48 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../../types/universe";
+import {IErrorObject} from "../../../../../types/platform/universe";
 
-import {MediaMatcher} from "@angular/cdk/layout";
-import {ChangeDetectorRef, OnDestroy, OnInit} from "@angular/core";
-
+import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
-import {MatSnackBar, MatSpinner} from "@angular/material";
+import {Directive, OnDestroy, OnInit} from "@angular/core";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSpinner} from "@angular/material/progress-spinner";
+
+import {SessionableComponent} from "./sessionable.component";
 
 import {SessionService} from "../services/session.service";
-import {SessionableComponent} from "./sessionable.component";
 
 /**
  *  * Angilar Material レスポンシブクラス
  *
  * @since 0.01
  */
+
+@Directive()
 export abstract class ResponsiveComponent extends SessionableComponent implements OnInit, OnDestroy {
 
-	protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
-	protected mobileQueryListener: () => void;
-	public mobileQuery: MediaQueryList;
+	public isHandset: any;
+	public isTablet: any;
+	public isDesktop: any;
 
+	protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
+
+	/**
+	 *
+	 * @param session
+	 * @param overlay
+	 * @param snackbar
+	 * @param breakpointObserver
+	 */
 	protected constructor(
 		protected session: SessionService,
-		protected change: ChangeDetectorRef,
 		protected overlay: Overlay,
 		protected snackbar: MatSnackBar,
-		protected media: MediaMatcher,
+		protected breakpointObserver: BreakpointObserver
 	) {
-		super(session, change);
-		this.mobileQuery = media.matchMedia("(max-width: 600px)");
-		this.mobileQueryListener = () => change.detectChanges();
-		this.mobileQuery.addListener(this.mobileQueryListener);
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngOnInit(): void {
-
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngOnDestroy(): void {
-		this.mobileQuery.removeListener(this.mobileQueryListener);
+		super(session);
 	}
 
 	protected cdkSpinnerCreate(): OverlayRef {
@@ -67,12 +61,26 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 		});
 	}
 
-	protected errorBar(error: IErrorObject): void {
-	 	this.snackbar.open(error.message, "Close", {
-	 		duration: 3000,
-	 	});
+	/**
+	 *
+	 * @param error
+	 */
+	/*
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	 }
+*/
 
+	/**
+	 * 処理中
+	 * スピナー
+	 * @param value
+	 * @constructor
+	 */
 	protected Progress(value: boolean): void {
 		if (value) {
 			if (!this.progress) {
@@ -85,5 +93,24 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 				this.progress = false;
 			}
 		}
+	}
+
+	public ngOnInit(): void {
+		this.isHandset = this.breakpointObserver.observe([
+			Breakpoints.HandsetPortrait,
+		]);
+		this.isTablet = this.breakpointObserver.observe([
+			Breakpoints.TabletPortrait,
+		]);
+		this.isDesktop = this.breakpointObserver.observe([
+			Breakpoints.Web,
+		]);
+	}
+
+	/**
+	 *
+	 */
+	public ngOnDestroy(): void {
+	// 	this.mobileQuery.removeListener(this.mobileQueryListener);
 	}
 }

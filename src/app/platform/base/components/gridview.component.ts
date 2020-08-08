@@ -6,49 +6,69 @@
 
 "use strict";
 
-import {HttpClient} from "@angular/common/http";
-import {AfterContentInit, ChangeDetectorRef, OnChanges, OnInit, ViewChild} from "@angular/core";
-import {MediaChange, MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatGridList} from "@angular/material";
+import {Directive, OnInit} from "@angular/core";
+import {MatDialog} from "@angular/material/dialog";
+
+import {UpdatableComponent} from "./updatable.component";
 
 import {SessionService} from "../services/session.service";
-import {UpdatableComponent} from "./updatable.component";
 
 /**
  * Angilar Material グリッドビュー基本
  *
  * @since 0.01
  */
-export abstract class GridViewComponent extends UpdatableComponent implements OnInit, OnChanges, AfterContentInit {
 
-	@ViewChild("grid", {static: true}) public grid: MatGridList;
+@Directive()
+export abstract class GridViewComponent extends UpdatableComponent implements OnInit {
 
-	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
+	public breakpoint: number = 4;
 
+	/**
+	 *
+	 * @param session
+	 * @param matDialog
+	 */
 	constructor(
 		protected session: SessionService,
-		protected http: HttpClient,
-		protected change: ChangeDetectorRef,
 		protected matDialog: MatDialog,
-		protected observableMedia: MediaObserver,
 	) {
-		super(session, http, change, matDialog);
+		super(session, matDialog);
 	}
 
-	/**
-	 * @returns none
-	 */
-	public ngOnChanges(changes): void {
-
+	/*
+	* width to grid columns
+	*  @returns columns
+ 	*/
+	private widthToColumns(width: number): number {
+		let result: number = 4;
+		if (width < 600) {
+			result = 1;  // xs,
+		} else if (width < 960) {
+			result = 2;  // sm,
+		} else if (width < 1280) {
+			result = 4;  // md,
+		} else if (width < 1920) {
+			result = 6; // lg,
+		} else {
+			result = 8; // xl,
+		}
+		return result;
 	}
 
-	/**
-	 * @returns none
+	/*
+	*  @returns none
 	 */
-	public ngAfterContentInit(): void {
-		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
-			this.grid.cols = this.gridByBreakpoint[change.mqAlias];
-		});
+	public ngOnInit(): void {
+		this.breakpoint = this.widthToColumns(window.innerWidth);
+		super.ngOnInit();
+	}
+
+	/*
+	*  @returns none
+ 	*/
+	public onResize(event: any): void {
+		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
 }

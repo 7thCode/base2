@@ -9,12 +9,14 @@
 import {NgModule} from "@angular/core";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
-import {MatButtonModule, MatCheckboxModule, MatDialogModule} from "@angular/material";
+import {MatButtonModule} from "@angular/material/button";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatDialogModule} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "./components/info-dialog/info-dialog.component";
 import {EqualsValidator} from "./directives/equals-validator.directive";
-import {AuthcolorPipe} from "./pipes/authcolor.pipe";
-import {ShortnamePipe} from "./pipes/shortname.pipe";
+import {HighlightDirective} from "./directives/highlight.directive";
+
 import {ProfileService} from "./services/profile.service";
 import {PublicKeyService} from "./services/publickey.service";
 import {SessionService} from "./services/session.service";
@@ -26,9 +28,8 @@ import {SessionService} from "./services/session.service";
 		SessionService,
 	],
 	declarations: [
-		ShortnamePipe,
-		AuthcolorPipe,
 		EqualsValidator,
+		HighlightDirective,
 		InfoDialogComponent,
 	],
 	imports: [
@@ -41,9 +42,8 @@ import {SessionService} from "./services/session.service";
 		FormsModule,
 	],
 	exports: [
-		ShortnamePipe,
-		AuthcolorPipe,
 		EqualsValidator,
+		HighlightDirective,
 		InfoDialogComponent,
 	],
 	bootstrap: [

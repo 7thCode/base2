@@ -1,0 +1,7 @@
+.title {
+	font-size:48px;
+	color:#c0c0c0;
+	font-weight: 900;
+	font-style: italic;
+	filter: drop-shadow(2px 4px 8px #4444dd50);
+}

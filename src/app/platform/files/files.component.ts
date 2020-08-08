@@ -6,46 +6,112 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../../types/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
-import {ChangeDetectorRef, Component, HostListener, OnChanges, OnInit, ViewChild} from "@angular/core";
-import {MediaChange, MediaObserver} from "@angular/flex-layout";
-import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
+import {Component, HostListener, OnInit, ViewChild} from "@angular/core";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
-import {ConstService} from "../base/services/const.service";
+
 import {SessionService} from "../base/services/session.service";
 
+/**
+ * ファイル
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "files",
 	templateUrl: "./files.component.html",
 	styleUrls: ["./files.component.css"],
 })
+export class FilesComponent extends UploadableComponent implements OnInit {
 
-/**
- * @since 0.01
- */
-export class FilesComponent extends UploadableComponent implements OnInit, OnChanges {
+	@ViewChild("fileInput") public fileInput: any;
 
-	public results: any[];
-	protected query: object = {};
-	protected page: number = 0;
-
-	@ViewChild("fileInput", {static: true}) public fileInput;
-	@ViewChild("grid", {static: true}) public grid: MatGridList;
+	public results: any[] = [];
 
 	public filename: string = "";
 	public size: number = 20;
-	public count: number;
+	public count: number = 0;
 
-	public gridByBreakpoint: any = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
+	public breakpoint: number = 4;
 
+	protected query: object = {};
+	protected page: number = 0;
+
+	/**
+	 *
+	 * @param session
+	 * @param http
+	 * @param matDialog
+	 * @param snackbar
+	 */
+	constructor(
+		protected session: SessionService,
+		protected http: HttpClient,
+		private matDialog: MatDialog,
+		private snackbar: MatSnackBar,
+	) {
+		super(session, http);
+	}
+
+	private widthToColumns(width: number): number {
+		let result: number = 4;
+		if (width < 600) {
+			result = 1;  // xs,
+		} else if (width < 960) {
+			result = 2;  // sm,
+		} else if (width < 1280) {
+			result = 4;  // md,
+		} else if (width < 1920) {
+			result = 6; // lg,
+		} else {
+			result = 8; // xl,
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
+	}
+
+	/**
+	 *
+	 * @param name 名前
+	 * @param category カテゴリー
+	 */
+	protected getCategory(name: string, category: string): string {
+		let result: string = "";
+		if ((name === "avatar.jpg" || name === "blank.png")) {
+			result = "l";
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 * @param event ウィンドウイベント
+	 */
 	@HostListener("dragover", ["$event"])
 	public onDragOver(event: any): void {
 		event.preventDefault();
 	}
 
+	/**
+	 *
+	 * @param event ウィンドウイベント
+	 */
 	@HostListener("drop", ["$event"])
 	public onDrop(event: any): void {
 		event.preventDefault();
@@ -53,54 +119,51 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files));
 	}
 
-	constructor(
-		protected session: SessionService,
-		protected http: HttpClient,
-		protected constService: ConstService,
-		protected change: ChangeDetectorRef,
-		protected observableMedia: MediaObserver,
-		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar
-	) {
-		super(session, http, constService, change);
-	}
-
 	/**
-	 * @returns none
+	 *
 	 */
 	public ngOnInit(): void {
 		super.ngOnInit();
 		this.page = 0;
 		this.query = {};
 		this.results = [];
+		this.breakpoint =  this.widthToColumns(window.innerWidth);
 
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
+				if (results) {
+					this.results = results;
+				} else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}
 		});
 	}
 
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
+	public onResize(event: any): void {
+		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
 	/**
-	 * @returns none
+	 * ファイルドロップハンドラー
+	 * @param path パス
+	 * @param files ファイルオブジェクト
 	 */
 	public onFileDrop(path: string, files: any[]): void {
 		if (files.length > 0) {
 			this.Progress(true);
 			this.uploadFiles(path, files, (error: IErrorObject, result: any): void => {
 				if (!error) {
-					this.draw((error, filtered) => {
+					this.draw((error, results) => {
 						if (!error) {
-							this.results = filtered;
-							this.Complete("", filtered);
+							if (results) {
+								this.results = results;
+								this.Complete("", results);
+							} else {
+								this.Complete("error", {code: -1, message: "error."});
+							}
 						} else {
 							this.Complete("error", error);
 						}
@@ -115,14 +178,14 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public onClickFileInputButton(): void {
 		this.fileInput.nativeElement.click();
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public onChangeFileInput(): void {
 		const files: any[] = this.fileInput.nativeElement.files;
@@ -131,18 +194,23 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public findByFilename(): void {
 		this.query = {};
+		this.page = 0;
 		if (this.filename) {
 			this.query = {filename: {$regex: this.filename}};
 		}
 
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
-				this.Complete("", filtered);
+				if (results) {
+					this.results = results;
+					this.Complete("", results);
+				}else {
+					this.Complete("error", {code: -1, message: "error."});
+				}
 			} else {
 				this.Complete("error", error);
 			}
@@ -150,42 +218,21 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
-	 */
-	protected getCategory(name: string, category: string): string {
-		let result: string = "";
-		if ((name === "avatar.jpg" || name === "blank.png")) {
-			result = "l";
-		}
-		return result;
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngOnChanges(changes: any): void {
-	}
-
-	/**
-	 * @returns none
-	 */
-	public ngAfterContentInit(): void {
-		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
-			this.grid.cols = this.gridByBreakpoint[change.mqAlias];
-		});
-	}
-
-	/**
-	 * @returns none
+	 * ファイル削除
+	 * @param name
 	 */
 	public onDelete(name: string): void {
 		this.Progress(true);
 		this.delete(name, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw((error, filtered) => {
+				this.draw((error, results) => {
 					if (!error) {
-						this.results = filtered;
-						this.Complete("", filtered);
+						if (results) {
+							this.results = results;
+							this.Complete("", results);
+						} else {
+							this.Complete("error", {code: -1, message:"error."});
+						}
 					} else {
 						this.Complete("error", error);
 					}
@@ -198,32 +245,35 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 * 再描画
+	 * @param callback
 	 */
-	public draw(callback: Callback<any>): void {
+	public draw(callback: Callback<object[]>): void {
 		this.Progress(true);
-		this.fileService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
+		this.filesService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
 				const option = {sort: {"content.start": -1}, skip: this.size * this.page, limit: this.size};
-				this.fileService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[]): void => {
+				this.filesService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[] | null): void => {
 					if (!error) {
 						const filtered: any[] = [];
-						results.forEach((result) => {
-							result.cols = 1;
-							result.rows = 1;
-							result.type = 0;
-							if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,webp")) {
-								result.type = 1;
-							} else if (this.hasExtension({name: result.filename}, "svg")) {
-								result.type = 2;
-							} else if (this.hasExtension({name: result.filename}, "mpg,mp4,avi,mov,m4v,webm")) {
-								result.type = 3;
-							}
-							result.extension = this.Extension({name: result.filename});
+						if (results) {
+							results.forEach((result) => {
+								result.cols = 1;
+								result.rows = 1;
+								result.type = 0;
+								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
+									result.type = 1;
+								} else if (this.hasExtension({name: result.filename}, "svg")) {
+									result.type = 2;
+								} else if (this.hasExtension({name: result.filename}, "mpg,mp4,avi,mov,m4v,webm")) {
+									result.type = 3;
+								}
+								result.extension = this.Extension({name: result.filename});
 
-							filtered.push(result);
-						});
+								filtered.push(result);
+							});
+						}
 						callback(null, filtered);
 					} else {
 						callback(error, null);
@@ -237,13 +287,18 @@ export class FilesComponent extends UploadableComponent implements OnInit, OnCha
 	}
 
 	/**
-	 * @returns none
+	 * ページ送り
+	 * @param event
 	 */
-	public Page(event): void {
+	public Page(event: any): void {
 		this.page = event.pageIndex;
-		this.draw((error: IErrorObject, filtered: any): void => {
+		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
-				this.results = filtered;
+				if (results) {
+					this.results = results;
+				} else {
+					this.Complete("error", {code: -1, message: "error"});
+				}
 			} else {
 				this.Complete("error", error);
 			}

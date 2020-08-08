@@ -7,25 +7,32 @@
 "use strict";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-
-@Component({
-	selector: "info-dialog",
-	styleUrls: ["./info-dialog.component.css"],
-	templateUrl: "./info-dialog.component.html",
-})
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 /**
  *
  *
  * @since 0.01
  */
+@Component({
+	selector: "info-dialog",
+	styleUrls: ["./info-dialog.component.css"],
+	templateUrl: "./info-dialog.component.html",
+})
 export class InfoDialogComponent implements OnInit {
 
+	/**
+	 *
+	 */
 	get content(): any {
 		return this.data.content;
 	}
 
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
@@ -33,13 +40,18 @@ export class InfoDialogComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-
 	}
 
+	/**
+	 *
+	 */
 	public cancel(): void {
 		this.matDialogRef.close(null);
 	}
 
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.matDialogRef.close(this.data);
 	}

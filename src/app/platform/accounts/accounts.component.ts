@@ -6,121 +6,206 @@
 
 "use strict";
 
-import {Callback, IErrorObject} from "../../../../types/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
-import {HttpClient} from "@angular/common/http";
-import {AfterContentInit, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
-import {MediaChange, MediaObserver} from "@angular/flex-layout"; // for responsive
-import {MatDialog, MatGridList, MatSnackBar} from "@angular/material";
+import {Component, OnInit} from "@angular/core";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {AuthService} from "../auth/auth.service";
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 import {SessionableComponent} from "../base/components/sessionable.component";
-import {ConstService} from "../base/services/const.service";
-import {PublicKeyService} from "../base/services/publickey.service";
-import {SessionService} from "../base/services/session.service";
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
-import {AccountsService} from "./accounts.service";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 
+import {AuthService} from "../auth/auth.service";
+import {SessionService} from "../base/services/session.service";
+import {AccountsService} from "./accounts.service";
+
+/**
+ * アカウントレコード
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "accounts",
 	templateUrl: "./accounts.component.html",
 	styleUrls: ["./accounts.component.css"],
 })
-
-/**
- *
- *
- * @since 0.01
- */
-export class AccountsComponent extends SessionableComponent implements OnInit, AfterContentInit {
-
-	public results: object[];
-
-	public progress: boolean;
+export class AccountsComponent extends SessionableComponent implements OnInit {
 
 	public get isProgress(): boolean {
 		return this.progress;
 	}
 
-	public Progress(value: boolean): void {
-		this.progress = value;
-		this.onProgress.emit(value);
-	}
+	public results: any[] = [];
 
-	public gridByBreakpoint: object = {xl: 8, lg: 6, md: 4, sm: 2, xs: 1};
+	public progress: boolean = false;
 
-	@ViewChild("grid", {static: true}) public grid: MatGridList;
+	public nickname: string = "";
+	public size: number = 20;
+	public count: number = 0;
 
-	public nickname = "";
-
-	protected service: AccountsService;
-	protected auth_service: AuthService;
+	public breakpoint: number = 4;
 
 	protected query: object = {};
 	protected page: number = 0;
-	public size: number = 20;
-	public count: number;
 
 	/**
-	 * @returns none
+	 *
+	 * @param session
+	 * @param authService
+	 * @param accountService
+	 * @param matDialog
+	 * @param snackbar
 	 */
-	protected Complete(type: string, value: object): void {
-		this.complete.emit({type, value});
+	constructor(
+		protected session: SessionService,
+		private authService: AuthService,
+		private accountService: AccountsService,
+		private matDialog: MatDialog,
+		private snackbar: MatSnackBar,
+	) {
+		super(session);
 	}
 
 	/**
-	 * @returns none
+	 * フォームコンバータ
+	 * @param data
 	 */
 	public static confirmToForm(data: object): object {
 		return data;
 	}
 
 	/**
-	 * @returns none
+	 * モデルコンバータ
+	 * @param data
 	 */
 	public static confirmToModel(data: object): object {
 		return data;
 	}
 
-	constructor(
-		public session: SessionService,
-		public constService: ConstService,
-		public publickeyservice: PublicKeyService,
-		protected http: HttpClient,
-		public change: ChangeDetectorRef,
-		private observableMedia: MediaObserver,
-		protected matDialog: MatDialog,
-		protected snackbar: MatSnackBar
-	) {
-		super(session, change);
-		this.service = new AccountsService(http, constService);
-		this.auth_service = new AuthService(http, constService, publickeyservice);
+	/**
+	 *
+	 */
+	private widthToColumns(width: number): number {
+		let result: number = 4;
+		if (width < 600) {
+			result = 1;  // xs,
+		} else if (width < 960) {
+			result = 2;  // sm,
+		} else if (width < 1280) {
+			result = 4;  // md,
+		} else if (width < 1920) {
+			result = 6; // lg,
+		} else {
+			result = 8; // xl,
+		}
+		return result;
 	}
 
 	/**
-	 * @returns none
+	 * アカウント参照
+	 * @param id
+	 * @param callback
 	 */
-	public ngAfterContentInit(): void {
-		this.observableMedia.media$.subscribe((change: MediaChange) => { // for responsive
-			this.grid.cols = this.gridByBreakpoint[change.mqAlias];
+	private get(id: string, callback: Callback<object>): void {
+		this.Progress(true);
+		this.accountService.get(id, (error: IErrorObject, result: object): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
 		});
 	}
 
 	/**
-	 * @returns none
+	 * アカウント更新
+	 * @param id
+	 * @param data
+	 * @param callback
+	 */
+	private update(id: string, data: object, callback: Callback<object>): void {
+		this.Progress(true);
+		this.accountService.put(id, data, (error: IErrorObject, result: object): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 * アカウント削除
+	 * @param id
+	 * @param callback
+	 */
+	private delete(id: string, callback: Callback<object>): void {
+		this.Progress(true);
+		this.accountService.delete(id, (error: IErrorObject, result: object): void => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+			this.Progress(false);
+		});
+	}
+
+	/**
+	 * 完了通知
+	 * @param type
+	 * @param value
+	 * @constructor
+	 */
+	protected Complete(type: string, value: object): void {
+		this.complete.emit({type, value});
+	}
+
+	/**
+	 * エラー表示
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0
+			});
+		}
+	}
+
+	/**
+	 * 処理中
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
+		this.onProgress.emit(value);
+	}
+
+	/**
+	 *
 	 */
 	public ngOnInit(): void {
 		this.Progress(false);
 		this.page = 0;
 		this.query = {};
 
+		this.breakpoint =  this.widthToColumns(window.innerWidth);
+
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
-			this.draw((error: IErrorObject, accounts: object[]): void => {
+			this.draw((error: IErrorObject, accounts: object[] | null): void => {
 				if (!error) {
-					this.results = accounts;
+					if (accounts) {
+						this.results = accounts;
+					} else {
+						this.errorBar({code: -1, message:"error."});
+					}
 				} else {
 					this.errorBar(error);
 				}
@@ -128,23 +213,29 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		});
 	}
 
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
+	/**
+	 *
+	 */
+	public onResize(event: any): void {
+		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
 	/**
-	 * @returns none
+	 *
 	 */
 	public findByNickname(): void {
 		this.query = {};
+		this.page = 0;
 		if (this.nickname) {
 			this.query = {"content.nickname": {$regex: this.nickname}};
 		}
-		this.draw((error: IErrorObject, accounts: object[]): void => {
+		this.draw((error: IErrorObject, accounts: object[] | null): void => {
 			if (!error) {
-				this.results = accounts;
+				if (accounts) {
+					this.results = accounts;
+				} else {
+					this.errorBar({code: -1, message:"error."});
+				}
 			} else {
 				this.errorBar(error);
 			}
@@ -152,15 +243,16 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
-	 * @returns none
+	 * 再描画
+	 * @param callback
 	 */
-	public draw(callback: Callback<object>): void {
+	public draw(callback: Callback<object[]>): void {
 		this.Progress(true);
-		this.service.count(this.query, (error: IErrorObject, result: any): void => {
+		this.accountService.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
 				const option = {sort: {auth: 1}, skip: this.size * this.page, limit: this.size};
-				this.service.query(this.query, option, (error: IErrorObject, results: any[]): void => {
+				this.accountService.query(this.query, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
 						const accounts: object[] = [];
 						results.forEach((result) => {
@@ -183,20 +275,33 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		});
 	}
 
-	public Page(event): void {
+	/**
+	 * ページ送り
+	 * @param event
+	 * @constructor
+	 */
+	public Page(event: any): void {
 		this.page = event.pageIndex;
-		this.draw((error: IErrorObject, accounts: object[]): void => {
+		this.draw((error: IErrorObject, accounts: object[] | null): void => {
 			if (!error) {
-				this.results = accounts;
+				if (accounts) {
+					this.results = accounts;
+				} else {
+					this.errorBar({code: -1, message:"error."});
+				}
 			} else {
 				this.errorBar(error);
 			}
 		});
 	}
 
+	/**
+	 * クリエイトダイアログ
+	 */
 	public createDialog(): void {
-		const dialog: any = this.matDialog.open(RegistDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
 			data: {
 				session: this.currentSession,
 				content: {
@@ -205,7 +310,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 					password: "",
 					nickname: "",
 				},
-				service: this.service,
+				service: this.accountService,
 			},
 			disableClose: true,
 		});
@@ -217,7 +322,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 				const username: string = content.username;
 				const password: string = content.password;
 				const metadata: {nickname: string, id: string} = {nickname: content.nickname, id: "1"};
-				this.auth_service.regist_immediate(username, password, metadata, (error: IErrorObject, result: object): void => {
+				this.authService.regist_immediate(username, password, metadata, (error: IErrorObject, result: object): void => {
 					if (!error) {
 						this.draw((error: IErrorObject, accounts: object[]): void => {
 							if (!error) {
@@ -243,49 +348,66 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
+	 * アップデートダイアログ
 	 * @returns none
 	 */
 	public updateDialog(id: string): void {
 		this.Progress(true);
-		this.get(id, (error: IErrorObject, result: object): void => {
+		this.get(id, (error: IErrorObject, result: object | null): void => {
 			if (!error) {
-				const dialog: any = this.matDialog.open(AccountDialogComponent, {
-					width: "90vw",
-					data: {
-						session: this.currentSession,
-						user: result,
-						content: AccountsComponent.confirmToForm(result),
-						service: this.service,
-					},
-					disableClose: true,
-				});
+				if (result) {
+					const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
+						width: "fit-content",
+						height: "fit-content",
+						data: {
+							session: this.currentSession,
+							user: result,
+							content: AccountsComponent.confirmToForm(result),
+							service: this.accountService,
+						},
+						disableClose: true,
+					});
 
-				dialog.beforeClosed().subscribe((result: object): void => {
-					if (result) { // if not cancel then
-						this.Progress(true);
-						this.update(id, AccountsComponent.confirmToModel(result), (error: IErrorObject, result: object): void => {
-							if (!error) {
-								this.draw((error: IErrorObject, accounts: object[]): void => {
-									if (!error) {
-										this.results = accounts;
-										this.Complete("", result);
+					dialog.beforeClosed().subscribe((result: object): void => {
+						if (result) { // if not cancel then
+							this.Progress(true);
+							this.update(id, AccountsComponent.confirmToModel(result), (error: IErrorObject, result: object | null): void => {
+								if (!error) {
+									if (result) {
+										this.draw((error: IErrorObject, accounts: object[] | null): void => {
+											if (!error) {
+												if (accounts) {
+													this.results = accounts;
+													this.Complete("", result);
+												} else {
+													this.Complete("error", {code: -1, message:"error."});
+													this.errorBar({code: -1, message:"error."});
+												}
+											} else {
+												this.Complete("error", error);
+												this.errorBar(error);
+											}
+										});
 									} else {
-										this.Complete("error", error);
-										this.errorBar(error);
+										this.Complete("error", {code: -1, message:"error."});
+										this.errorBar({code: -1, message:"error."});
 									}
-								});
-							} else {
-								this.Complete("error", error);
-								this.errorBar(error);
-							}
-							this.Progress(false);
-						});
-					}
-				});
+								} else {
+									this.Complete("error", error);
+									this.errorBar(error);
+								}
+								this.Progress(false);
+							});
+						}
+					});
 
-				dialog.afterClosed().subscribe((result: object): void => {
+					dialog.afterClosed().subscribe((result: object): void => {
 
-				});
+					});
+				} else {
+					this.Complete("error", {code: -1, message:"error."});
+					this.errorBar({code: -1, message:"error."});
+				}
 			} else {
 				this.Complete("error", error);
 				this.errorBar(error);
@@ -295,13 +417,15 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 	}
 
 	/**
+	 * デリートダイアログ
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
 		const resultDialogContent: any = {title: "User", message: "Delete User?."};
 
-		const dialog: any = this.matDialog.open(InfoDialogComponent, {
-			width: "40vw",
+		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+			width: "fit-content",
+			height: "fit-content",
 			data: {
 				session: this.currentSession,
 				content: resultDialogContent,
@@ -312,12 +436,17 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 		dialog.afterClosed().subscribe((result: object) => {
 			if (result) { // if not cancel then
 				this.Progress(true);
-				this.delete(id, (error: IErrorObject, result: any): void => {
+		 		this.delete(id, (error: IErrorObject, result: any): void => {
 					if (!error) {
-						this.draw((error: IErrorObject, accounts: object[]): void => {
+						this.draw((error: IErrorObject, accounts: object[] | null): void => {
 							if (!error) {
-								this.results = accounts;
-								this.Complete("", result);
+								if (accounts) {
+									this.results = accounts;
+									this.Complete("", result);
+								} else {
+									this.Complete("error", {code: -1, message: "error."});
+									this.errorBar({code: -1, message: "error."});
+								}
 							} else {
 								this.Complete("error", error);
 								this.errorBar(error);
@@ -332,50 +461,4 @@ export class AccountsComponent extends SessionableComponent implements OnInit, A
 			}
 		});
 	}
-
-	/**
-	 * @returns none
-	 */
-	private get(id: string, callback: Callback<object>): void {
-		this.Progress(true);
-		this.service.get(id, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	private update(id: string, data: object, callback: Callback<object>): void {
-		this.Progress(true);
-		this.service.put(id, data, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
-		});
-	}
-
-	/**
-	 * @returns none
-	 */
-	private delete(id: string, callback: Callback<object>): void {
-		this.Progress(true);
-		this.service.delete(id, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				callback(null, result);
-			} else {
-				callback(error, null);
-			}
-			this.Progress(false);
-		});
-	}
-
 }

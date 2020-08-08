@@ -7,56 +7,91 @@
 "use strict";
 
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ConstService} from "./const.service";
+
+import { environment } from '../../../../environments/environment';
 
 /**
- * HTTP
+ * HTTPサービス
+ *
+ * ベースクラス。
+ * 全てのHTTPクライアントはこのサービスを継承する。
  *
  * @since 0.01
  */
 export abstract class HttpService {
 
-	protected httpOptions: any;
-	protected networkError: any;
+	/**
+	 * 共通エンドポイント
+	 */
 	public endPoint: string = "";
 
+	/**
+	 * 共通オプション
+	 */
+	protected httpOptions: any;
+
+	/**
+	 * 共通エラー
+	 */
+	protected networkError: any;
+
+	/**
+	 * @constructor
+	 * @param http 基本HTTP
+	 */
 	constructor(
 		protected http: HttpClient,
-		protected constService: ConstService,
 	) {
-		this.endPoint = this.constService.endPoint;
+		this.endPoint = environment.endPoint;
+		this.networkError = {code: 10000, message: "network error. 7461"};
 		this.httpOptions = {
 			headers: new HttpHeaders({
 				"Accept": "application/json; charset=utf-8",
 				"Content-Type": "application/json; charset=utf-8",
-				"x-requested-with": "XMLHttpRequest",
 			}),
 			withCredentials: true,
 		};
-		this.networkError = {code: 10000, message: "network error"};
 	}
 
+	/**
+	 * URIストリングからオブジェクトにデシリアライズ
+	 *
+	 * @param data デシリアライズされるテキスト
+	 * @param callback オブジェクトを返すコールバック
+	 */
 	protected Decode(data: string, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
-		} catch (e) {
-			callback(e, null);
+		} catch (error) {
+			callback(error, null);
 		}
 	}
 
-	protected Encode(data: any, callback: (error: any, result: any) => void): void {
+	/**
+	 * オブジェクトからURIストリングシリアライズ
+	 *
+	 * @param data シリアライズされるオブジェクト
+	 * @param callback シリアライズテキストを返すコールバック
+	 */
+	protected Encode(data: any, callback: (error: any, result: string) => void): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
-		} catch (e) {
-			callback(e, null);
+		} catch (error) {
+			callback(error, "");
 		}
 	}
 
+	/**
+	 * エラー判定付きパース
+	 *
+	 * @param data　デシリアライズされるテキスト
+	 * @param callback オブジェクトを返すコールバック
+	 */
 	protected Parse(data: string, callback: (error: any, result: any) => void): void {
 		try {
 			callback(null, JSON.parse(data));
-		} catch (e) {
-			callback(e, null);
+		} catch (error) {
+			callback(error, null);
 		}
 	}
 

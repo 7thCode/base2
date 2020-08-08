@@ -6,30 +6,44 @@
 
 "use strict";
 
-import {IEmit} from "../../../../../../../types/universe";
+import {IEmit} from "../../../../../../../types/platform/universe";
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 
+/**
+ * ボタン
+ *
+ * @since 0.01
+ */
 @Component({
 	selector: "button-element",
 	templateUrl: "./button.component.html",
 	styleUrls: ["./button.component.css"],
 })
-
 export class ButtonComponent implements OnInit {
 
 	@Input() public description: any;
 
 	@Output() public onClick = new EventEmitter<IEmit>();
 
+	/**
+	 *
+	 */
 	constructor() {
 	}
 
-	public ngOnInit() {
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
 
 	}
 
-	public click(event) {
+	/**
+	 *
+	 * @param event
+	 */
+	public click(event: any) {
 		this.onClick.emit({source: this.description, value: true, changed: null});
 	}
 

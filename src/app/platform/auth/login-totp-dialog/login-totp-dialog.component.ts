@@ -7,60 +7,95 @@
 "use strict";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {IErrorObject} from "../../../../../types/universe";
+import {IErrorObject} from "../../../../../types/platform/universe";
 import {AuthService} from "../auth.service";
-
-@Component({
-	selector: "login-totp-dialog",
-	styleUrls: ["../auth.component.css"],
-	templateUrl: "./login-totp-dialog.component.html",
-})
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 /**
  *
  *
  * @since 0.01
  */
-export class LoginTotpDialogComponent implements OnInit {
+@Component({
+	selector: "login-totp-dialog",
+	styleUrls: ["../auth.component.css"],
+	templateUrl: "./login-totp-dialog.component.html",
+})
+export class LoginTotpDialogComponent extends BaseDialogComponent implements OnInit {
 
-	public progress: boolean;
-
-	public Progress(value: boolean): void {
-		this.progress = value;
+	/**
+	 *
+	 */
+	get content(): any {
+		return this.data.content;
 	}
 
-	public password_visible: boolean;
+	/**
+	 *
+	 */
+	public progress: boolean = false;
+
+	/**
+	 *
+	 */
+	public password_visible: boolean = false;
 
 	// public emailFormControl = new FormControl("", [
 	// 	Validators.required,
 	// 	Validators.email,
 	// ]);
 
+	/**
+	 *
+	 * @param data
+	 * @param matDialogRef
+	 * @param snackbar
+	 * @param auth
+	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<LoginTotpDialogComponent>,
-		private snackbar: MatSnackBar,
+		public matDialogRef: MatDialogRef<any>,
+		public snackbar: MatSnackBar,
 		public auth: AuthService) {
+		super();
 	}
 
-	get content(): any {
-		return this.data.content;
+	/**
+	 *
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 0,
+			});
+		}
 	}
 
+	/**
+	 *
+	 * @param value
+	 * @constructor
+	 */
+	public Progress(value: boolean): void {
+		this.progress = value;
+	}
+
+	/**
+	 *
+	 */
 	public ngOnInit(): void {
 		this.Progress(false);
 		this.password_visible = false;
 	}
 
-	protected errorBar(error: IErrorObject): void {
-		this.snackbar.open(error.message, "Close", {
-			duration: 3000,
-		});
-	}
-
+	/**
+	 *
+	 */
 	public onAccept(): void {
 		this.Progress(true);
 		this.auth.login_totp(this.content.username, this.content.password, this.content.code, (error: IErrorObject, result: any): void => {

@@ -6,50 +6,65 @@
 
 	<div mat-dialog-content fxLayout="column">
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
-			<mat-form-field>
-				<input matInput type="text" placeholder="Nickname" [(ngModel)]="content.nickname" #nickname="ngModel" name="nickname" required minlength="2" maxlength="255">
-				<mat-hint>3文字以上500文字まで</mat-hint>
-				<mat-error *ngIf="nickname.errors?.required;">入力してください</mat-error>
-				<mat-error *ngIf="nickname.errors?.maxlength">長すぎます</mat-error>
-				<mat-error *ngIf="nickname.errors?.minlength">短すぎます</mat-error>
-			</mat-form-field>
+			<mat-card>
+				<mat-card-content fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between">
 
-			<mat-form-field>
-				<textarea matInput type="text" placeholder="Description" [(ngModel)]="content.description" #description="ngModel" name="description" maxlength="255"></textarea>
-				<mat-hint>3文字以上500文字まで</mat-hint>
-				<mat-error *ngIf="description.errors?.maxlength">長すぎます</mat-error>
-			</mat-form-field>
-
-			<div fxLayout="row" fxLayoutAlign="space-between">
-				<div>
 					<mat-form-field>
-						<input matInput type="number" placeholder="Auth" [(ngModel)]="content.auth" name="auth" required>
+						<mat-label>Nickname...</mat-label>
+						<input matInput autocomplete="off" type="text" placeholder="Xxxxxx" [(ngModel)]="content.nickname" #nickname_field="ngModel" name="nickname" required minlength="2" maxlength="255">
+						<mat-hint>3文字以上500文字まで</mat-hint>
+						<mat-error *ngIf="nickname_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="nickname_field.errors?.maxlength">長すぎます</mat-error>
+						<mat-error *ngIf="nickname_field.errors?.minlength">短すぎます</mat-error>
 					</mat-form-field>
-				</div>
-				<div *ngIf="session.role.system || session.role.manager">
-					<mat-slide-toggle class="example-margin" [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
-				</div>
-			</div>
 
-			<div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+					<mat-form-field>
+						<mat-label>Auth...</mat-label>
+						<input matInput type="number" placeholder="999" [(ngModel)]="content.auth" name="auth" required>
+					</mat-form-field>
 
-				<mat-card fxLayout="column" fxLayout.xs="row" fxLayoutAlign="space-around center" style="height:200px;width:200px;padding:10px;">
-					<img *ngIf="qr != ''" style="height:180px;width:180px;border-style: solid; border-color: #505050;" [src]="qr">
-				</mat-card>
+					<div *ngIf="session.role | authis: 'manager'">
+						<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
+					</div>
 
-				<mat-card fxLayout="column" fxLayout.xs="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around center">
-					<button mat-raised-button color="accent" [disabled]="is2fa" (click)="onSet2Fa()">Set 2FA</button>
-					<button mat-raised-button color="primary" [disabled]="!is2fa" (click)="onReset2Fa()">Clear 2FA</button>
-				</mat-card>
+				</mat-card-content>
+			</mat-card>
 
-			</div>
+			<mat-card>
+				<mat-card-content>
+					<mat-form-field>
+						<textarea matInput type="text" placeholder="Xxxxxxxxxx..." [(ngModel)]="content.description" #description="ngModel" name="description" maxlength="255"></textarea>
+						<mat-hint>3文字以上500文字まで</mat-hint>
+						<mat-error *ngIf="description.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+				</mat-card-content>
+			</mat-card>
+
+			<mat-card>
+				<mat-card-header>
+					<mat-card-title>2FA</mat-card-title>
+				</mat-card-header>
+				<mat-card-content fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+					<mat-card style="height:200px;width:200px;padding:10px;">
+						<mat-card-content fxLayout="column" fxLayout.xs="row" fxLayoutAlign="space-around center">
+							<img *ngIf="qr != ''" style="height:180px;width:180px;border-style: solid; border-color: #505050;" [src]="qr" alt="qr code">
+						</mat-card-content>
+					</mat-card>
+					<mat-card>
+						<mat-card-content fxLayout="column" fxLayout.xs="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
+							<button mat-raised-button color="accent" [disabled]="is2fa" (click)="onSet2Fa()">Set 2FA</button>
+							<button mat-raised-button color="primary" [disabled]="!is2fa" (click)="onReset2Fa()">Clear 2FA</button>
+						</mat-card-content>
+					</mat-card>
+				</mat-card-content>
+			</mat-card>
 		</form>
 	</div>
 
 	<div class="spacer"></div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()">OK</button>
+		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</div>
 </div>
