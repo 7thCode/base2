@@ -34,7 +34,6 @@ const cache_root: string = "files/cache/";
 
 file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
-
 		const cache_write = (user_id: string, _path: string, input: any, callback: (error: IErrorObject) => void): void => {
 			try {
 				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
@@ -283,7 +282,6 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				render_id(response, next, file, _id, query, range, command_string, (result) => {
 
 				});
-
 			});
 		}]);
 

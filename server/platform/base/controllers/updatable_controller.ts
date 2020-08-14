@@ -60,7 +60,7 @@ export abstract class Updatable extends Wrapper {
 	private own_by_name(current: any, username: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw < AuthLevel.user) { // is not manager?
+		if (current.auth < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.username === username); // is self?
@@ -77,21 +77,12 @@ export abstract class Updatable extends Wrapper {
 	private own_by_id(current: any, user_id: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw < AuthLevel.user) { // is not manager?
+		if (current.auth < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.user_id === user_id); // is self?
 		}
 		return readable;
-	}
-
-	/**
-	 *
-	 * @param user
-	 * @returns role
-	 */
-	protected role(user: any): object {
-		return Account.Role(user);
 	}
 
 	/**

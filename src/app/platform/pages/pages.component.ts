@@ -17,6 +17,7 @@ import {PageDialogComponent} from "./page-dialog/page-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
+import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 /**
  * ページ
@@ -90,7 +91,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 			category: "html",
 			status: 0,
 			type: "text/html",
-			path: "index.html",
+			path: "",
 			value: "",
 			accessory: {},
 		};
@@ -183,16 +184,40 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 * ページ削除
 	 * @param id ターゲット
 	 */
-	public onDelete(id: string): void {
-		this.Progress(true);
-		this.delete(id, (error: IErrorObject, result: object): void => {
-			if (!error) {
-				this.Complete("", result);
-			} else {
-				this.Complete("error", error);
-			}
-			this.Progress(false);
-		});
+	public onDelete(event: any, id: string): void {
+
+		const _delete = (id: string): void => {
+			this.Progress(true);
+			this.delete(id, (error: IErrorObject, result: object): void => {
+				if (!error) {
+					this.Complete("", result);
+				} else {
+					this.Complete("error", error);
+				}
+				this.Progress(false);
+			});
+		}
+
+		if (event.shiftKey) { // dialog?
+			_delete(id);
+		} else {
+			const resultDialogContent: any = {title: "Page", message: "Delete this?."};
+			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+				width: "fit-content",
+				height: "fit-content",
+				data: {
+					session: this.currentSession,
+					content: resultDialogContent,
+				},
+				disableClose: true,
+			});
+			dialog.afterClosed().subscribe((result: object) => {
+				if (result) { // if not cancel then
+					_delete(id);
+				}
+			});
+		}
+
 	}
 
 }

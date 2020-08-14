@@ -53,7 +53,7 @@ const auth: any = new Auth(event, ConfigModule, logger,  passport);
 passport.use(new LocalStrategy(LocalAccount.authenticate()));
 
 if (systemsConfig.facebook) {
-	passport.use(new FacebookStrategy(systemsConfig.facebook.key, (accessToken, refreshToken, profile, done): void => {
+	passport.use(new FacebookStrategy(systemsConfig.facebook.key, (accessToken: string, refreshToken: string, profile: any, done: any): void => {
 		process.nextTick((): void => {
 			done(null, profile);
 		});
@@ -64,7 +64,7 @@ if (systemsConfig.apple) {
 	const config: any = systemsConfig.apple.key;
 	const keyFile: any = systemsConfig.apple.KeyFile;
 	config.privateKeyPath = __dirname + "/" + keyFile;
-	passport.use(new AppleStrategy(config, (accessToken, refreshToken, profile, done): void => {
+	passport.use(new AppleStrategy(config, (accessToken: string, refreshToken: string, profile: any, done: any): void => {
 		process.nextTick((): void => {
 			done(null, profile);
 		});
@@ -72,7 +72,7 @@ if (systemsConfig.apple) {
 }
 
 if (systemsConfig.twitter) {
-	passport.use(new TwitterStrategy(systemsConfig.twitter.key, (accessToken, refreshToken, profile, done): void => {
+	passport.use(new TwitterStrategy(systemsConfig.twitter.key, (accessToken: string, refreshToken: string, profile: any, done: any): void => {
 		process.nextTick((): void => {
 			done(null, profile);
 		});
@@ -80,7 +80,7 @@ if (systemsConfig.twitter) {
 }
 
 if (systemsConfig.instagram) {
-	passport.use(new InstagramStrategy(systemsConfig.instagram.key, (accessToken, refreshToken, profile, done): void => {
+	passport.use(new InstagramStrategy(systemsConfig.instagram.key, (accessToken: string, refreshToken: string, profile: any, done: any): void => {
 		process.nextTick((): void => {
 			done(null, profile);
 		});
@@ -88,7 +88,7 @@ if (systemsConfig.instagram) {
 }
 
 if (systemsConfig.line) {
-	passport.use(new LineStrategy(systemsConfig.line.key, (accessToken, refreshToken, profile, done): void => {
+	passport.use(new LineStrategy(systemsConfig.line.key, (accessToken: string, refreshToken: string, profile: any, done: any): void => {
 		process.nextTick((): void => {
 			done(null, profile);
 		});
@@ -105,7 +105,7 @@ if (systemsConfig.line) {
 // }
 
 
-const init_users = [];
+const init_users: any[] = [];
 
 if (systemsConfig.initusers) {
 	systemsConfig.initusers.forEach((user: any): void => {

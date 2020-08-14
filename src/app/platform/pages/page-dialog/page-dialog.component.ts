@@ -124,8 +124,8 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 
 		// 	this.editor.setMode("JavaScript");
 
-		// : todo
-		// this.editor.getEditor().setOptions({
+		// : todoi
+		// this.editor.getEdtor().setOptions({
 		// 	enableBasicAutocompletion: true,
 		// });
 	}
@@ -382,7 +382,8 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	 *
 	 * @param event
 	 */
-	public valid(event: IEmit): void {
+	public invalid(): boolean {
+		return (this.data.content.value === "");
 	// 	const errors: any = JSON.stringify(event.value.errors);
 	// 	console.error(event.source.name + " errors :" + errors);
 	}
@@ -405,9 +406,9 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	 * アクセプトクローズ
 	 */
 	public onAccept(): void {
-		if (this.data.content.category === "HTML") { // :todo categoryの切り替えがいい感じにならない。。。どうしようか。。。
-			this.data.content.value = this.pageContent.value;
-		}
+		// if (this.data.content.category === "HTML") { // :todo categoryの切り替えがいい感じにならない。。。どうしようか。。。
+		// 	this.data.content.value = this.pageContent.value;
+		// }
 		this.matDialogRef.close(this.data);
 	}
 

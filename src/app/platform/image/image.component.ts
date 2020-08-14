@@ -263,11 +263,14 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 */
 	public updateDialog(event: any): void {
 
+		this.Progress(true);
 		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
-			width: "fit-content",
-			height: "fit-content",
 			data: {content: event.target, filename: this.fileName},
 			disableClose: true,
+		});
+
+		dialog.afterOpened().subscribe(() => {
+			this.Progress(false);
 		});
 
 		dialog.beforeClosed().subscribe((result: any): void => {

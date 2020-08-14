@@ -36,15 +36,25 @@ export abstract class SessionableComponent {
 	}
 
 	/**
-	 * ロール取得
-	 * @returns アカウントのロール
+	 * authLevel
+	 * @returns level
 	 */
-	public get role(): IRole {
-		let result: IRole = {login: false, categoly: 0, raw: AuthLevel.public};
+	 public get auth(): number {
+	 	let result: number = AuthLevel.public;
+	 	if (this.privateCurrentSession) {
+	 		result = this.privateCurrentSession.auth;
+	 	}
+	 	return result;
+	 }
+
+	/**
+	 * login
+	 * @returns is Login
+	 */
+	public get login(): boolean {
+		let result: boolean = false;
 		if (this.privateCurrentSession) {
-			if (this.privateCurrentSession.role) {
-				result = this.privateCurrentSession.role;
-			}
+			result = this.privateCurrentSession.login;
 		}
 		return result;
 	}
@@ -100,7 +110,7 @@ export abstract class SessionableComponent {
 				id: "",
 			},
 			enabled: true,
-			role: {},
+			login: false
 		};
 	}
 

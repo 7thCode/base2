@@ -303,7 +303,7 @@ export class Auth extends Mail {
 			const target: IUsernameParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			if (operator) {
-				if (operator.role.raw < AuthLevel.user) {
+				if (operator.auth < AuthLevel.user) {
 					next();
 				} else {
 					if (operator.username === target.username) {
@@ -332,7 +332,7 @@ export class Auth extends Mail {
 			const target: IUserIDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			if (operator) {
-				if (operator.role.raw < AuthLevel.user) {
+				if (operator.auth < AuthLevel.user) {
 					next();
 				} else {
 					if (operator.user_id === target.user_id) {
@@ -360,7 +360,7 @@ export class Auth extends Mail {
 		if (request.user) {
 			const operator: IAccountModel = this.Transform(request.user);
 			if (operator) {
-				if (operator.role.raw <= AuthLevel.system) {
+				if (operator.auth <= AuthLevel.system) {
 					next();
 				} else {
 					this.SendError(response, {code: 403, message: "Forbidden.(auth 3) 9578"});
@@ -384,7 +384,7 @@ export class Auth extends Mail {
 		if (request.user) {
 			const operator: IAccountModel = this.Transform(request.user);
 			if (operator) {
-				if (operator.role.raw < AuthLevel.user) {
+				if (operator.auth < AuthLevel.user) {
 					next();
 				} else {
 					this.SendError(response, {code: 403, message: "Forbidden.(auth 5) 7896"});
@@ -408,7 +408,7 @@ export class Auth extends Mail {
 		if (request.user) {
 			const operator: IAccountModel = this.Transform(request.user);
 			if (operator) {
-				if (operator.role.raw <= AuthLevel.user) {
+				if (operator.auth <= AuthLevel.user) {
 					next();
 				} else {
 					this.SendError(response, {code: 403, message: "Forbidden.(auth 7) 5081"});

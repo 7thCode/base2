@@ -22,23 +22,23 @@ export class AuthisPipe implements PipeTransform {
 
 	/**
 	 *
-	 * @param value
-	 * @param args
+	 * @param auth
+	 * @param level
 	 */
-	public transform(role: any, level: string): boolean {
+	public transform(auth: number, level: string): boolean {
 		let result:boolean = false;     // public
 		switch (level) {
 			case "system":
-				result = (role.raw <= AuthLevel.system);
+				result = (auth <= AuthLevel.system);
 				break;
 			case "manager":
-				result = (role.raw <= AuthLevel.manager);
+				result = (auth <= AuthLevel.manager);
 				break;
 			case "user":
-				result = (role.raw <= AuthLevel.user);
+				result = (auth <= AuthLevel.user);
 				break;
 			case "public":
-				result = (role.raw <= AuthLevel.public);
+				result = (auth <= AuthLevel.public);
 				break;
 			default:
 		}

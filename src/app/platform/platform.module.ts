@@ -11,6 +11,7 @@ import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterModule} from "@angular/router";
+import {FormsModule} from "@angular/forms";
 
 import {FlexLayoutModule} from "@angular/flex-layout";
 
@@ -26,8 +27,12 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatSliderModule} from "@angular/material/slider";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 
 import {AceEditorModule} from "ng2-ace-editor";
+
+import {BasePipeModule} from "./base/pipes/base-pipe.module";
 
 import {AccountsModule} from "./accounts/accounts.module";
 import {ArticlesModule} from "./articles/articles.module";
@@ -36,18 +41,19 @@ import {ErrorModule} from "./error/error.module";
 import {FilesModule} from "./files/files.module";
 import {ImageModule} from "./image/image.module";
 import {PagesModule} from "./pages/pages.module";
+
+import {StripeModule} from "../plugins/stripe/stripe.module";
+
 import {PlatformRoutingModule} from "./platform-routing.module";
+
 import {PlatformComponent} from "./platform.component";
-import {BasePipeModule} from "./base/pipes/base-pipe.module";
-import { PersonalComponent } from './personal/personal.component';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {FormsModule} from "@angular/forms";
-import {MatInputModule} from "@angular/material/input";
+import {PersonalModule} from "./personal/personal.module";
+// import { PersonalComponent } from './personal/personal.component';
+
 
 @NgModule({
 	declarations: [
 		PlatformComponent,
-		PersonalComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -70,6 +76,9 @@ import {MatInputModule} from "@angular/material/input";
 		MatMenuModule,
 		MatButtonToggleModule,
 		MatProgressSpinnerModule,
+		MatFormFieldModule,
+		FormsModule,
+		MatInputModule,
 		AceEditorModule,
 
 		ErrorModule,
@@ -79,10 +88,10 @@ import {MatInputModule} from "@angular/material/input";
 		AuthModule,
 		ImageModule,
 		FilesModule,
+		PersonalModule,
+		StripeModule,
 		BasePipeModule,
-		MatFormFieldModule,
-		FormsModule,
-		MatInputModule,
+
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],

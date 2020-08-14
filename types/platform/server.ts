@@ -38,7 +38,7 @@ export interface IAccountModel {
 	privatekey: string;
 	publickey: string;
 	enabled: boolean;
-	role: IRole;
+	login: boolean;
 	category: string;
 	status: number;
 	type: string;
@@ -56,7 +56,7 @@ export interface IAccountModel {
 
 	get_status(): number;
 
-	set_status(status): void;
+	set_status(status: any): void;
 
 	Role(user: IAccountModel): IRole;
 

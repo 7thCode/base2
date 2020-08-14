@@ -24,7 +24,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	public create: Date;
 	public username: string;
 	public provider: string;
-	public auth: number;
+// 	public _auth: number;
 
 	@Input() public nickname: string;
 	@Input() public description: string;
@@ -112,7 +112,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 			if (!error) {
 				this.create = session.create;
 				this.username = session.username;
-				this.auth = session.auth;
+		// 		this._auth = session.auth;
 				this.get((error: IErrorObject, content: any): void => {
 					if (!error) {
 						this.nickname = content.nickname;

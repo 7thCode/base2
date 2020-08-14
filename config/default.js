@@ -62,7 +62,16 @@ module.exports = {
 			"MEgCQQCMCKOCbTexbTtSOPD0wqkQe6d5hTHI+TS2cpZXugYu1R1vj9i6nz6oIlJd" +
 			"iS8nLAg7Y+ptg4HldnCv7wLoEkQzAgMBAAE=\n" +
 			"-----END RSA PUBLIC KEY-----",
-		modules: [],
+		modules: [
+			{
+				type: "optional",
+				path: "/plugins/modules/",
+				name: "stripe",
+				description: {
+					display: "Stripe"
+				}
+			},
+		],
 		root_modules: [
 			{
 				type: "required",
@@ -322,7 +331,7 @@ module.exports = {
 					category: "HTML",
 					status: 0,
 					type: "text/html",
-					path: "html.html",
+					path: "path/to/html.html",
 					value: "<!DOCTYPE html>\n" +
 						"<html lang=\"en\">\n" +
 						"<head>\n" +
@@ -342,7 +351,7 @@ module.exports = {
 					category: "pug",
 					status: 0,
 					type: "text/html",
-					path: "pug.html",
+					path: "path/to/pug.html",
 					value: "div\n" +
 						"  div Hello from pug!\n",
 					accessory: {},
@@ -354,7 +363,7 @@ module.exports = {
 					category: "EJS",
 					status: 0,
 					type: "text/html",
-					path: "ejs.html",
+					path: "path/to/ejs.html",
 					value: "<div><div>Hello from ejs!</div></div>",
 					accessory: {},
 				}
@@ -365,7 +374,7 @@ module.exports = {
 					category: "Markdown",
 					status: 0,
 					type: "text/html",
-					path: "markdown.html",
+					path: "path/to/markdown.html",
 					value: "#### Hello from Markdown!",
 					accessory: {},
 				}
@@ -376,7 +385,7 @@ module.exports = {
 					category: "JavaScript",
 					status: 0,
 					type: "text/javascript",
-					path: "javascript.js",
+					path: "path/to/javascript.js",
 					value: "function foo(items, nada) {\n" +
 						"    for (var i=0; i<items.length; i++) {\n" +
 						"        alert(items[i] + \"juhu\\n\");\n" +

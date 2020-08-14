@@ -98,6 +98,7 @@
 		"source-map": "^0.7.3",
 		"spdy": "^4.0.2",
 		"speakeasy": "^2.0.0",
+		"stripe": "^8.84.0",
 		"tslib": "^1.11.0",
 		"ws": "^7.3.0",
 		"zone.js": "^0.10.2"
@@ -115,6 +116,7 @@
 		"@types/moment": "^2.13.0",
 		"@types/node": "^12.12.28",
 		"@types/node-rsa": "^1.0.0",
+		"@types/stripe": "^7.13.24",
 		"codelyzer": "^5.2.2",
 		"cypress": "^4.9.0",
 		"gulp": "^4.0.2",

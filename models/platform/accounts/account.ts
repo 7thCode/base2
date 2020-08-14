@@ -30,7 +30,7 @@ namespace AccountModel {
 		user_id: {type: String, required: true, index: {unique: true}},
 		username: {type: String, required: true, index: {unique: true}},
 		password: {type: String},
-		relations: {type: [mongoose.Schema.Types.ObjectId], default: []},
+		relations: {type: mongoose.Schema.Types.Mixed},
 		privatekey: {type: String, default: ""},
 		publickey: {type: String, default: ""},
 		enabled: {type: Boolean, default: true},
@@ -38,54 +38,15 @@ namespace AccountModel {
 		status: {type: Number, default: 0},
 		type: {type: String, default: ""},
 		secret: {type: String, default: ""},
-		content: {type: Schema.Types.Mixed},
+		content: {type: mongoose.Schema.Types.Mixed},
 	});
 
 	Account.plugin(passport);
 	Account.plugin(timestamp, { offset: 9 });
 	Account.plugin(grouped);
 
-	// プロバイダー種別とユーザレベル
-	const role = (user: { auth: number, provider: string }): IRole => {
-		let result: IRole = {
-			login: false,
-			categoly: 0,
-			raw: AuthLevel.public,
-		};
-
-		if (user) {
-			let auth: number;
-			let categoly: number = 0;
-			switch (user.provider) {
-				case "local":
-					auth = user.auth;
-					categoly = 0;
-					break;
-				case "facebook":
-				case "apple":
-					auth = AuthLevel.user;
-					categoly = 1;
-					break;
-				default:
-					auth = AuthLevel.user;
-					categoly = 1;
-			}
-
-			result = {
-				categoly,
-				raw: auth,
-				login: true,
-			};
-		}
-		return result;
-	};
-
 	const usernameToMail = (username: string): string => {
 		return username;
-	};
-
-	Account.statics.Role = function(user: IAccountModel): IRole {
-		return role(user);
 	};
 
 	// Public data

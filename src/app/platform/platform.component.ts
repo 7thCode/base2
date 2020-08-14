@@ -46,9 +46,9 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	public device: string;
 
 	@ViewChild("sidenav") protected sidenav: MatSidenav;
-	@ViewChild(AccountsComponent) protected accountsComponent: AccountsComponent;
+	// @ViewChild(AccountsComponent) protected accountsComponent: AccountsComponent;
 
-	private accountsService: AccountsService;
+// 	private accountsService: AccountsService;
 
 	/**
 	 *
@@ -76,7 +76,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		this.sock = null;
 		this.date = new Date();
 		this.device = "";
-		this.accountsService = accountService;
+		// this.accountsService = accountService;
 		this.sock = new WebSocket(environment.webSocket);
 	}
 
@@ -100,7 +100,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 */
 	private get(id: string, callback: Callback<any>): void {
 		this.Progress(true);
-		this.accountsService.get(id, (error: IErrorObject, result: any): void => {
+		this.accountService.get(id, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				callback(null, result);
 			} else {
@@ -119,7 +119,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 */
 	private update(id: string, data: object, callback: Callback<any>): void {
 		this.Progress(true);
-		this.accountsService.put(id, data, (error: IErrorObject, result: any): void => {
+		this.accountService.put(id, data, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				callback(null, result);
 			} else {
@@ -269,9 +269,11 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 				break;
 			default:
 		}
-		this.accountsComponent.draw((error, results) => {
-			this.change.detectChanges();
-		});
+		// if (this.accountsComponent) {
+		// 	this.accountsComponent.draw((error, results) => {
+		// 		this.change.detectChanges();
+		// 	});
+		// }
 	}
 
 	/**
@@ -295,7 +297,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 						session: this.currentSession,
 						user: result,
 						content: AccountsComponent.confirmToForm(result),
-						service: this.accountsService,
+						service: this.accountService,
 					},
 					disableClose: true,
 				});

@@ -30,13 +30,6 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 	}
 
 	/**
-	 * ロール
-	 */
-	get role(): any {
-		return this.data.user.role;
-	}
-
-	/**
 	 * コンテント
 	 */
 	get content(): any {

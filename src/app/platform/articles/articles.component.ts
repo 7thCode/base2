@@ -17,6 +17,7 @@ import {ArticleDialogComponent} from "./article-dialog/article-dialog.component"
 
 import {SessionService} from "../base/services/session.service";
 import {ArticlesService} from "./articles.service";
+import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 /**
  * アーティクル
@@ -156,16 +157,40 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 * 削除
 	 * @param id ターゲット
 	 */
-	public onDelete(id: string): void {
-		this.Progress(true);
-		this.delete(id, (error: IErrorObject, result: any): void => {
-			if (!error) {
-				this.Complete("", result);
-			} else {
-				this.Complete("error", error);
-			}
-			this.Progress(false);
-		});
+	public onDelete(event: any, id: string): void {
+
+		const _delete = (id: string): void => {
+			this.Progress(true);
+			this.delete(id, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					this.Complete("", result);
+				} else {
+					this.Complete("error", error);
+				}
+				this.Progress(false);
+			});
+		};
+
+		if (event.shiftKey) { // dialog?
+			_delete(id);
+		} else {
+			const resultDialogContent: any = {title: "Articles", message: "Delete this?."};
+			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+				width: "fit-content",
+				height: "fit-content",
+				data: {
+					session: this.currentSession,
+					content: resultDialogContent,
+				},
+				disableClose: true,
+			});
+			dialog.afterClosed().subscribe((result: object) => {
+				if (result) { // if not cancel then
+					_delete(id);
+				}
+			});
+		}
+
 	}
 
 }

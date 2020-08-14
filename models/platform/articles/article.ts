@@ -8,7 +8,7 @@
 "use strict";
 
 import {IAccountModel} from "../../../types/platform/server";
-import {Callback, IArticleModelContent, IQueryOption, IRights} from "../../../types/platform/universe";
+import {Callback, IArticleModelContent, IErrorObject, IQueryOption, IRights} from "../../../types/platform/universe";
 
 namespace ArticleModel {
 
@@ -31,7 +31,7 @@ namespace ArticleModel {
 		user_id: {type: String, default: ""},
 		content: {
 			id: {type: String, required: true, index: {unique: true}},
-			parent_id: {type: String, default: ""},
+			relations: {type: mongoose.Schema.Types.Mixed},
 			enabled: {type: Boolean, default: true},
 			category: {type: String, default: ""},
 			status: {type: Number, default: 0},
@@ -93,7 +93,7 @@ namespace ArticleModel {
 	Article.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
 		this.user_id = user.user_id;
 		this.content = init(this._id, body.content);
-		this.model("Article").findOne(query_by_user_write(user, {"content.id": this.content.id}), (error, instance) => {
+		this.model("Article").findOne(query_by_user_write(user, {"content.id": this.content.id}), (error: IErrorObject, instance: any) => {
 			if (!error) {
 				if (!instance) {
 					this.save(cb);

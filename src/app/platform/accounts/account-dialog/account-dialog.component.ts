@@ -33,10 +33,6 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 		return this.data.user;
 	}
 
-	get role(): any {
-		return this.auth_to_role(this.data.user);
-	}
-
 	get content(): any {
 		return this.data.content;
 	}
@@ -56,38 +52,6 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 		public data: any,
 		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
 		super();
-	}
-
-	/**
-	 * Auth to Role
-	 * @param user 対象ユーザ
-	 */
-	private auth_to_role(user: { auth: number, provider: string }): IRole {
-		let result: IRole = {
-			login: false,
-			categoly: 0,
-			raw: AuthLevel.public,
-		};
-
-		if (user) {
-			const auth = user.auth;
-
-			let categoly: number = 0;
-			switch (user.provider) {
-				case "local":
-					categoly = 0;
-					break;
-				default:
-					categoly = 1;
-			}
-
-			result = {
-				categoly,
-				raw: auth,
-				login: true,
-			};
-		}
-		return result;
 	}
 
 	/**

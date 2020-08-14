@@ -1,23 +1,21 @@
 <mat-toolbar style="background-color:#4a0072;" fxLayout="row" fxLayoutAlign="space-between center">
 
 	<div fxLayout="row" fxLayoutAlign="start">
-		<button mat-icon-button *ngIf="(device === 'handset') && role.login" (click)="sidenav.toggle()">
+		<button mat-icon-button *ngIf="(device === 'handset') && login" (click)="sidenav.toggle()">
 			<mat-icon style="color:#fdfdfd;">menu</mat-icon>
 		</button>
 		<span style="color:#fdfdfd;font-weight:400;"><span style="color:#ff9800;font-weight:900;">P</span>latform</span>
 		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;color:#fdfdfd;">Release 0.0.9 :</span>
-
-
 	</div>
 
-	<div *ngIf="role.login">
+	<div *ngIf="login">
 		<span style="color:#fdfdfd;font-size:0.8rem;">{{currentSession.content.nickname}}</span>
 		<button mat-icon-button style="color:#fdfdfd;" (click)="updateDialog()">
 			<mat-icon>perm_identity</mat-icon>
 		</button>
 	</div>
 
-	<div *ngIf="!role.login">
+	<div *ngIf="!login">
 		<button mat-icon-button [matMenuTriggerFor]="menu">
 			<mat-icon style="color:#fdfdfd;">more_vert</mat-icon>
 		</button>
@@ -39,7 +37,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="container">
-	<mat-sidenav #sidenav  fxLayout="column" fxLayoutAlign="center" [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset') && role.login" style="background-color:#000051;">
+	<mat-sidenav #sidenav  fxLayout="column" fxLayoutAlign="center" [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset') && login" style="background-color:#000051;">
 
 		<div fxLayout="column" fxLayoutAlign="center center">
 			<app-image style="margin: 12px;" [extensions]="'jpg,jpeg,png,webp'" [fileName]="'avatar.jpg'" [view]="'rename'" (onProgress)="onProgressed($event)" (complete)="onUpdateAvatar()"></app-image>
@@ -53,7 +51,7 @@
 					Personal</a>
 			</mat-list-item>
 
-			<mat-list-item style="height: 34px;" *ngIf="role | authis: 'manager'">
+			<mat-list-item style="height: 34px;" *ngIf="auth | authis: 'manager'">
 				<a mat-button style="color:#fdfdfd;font-size:12px;" routerLink="/platform/accounts">
 					<mat-icon style="color:#b9fad7;font-size:20px;" mat-list-icon>account_circle</mat-icon>
 					Accounts</a>
@@ -99,6 +97,12 @@
 				</button>
 			</mat-list-item>
 
+			<mat-list-item style="height: 34px;">
+				<a mat-button style="color:#fdfdfd;font-size:12px;" routerLink="/platform/stripe">
+					<mat-icon style="color:#e5a5ff;font-size:20px;" mat-list-icon>view_comfy</mat-icon>
+					test Stripe</a>
+			</mat-list-item>
+
 			<!-- <mat-list-item style="color:#fdfdfd;">
 				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-withdraw-button>
 					<mat-icon style="font-size:20px;" mat-list-icon>exit_to_app</mat-icon>
@@ -111,7 +115,7 @@
 	</mat-sidenav>
 
 	<mat-sidenav-content style="background-color:#E1E2E1;">
-		<div *ngIf="role.login">
+		<div *ngIf="login">
 			<router-outlet #o="outlet"></router-outlet>
 		</div>
 	<!--	<div [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">

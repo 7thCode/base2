@@ -34,7 +34,7 @@ namespace PageModel {
 		user_id: {type: String, default: ""},
 		content: {
 			id: {type: String, required: true, index: {unique: true}},
-			parent_id: {type: String, default: ""},
+			relations: {type: mongoose.Schema.Types.Mixed},
 			enabled: {type: Boolean, default: true},
 			category: {type: String, default: ""},
 			status: {type: Number, default: 0},
@@ -58,7 +58,7 @@ namespace PageModel {
 		return shasum.digest("hex");
 	};
 
-	const query_by_user_read: any = (user: any, query): any => {
+	const query_by_user_read: any = (user: any, query: any): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
 		return {$and: [{user_id: user.user_id}, {"rights.read": {$gte: user.auth}}, query]};
 	};
@@ -115,7 +115,7 @@ namespace PageModel {
 	};
 
 	Page.statics.get_page = function(user_id: string, path: string, object: any, cb: (error: IErrorObject, doc: any, mimetype: string) => void): void {
-		this.model("Page").findOne({$and: [{user_id}, {"content.path": path}]}, (error, instance): void => {
+		this.model("Page").findOne({$and: [{user_id}, {"content.path": path}]}, (error:IErrorObject, instance: any): void => {
 			if (!error) {
 				if (instance) {
 					const content: any = instance.content;

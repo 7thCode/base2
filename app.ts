@@ -7,7 +7,7 @@ import {Server} from "http";
 import {IErrorObject} from "./types/platform/universe";
 
 const cluster: any = require('cluster');
-const cpu_count: number = require('os').cpus().length;
+let cpu_count: number = require('os').cpus().length;
 
 const express: any = require("express");
 
@@ -371,6 +371,8 @@ const normal: () => void = () => {
 	}
 
 	const is_cluster: boolean = config.is_cluster;
+
+//	cpu_count = 1;
 
 	if (is_cluster) {
 		if (cluster.isMaster) {

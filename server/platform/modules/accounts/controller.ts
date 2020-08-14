@@ -47,7 +47,7 @@ export class Accounts extends Wrapper {
 	private own_by_name(current: any, username: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw < AuthLevel.user) { // is not manager?
+		if (current.auth < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.username === username); // is self?
@@ -64,7 +64,7 @@ export class Accounts extends Wrapper {
 	private own_by_id(current: any, user_id: string): boolean {
 		// マネージャ以上は、自分以外のアカウントを変更できる。
 		let readable: boolean = false;
-		if (current.role.raw < AuthLevel.user) { // is not manager?
+		if (current.auth < AuthLevel.user) { // is not manager?
 			readable = true;
 		} else {
 			readable = (current.user_id === user_id); // is self?
@@ -122,7 +122,7 @@ export class Accounts extends Wrapper {
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Decode(params.query, (error: IErrorObject, query: object): void => {
 				this.ifSuccess(response, error, (): void => {
-					const q: object = {$and: [query, {auth: {$gte: operator.role.raw}}]};
+					const q: object = {$and: [query, {auth: {$gte: operator.auth}}]};
 					LocalAccount.default_find(operator, q, {}, (error: IErrorObject, accounts: IAccountModel[]): void => {
 						this.ifSuccess(response, error, (): void => {
 							this.SendSuccess(response, accounts.length);
@@ -188,7 +188,7 @@ export class Accounts extends Wrapper {
 					"content.description": content.description,
 				};
 
-				if (operator.role.raw <= content.auth) {
+				if (operator.auth <= content.auth) {
 					update.auth = content.auth;
 					update.enabled = content.enabled;
 				}
@@ -404,7 +404,7 @@ export class Accounts extends Wrapper {
 					"content.description": content.description,
 				};
 
-				if (operator.role.raw <= content.auth) {
+				if (operator.auth <= content.auth) {
 					update.auth = content.auth;
 					update.enabled = content.enabled;
 				}

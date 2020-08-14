@@ -10,12 +10,13 @@ import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {Component, HostListener, OnInit, ViewChild} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
 
 import {SessionService} from "../base/services/session.service";
+import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 /**
  * ファイル
@@ -221,27 +222,51 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * ファイル削除
 	 * @param name
 	 */
-	public onDelete(name: string): void {
-		this.Progress(true);
-		this.delete(name, (error: IErrorObject, result: any): void => {
-			if (!error) {
-				this.draw((error, results) => {
-					if (!error) {
-						if (results) {
-							this.results = results;
-							this.Complete("", results);
+	public onDelete(event: MouseEvent, name: string): void {
+
+		const _delete = (name: string): void => {
+			this.Progress(true);
+			this.delete(name, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					this.draw((error, results) => {
+						if (!error) {
+							if (results) {
+								this.results = results;
+								this.Complete("", results);
+							} else {
+								this.Complete("error", {code: -1, message:"error."});
+							}
 						} else {
-							this.Complete("error", {code: -1, message:"error."});
+							this.Complete("error", error);
 						}
-					} else {
-						this.Complete("error", error);
-					}
-				});
-			} else {
-				this.Complete("error", error);
-			}
-			this.Progress(false);
-		});
+					});
+				} else {
+					this.Complete("error", error);
+				}
+				this.Progress(false);
+			});
+		}
+
+		if (event.shiftKey) { // dialog?
+			_delete(name);
+		} else {
+			const resultDialogContent: any = {title: "File", message: "Delete this?."};
+			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+				width: "fit-content",
+				height: "fit-content",
+				data: {
+					session: this.currentSession,
+					content: resultDialogContent,
+				},
+				disableClose: true,
+			});
+			dialog.afterClosed().subscribe((result: object) => {
+				if (result) { // if not cancel then
+					_delete(name);
+				}
+			});
+		}
+
 	}
 
 	/**

@@ -84,11 +84,7 @@ export interface ISession {
 		description: string
 	};
 	enabled: boolean;
-	role: {
-		categoly: number;
-		raw: number;
-		login: boolean;
-	};
+	login: boolean;
 	entry: string;
 	exit: string;
 }
