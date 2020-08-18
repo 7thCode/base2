@@ -286,6 +286,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	/**
 	 * 更新ダイアログ
 	 */
+	/*
 	public updateDialog(): void {
 		const id: string = this.currentSession.username;
 		this.get(id, (error: IErrorObject, result: object): void => {
@@ -322,4 +323,5 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 			}
 		});
 	}
+	*/
 }

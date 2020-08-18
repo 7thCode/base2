@@ -16,14 +16,13 @@ const pug: any = require("pug");
 
 const path: any = require("path");
 
-const project_root: string = process.cwd();
-const library: string = path.join(project_root, "server/platform/base/library");
+const project_root = path.join(__dirname, "../../../..");
 
 const Wrapper: any = require("./wrapper");
 
-const Mailer: any = require(path.join(library, "mail_sender"));
-const Mailer2: any = require(path.join(library, "mail_sender_2"));
-const MailGun: any = require(path.join(library, "mail_sender_mailgun"));
+const Mailer: any = require("../../../../server/platform/base/library/mail_sender");
+const Mailer2: any = require("../../../../server/platform/base/library/mail_sender_2");
+const MailGun: any = require("../../../../server/platform/base/library/mail_sender_mailgun");
 
 /**
  *

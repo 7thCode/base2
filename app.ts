@@ -7,7 +7,7 @@ import {Server} from "http";
 import {IErrorObject} from "./types/platform/universe";
 
 const cluster: any = require('cluster');
-let cpu_count: number = require('os').cpus().length;
+const cpu_count: number = require('os').cpus().length;
 
 const express: any = require("express");
 
@@ -24,17 +24,11 @@ const session: any = require("express-session");
 const log4js: any = require("log4js");
 const rotatestream: any = require("logrotate-stream");
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const library: string = path.join(project_root, "server/platform/base/library");
-const _config: string = path.join(project_root, "config");
-
-const _ConfigModule: any = require(path.join(_config, "default"));
-const Scheduler: any = require(path.join(library, "scheduler"));
-const Unix: any = require(path.join(library, "commandar"));
-const Cipher: any = require(path.join(library, "cipher"));
-const IPV6: any = require(path.join(library, "ipv6"));
+const _ConfigModule: any = require("./config/default");
+const Scheduler: any = require("./server/platform/base/library/scheduler");
+const Unix: any = require("./server/platform/base/library/commandar");
+const Cipher: any = require("./server/platform/base/library/cipher");
+const IPV6: any = require("./server/platform/base/library/ipv6");
 
 let saslprep: any = null;
 
@@ -125,7 +119,7 @@ const normal: () => void = () => {
 		app.use(cookieParser());
 
 		// logs
-		log4js.configure(path.join(_config, "platform/logs.json"));
+		log4js.configure("./config/platform/logs.json");
 		const logger: any = log4js.getLogger("request");
 
 		module.exports.event = localEvent;
@@ -372,7 +366,7 @@ const normal: () => void = () => {
 
 	const is_cluster: boolean = config.is_cluster;
 
-//	cpu_count = 1;
+// 	cpu_count = 1;
 
 	if (is_cluster) {
 		if (cluster.isMaster) {

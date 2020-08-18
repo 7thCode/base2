@@ -58,7 +58,7 @@ export class FragmentComponent extends UpdatableComponent implements OnInit {
 	public ngOnInit() {
 		this.sort = {};
 		super.ngOnInit();
-		this.getSession((error: IErrorObject, session: {user_id}): void => {
+		this.getSession((error: IErrorObject, session: any): void => {
 			this.service.get("", this.user_id || session.user_id, this.fileName, (error: IErrorObject, result: any) => {
 				if (!error) {
 					this.innerText = result;

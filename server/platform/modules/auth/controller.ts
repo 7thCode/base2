@@ -17,16 +17,13 @@ const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
 
 const path: any = require("path");
+const project_root = path.join(__dirname, "../../../..");
 
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
-const library: string = path.join(project_root, "server/platform/base/library");
 const _config: string = path.join(project_root, "config");
 
-const Cipher: any = require(path.join(library, "cipher"));
-const Mail: any = require(path.join(controllers, "mail_controller"));
-const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
+const Cipher: any = require("../../../../server/platform/base/library/cipher");
+const Mail: any = require("../../../../server/platform/base/controllers/mail_controller");
+const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
 export class Auth extends Mail {
 

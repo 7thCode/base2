@@ -8,14 +8,8 @@
 
 import {IJSONResponse} from "../../../../types/platform/server";
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
-const library: string = path.join(project_root, "server/platform/base/library");
-
-const Wrapper: any = require(path.join(controllers, "wrapper"));
-const Cipher: any = require(path.join(library, "cipher"));
+const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
+const Cipher: any = require("../../../../server/platform/base/library/cipher");
 
 /**
  *

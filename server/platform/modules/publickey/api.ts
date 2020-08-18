@@ -9,16 +9,11 @@
 const express: any = require("express");
 export const router: any = express.Router();
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const library: string = path.join(project_root, "server/platform/base/library");
-
 const event = module.parent.exports.event;
 const config: any = module.parent.exports.config;
 const logger: any = module.parent.exports.logger;
 
-const gatekeeper: any = require(path.join(library, "gatekeeper"));
+const gatekeeper: any = require("../../base/library/gatekeeper");
 
 const PublicKey: any = require("./controller");
 const publickey: any = new PublicKey(event, config, logger);

@@ -23,13 +23,6 @@ import {
 
 const Wrapper: any = require("./wrapper");
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-
-const Account: any = require(path.join(models, "platform/accounts/account"));
-
 /**
  *
  */

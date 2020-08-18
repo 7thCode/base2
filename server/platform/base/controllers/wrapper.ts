@@ -10,15 +10,7 @@ import {AuthLevel, Callback, IErrorObject} from "../../../../types/platform/univ
 
 import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-const library: string = path.join(project_root, "server/platform/base/library");
-
-const result: any = require(path.join(library, "result"));
-
-const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
+const result: any = require("../../../../server/platform/base/library/result");
 
 /**
  *

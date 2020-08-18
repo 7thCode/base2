@@ -5,7 +5,7 @@ namespace Electron {
 	const url: any = require("url");
 	const path: any = require("path");
 
-	let mainWindow = null;
+	let mainWindow: any = null;
 
 	function createWindow() {
 		mainWindow = new BrowserWindow({

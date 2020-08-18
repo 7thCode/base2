@@ -28,12 +28,6 @@ const TwitterStrategy: any = require("passport-twitter").Strategy;
 const InstagramStrategy: any = require("passport-instagram").Strategy;
 const LineStrategy: any = require("passport-line").Strategy;
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-const library: string = path.join(project_root, "server/platform/base/library");
-
 const event = module.parent.exports.event;
 
 const logger: any = module.parent.exports.logger;
@@ -42,10 +36,10 @@ const ConfigModule: any = module.parent.exports.config;
 const systemsConfig: any = ConfigModule.systems;
 const usersConfig: any = ConfigModule.users;
 
-const Cipher: any = require(path.join(library, "cipher"));
-const IPV6: any = require(path.join(library, "ipv6"));
-const gatekeeper: any = require(path.join(library, "gatekeeper"));
-const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
+const Cipher: any = require("../../base/library/cipher");
+const IPV6: any = require("../../base/library/ipv6");
+const gatekeeper: any = require("../../base/library/gatekeeper");
+const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
 const Auth: any = require("./controller");
 const auth: any = new Auth(event, ConfigModule, logger,  passport);

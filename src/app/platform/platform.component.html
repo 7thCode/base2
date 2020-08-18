@@ -5,14 +5,14 @@
 			<mat-icon style="color:#fdfdfd;">menu</mat-icon>
 		</button>
 		<span style="color:#fdfdfd;font-weight:400;"><span style="color:#ff9800;font-weight:900;">P</span>latform</span>
-		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;color:#fdfdfd;">Release 0.0.9 :</span>
+		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;color:#fdfdfd;">Release 0.3.6 :</span>
 	</div>
 
 	<div *ngIf="login">
 		<span style="color:#fdfdfd;font-size:0.8rem;">{{currentSession.content.nickname}}</span>
-		<button mat-icon-button style="color:#fdfdfd;" (click)="updateDialog()">
+		<!-- <button mat-icon-button style="color:#fdfdfd;" (click)="updateDialog()">
 			<mat-icon>perm_identity</mat-icon>
-		</button>
+		</button> -->
 	</div>
 
 	<div *ngIf="!login">

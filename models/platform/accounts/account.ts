@@ -14,13 +14,8 @@ namespace AccountModel {
 	const mongoose: any = require("mongoose");
 	const passport: any = require("passport-local-mongoose");
 
-	const path: any = require("path");
-
-	const project_root: string = process.cwd();
-	const models: string = path.join(project_root, "models");
-
-	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
-	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
+	const timestamp: any = require("../../../models/platform/plugins/timestamp/timestamp");
+	const grouped: any = require("../../../models/platform/plugins/grouped/grouped");
 
 	const Schema: any = mongoose.Schema;
 

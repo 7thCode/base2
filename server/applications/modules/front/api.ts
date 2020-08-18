@@ -11,7 +11,7 @@ export const router = express.Router();
 
 const path = require("path");
 
-router.get("*", (req, res) => {
+router.get("*", (req: any, res: any) => {
 	res.cookie("XSRF-TOKEN", "YQIhAPluUGJqF3PArH0HIL2TWqy+w0ADjOE/PEO2RC3+8HjnAiEAovqZSR7R+u6k1AbJjqwhX2VUwaeRN28zxjJzrgT6kmcCICaSx72geIX/Gu2u54JJwnEKgzloEyZW", {
 		maxAge: 60000,
 		httpOnly: false,

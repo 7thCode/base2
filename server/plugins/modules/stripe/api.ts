@@ -12,16 +12,11 @@
 const express: any = require("express");
 export const router = express.Router();
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const library: string = path.join(project_root, "server/platform/base/library");
-
 const event = module.parent.exports.event;
 const logger: any = module.parent.exports.logger;
 const config: any = module.parent.exports.config;
 
-const gatekeeper: any = require(path.join(library, "gatekeeper"));
+const gatekeeper: any = require("../../../platform/base/library/gatekeeper");
 
 const Stripes: any = require("./controller");
 const stripe: any = new Stripes(event, config, logger);

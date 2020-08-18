@@ -10,15 +10,9 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 import {IPageModel} from "../../../../types/platform/server";
 
-const path: any = require("path");
+const Updatable: any = require("../../../../server/platform/base/controllers/updatable_controller");
 
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
-
-const Updatable: any = require(path.join(controllers, "updatable_controller"));
-
-const Page: any = require(path.join(models, "platform/pages/page"));
+const Page: any = require("../../../../models/platform/pages/page");
 
 export class Pages extends Updatable {
 

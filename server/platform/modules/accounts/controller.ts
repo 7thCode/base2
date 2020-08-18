@@ -13,14 +13,8 @@ import {IAccountContent, IAccountModel, IAccountRequest, IJSONResponse, IQueryPa
 const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
-
-const Wrapper: any = require(path.join(controllers, "wrapper"));
-const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
+const Wrapper: any = require( "../../../../server/platform/base/controllers/wrapper");
+const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
 /**
  *

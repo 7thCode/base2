@@ -13,16 +13,10 @@ const NodeRSA: any = require("node-rsa");
 const cipherMode: string = "aes-256-cbc";
 const seed: string = "0123456789abcdef";
 
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const models: string = path.join(project_root, "models");
-const _config: string = path.join(project_root, "config");
-
-const ConfigModule: any = require(path.join(_config, "default"));
+const ConfigModule: any = require("../../../../config/default");
 const config: any = ConfigModule.systems;
 
-const LocalAccount: any = require(path.join(models, "platform/accounts/account"));
+const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
 /**
  * 暗号

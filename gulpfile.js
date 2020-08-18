@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var typescript = require('gulp-typescript');
 var sourcemaps = require('gulp-sourcemaps');
 
-
 const configured_typescript = typescript.createProject("server_tsconfig.json");
 
 var rimraf = require('rimraf');

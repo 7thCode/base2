@@ -19,14 +19,9 @@ namespace PageModel {
 	const ejs: any = require("ejs");
 	const marked: any = require("marked");
 
-	const path: any = require("path");
-
-	const project_root: string = process.cwd();
-	const models: string = path.join(project_root, "models");
-
-	const timestamp: any = require(path.join(models, "platform/plugins/timestamp/timestamp"));
-	const grouped: any = require(path.join(models, "platform/plugins/grouped/grouped"));
-	const rights: any = require(path.join(models, "platform/plugins/rights/rights"));
+	const timestamp: any = require("../../../models/platform/plugins/timestamp/timestamp");
+	const grouped: any = require("../../../models/platform/plugins/grouped/grouped");
+	const rights: any = require("../../../models/platform/plugins/rights/rights");
 
 	const Schema = mongoose.Schema;
 

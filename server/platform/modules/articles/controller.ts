@@ -8,15 +8,9 @@
 
 import {IArticleModel} from "../../../../types/platform/server";
 
-const path: any = require("path");
+const Updatable: any = require( "../../../../server/platform/base/controllers/updatable_controller");
 
-const project_root: string = process.cwd();
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
-const models: string = path.join(project_root, "models");
-
-const Updatable: any = require(path.join(controllers, "updatable_controller"));
-
-const Article: any = require(path.join(models, "platform/articles/article"));
+const Article: any = require( "../../../../models/platform/articles/article");
 
 export class Articles extends Updatable {
 

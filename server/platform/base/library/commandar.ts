@@ -6,6 +6,8 @@
 
 "use strict";
 
+const path: any = require("path");
+
 const childProcess: any = require("child_process");
 
 const execSync: any = childProcess.execSync;
@@ -21,7 +23,8 @@ export class Unix {
 	 *
 	 */
 	constructor() {
-		this.backupdir = process.cwd() + "/backup";
+		const project_root = path.join(__dirname, "../../../..");
+		this.backupdir = project_root + "/backup";
 	}
 
 	/**

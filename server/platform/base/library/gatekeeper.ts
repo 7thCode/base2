@@ -8,14 +8,9 @@
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
-const path: any = require("path");
-
 const result: any = require("./result");
 
-const project_root: string = process.cwd();
-const _config: string = path.join(project_root, "config");
-
-const ConfigModule: any = require(path.join(_config, "default"));
+const ConfigModule: any = require("../../../../config/default");
 const systemsConfig: any = ConfigModule.systems;
 
 /**
@@ -61,7 +56,7 @@ export class Gatekeeper {
 		}
 
 		response.header("Access-Control-Allow-Origin", host);
-		systemsConfig.extendheader.forEach((header) => {
+		systemsConfig.extendheader.forEach((header: any) => {
 			response.header(header[0], header[1]);
 		});
 
@@ -91,7 +86,7 @@ export class Gatekeeper {
 	 * @param callback
 	 * @returns none
 	 */
-	public static catch(response, callback: () => void): void {
+	public static catch(response: any, callback: () => void): void {
 		try {
 			callback();
 		} catch (error) {

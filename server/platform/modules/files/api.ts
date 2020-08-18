@@ -15,14 +15,13 @@ export const router = express.Router();
 const path: any = require("path");
 const fs: any = require("graceful-fs");
 
-const project_root: string = process.cwd();
-const library: string = path.join(project_root, "server/platform/base/library");
+const project_root = path.join(__dirname, "../../../..");
 
 const event: any = module.parent.exports.event;
 
 const logger: any = module.parent.exports.logger;
 
-const gatekeeper: any = require(path.join(library, "gatekeeper"));
+const gatekeeper: any = require("../../base/library/gatekeeper");
 
 const ConfigModule: any = module.parent.exports.config;
 const systemsConfig: any = ConfigModule.systems;

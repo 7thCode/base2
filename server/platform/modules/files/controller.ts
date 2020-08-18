@@ -10,7 +10,6 @@ import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types
 
 import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
 
-// const _: any = require("lodash");
 const fs: any = require("graceful-fs");
 const sharp: any = require("sharp");
 const mongodb: any = require("mongodb");
@@ -18,10 +17,9 @@ const MongoClient: any = require("mongodb").MongoClient;
 
 const path: any = require("path");
 
-const project_root: string = process.cwd();
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
+const project_root = path.join(__dirname, "../../../..");
 
-const Wrapper: any = require(path.join(controllers, "wrapper"));
+const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 
 export class Files extends Wrapper {
 

@@ -9,16 +9,12 @@
 import {IJSONResponse} from "../../../../types/platform/server";
 
 const _: any = require("lodash");
-const path: any = require("path");
-
-const project_root: string = process.cwd();
-const controllers: string = path.join(project_root, "server/platform/base/controllers");
 
 // import Stripe from 'stripe';
 
 const _Stripe: any = require('stripe')
 
-const Wrapper: any = require(path.join(controllers, "wrapper"));
+const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 
 interface ICardInit {
 	card: {
