@@ -28,31 +28,52 @@ router.post('/stripe/customer/create', [gatekeeper.default,
 		});
 	}])
 
-router.get('/stripe/customer/retrieve/:id', [gatekeeper.default,
-	(request: object, response: object): void => {
-		gatekeeper.catch(response, () => {
-			stripe.retrieveCustomer(request, response);
-		});
-	}])
-
-router.put('/stripe/customer/update/:id', [gatekeeper.default,
-	(request: object, response: object): void => {
-		gatekeeper.catch(response, () => {
-			stripe.updateCustomer(request, response);
-		});
-	}])
-
-router.delete('/stripe/customer/delete/:id', [gatekeeper.default,
+router.delete('/stripe/customer/delete', [gatekeeper.default,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
 			stripe.deleteCustomer(request, response);
 		});
 	}])
 
-router.put('/stripe/token/create/:id', [gatekeeper.default,
+router.get('/stripe/customer/retrieve', [gatekeeper.default,
 	(request: object, response: object): void => {
 		gatekeeper.catch(response, () => {
-			stripe.createToken(request, response);
+			stripe.retrieveCustomer(request, response);
+		});
+	}])
+
+router.put('/stripe/customer/update', [gatekeeper.default,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe.updateCustomer(request, response);
+		});
+	}])
+
+router.post('/stripe/source/create', [gatekeeper.default,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe.createSource(request, response);
+		});
+	}])
+
+router.get('/stripe/source/retrieve/:index', [gatekeeper.default,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe.retrieveSource(request, response);
+		});
+	}])
+
+router.put('/stripe/source/update/:index', [gatekeeper.default,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe.updateSource(request, response);
+		});
+	}])
+
+router.delete('/stripe/source/delete/:index', [gatekeeper.default,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe.deleteSource(request, response);
 		});
 	}])
 

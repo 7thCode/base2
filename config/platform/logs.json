@@ -1,28 +1,30 @@
 {
-  "appenders": {
-    "request": {
-      "type": "dateFile",
-      "filename": "logs/request.log",
-      "pattern": "%d"
-    },
-    "audit": {
-      "type": "file",
-      "filename": "logs/audit.log",
-      "pattern": "%d"
-    }
-  },
-  "categories": {
-    "default": {
-      "appenders": [
-        "request"
-      ],
-      "level": "error"
-    },
-    "audit": {
-      "appenders": [
-        "audit"
-      ],
-      "level": "info"
-    }
-  }
+	"appenders": {
+		"request": {
+			"type": "dateFile",
+			"category": "access",
+			"filename": "logs/request.log",
+			"pattern": "%d"
+		},
+		"audit": {
+			"type": "file",
+			"category": "audit",
+			"filename": "logs/audit.log",
+			"pattern": "%d"
+		}
+	},
+	"categories": {
+		"default": {
+			"appenders": [
+				"request"
+			],
+			"level": "error"
+		},
+		"audit": {
+			"appenders": [
+				"audit"
+			],
+			"level": "info"
+		}
+	}
 }

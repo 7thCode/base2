@@ -7,7 +7,14 @@ const configured_typescript = typescript.createProject("server_tsconfig.json");
 var rimraf = require('rimraf');
 
 gulp.task('dry', (cb) => {
-	gulp.src(['backup', 'dist', 'dmg', 'documentation', 'logs/*.log', 'out-tsc', 'product', 'public'], {read: false}).pipe(rimraf());
+	rimraf('backup', cb);
+	rimraf('dist', cb);
+	rimraf('dmg', cb);
+	rimraf('documentation', cb);
+	rimraf('logs/*.log.*', cb);
+	rimraf('out-tsc', cb);
+	rimraf('product', cb);
+	rimraf('public', cb);
 });
 
 gulp.task('clean', (cb) => {

@@ -70,9 +70,9 @@ import {ArticlesService} from "./articles.service";
 		MatProgressSpinnerModule,
 		MatPaginatorModule,
 		MatSlideToggleModule,
+		MatGridListModule,
 
 		BaseModule,
-		MatGridListModule,
 	],
 	exports: [
 		ArticlesComponent,

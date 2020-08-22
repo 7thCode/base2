@@ -156,16 +156,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	}
 
 	/**
-	 * 完了通知
-	 * @param type
-	 * @param value
-	 * @constructor
-	 */
-	protected Complete(type: string, value: object): void {
-		this.complete.emit({type, value});
-	}
-
-	/**
 	 * エラー表示
 	 * @param error
 	 */
@@ -175,6 +165,16 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				duration: 0
 			});
 		}
+	}
+
+	/**
+	 * 完了通知
+	 * @param type
+	 * @param value
+	 * @constructor
+	 */
+	protected Complete(type: string, value: object): void {
+		this.complete.emit({type, value});
 	}
 
 	/**
@@ -254,11 +254,10 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				const option = {sort: {auth: 1}, skip: this.size * this.page, limit: this.size};
 				this.accountService.query(this.query, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
-						const accounts: object[] = [];
-						results.forEach((result) => {
+						const accounts: object[] = results.map((result) => {
 							result.cols = 1;
 							result.rows = 1;
-							accounts.push(result);
+							return result;
 						});
 						// this.results = accounts;
 						callback(null, accounts);

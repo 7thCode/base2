@@ -7,6 +7,8 @@ module.exports = {
 
 		timezone: "Asia/Tokyo",
 
+		loglevel: "trace", 		// trace, debug, info, warn, error,fatal
+
 		port: 3000,
 		domain: "localhost:3000",
 		protocol: "http",
@@ -24,6 +26,7 @@ module.exports = {
 		use_publickey: false,
 		dav: false,
 		db: {
+			protocol: "mongodb",
 			address: "localhost",
 			user: "base1master",
 			password: "33550336",
@@ -320,6 +323,9 @@ module.exports = {
 			"usernamenotfound": "password missmatch or user not found.",
 			"usernamealreadyregist": "username already exist."
 		}
+	},
+	plugins: {
+		stripe: "sk_test_YsexgC22DK728hiSHQxJILSC00TymbkYxj"
 	},
 	users: {
 		initresources: [],

@@ -6,10 +6,8 @@
 
 "use strict";
 
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {Component, Inject, NgZone, ViewChild} from "@angular/core";
+import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {take} from "rxjs/operators";
 
 /**
  *
@@ -17,13 +15,13 @@ import {take} from "rxjs/operators";
  * @since 0.01
  */
 @Component({
-	selector: "stripe-dialog",
-	styleUrls: ["./stripe-dialog.component.css"],
-	templateUrl: "./stripe-dialog.component.html",
+	selector: "stripe-create-dialog",
+	styleUrls: ["./stripe-create-dialog.component.css"],
+	templateUrl: "./stripe-create-dialog.component.html",
 })
-export class StripeDialogComponent {
+export class StripeCreateDialogComponent {
 
-	@ViewChild("autosize") public autosize: CdkTextareaAutosize;
+	// @ViewChild("autosize") public autosize: CdkTextareaAutosize;
 
 	/**
 	 * @constructor
@@ -34,15 +32,7 @@ export class StripeDialogComponent {
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<StripeDialogComponent>,
-		private zone: NgZone) {
-	}
-
-	/**
-	 *
-	 */
-	public triggerResize() {
-		this.zone.onStable.pipe(take(1)).subscribe(() => this.autosize.resizeToFitContent(true));
+		public matDialogRef: MatDialogRef<StripeCreateDialogComponent>) {
 	}
 
 	/**

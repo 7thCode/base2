@@ -2,46 +2,49 @@
 	<mat-card style="margin:2rem;">
 		<mat-card-header>
 			<div style="font-size: 32px;font-weight: 900;">Stripe</div>
-			<button mat-icon-button (click)="createCustomer()">
-				<mat-icon color="primary">edit</mat-icon>
+
+			<button mat-button (click)="deleteCustomer()">
+				delete
 			</button>
-			<button mat-icon-button (click)="retrieveCustomer()">
-				<mat-icon color="accent">edit</mat-icon>
+
+			<button mat-button (click)="retrieveCustomer()">
+				retrieveCustomer
 			</button>
-			<button mat-icon-button (click)="updateCustomer()">
-				<mat-icon color="accent">edit</mat-icon>
+
+			<button mat-button (click)="updateCustomer()">
+				updateCustomer
 			</button>
-			<button mat-icon-button (click)="deleteCustomer()">
-				<mat-icon color="primary">edit</mat-icon>
+
+			<button mat-button (click)="retrieveSource(0)">
+				retrieveSource
 			</button>
-			<button mat-icon-button (click)="createToken()">
-				<mat-icon color="primary">edit</mat-icon>
+
+			<button mat-button (click)="updateSource(0, {name: 'Jenny Rosen'})">
+				updateSource
 			</button>
-			<button mat-icon-button (click)="charge()">
-				<mat-icon color="accent">edit</mat-icon>
+
+			<button mat-button (click)="charge()">
+				charge
 			</button>
+
 		</mat-card-header>
 		<mat-card-content>
-			<div fxLayout="row" fxLayoutAlign="space-between">
-				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
-				</mat-paginator>
+			<div fxLayout="row" fxLayoutAlign="end">
 				<button mat-fab color="primary" (click)="createDialog()" class="fab-center">+</button>
 			</div>
-			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
-				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
+			<mat-grid-list [cols]="breakpoint" rowHeight="3:2">
+				<mat-grid-tile class="box-body" style="border-radius: 10px;" *ngFor="let card of results; let i = index" [colspan]="card.cols" [rowspan]="card.rows">
 					<mat-grid-tile-header>
-						<div class="box-header">{{resource.id}}</div>
+						<div class="box-header" style="font-weight:900;font-size:14px;">{{card.brand}}</div>
 					</mat-grid-tile-header>
-
+					<div fxLayout="row" fxLayoutAlign="center" style="font-weight:900;font-size:14px;">****-****-****-{{card.last4}}</div>
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-
-						<button mat-icon-button (click)="updateDialog(resource.id)">
+						<button mat-icon-button (click)="updateDialog(card.id)">
 							<mat-icon color="primary">edit</mat-icon>
 						</button>
-						<button mat-icon-button (click)="onDelete($event, resource.id)">
+						<button mat-icon-button (click)="deleteSource(i)">
 							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
-
 					</mat-grid-tile-footer>
 				</mat-grid-tile>
 			</mat-grid-list>

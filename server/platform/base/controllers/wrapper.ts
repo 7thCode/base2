@@ -78,6 +78,18 @@ export abstract class Wrapper {
 	 * @param error
 	 * @returns none
 	 */
+	protected SendInfo(response: IJSONResponse, error: IErrorObject): void {
+		if (response) {
+			response.jsonp(new result(error.code, error.message, error));
+		}
+	}
+
+	/**
+	 *
+	 * @param response
+	 * @param error
+	 * @returns none
+	 */
 	protected SendWarn(response: IJSONResponse, error: IErrorObject): void {
 		this.logger.warn(JSON.stringify(error));
 		if (response) {

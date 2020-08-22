@@ -32,7 +32,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 import {BaseModule} from "../../platform/base/base.module";
 
-import {StripeDialogComponent} from "./stripe-dialog/stripe-dialog.component";
+import {StripeCreateDialogComponent} from "./stripe-create-dialog/stripe-create-dialog.component";
 import {StripeComponent} from "./stripe.component";
 
 import {SessionService} from "../../platform/base/services/session.service";
@@ -41,7 +41,7 @@ import {StripeService} from "./stripe.service";
 @NgModule({
 	declarations: [
 		StripeComponent,
-		StripeDialogComponent,
+		StripeCreateDialogComponent,
 	],
 	providers: [
 		SessionService,
@@ -70,15 +70,15 @@ import {StripeService} from "./stripe.service";
 		MatProgressSpinnerModule,
 		MatPaginatorModule,
 		MatSlideToggleModule,
+		MatGridListModule,
 
 		BaseModule,
-		MatGridListModule,
 	],
 	exports: [
 		StripeComponent,
 	],
 	bootstrap: [
-		StripeDialogComponent,
+		StripeCreateDialogComponent,
 	],
 })
 

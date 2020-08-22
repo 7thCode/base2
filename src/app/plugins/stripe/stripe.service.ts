@@ -13,12 +13,16 @@ import {UpdatableService} from "../../platform/base/services/updatable.service";
 import {Callback, IContent} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
 
+import {loadStripe} from '@stripe/stripe-js';
+
+
 @Injectable({
 	providedIn: "root",
 })
 
 export class StripeService extends UpdatableService {
 
+	// private stripe: any;
 	/**
 	 *
 	 * @param http
@@ -27,7 +31,12 @@ export class StripeService extends UpdatableService {
 		public http: HttpClient,
 	) {
 		super(http, "articles");
+		// this.stripe = this.loadStripe();
 	}
+
+	// private async loadStripe() {
+	// 	return await loadStripe('pk_test_Ht8bLgBXv2BeLuDy7nXWpoJV00pQHaaDCK');
+	// }
 
 	/**
 	 * @returns none
@@ -42,7 +51,7 @@ export class StripeService extends UpdatableService {
 	 * @param content　クリエイトデータ
 	 * @param callback コールバック
 	 */
-	public createCustomer(content: IContent, callback: Callback<any>): void {
+	public createCustomer(content: any, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/stripe/customer/create", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -64,8 +73,8 @@ export class StripeService extends UpdatableService {
 	 * @param id オブジェクトID
 	 * @param callback オブジェクトを返すコールバック
 	 */
-	public retrieveCustomer(id: string, callback: Callback<object>): void {
-		this.http.get(this.endPoint + "/stripe/customer/retrieve/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public retrieveCustomer(callback: Callback<object>): void {
+		this.http.get(this.endPoint + "/stripe/customer/retrieve", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, this.decorator(result.value));
@@ -86,8 +95,8 @@ export class StripeService extends UpdatableService {
 	 * @param content
 	 * @param callback
 	 */
-	public updateCustomer(id: string, content: any, callback: Callback<any>): void {
-		this.http.put(this.endPoint + "/stripe/customer/update/" + encodeURIComponent(id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public updateCustomer(content: any, callback: Callback<any>): void {
+		this.http.put(this.endPoint + "/stripe/customer/update", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result);
@@ -108,8 +117,8 @@ export class StripeService extends UpdatableService {
 	 * @param id 削除レコードID
 	 * @param callback コールバック
 	 */
-	public deleteCustomer(id: string, callback: Callback<any>): void {
-		this.http.delete(this.endPoint + "/stripe/customer/delete/" + encodeURIComponent(id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public deleteCustomer(callback: Callback<any>): void {
+		this.http.delete(this.endPoint + "/stripe/customer/delete", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
@@ -124,14 +133,20 @@ export class StripeService extends UpdatableService {
 		});
 	}
 
-	/**
-	 *
+	/*
 	 * @param id
 	 * @param content
 	 * @param callback
 	 */
-	public createToken(id: string, content: any, callback: Callback<any>): void {
-		this.http.put(this.endPoint + "/stripe/token/create/" + encodeURIComponent(id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public createSource(content: any, callback: Callback<any>): void {
+/*
+		this.stripe.createToken(content).then((token: any) => {
+			console.log(token);
+		}).catch((error: any) => {
+			console.log(error);
+		});
+*/
+		this.http.post(this.endPoint + "/stripe/source/create", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result);
@@ -146,13 +161,77 @@ export class StripeService extends UpdatableService {
 		});
 	}
 
+	/*
+	 * @param id
+	 * @param content
+	 * @param callback
+	 */
+	public retrieveSource(index: number, callback: Callback<any>): void {
+		this.http.get(this.endPoint + "/stripe/source/retrieve/" + index, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 5462"}, null);
+		});
+	}
+
+	/*
+	 * @param id
+	 * @param content
+	 * @param callback
+	 */
+	public updateSource(index: number, content: any, callback: Callback<any>): void {
+		this.http.put(this.endPoint + "/stripe/source/update/" + index, content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 5462"}, null);
+		});
+	}
+
+	/*
+ * @param id
+ * @param content
+ * @param callback
+ */
+	public deleteSource(index: number, callback: Callback<any>): void {
+		this.http.delete(this.endPoint + "/stripe/source/delete/" + index, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 5462"}, null);
+		});
+	}
+
+
 	/**
 	 * チャージ
 	 *
 	 * @param content　クリエイトデータ
 	 * @param callback コールバック
 	 */
-	public charge(content: IContent, callback: Callback<any>): void {
+	public charge(content: any, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/stripe/charge", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {

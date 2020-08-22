@@ -16,6 +16,8 @@ const morgan: any = require("morgan");
 const mongoose: any = require("mongoose");
 const passport: any = require("passport");
 
+// const domain = require('express-domain-middleware');
+
 const cookieParser: any = require("cookie-parser");
 const bodyParser: any = require("body-parser");
 
@@ -30,6 +32,8 @@ const Unix: any = require("./server/platform/base/library/commandar");
 const Cipher: any = require("./server/platform/base/library/cipher");
 const IPV6: any = require("./server/platform/base/library/ipv6");
 
+let logger: any;
+
 let saslprep: any = null;
 
 try {
@@ -38,6 +42,26 @@ try {
 }
 
 const normal: () => void = () => {
+
+	const config: any = _ConfigModule.systems;
+
+	log4js.configure({
+		appenders: {
+			out: {type: "stdout"},
+			app: {type: "dateFile", filename: "logs/application.log", daysToKeep: 7, compress: true}
+		},
+		categories: {
+			default: {appenders: ["out", "app"], level: "info"}
+		}
+	})
+
+	logger = log4js.getLogger();
+
+	logger.level = "info";
+
+	if (config.loglevel) {
+		logger.level = config.loglevel;
+	}
 
 	morgan("combined");
 
@@ -48,8 +72,6 @@ const normal: () => void = () => {
 	mongoose.set('useCreateIndex', true);
 	mongoose.set("useFindAndModify", false);
 
-	const config: any = _ConfigModule.systems;
-
 	process.env.TZ = "Asia/Tokyo";
 
 	if (config.timezone) {
@@ -59,14 +81,21 @@ const normal: () => void = () => {
 	const working: () => void = () => {
 		const app: any = express();
 
+		// domain
+		// app.use(domain);
+
+		// exception handlers
+		app.use((error: any, req: any, res: any, next: any) => {
+			logger.fatal(error);
+		});
+
 		// helmet
 		app.use(helmet());
 		app.use(helmet.hidePoweredBy({setTo: "JSF/1.2"}));  // impersonation
 
+		// console.group("\u001b[35m" + "Take off sequence..." + "\u001b[0m");
 
-		console.group("\u001b[35m" + "Take off sequence..." + "\u001b[0m");
-
-		console.info("\u001b[32m" + "Hundred." + "\u001b[0m");
+		logger.info("\u001b[32m" + "Hundred." + "\u001b[0m");
 
 		const EventEmitter: any = require("events").EventEmitter;
 		const localEvent: any = new EventEmitter();
@@ -85,7 +114,7 @@ const normal: () => void = () => {
 					// socket.clients.forEach((client: any): void => {
 					if (client) {
 						if (client.readyState === websocket.OPEN) {
-						// 	const r: any = IPV6.ToIPV6(client._socket.remoteAddress);
+							// 	const r: any = IPV6.ToIPV6(client._socket.remoteAddress);
 							client.send(JSON.stringify(data));
 						}
 					}
@@ -119,8 +148,8 @@ const normal: () => void = () => {
 		app.use(cookieParser());
 
 		// logs
-		log4js.configure("./config/platform/logs.json");
-		const logger: any = log4js.getLogger("request");
+		// log4js.configure("./config/platform/logs.json");
+		// const logger: any = log4js.getLogger("request");
 
 		module.exports.event = localEvent;
 		module.exports.config = _ConfigModule;
@@ -151,9 +180,9 @@ const normal: () => void = () => {
 			useUnifiedTopology: true,
 			// 	useUnifiedTopology: true,
 		};
-		let connect_url: string = "mongodb://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
+		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 		if (config.db.noauth) {
-			connect_url = "mongodb://" + config.db.address + "/" + config.db.name;
+			connect_url = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
 		}
 
 		mongoose.connection.once("open", () => {
@@ -169,9 +198,11 @@ const normal: () => void = () => {
 			});
 
 			mongoose.connection.on("disconnected", () => {
-				console.error("\u001b[31m" + "Mongoose default connection disconnected" + "\u001b[0m");
-				logger.info("Mongoose default connection disconnected");
-				process.exit(1);
+				// 	console.error("\u001b[31m" + "Mongoose default connection disconnected" + "\u001b[0m");
+				logger.error("Mongoose default connection disconnected");
+				log4js.shutdown((err: any) => {
+					process.exit(1);
+				})
 			});
 
 			mongoose.connection.on("reconnected", () => {
@@ -179,9 +210,11 @@ const normal: () => void = () => {
 			});
 
 			mongoose.connection.on("error", (error: IErrorObject) => {
-				console.error("\u001b[31m" + "Mongoose default connection error" + "\u001b[0m");
+				// 	console.error("\u001b[31m" + "Mongoose default connection error" + "\u001b[0m");
 				logger.error("Mongoose default connection error: " + error);
-				process.exit(1);
+				log4js.shutdown((err: any) => {
+					process.exit(1);
+				})
 			});
 
 			const sessionMiddleware: any = session({
@@ -200,13 +233,14 @@ const normal: () => void = () => {
 				}),
 			});
 
-	// 		app.session = sessionMiddleware;
+			// 		app.session = sessionMiddleware;
 			app.use(sessionMiddleware);
 
 			// passport
 			app.use(passport.initialize());
 			app.use(passport.session());
 			// passport
+
 
 			const load_module: any = (root: string, modules: any): void => {
 				if (modules) {
@@ -218,7 +252,7 @@ const normal: () => void = () => {
 				}
 			};
 
-			console.info("\u001b[32m" + "V1" + "\u001b[0m");
+			logger.info("\u001b[32m" + "V1" + "\u001b[0m");
 
 			const default_modules: any = [
 				{
@@ -275,7 +309,7 @@ const normal: () => void = () => {
 			load_module("./server", config.modules);
 			load_module("./server", config.root_modules);
 
-			console.info("\u001b[32m" + "VR" + "\u001b[0m");
+			logger.info("\u001b[32m" + "VR" + "\u001b[0m");
 
 			// backup
 
@@ -329,39 +363,45 @@ const normal: () => void = () => {
 		// database
 		mongoose.connect(connect_url, options)
 			.catch((error: any) => {
-				console.error("\u001b[31m" + "Mongoose exception " + error.message + "\u001b[0m");
+				// 	console.error("\u001b[31m" + "Mongoose exception " + error.message + "\u001b[0m");
 				logger.fatal("catch Mongoose exception. ", error.stack);
-				process.exit(1);
+				log4js.shutdown((err: any) => {
+					process.exit(1);
+				})
 			});
 
 		process.on("SIGINT", (): void => { // for pm2 cluster.
 			mongoose.connection.close(() => {
 				logger.info("Stop by SIGINT.");
-				process.exit(0);
+				log4js.shutdown((err: any) => {
+					process.exit(0);
+				})
 			});
 		});
 
 		process.on("message", (msg): void => {  // for pm2 cluster on windows.
 			if (msg === "shutdown") {
 				logger.info("Stop by shutdown.");
-				setTimeout(function () {
-					process.exit(0);
+				setTimeout(() => {
+					log4js.shutdown((err: any) => {
+						process.exit(0);
+					})
 				}, 1500);
 			}
 		});
 	}
 
 	const message = (): void => {
-		console.group("\u001b[35m" + "Environment" + "\u001b[0m");
-		console.info("TZ  : " + process.env.TZ);
-		console.info("LC_CTYPE  : " + process.env.LC_CTYPE);
-		console.info("PWD       : " + process.env.PWD);
-		console.info("HOME      : " + process.env.HOME);
-		console.info("ENV       : " + process.env.NODE_ENV);
-		console.info("MODE      : " + config.status);
-		console.info("DB ADDRESS: " + config.db.address);
-		console.info("DB NAME   : " + config.db.name);
-		console.groupEnd();
+		// 	console.group("\u001b[35m" + "Environment" + "\u001b[0m");
+		logger.info("TZ  : " + process.env.TZ);
+		logger.info("LC_CTYPE  : " + process.env.LC_CTYPE);
+		logger.info("PWD       : " + process.env.PWD);
+		logger.info("HOME      : " + process.env.HOME);
+		logger.info("ENV       : " + process.env.NODE_ENV);
+		logger.info("MODE      : " + config.status);
+		logger.info("DB ADDRESS: " + config.db.address);
+		logger.info("DB NAME   : " + config.db.name);
+		// 	console.groupEnd();
 	}
 
 	const is_cluster: boolean = config.is_cluster;
@@ -409,17 +449,21 @@ const Serve = (config: any, app: any): any => {
 				: "Port " + port;
 			switch (error.code) {
 				case "EACCES":
-					console.error("\u001b[31m" + bind + " requires elevated privileges" + "\u001b[0m");
-					process.exit(1);
+					logger.error("\u001b[31m" + bind + " requires elevated privileges" + "\u001b[0m");
+					log4js.shutdown((err: any) => {
+						process.exit(1);
+					})
 					break;
 				case "EADDRINUSE":
-					console.error("\u001b[31m" + bind + " is already in use" + "\u001b[0m");
-					process.exit(1);
+					logger.error("\u001b[31m" + bind + " is already in use" + "\u001b[0m");
+					log4js.shutdown((err: any) => {
+						process.exit(1);
+					})
 					break;
 				default:
 					throw error;
 			}
-		} else  {
+		} else {
 			throw error;
 		}
 	}
@@ -436,8 +480,8 @@ const Serve = (config: any, app: any): any => {
 		};  // for pm2 cluster.
 
 		process.send("ready");
-		console.info("\u001b[34m" + "Steady flight." + "\u001b[0m");
-		console.groupEnd();
+		logger.info("\u001b[34m" + "Steady flight." + "\u001b[0m");
+		// 	console.groupEnd();
 	}
 
 	const port: any = normalizePort(process.env.PORT || config.port);
@@ -461,7 +505,7 @@ const Serve = (config: any, app: any): any => {
 	server.on("listening", onListening);
 	server.listen(port, "::0");
 
-	console.info("\u001b[32m" + "V2" + "\u001b[0m");
+	logger.info("\u001b[32m" + "V2" + "\u001b[0m");
 
 	return server;
 };

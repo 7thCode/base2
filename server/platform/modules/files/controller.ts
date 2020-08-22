@@ -63,9 +63,9 @@ export class Files extends Wrapper {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 		};
-		let connectUrl: string = "mongodb://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
+		let connectUrl: string =  config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 		if (config.db.noauth) {
-			connectUrl = "mongodb://" + config.db.address + "/" + config.db.name;
+			connectUrl = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
 		}
 		return MongoClient.connect(connectUrl, options);
 	}

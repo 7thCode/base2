@@ -36,12 +36,13 @@ export class Session extends Wrapper {
 			if (request.user) {
 				this.SendSuccess(response, this.Transform(request.user));
 			} else {
-				this.SendError(response, {code: -1, message: "not logged in.(session 1) 3630"});
+				this.SendInfo(response, {code: 1, message: "not logged in."});
 			}
 		} catch (error) {
 			this.SendError(response, error);
 		}
 	}
+
 
 	/**
 	 * @param request
