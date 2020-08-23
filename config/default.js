@@ -69,7 +69,7 @@ module.exports = {
 			stripe: {
 				type: "optional",
 				path: "/plugins/modules/",
-				name: "stripe",
+				key: "sk_test_YsexgC22DK728hiSHQxJILSC00TymbkYxj",
 				description: {
 					display: "Stripe"
 				}
@@ -77,7 +77,6 @@ module.exports = {
 			front: {
 				type: "required",
 				path: "/applications/modules/",
-				name: "front",
 				description: {
 					display: "Front"
 				}
@@ -321,9 +320,6 @@ module.exports = {
 			"usernamenotfound": "password missmatch or user not found.",
 			"usernamealreadyregist": "username already exist."
 		}
-	},
-	plugins: {
-		stripe: "sk_test_YsexgC22DK728hiSHQxJILSC00TymbkYxj"
 	},
 	users: {
 		initresources: [],

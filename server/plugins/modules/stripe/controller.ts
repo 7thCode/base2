@@ -48,12 +48,15 @@ export class Stripe extends Wrapper {
 	 */
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
-		if (config.plugins.stripe) {
-			const key = config.plugins.stripe;
-			this.stripe = new _Stripe(key, {
-				apiVersion: "2020-03-02",
-			});
-			this.enable = true;
+		if (config.systems.modules.stripe) {
+			if (config.systems.modules.stripe.key) {
+				// const key = config.plugins.stripe.key;
+				const key = config.modules.stripe.key;
+				this.stripe = new _Stripe(key, {
+					apiVersion: "2020-03-02",
+				});
+				this.enable = true;
+			}
 		}
 	}
 
