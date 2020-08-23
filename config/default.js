@@ -65,8 +65,8 @@ module.exports = {
 			"MEgCQQCMCKOCbTexbTtSOPD0wqkQe6d5hTHI+TS2cpZXugYu1R1vj9i6nz6oIlJd" +
 			"iS8nLAg7Y+ptg4HldnCv7wLoEkQzAgMBAAE=\n" +
 			"-----END RSA PUBLIC KEY-----",
-		modules: [
-			{
+		modules: {
+			stripe: {
 				type: "optional",
 				path: "/plugins/modules/",
 				name: "stripe",
@@ -74,9 +74,7 @@ module.exports = {
 					display: "Stripe"
 				}
 			},
-		],
-		root_modules: [
-			{
+			front: {
 				type: "required",
 				path: "/applications/modules/",
 				name: "front",
@@ -84,7 +82,7 @@ module.exports = {
 					display: "Front"
 				}
 			}
-		],
+		},
 		default: {
 			user_id: "000000000000000000000000",
 		},

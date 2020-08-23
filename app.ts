@@ -242,72 +242,73 @@ const normal: () => void = () => {
 			// passport
 
 
+			// const load_module: any = (root: string, modules: any): void => {
+			// 	if (modules) {
+			// 		modules.forEach((module: any) => {
+			// 			const path: string = root + module.path;
+			// 			const name: string = module.name;
+			// 			app.use("/", require(path + name + "/api"));
+			// 		});
+			// 	}
+			// };
+
 			const load_module: any = (root: string, modules: any): void => {
 				if (modules) {
-					modules.forEach((module: any) => {
-						const path: string = root + module.path;
-						const name: string = module.name;
-						app.use("/", require(path + name + "/api"));
+					Object.keys(modules).forEach((key: string) => {
+						const path: string = root + modules[key].path;
+						app.use("/", require(path + key + "/api"));
 					});
 				}
 			};
 
 			logger.info("\u001b[32m" + "V1" + "\u001b[0m");
 
-			const default_modules: any = [
-				{
+			const default_modules: any = {
+				auth: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "auth",
 					description: {},
 				},
-				{
+				accounts: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "accounts",
 					description: {},
 				},
-				{
+				publickey: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "publickey",
 					description: {},
 				},
-				{
+				session: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "session",
 					description: {},
 				},
-				{
+				articles: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "articles",
 					description: {
 						display: "Article",
 					},
 				},
-				{
+				pages: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "pages",
 					description: {
 						display: "page",
 					},
 				},
-				{
+				files: {
 					type: "required",
 					path: "/platform/modules/",
-					name: "files",
 					description: {
 						display: "File",
 					},
 				},
-			];
+			};
 
 			load_module("./server", default_modules);
 			load_module("./server", config.modules);
-			load_module("./server", config.root_modules);
 
 			logger.info("\u001b[32m" + "VR" + "\u001b[0m");
 
@@ -406,7 +407,7 @@ const normal: () => void = () => {
 
 	const is_cluster: boolean = config.is_cluster;
 
-// 	cpu_count = 1;
+ 	// cpu_count = 1;
 
 	if (is_cluster) {
 		if (cluster.isMaster) {
