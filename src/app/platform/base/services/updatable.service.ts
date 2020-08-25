@@ -14,6 +14,7 @@ import {retry} from "rxjs/operators";
 import { environment } from '../../../../environments/environment';
 
 import {QueryableService} from "./queryable.service";
+import {Injectable} from "@angular/core";
 
 /**
  * 更新サービス

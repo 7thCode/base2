@@ -29,10 +29,14 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {PageEditModule} from "../base/components/pageedit/pageedit.module";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {BaseModule} from "../base/base.module";
+import {SessionService} from "../base/services/session.service";
 
 @NgModule({
 	declarations: [
 		PersonalComponent
+	],
+	providers: [
+		SessionService,
 	],
 	imports: [
 		CommonModule,

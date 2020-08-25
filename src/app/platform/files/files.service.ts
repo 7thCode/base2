@@ -14,12 +14,17 @@ import {retry} from "rxjs/operators";
 import { environment } from '../../../environments/environment';
 
 import {HttpService} from "../base/services/http.service";
+import {Injectable} from "@angular/core";
 
 /**
  * ファイル
  *
  * @since 0.01
  */
+
+@Injectable({
+	providedIn: "root",
+})
 export class FilesService extends HttpService {
 
 	/**

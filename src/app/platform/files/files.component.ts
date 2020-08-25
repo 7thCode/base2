@@ -14,9 +14,9 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
+import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
-import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 /**
  * ファイル

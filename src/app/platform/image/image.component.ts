@@ -20,7 +20,7 @@ import { environment } from '../../../environments/environment';
 import {SessionService} from "../base/services/session.service";
 
 /**
- *　イメージ
+ * イメージ
  *
  * @since 0.01
  */
@@ -87,7 +87,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 *
 	 * @param session
 	 * @param http
-	 * @param change
 	 * @param matDialog
 	 */
 	constructor(

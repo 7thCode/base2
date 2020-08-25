@@ -13,13 +13,13 @@ import { environment } from '../../../environments/environment';
 
 import {UpdatableService} from "../base/services/updatable.service";
 
-@Injectable({
-	providedIn: "root",
-})
-
 /**
  *
  */
+
+@Injectable({
+	providedIn: "root",
+})
 export class PagesService extends UpdatableService {
 
 	/**

@@ -41,6 +41,7 @@ import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
 import {AuthService} from "./auth.service";
 import {WithdrawDialogComponent} from "./withdraw-dialog/withdraw-dialog.component";
 import {WithdrawDialogDirective} from "./withdraw-dialog/withdraw-dialog.directive";
+import {HttpService} from "../base/services/http.service";
 
 @NgModule({
 	declarations: [

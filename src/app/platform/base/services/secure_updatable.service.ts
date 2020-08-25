@@ -17,12 +17,17 @@ import { environment } from '../../../../environments/environment';
 
 import {PublicKeyService} from "./publickey.service";
 import {UpdatableService} from "./updatable.service";
+import {Injectable} from "@angular/core";
 
 /**
  * 秘匿更新サービスのベースクラス
  *
  * @since 0.01
  */
+
+@Injectable({
+	providedIn: "root",
+})
 export abstract class SecureUpdatableService extends UpdatableService {
 
 	/**

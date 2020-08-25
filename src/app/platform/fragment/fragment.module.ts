@@ -21,6 +21,7 @@ import {FragmentComponent} from "./fragment.component";
 		FragmentComponent,
 	],
 	imports: [
+		HttpService,
 		CommonModule,
 		FormsModule,
 		FlexLayoutModule,

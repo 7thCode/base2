@@ -16,15 +16,15 @@ import { environment } from '../../../../environments/environment';
 
 import {HttpService} from "./http.service";
 
-@Injectable({
-	providedIn: "root",
-})
-
 /**
  * 公開鍵
  *
  * @since 0.01
  */
+
+@Injectable({
+	providedIn: "root",
+})
 export class PublicKeyService extends HttpService {
 
 	/**

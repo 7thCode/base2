@@ -16,15 +16,16 @@ import { environment } from '../../../../environments/environment';
 
 import {HttpService} from "./http.service";
 
-@Injectable({
-	providedIn: "root",
-})
 
 /**
  * ユーザプロファイル
  *
  * @since 0.01
  */
+
+@Injectable({
+	providedIn: "root",
+})
 export class ProfileService extends HttpService {
 
 	/**

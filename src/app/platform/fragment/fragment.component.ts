@@ -40,7 +40,6 @@ export class FragmentComponent extends UpdatableComponent implements OnInit {
 	 *
 	 * @param session
 	 * @param fragmentService
-	 * @param change
 	 * @param matDialog
 	 */
 	constructor(

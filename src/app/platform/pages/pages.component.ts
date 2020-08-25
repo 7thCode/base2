@@ -14,10 +14,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
 import {PageDialogComponent} from "./page-dialog/page-dialog.component";
+import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
-import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 /**
  * ページ

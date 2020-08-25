@@ -9,9 +9,7 @@
 import {Injectable} from "@angular/core";
 import {InteractionChannel} from "../library/channel";
 
-@Injectable({
-	providedIn: "root",
-})
+
 
 /**
  * 汎用ネームドイベントチャネル
@@ -32,6 +30,10 @@ import {InteractionChannel} from "../library/channel";
  * this.channel.subscribe((data: any) => this.handler(data: any));
  *
  */
+
+@Injectable({
+	providedIn: "root",
+})
 export class InteractionService {
 
 	/**

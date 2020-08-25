@@ -20,7 +20,6 @@ import {HttpService} from "../base/services/http.service";
 @Injectable({
 	providedIn: "root",
 })
-
 export class FragmentService extends HttpService {
 
 	constructor(

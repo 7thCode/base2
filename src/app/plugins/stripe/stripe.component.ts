@@ -12,13 +12,12 @@ import {Component, OnInit} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {GridViewComponent} from "../../platform/base/components/gridview.component";
 import {StripeCreateDialogComponent} from "./stripe-create-dialog/stripe-create-dialog.component";
+import {InfoDialogComponent} from "../../platform/base/components/info-dialog/info-dialog.component";
+import {SessionableComponent} from "../../platform/base/components/sessionable.component";
 
 import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
-import {InfoDialogComponent} from "../../platform/base/components/info-dialog/info-dialog.component";
-import {SessionableComponent} from "../../platform/base/components/sessionable.component";
 
 /**
  * Stripe
@@ -227,39 +226,39 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 	 */
 
 	public onDelete(event: any, id: string): void {
-		/*
-				const _delete = (id: string): void => {
-					this.Progress(true);
-					this.delete(id, (error: IErrorObject, result: any): void => {
-						if (!error) {
-							this.Complete("", result);
-						} else {
-							this.Complete("error", error);
-						}
-						this.Progress(false);
-					});
-				};
-
-				if (event.shiftKey) { // dialog?
-					_delete(id);
+/*
+		const _delete = (id: string): void => {
+			this.Progress(true);
+			this.delete(id, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					this.Complete("", result);
 				} else {
-					const resultDialogContent: any = {title: "Articles", message: "Delete this?."};
-					const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
-						width: "fit-content",
-						height: "fit-content",
-						data: {
-							session: this.currentSession,
-							content: resultDialogContent,
-						},
-						disableClose: true,
-					});
-					dialog.afterClosed().subscribe((result: object) => {
-						if (result) { // if not cancel then
-							_delete(id);
-						}
-					});
+					this.Complete("error", error);
 				}
-		*/
+				this.Progress(false);
+			});
+		};
+
+		if (event.shiftKey) { // dialog?
+			_delete(id);
+		} else {
+			const resultDialogContent: any = {title: "Articles", message: "Delete this?."};
+			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+				width: "fit-content",
+				height: "fit-content",
+				data: {
+					session: this.currentSession,
+					content: resultDialogContent,
+				},
+				disableClose: true,
+			});
+			dialog.afterClosed().subscribe((result: object) => {
+				if (result) { // if not cancel then
+					_delete(id);
+				}
+			});
+		}
+*/
 	}
 
 	public createCustomer() {

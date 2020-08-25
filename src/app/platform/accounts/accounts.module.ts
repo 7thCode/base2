@@ -10,6 +10,7 @@ import {CommonModule} from "@angular/common";
 import {NgModule} from "@angular/core";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
+
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
@@ -29,7 +30,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 
-
+import {BasePipeModule} from "../base/pipes/base-pipe.module";
 import {BaseModule} from "../base/base.module";
 import {ImageModule} from "../image/image.module";
 
@@ -39,7 +40,6 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
 import {AccountsService} from "./accounts.service";
-import {BasePipeModule} from "../base/pipes/base-pipe.module";
 
 @NgModule({
 	declarations: [
