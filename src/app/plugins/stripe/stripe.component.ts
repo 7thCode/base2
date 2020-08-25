@@ -21,7 +21,7 @@ import {InfoDialogComponent} from "../../platform/base/components/info-dialog/in
 import {SessionableComponent} from "../../platform/base/components/sessionable.component";
 
 /**
- * アーティクル
+ * Stripe
  *
  * @since 0.01
  */
@@ -227,44 +227,43 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 	 */
 
 	public onDelete(event: any, id: string): void {
-/*
-		const _delete = (id: string): void => {
-			this.Progress(true);
-			this.delete(id, (error: IErrorObject, result: any): void => {
-				if (!error) {
-					this.Complete("", result);
-				} else {
-					this.Complete("error", error);
-				}
-				this.Progress(false);
-			});
-		};
+		/*
+				const _delete = (id: string): void => {
+					this.Progress(true);
+					this.delete(id, (error: IErrorObject, result: any): void => {
+						if (!error) {
+							this.Complete("", result);
+						} else {
+							this.Complete("error", error);
+						}
+						this.Progress(false);
+					});
+				};
 
-		if (event.shiftKey) { // dialog?
-			_delete(id);
-		} else {
-			const resultDialogContent: any = {title: "Articles", message: "Delete this?."};
-			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
-				width: "fit-content",
-				height: "fit-content",
-				data: {
-					session: this.currentSession,
-					content: resultDialogContent,
-				},
-				disableClose: true,
-			});
-			dialog.afterClosed().subscribe((result: object) => {
-				if (result) { // if not cancel then
+				if (event.shiftKey) { // dialog?
 					_delete(id);
+				} else {
+					const resultDialogContent: any = {title: "Articles", message: "Delete this?."};
+					const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+						width: "fit-content",
+						height: "fit-content",
+						data: {
+							session: this.currentSession,
+							content: resultDialogContent,
+						},
+						disableClose: true,
+					});
+					dialog.afterClosed().subscribe((result: object) => {
+						if (result) { // if not cancel then
+							_delete(id);
+						}
+					});
 				}
-			});
-		}
-*/
+		*/
 	}
 
 	public createCustomer() {
 		this.stripeService.createCustomer({email: "test3@test.com"}, (error: IErrorObject, result: any) => {
-			console.log(result);
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
 			});
 		})
@@ -272,7 +271,6 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 
 	public retrieveCustomer() {
 		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
-			console.log(result);
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
 			});
 		})
@@ -280,7 +278,6 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 
 	public updateCustomer() {
 		this.stripeService.updateCustomer({metadata: {order_id: '6735'}}, (error: IErrorObject, result: any) => {
-			console.log(result);
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
 			});
 		})
@@ -288,7 +285,6 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 
 	public deleteCustomer() {
 		this.stripeService.deleteCustomer((error: IErrorObject, result: any) => {
-			console.log(result);
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
 			});
 		})
@@ -304,7 +300,6 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 
 	public retrieveSource(index: number): void {
 		this.stripeService.retrieveSource(index,(error: IErrorObject, result: any) => {
-			console.log(result);
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
 			});
 		})
@@ -312,7 +307,6 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 
 	public updateSource(index: number, content: any): void {
 		this.stripeService.updateSource(index, content,(error: IErrorObject, result: any) => {
-			console.log(result);
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
 			});
 		})
@@ -332,7 +326,6 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 		dialog.afterClosed().subscribe((result: object) => {
 			if (result) { // if not cancel then
 				this.stripeService.deleteSource(index,(error: IErrorObject, result: any) => {
-					console.log(result);
 					this.draw((error: IErrorObject, cards: object[] | null): void => {
 					});
 				})

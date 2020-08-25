@@ -34,7 +34,7 @@ export class PublicKey extends Wrapper {
 	 * @returns none
 	 */
 	public get_fixed_public_key(request: object, response: IJSONResponse): void {
-		if (this.systemsConfig.use_publickey) {
+		if (this.systemsConfig.publickey) {
 			this.SendSuccess(response, this.systemsConfig.publickey);
 		} else {
 			this.SendSuccess(response, null);

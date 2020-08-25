@@ -8,35 +8,71 @@
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-
-import {UpdatableService} from "../../platform/base/services/updatable.service";
-import {Callback, IContent} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
-
-import {loadStripe} from '@stripe/stripe-js';
+import * as NodeRSA from "node-rsa";
+import {PublicKeyService} from "../../platform/base/services/publickey.service";
+import {HttpService} from "../../platform/base/services/http.service";
 
 
 @Injectable({
 	providedIn: "root",
 })
 
-export class StripeService extends UpdatableService {
+export class StripeService extends HttpService {
 
 	// private stripe: any;
 	/**
 	 *
 	 * @param http
+	 * @param PublicKey
 	 */
 	constructor(
 		public http: HttpClient,
+		private PublicKey: PublicKeyService,
 	) {
-		super(http, "articles");
+		super(http);
 		// this.stripe = this.loadStripe();
 	}
 
 	// private async loadStripe() {
 	// 	return await loadStripe('pk_test_Ht8bLgBXv2BeLuDy7nXWpoJV00pQHaaDCK');
 	// }
+
+	/*
+	* @param key 公開鍵
+	* @param plain 原文
+	* @param callback 暗号を返すコールバック
+	*/
+	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
+		try {
+			const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			callback(null, rsa.encrypt(plain, "base64"));
+		} catch (e) {
+			callback(e, "");
+		}
+	}
+
+	/**
+	 * 公開鍵暗号
+	 *
+	 * @param key 公開鍵
+	 * @param plain 原文
+	 * @param callback 暗号を返すコールバック
+	 */
+	private value_encrypt(key: string, plain: object, callback: Callback<any>) {
+		try {
+			StripeService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
+				if (!error) {
+					callback(null, encryptedText);
+				} else {
+					callback(error, "");
+				}
+			});
+		} catch (error) {
+			callback(error, "");
+		}
+	}
 
 	/**
 	 * @returns none
@@ -139,25 +175,37 @@ export class StripeService extends UpdatableService {
 	 * @param callback
 	 */
 	public createSource(content: any, callback: Callback<any>): void {
-/*
-		this.stripe.createToken(content).then((token: any) => {
-			console.log(token);
-		}).catch((error: any) => {
-			console.log(error);
-		});
-*/
-		this.http.post(this.endPoint + "/stripe/source/create", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
-			if (result) {
-				if (result.code === 0) {
-					callback(null, result);
-				} else {
-					callback(result, null);
-				}
+		/*
+				this.stripe.createToken(content).then((token: any) => {
+					console.log(token);
+				}).catch((error: any) => {
+					console.log(error);
+				});
+		*/
+		this.PublicKey.fixed((error, key): void => {
+			if (!error) {
+				this.value_encrypt(key, content, (error: IErrorObject, value: any): void => {
+					if (!error) {
+						this.http.post(this.endPoint + "/stripe/source/create", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+							if (result) {
+								if (result.code === 0) {
+									callback(null, result);
+								} else {
+									callback(result, null);
+								}
+							} else {
+								callback(this.networkError, null);
+							}
+						}, (error: HttpErrorResponse): void => {
+							callback({code: -1, message: error.message + " 5562"}, null);
+						});
+					} else {
+						callback(error, null);
+					}
+				});
 			} else {
-				callback(this.networkError, null);
+				callback(error, null);
 			}
-		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 5562"}, null);
 		});
 	}
 

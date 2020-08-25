@@ -7,7 +7,8 @@
 "use strict";
 
 import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
-import {IErrorObject} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
+// import {Cipher} from "../../../platform/base/library/cipher";
 
 const _: any = require("lodash");
 
@@ -15,6 +16,7 @@ const _: any = require("lodash");
 
 const _Stripe: any = require('stripe')
 
+const Cipher: any = require("../../../platform/base/library/cipher");
 const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
@@ -51,7 +53,7 @@ export class Stripe extends Wrapper {
 		if (config.systems.modules.stripe) {
 			if (config.systems.modules.stripe.key) {
 				// const key = config.plugins.stripe.key;
-				const key = config.modules.stripe.key;
+				const key = config.systems.modules.stripe.key;
 				this.stripe = new _Stripe(key, {
 					apiVersion: "2020-03-02",
 				});
@@ -61,9 +63,46 @@ export class Stripe extends Wrapper {
 	}
 
 	/**
+	 *
+	 * @param key
+	 * @param crypted
+	 * @param callback
+	 * @returns none
+	 */
+	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
+		try {
+			callback(null, Cipher.Decrypt(key, crypted));
+		} catch (e) {
+			callback(e, "");
+		}
+	}
+
+	/**
+	 *
+	 * @param use_publickey
+	 * @param key
+	 * @param crypted
+	 * @param callback
+	 * @returns none
+	 */
+	public static value_decrypt(use_publickey: boolean, key: string, crypted: any, callback: Callback<any>): void {
+		try {
+			Stripe.publickey_decrypt(key, crypted, (error, plain): void => {
+				if (!error) {
+					callback(null, JSON.parse(plain));
+				} else {
+					callback({code: 2, message: "unknown error. 5977"}, {});
+				}
+			});
+		} catch (error) {
+			callback({code: 3, message: "unknown error. 7713"}, {});
+		}
+	}
+
+	/**
 	 * アカウントゲット
-	 * @param request
-	 * @param response
+	 * @param operator
+	 * @param callback
 	 * @returns none
 	 */
 	private get_self(operator: IAccountModel, callback: (error: IErrorObject, result: any) => void): void {
@@ -74,8 +113,9 @@ export class Stripe extends Wrapper {
 
 	/**
 	 * アカウントプット
-	 * @param request
-	 * @param response
+	 * @param operator
+	 * @param id
+	 * @param callback
 	 * @returns none
 	 */
 	private put_self(operator: IAccountModel, id: string, callback: (error: IErrorObject, result: any) => void): void {
@@ -87,6 +127,9 @@ export class Stripe extends Wrapper {
 		});
 	}
 
+	/**
+	 *
+	 */
 	public get_id(response: any, operator: any, callback: (customer_id: string) => void): void {
 		this.get_self(operator, (error, account) => {
 			this.ifSuccess(response, error, (): void => {
@@ -99,6 +142,9 @@ export class Stripe extends Wrapper {
 		})
 	}
 
+	/**
+	 *
+	 */
 	public put_id(response: any, operator: any, customer_id: string, callback: (result: string) => void) {
 		this.put_self(operator, customer_id, (error, account) => {
 			this.ifSuccess(response, error, (): void => {
@@ -107,6 +153,9 @@ export class Stripe extends Wrapper {
 		})
 	}
 
+	/**
+	 *
+	 */
 	public createCustomer(request: any, response: IJSONResponse): void {
 		try {
 			if (this.enable) {
@@ -255,56 +304,61 @@ export class Stripe extends Wrapper {
 		try {
 			if (this.enable) {
 				if (request.user) {
-					const operator: IAccountModel = this.Transform(request.user);
-					const customer_email = request.body.email;
-					const card = request.body.card; // todo : 暗号化
-					this.get_id(response, operator, (customer_id: string) => {
-						if (!customer_id) {
-							this.logger.info('begin createCustomer. ' + customer_email);
-							this.stripe.customers.create({
-								email: customer_email,
-								description: operator.user_id,
-							}).then((customer: any) => {
-								this.stripe.tokens.create({
-									card: card
-								}).then((token: any) => {
-									const params = {
-										source: token.id
-									};
-									this.logger.info('begin createSource. ' + customer_email);
-									this.stripe.customers.createSource(customer.id, params).then((card: any) => {
-										this.logger.info('end createSource. ' + customer_email);
-										this.put_id(response, operator, customer.id, (customer_id: string) => {
-											this.logger.info('end createSource. ' + customer_email);
-											this.SendSuccess(response, customer_id);
+					Stripe.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
+						this.ifSuccess(response, error, (): void => {
+							const operator: IAccountModel = this.Transform(request.user);
+							const card = value.card;// request.body.card; // todo : 暗号化
+							this.get_id(response, operator, (customer_id: string) => {
+								if (!customer_id) {
+									const customer_email = request.body.email;
+									this.logger.info('begin createCustomer. ' + customer_email);
+									this.stripe.customers.create({
+										email: customer_email,
+										description: operator.user_id,
+									}).then((customer: any) => {
+										this.stripe.tokens.create({
+											card: card
+										}).then((token: any) => {
+											const params = {
+												source: token.id
+											};
+											this.logger.info('begin createSource. ' + customer_email);
+											this.stripe.customers.createSource(customer.id, params).then((card: any) => {
+												this.logger.info('end createSource. ' + customer_email);
+												this.put_id(response, operator, customer.id, (customer_id: string) => {
+													this.logger.info('end createSource. ' + customer_email);
+													this.SendSuccess(response, customer_id);
+												});
+											}).catch((error: any) => {
+												this.SendError(response, error);
+											})
+										}).catch((error: any) => {
+											this.SendError(response, error);
 										});
 									}).catch((error: any) => {
 										this.SendError(response, error);
+									});
+								} else {
+									const customer_email = operator.username;
+									this.stripe.tokens.create({
+										card: card
+									}).then((token: any) => {
+										const params = {
+											source: token.id
+										};
+										this.logger.info('begin createSource. ' + customer_email);
+										this.stripe.customers.createSource(customer_id, params).then((card: any) => {
+											this.logger.info('end createSource. ' + customer_email);
+											this.SendSuccess(response, customer_id);
+										}).catch((error: any) => {
+											this.SendError(response, error);
+										})
+									}).catch((error: any) => {
+										this.SendError(response, error);
 									})
-								}).catch((error: any) => {
-									this.SendError(response, error);
-								});
-							}).catch((error: any) => {
-								this.SendError(response, error);
+								}
 							});
-						} else {
-							this.stripe.tokens.create({
-								card: card
-							}).then((token: any) => {
-								const params = {
-									source: token.id
-								};
-								this.logger.info('begin createSource. ' + customer_email);
-								this.stripe.customers.createSource(customer_id, params).then((card: any) => {
-									this.logger.info('end createSource. ' + customer_email);
-									this.SendSuccess(response, customer_id);
-								}).catch((error: any) => {
-									this.SendError(response, error);
-								})
-							}).catch((error: any) => {
-								this.SendError(response, error);
-							})
-						}
+						});
 					});
 				} else {
 					this.SendError(response, {code: 1, message: "not logged in."});
@@ -323,6 +377,7 @@ export class Stripe extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
+
 	/*
 	public createSource0(request: any, response: IJSONResponse): void {
 		try {

@@ -129,7 +129,8 @@ export abstract class Wrapper {
 	 * @param object
 	 * @returns none
 	 */
-	protected SendSuccess(response: IJSONResponse, object: object): void {
+	protected SendSuccess(response: any, object: object): void {
+		this.logger.trace(response.req.url);
 		if (response) {
 			response.jsonp(new result(0, "", object));
 		}
