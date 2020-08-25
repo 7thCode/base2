@@ -23,13 +23,13 @@
 
                     <mat-grid-tile-header fxLayout="row" fxLayoutAlign="space-between center" style="padding-left:4px;padding-right:4px;line-height:32px;">
                         <app-image [fileName]="'avatar.jpg'" [view]="'visible'" [width]="32" [height]="32" [user_id]="account.user_id"></app-image>
-                        <h3 style="line-height: 1.2rem;">{{account.nickname | truncate:10}}</h3>
                         <button mat-icon-button color="primary" (click)="updateDialog(account.user_id)"><mat-icon>folder_shared</mat-icon></button>
                         <button *ngIf="account.auth > 1" mat-icon-button color="warn" (click)="deleteDialog(account.user_id)"><mat-icon>clear</mat-icon></button>
                     </mat-grid-tile-header>
 
                     <div fxLayout="column" style="margin-top:2rem;padding:1rem;overflow: hidden;">
-                        <div style="font-size:0.8rem;font-weight:500;color:#505050;margin:0.5rem auto;">{{account.username}}</div>
+						<div style="line-height: 1.2rem;font-weight:900;color:#303030;">{{account.nickname | truncate:10}}</div>
+						<div style="font-size:0.8rem;font-weight:500;color:#505050;margin:0.5rem auto;">{{account.username | truncate:20}}</div>
                         <div class="mat-caption" style="height:4rem;overflow:hidden;">{{account.description}}</div>
                     </div>
                 </mat-grid-tile>

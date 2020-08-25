@@ -44,8 +44,7 @@
 	<div class="spacer"></div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable">enable</mat-slide-toggle>
-		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
+		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()">OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</div>
 

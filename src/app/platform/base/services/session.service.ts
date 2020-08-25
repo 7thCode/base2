@@ -25,6 +25,7 @@ import {HttpService} from "./http.service";
 })
 export class SessionService extends HttpService {
 
+	private cache: any;
 	/**
 	 * @constructor
 	 * @param http
@@ -33,6 +34,7 @@ export class SessionService extends HttpService {
 		protected http: HttpClient,
 	) {
 		super(http);
+		this. cache = null;
 	}
 
 	/**
@@ -41,19 +43,26 @@ export class SessionService extends HttpService {
 	 * @param callback コールバック
 	 */
 	public get(callback: Callback<ISession>): void {
-		this.http.get(this.endPoint + "/session/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
-			if (result) {
-				if (result.code === 0) {
-					callback(null, result.value);
+		if (this.cache) {
+			console.log("session cached");
+			callback(null, this.cache);
+		} else {
+			console.log("session get");
+			this.http.get(this.endPoint + "/session/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+				if (result) {
+					if (result.code === 0) {
+						this.cache = result.value;
+						callback(null, result.value);
+					} else {
+						callback(result, null);
+					}
 				} else {
-					callback(result, null);
+					callback(this.networkError, null);
 				}
-			} else {
-				callback(this.networkError, null);
-			}
-		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 4553"}, null);
-		});
+			}, (error: HttpErrorResponse) => {
+				callback({code: -1, message: error.message + " 4553"}, null);
+			});
+		}
 	}
 
 	/**
@@ -66,6 +75,7 @@ export class SessionService extends HttpService {
 		this.http.put(this.endPoint + "/session/auth", {data: content}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
+					this.cache = result.value;
 					callback(null, result.value);
 				} else {
 					callback(result, null);
