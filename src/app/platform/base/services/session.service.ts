@@ -34,7 +34,7 @@ export class SessionService extends HttpService {
 		protected http: HttpClient,
 	) {
 		super(http);
-		this. cache = null;
+		this.cache = null;
 	}
 
 	/**
@@ -44,10 +44,8 @@ export class SessionService extends HttpService {
 	 */
 	public get(callback: Callback<ISession>): void {
 		if (this.cache) {
-			console.log("session cached");
 			callback(null, this.cache);
 		} else {
-			console.log("session get");
 			this.http.get(this.endPoint + "/session/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
 					if (result.code === 0) {
