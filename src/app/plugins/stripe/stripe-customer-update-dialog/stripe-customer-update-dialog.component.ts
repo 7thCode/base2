@@ -7,6 +7,7 @@
 "use strict";
 
 import {Component, Inject} from "@angular/core";
+import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 /**
@@ -15,21 +16,13 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
  * @since 0.01
  */
 @Component({
-	selector: "stripe-create-dialog",
-	styleUrls: ["./stripe-create-dialog.component.css"],
-	templateUrl: "./stripe-create-dialog.component.html",
+	selector: "stripe-customer-update-dialog",
+	styleUrls: ["./stripe-customer-update-dialog.component.css"],
+	templateUrl: "./stripe-customer-update-dialog.component.html",
 })
-export class StripeCreateDialogComponent {
+export class StripeCustomerUpdateDialogComponent {
 
 	// @ViewChild("autosize") public autosize: CdkTextareaAutosize;
-
-	public months = [
-		"1","2","3","4","5","6","7","8","9","10","11","12"
-	]
-
-	public years = [
-		 "2020","2021","2022","2023","2024","2025"
-	]
 
 	/**
 	 * @constructor
@@ -40,7 +33,7 @@ export class StripeCreateDialogComponent {
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<StripeCreateDialogComponent>) {
+		public matDialogRef: MatDialogRef<StripeCustomerUpdateDialogComponent>) {
 	}
 
 	/**
