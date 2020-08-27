@@ -6,10 +6,84 @@
     font-size: 0.8rem;
 }
 
+.default-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
+	background-color: #f5f5f5;
+	color: #303030;
+}
+
+.default-visa-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
+	background-color: #e0e0e0;
+	color: #6e6e6e;
+}
+
+.default-master-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
+	background-color: #797877;
+	color: #fff59e;
+}
+
+.default-jcb-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
+	background-color: #cd9d23;
+	color: #522b2b;
+}
+
+.default-amex-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
+	background-color: #87b57e;
+	color: #f9f5ea;
+}
+
+.default-diners-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
+	background-color: #777676;
+	color: #ffffff;
+}
+
+
+
 .box-body {
     filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-    background-color: #efeff9;
+    background-color: #e0e0e0;
+	color: #6e6e6e;
 }
+
+
+.visa-box-body {
+	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
+	background-color: #e0e0e0;
+	color: #6e6e6e;
+}
+
+.master-box-body {
+	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
+	background-color: #797877;
+	color: #fff59e;
+}
+
+.jcb-box-body {
+	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
+	background-color: #cd9d23;
+	color: #522b2b;
+}
+
+.amex-box-body {
+	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
+	background-color: #87b57e;
+	color: #f9f5ea;
+}
+
+.diners-box-body {
+	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
+	background-color: #777676;
+	color: #ffffff;
+}
+
+
+
+
 
 .fab-center {
 	position:relative;

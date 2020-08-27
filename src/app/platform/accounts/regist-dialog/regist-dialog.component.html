@@ -16,7 +16,7 @@
 				<mat-error *ngIf="username.errors?.minlength">短すぎます</mat-error>
 			</mat-form-field>
 
-			<mat-form-field>
+			<mat-form-field class="input-text">
 				<mat-label>Nickname...</mat-label>
 				<input matInput autocomplete="off" type="text" placeholder="Xxxxxx..." [(ngModel)]="content.nickname" #nickname="ngModel" name="nickname" required minlength="2" maxlength="255">
 				<mat-hint>3文字以上500文字まで</mat-hint>

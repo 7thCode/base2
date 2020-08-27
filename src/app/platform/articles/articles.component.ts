@@ -70,6 +70,9 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		return object;
 	}
 
+	/*
+	*
+	*/
 	public ngOnInit(): void {
 		this.sort = {};
 		super.ngOnInit();

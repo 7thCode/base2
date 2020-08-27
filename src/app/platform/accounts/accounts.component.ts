@@ -85,25 +85,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	}
 
 	/**
-	 *
-	 */
-	private widthToColumns(width: number): number {
-		let result: number = 4;
-		if (width < 600) {
-			result = 1;  // xs,
-		} else if (width < 960) {
-			result = 2;  // sm,
-		} else if (width < 1280) {
-			result = 4;  // md,
-		} else if (width < 1920) {
-			result = 6; // lg,
-		} else {
-			result = 8; // xl,
-		}
-		return result;
-	}
-
-	/**
 	 * アカウント参照
 	 * @param id
 	 * @param callback
@@ -168,24 +149,35 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	}
 
 	/**
-	 * 完了通知
-	 * @param type
-	 * @param value
-	 * @constructor
+	 * リストビューデコレータ
+	 * @param object
 	 */
-	// protected Complete(type: string, value: object): void {
-	// 	this.complete.emit({type, value});
-	// }
+	protected toListView(object: any): any {
+		object.cols = 1;
+		object.rows = 1;
+		return object;
+	}
 
-	/**
-	 * 処理中
-	 * @param value
-	 * @constructor
-	 */
-	// public Progress(value: boolean): void {
-	// 	this.progress = value;
-	// 	this.onProgress.emit(value);
-	// }
+	/*
+	* width to grid columns
+	* override
+	* @returns columns
+ 	*/
+	protected widthToColumns(width: number): number {
+		let result: number = 4;
+		if (width < 600) {
+			result = 1;  // xs,
+		} else if (width < 960) {
+			result = 2;  // sm,
+		} else if (width < 1280) {
+			result = 4;  // md,
+		} else if (width < 1920) {
+			result = 6; // lg,
+		} else {
+			result = 8; // xl,
+		}
+		return result;
+	}
 
 	/**
 	 *
@@ -255,9 +247,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				this.accountService.query(this.query, option, (error: IErrorObject, results: any[]): void => {
 					if (!error) {
 						const accounts: object[] = results.map((result) => {
-							result.cols = 1;
-							result.rows = 1;
-							return result;
+							return this.toListView(result);
 						});
 						// this.results = accounts;
 						callback(null, accounts);

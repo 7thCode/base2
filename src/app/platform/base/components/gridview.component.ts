@@ -40,7 +40,7 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 	* width to grid columns
 	*  @returns columns
  	*/
-	private widthToColumns(width: number): number {
+	protected widthToColumns(width: number): number {
 		let result: number = 4;
 		if (width < 600) {
 			result = 1;  // xs,

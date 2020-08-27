@@ -15,6 +15,10 @@
 				updateCustomer
 			</button>
 
+			<button mat-icon-button (click)="updateCustomerDialog()">
+				<mat-icon color="primary">edit</mat-icon>
+			</button>
+
 			<button mat-button (click)="retrieveSource(0)">
 				retrieveSource
 			</button>
@@ -29,13 +33,44 @@
 
 		</mat-card-header>
 		<mat-card-content>
-			<div fxLayout="row" fxLayoutAlign="end">
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
 				<button mat-fab color="primary" (click)="createDialog()" class="fab-center">+</button>
 			</div>
 			<mat-grid-list [cols]="breakpoint" rowHeight="3:2" (window:resize)="onResize($event)">
-				<mat-grid-tile class="box-body" style="border-radius: 10px;" *ngFor="let card of results; let i = index" [colspan]="card.cols" [rowspan]="card.rows">
-					<mat-grid-tile-header>
+				<mat-grid-tile *ngFor="let card of results; let i = index" [colspan]="card.cols" [rowspan]="card.rows">
+
+					<div fxLayout="column" fxLayoutAlign="space-between" style="height:70%;width:70%;border-radius: 5%;" [ngClass]="card.view_class">
+						<div fxLayout="row" fxLayoutAlign="space-between">
+							<div style="font-weight:900;font-size:18px;margin:10px;color:#000ef4">{{card.brand}}</div>
+							<div style="font-weight:200;font-size:12px;margin:10px"><div *ngIf="card.is_default">Default</div></div>
+						</div>
+						<div fxLayout="row" fxLayoutAlign="center">
+							<div style="font-weight:900;font-size:18px;margin:10px;display:flex;align-items: baseline;">{{card.display_no}}</div>
+						</div>
+						<div fxLayout="row" fxLayoutAlign="end">
+							<div style="font-weight:500;font-size:16px;margin:10px;">{{card.exp_month}}/{{card.exp_year}}</div>
+						</div>
+					</div>
+
+					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
+						<button mat-icon-button (click)="updateCardDialog(card.id)">
+							<mat-icon color="primary">edit</mat-icon>
+						</button>
+						<button mat-icon-button *ngIf="!card.is_default" (click)="updateDefault(card.id)">
+							<mat-icon style="color:#f8c91f">star</mat-icon>
+						</button>
+						<button mat-icon-button (click)="deleteSource(i)">
+							<mat-icon color="warn">delete_sweep</mat-icon>
+						</button>
+					</mat-grid-tile-footer>
+
+
+					<!--					<mat-grid-tile-header>
 						<div class="box-header" style="font-weight:900;font-size:14px;">{{card.brand}}</div>
+						<div style="font-size:9px;">{{card.message}}</div>
+						<div>{{card.exp_month}}/{{card.exp_year}}</div>
 					</mat-grid-tile-header>
 					<div fxLayout="row" fxLayoutAlign="center" style="font-weight:900;font-size:14px;">****-****-****-{{card.last4}}</div>
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
@@ -45,7 +80,7 @@
 						<button mat-icon-button (click)="deleteSource(i)">
 							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
-					</mat-grid-tile-footer>
+					</mat-grid-tile-footer> -->
 				</mat-grid-tile>
 			</mat-grid-list>
 		</mat-card-content>

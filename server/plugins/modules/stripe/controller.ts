@@ -111,17 +111,18 @@ export class Stripe extends Wrapper {
 		});
 	}
 
+
 	/**
 	 * アカウントプット
 	 * @param operator
-	 * @param id
+	 * @param update
 	 * @param callback
 	 * @returns none
 	 */
-	private put_self(operator: IAccountModel, id: string, callback: (error: IErrorObject, result: any) => void): void {
-		const update: any = {
-			"content.stripe_id": id,
-		};
+	private put_self(operator: IAccountModel, update: object, callback: (error: IErrorObject, result: any) => void): void {
+		// 	const update: any = {
+		// 		"content.stripe_id": id,
+		// 	};
 		LocalAccount.set_by_id(operator, operator.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
 			callback(error, account);
 		});
@@ -146,7 +147,7 @@ export class Stripe extends Wrapper {
 	 *
 	 */
 	public put_id(response: any, operator: any, customer_id: string, callback: (result: string) => void) {
-		this.put_self(operator, customer_id, (error, account) => {
+		this.put_self(operator, {"content.stripe_id": customer_id}, (error, account) => {
 			this.ifSuccess(response, error, (): void => {
 				callback(customer_id);
 			});
@@ -204,7 +205,18 @@ export class Stripe extends Wrapper {
 					this.get_id(response, operator, (customer_id: string) => {
 						if (customer_id) {
 							this.stripe.customers.retrieve(customer_id).then((full_customer: any) => {
-								const result_customer = {sources: {data: full_customer.sources.data}};
+
+								const updateable =	{
+									address: full_customer.address,
+									description: full_customer.description,
+									email: full_customer.email,
+									metadata: full_customer.metadata,
+									name: full_customer.name,
+									phone: full_customer.phone,
+									shipping: full_customer.shipping
+								}
+
+								const result_customer = {sources: {data: full_customer.sources.data, default: full_customer.default_source, updateable: updateable}};
 								this.SendSuccess(response, result_customer);
 							}).catch((error: any) => {
 								this.SendError(response, error);
@@ -371,51 +383,6 @@ export class Stripe extends Wrapper {
 		}
 	}
 
-	/**
-	 * card 登録
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
-
-	/*
-	public createSource0(request: any, response: IJSONResponse): void {
-		try {
-			if (this.enable) {
-				if (request.user) {
-					const operator: IAccountModel = this.Transform(request.user);
-					this.get_id(response, operator, (customer_id: string) => {
-						if (customer_id) {
-							const card = request.body.card;
-							this.stripe.tokens.create({
-								card: card
-							}).then((token: any) => {
-								const params = {
-									source: token.id
-								};
-								this.stripe.customers.createSource(customer_id, params).then((card: any) => {
-									this.SendSuccess(response, card);
-								}).catch((error: any) => {
-									this.SendError(response, error);
-								})
-							}).catch((error: any) => {
-								this.SendError(response, error);
-							})
-						} else {
-							this.SendError(response, {code: 1, message: "not."});
-						}
-					})
-				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
-				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
-		} catch (error) {
-			this.SendError(response, error);
-		}
-	}
-*/
 	/**
 	 * card 登録
 	 * @param request

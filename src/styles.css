@@ -40,3 +40,8 @@ router-outlet ~ * {
 	color:#303030;
 	background-color:#ffffff;
 }
+
+.input-text {
+	font-size: 14px;
+	line-height: 14px;
+}

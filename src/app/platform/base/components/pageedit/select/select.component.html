@@ -1,4 +1,4 @@
-<mat-form-field>
+<mat-form-field class="input-text">
 	<mat-label>{{description.label}}</mat-label>
 	<mat-select [(ngModel)]="value" [formControl]="validators">
 		<mat-option *ngFor="let option of description.options" [value]="option.value">

@@ -32,8 +32,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 import {BaseModule} from "../../platform/base/base.module";
 
-import {StripeCreateDialogComponent} from "./stripe-create-dialog/stripe-create-dialog.component";
 import {StripeComponent} from "./stripe.component";
+import {StripeCardCreateDialogComponent} from "./stripe-card-create-dialog/stripe-card-create-dialog.component";
+import {StripeCustomerUpdateDialogComponent} from "./stripe-customer-update-dialog/stripe-customer-update-dialog.component";
 
 import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
@@ -41,7 +42,8 @@ import {StripeService} from "./stripe.service";
 @NgModule({
 	declarations: [
 		StripeComponent,
-		StripeCreateDialogComponent,
+		StripeCardCreateDialogComponent,
+		StripeCustomerUpdateDialogComponent,
 	],
 	providers: [
 		SessionService,
@@ -58,7 +60,7 @@ import {StripeService} from "./stripe.service";
 		MatIconModule,
 		MatButtonModule,
 		MatDatepickerModule,
-	 	MatNativeDateModule,
+		MatNativeDateModule,
 		MatInputModule,
 		MatListModule,
 		MatCheckboxModule,
@@ -78,7 +80,7 @@ import {StripeService} from "./stripe.service";
 		StripeComponent,
 	],
 	bootstrap: [
-		StripeCreateDialogComponent,
+		StripeCardCreateDialogComponent,
 	],
 })
 
