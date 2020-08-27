@@ -34,7 +34,7 @@ export class SessionService extends HttpService {
 		protected http: HttpClient,
 	) {
 		super(http);
-		this.cache = null;
+		this. cache = null;
 	}
 
 	/**

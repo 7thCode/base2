@@ -19,14 +19,16 @@ const Session: any = require("./controller");
 const session: any = new Session(event, config, logger);
 
 router.get("/session/auth", [gatekeeper.default,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			session.get(request, response);
 		});
 	}]);
 
 router.put("/session/auth", [gatekeeper.default, gatekeeper.authenticate,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			session.put(request, response);
 		});

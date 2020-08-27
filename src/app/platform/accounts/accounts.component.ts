@@ -173,19 +173,19 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @param value
 	 * @constructor
 	 */
-	protected Complete(type: string, value: object): void {
-		this.complete.emit({type, value});
-	}
+	// protected Complete(type: string, value: object): void {
+	// 	this.complete.emit({type, value});
+	// }
 
 	/**
 	 * 処理中
 	 * @param value
 	 * @constructor
 	 */
-	public Progress(value: boolean): void {
-		this.progress = value;
-		this.onProgress.emit(value);
-	}
+	// public Progress(value: boolean): void {
+	// 	this.progress = value;
+	// 	this.onProgress.emit(value);
+	// }
 
 	/**
 	 *

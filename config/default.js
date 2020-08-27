@@ -7,8 +7,6 @@ module.exports = {
 
 		timezone: "Asia/Tokyo",
 
-		loglevel: "trace", 		// trace, debug, info, warn, error,fatal
-
 		port: 3000,
 		domain: "localhost:3000",
 		protocol: "http",
@@ -25,6 +23,18 @@ module.exports = {
 		ua: "base1",
 		use_publickey: false,
 		dav: false,
+		logs: {
+			config : {
+				appenders: {
+					out: {type: "stdout"},
+					app: {type: "dateFile", filename: "logs/application.log", daysToKeep: 7, compress: true}
+				},
+				categories: {
+					default: {appenders: ["out", "app"], level: "info"}
+				}
+			},
+			level: "trace", 		// trace, debug, info, warn, error,fatal
+		},
 		db: {
 			protocol: "mongodb",
 			address: "localhost",
@@ -67,7 +77,7 @@ module.exports = {
 			"-----END RSA PUBLIC KEY-----",
 		modules: {
 			stripe: {
-				type: "optional",
+				type: "plugin",
 				path: "/plugins/modules/",
 				key: "sk_test_YsexgC22DK728hiSHQxJILSC00TymbkYxj",
 				description: {

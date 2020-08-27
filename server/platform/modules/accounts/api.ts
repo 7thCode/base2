@@ -29,7 +29,8 @@ router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeepe
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.query(request, response);
 		});
@@ -42,7 +43,8 @@ router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authen
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.count(request, response);
 		});
@@ -55,7 +57,8 @@ router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.get(request, response);
 		});
@@ -68,7 +71,8 @@ router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.put(request, response);
 		});
@@ -78,7 +82,8 @@ router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 *
 */
 router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.get_self(request, response);
 		});
@@ -88,7 +93,8 @@ router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 *
 */
 router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.put_self(request, response);
 		});
@@ -101,7 +107,8 @@ router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authent
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.delete(request, response);
 		});
@@ -114,7 +121,8 @@ router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.auth
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.get_is_secret(request, response);
 		});
@@ -127,7 +135,8 @@ router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.a
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_name(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.post_set_secret(request, response);
 		});
@@ -140,7 +149,8 @@ router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_name(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.post_reset_secret(request, response);
 		});
@@ -153,7 +163,8 @@ router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.get_by_id(request, response);
 		});
@@ -166,7 +177,8 @@ router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.put_by_id(request, response);
 		});
@@ -179,7 +191,8 @@ router.delete("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authentic
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			accounts.delete_by_id(request, response);
 		});

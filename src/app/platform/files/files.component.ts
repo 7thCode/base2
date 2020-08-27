@@ -200,6 +200,9 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public findByFilename(): void {
 		this.query = {};
 		this.page = 0;
+
+	// 	this.count = 0;
+
 		if (this.filename) {
 			this.query = {filename: {$regex: this.filename}};
 		}

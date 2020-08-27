@@ -18,6 +18,9 @@ import {SessionableComponent} from "../../platform/base/components/sessionable.c
 
 import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
+import {ResponsiveComponent} from "../../platform/base/components/responsive.component";
+import {Overlay} from "@angular/cdk/overlay";
+import {BreakpointObserver} from "@angular/cdk/layout";
 
 /**
  * Stripe
@@ -29,7 +32,7 @@ import {StripeService} from "./stripe.service";
 	templateUrl: "./stripe.component.html",
 	styleUrls: ["./stripe.component.css"],
 })
-export class StripeComponent extends SessionableComponent implements OnInit {
+export class StripeComponent extends ResponsiveComponent implements OnInit {
 
 	public get isProgress(): boolean {
 		return this.progress;
@@ -51,17 +54,21 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 	/**
 	 *
 	 * @param session
-	 * @param stripeService
-	 * @param matDialog
+	 * @param overlay
 	 * @param snackbar
+	 * @param breakpointObserver
+	 * @param matDialog
+	 * @param stripeService
 	 */
 	constructor(
 		protected session: SessionService,
+		protected overlay: Overlay,
+		protected snackbar: MatSnackBar,
+		protected breakpointObserver: BreakpointObserver,
 		protected matDialog: MatDialog,
 		private stripeService: StripeService,
-		private snackbar: MatSnackBar,
 	) {
-		super(session);
+		super(session, overlay, snackbar, breakpointObserver);
 	}
 
 	/**
@@ -119,6 +126,13 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 		});
 	}
 
+	/*
+*  @returns none
+ */
+	public onResize(event: any): void {
+		this.breakpoint = this.widthToColumns(event.target.innerWidth);
+	}
+
 	/**
 	 * 再描画
 	 * @param callback
@@ -171,7 +185,7 @@ export class StripeComponent extends SessionableComponent implements OnInit {
 					if (error) {
 						this.errorBar(error);
 					}
-					this.Progress(true);
+					this.Progress(false);
 				});
 			}
 		});

@@ -32,7 +32,7 @@
 			<div fxLayout="row" fxLayoutAlign="end">
 				<button mat-fab color="primary" (click)="createDialog()" class="fab-center">+</button>
 			</div>
-			<mat-grid-list [cols]="breakpoint" rowHeight="3:2">
+			<mat-grid-list [cols]="breakpoint" rowHeight="3:2" (window:resize)="onResize($event)">
 				<mat-grid-tile class="box-body" style="border-radius: 10px;" *ngFor="let card of results; let i = index" [colspan]="card.cols" [rowspan]="card.rows">
 					<mat-grid-tile-header>
 						<div class="box-header" style="font-weight:900;font-size:14px;">{{card.brand}}</div>

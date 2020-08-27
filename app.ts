@@ -45,22 +45,17 @@ const normal: () => void = () => {
 
 	const config: any = _ConfigModule.systems;
 
-	log4js.configure({
-		appenders: {
-			out: {type: "stdout"},
-			app: {type: "dateFile", filename: "logs/application.log", daysToKeep: 7, compress: true}
-		},
-		categories: {
-			default: {appenders: ["out", "app"], level: "info"}
-		}
-	})
+	process.env.TZ = "Asia/Tokyo"; // default
+	if (config.timezone) {
+		process.env.TZ = config.timezone;
+	}
 
+	log4js.configure(config.logs.config);
 	logger = log4js.getLogger();
 
-	logger.level = "info";
-
-	if (config.loglevel) {
-		logger.level = config.loglevel;
+	logger.level = "info"; // default
+	if (config.logs.level) {
+		logger.level = config.logs.level;
 	}
 
 	morgan("combined");
@@ -71,12 +66,6 @@ const normal: () => void = () => {
 
 	mongoose.set('useCreateIndex', true);
 	mongoose.set("useFindAndModify", false);
-
-	process.env.TZ = "Asia/Tokyo";
-
-	if (config.timezone) {
-		process.env.TZ = config.timezone;
-	}
 
 	const working: () => void = () => {
 		const app: any = express();
@@ -93,9 +82,7 @@ const normal: () => void = () => {
 		app.use(helmet());
 		app.use(helmet.hidePoweredBy({setTo: "JSF/1.2"}));  // impersonation
 
-		// console.group("\u001b[35m" + "Take off sequence..." + "\u001b[0m");
-
-		logger.info("\u001b[32m" + "Hundred." + "\u001b[0m");
+		logger.info("Hundred.");
 
 		const EventEmitter: any = require("events").EventEmitter;
 		const localEvent: any = new EventEmitter();
@@ -192,13 +179,11 @@ const normal: () => void = () => {
 			});
 
 			mongoose.connection.on("closed", () => {
-				// 	console.log("Mongoose default connection disconnected");
 				// 	logger.info("Mongoose default connection disconnected");
 				// 	process.exit(1);
 			});
 
 			mongoose.connection.on("disconnected", () => {
-				// 	console.error("\u001b[31m" + "Mongoose default connection disconnected" + "\u001b[0m");
 				logger.error("Mongoose default connection disconnected");
 				log4js.shutdown((err: any) => {
 					process.exit(1);
@@ -210,7 +195,6 @@ const normal: () => void = () => {
 			});
 
 			mongoose.connection.on("error", (error: IErrorObject) => {
-				// 	console.error("\u001b[31m" + "Mongoose default connection error" + "\u001b[0m");
 				logger.error("Mongoose default connection error: " + error);
 				log4js.shutdown((err: any) => {
 					process.exit(1);
@@ -261,7 +245,7 @@ const normal: () => void = () => {
 				}
 			};
 
-			logger.info("\u001b[32m" + "V1" + "\u001b[0m");
+			logger.info("V1");
 
 			const default_modules: any = {
 				auth: {
@@ -310,7 +294,7 @@ const normal: () => void = () => {
 			load_module("./server", default_modules);
 			load_module("./server", config.modules);
 
-			logger.info("\u001b[32m" + "VR" + "\u001b[0m");
+			logger.info("VR");
 
 			// backup
 
@@ -364,7 +348,6 @@ const normal: () => void = () => {
 		// database
 		mongoose.connect(connect_url, options)
 			.catch((error: any) => {
-				// 	console.error("\u001b[31m" + "Mongoose exception " + error.message + "\u001b[0m");
 				logger.fatal("catch Mongoose exception. ", error.stack);
 				log4js.shutdown((err: any) => {
 					process.exit(1);
@@ -393,7 +376,6 @@ const normal: () => void = () => {
 	}
 
 	const message = (): void => {
-		// 	console.group("\u001b[35m" + "Environment" + "\u001b[0m");
 		logger.info("TZ  : " + process.env.TZ);
 		logger.info("LC_CTYPE  : " + process.env.LC_CTYPE);
 		logger.info("PWD       : " + process.env.PWD);
@@ -402,12 +384,11 @@ const normal: () => void = () => {
 		logger.info("MODE      : " + config.status);
 		logger.info("DB ADDRESS: " + config.db.address);
 		logger.info("DB NAME   : " + config.db.name);
-		// 	console.groupEnd();
 	}
 
 	const is_cluster: boolean = config.is_cluster;
 
- 	// cpu_count = 1;
+// 	cpu_count = 1;
 
 	if (is_cluster) {
 		if (cluster.isMaster) {
@@ -450,13 +431,13 @@ const Serve = (config: any, app: any): any => {
 				: "Port " + port;
 			switch (error.code) {
 				case "EACCES":
-					logger.error("\u001b[31m" + bind + " requires elevated privileges" + "\u001b[0m");
+					logger.error(bind + " requires elevated privileges");
 					log4js.shutdown((err: any) => {
 						process.exit(1);
 					})
 					break;
 				case "EADDRINUSE":
-					logger.error("\u001b[31m" + bind + " is already in use" + "\u001b[0m");
+					logger.error(bind + " is already in use");
 					log4js.shutdown((err: any) => {
 						process.exit(1);
 					})
@@ -481,8 +462,7 @@ const Serve = (config: any, app: any): any => {
 		};  // for pm2 cluster.
 
 		process.send("ready");
-		logger.info("\u001b[34m" + "Steady flight." + "\u001b[0m");
-		// 	console.groupEnd();
+		logger.info("Steady flight.");
 	}
 
 	const port: any = normalizePort(process.env.PORT || config.port);
@@ -506,7 +486,7 @@ const Serve = (config: any, app: any): any => {
 	server.on("listening", onListening);
 	server.listen(port, "::0");
 
-	logger.info("\u001b[32m" + "V2" + "\u001b[0m");
+	logger.info("V2");
 
 	return server;
 };

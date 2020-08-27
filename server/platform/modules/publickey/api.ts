@@ -19,21 +19,24 @@ const PublicKey: any = require("./controller");
 const publickey: any = new PublicKey(event, config, logger);
 
 router.get("/publickey/fixed", [gatekeeper.default,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			publickey.get_fixed_public_key(request, response);
 		});
 	}]);
 
 router.get("/publickey/dynamic", [gatekeeper.default, gatekeeper.authenticate,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			publickey.get_public_key(request, response);
 		});
 	}]);
 
 router.get("/publickey/token", [gatekeeper.default, gatekeeper.authenticate,
-	(request: object, response: object): void => {
+	(request: any, response: object): void => {
+		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
 			publickey.get_access_token(request, response);
 		});

@@ -61,7 +61,8 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 		};
 
 		router.get("/files/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
 					file.queryFiles(request, response);
 				});
@@ -69,7 +70,8 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 		]);
 
 		router.get("/files/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
 					file.countFiles(request, response);
 				});
@@ -77,7 +79,8 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 		]);
 
 		router.get("/files/auth/*", [gatekeeper.default,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
 					file.getFile(request, response);
 				});
@@ -85,7 +88,8 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 		]);
 
 		router.post("/files/auth/*", [gatekeeper.default, gatekeeper.authenticate,
-			(request: { user: { user_id: string }, params: string[] }, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				const path: string = request.params[0];
 				const user_id = request.user.user_id;
 				cache_delete(user_id, path, (error) => {
@@ -97,7 +101,8 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 		]);
 
 		router.delete("/files/auth/*", [gatekeeper.default, gatekeeper.authenticate,
-			(request: { user: { user_id: string }, params: string[] }, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				const path: string = request.params[0];
 				const user_id = request.user.user_id;
 				cache_delete(user_id, path, (error) => {
@@ -248,7 +253,9 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		};
 
-		router.get("/files/get/*", [gatekeeper.default, (request: { params: string[], query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		router.get("/files/get/*", [gatekeeper.default,
+			(request: any, response: any, next: () => void): void => {
+			logger.trace(request.url);
 			gatekeeper.catch(response, (): void => {
 
 				const path: string = request.params[0];
@@ -270,7 +277,9 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		}]);
 
-		router.get("/files/getid/:id", [gatekeeper.default, (request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		router.get("/files/getid/:id", [gatekeeper.default,
+			(request: any, response: any, next: () => void): void => {
+				logger.trace(request.url);
 			gatekeeper.catch(response, (): void => {
 				const _id = request.params.id;
 				const query: { u: string, c: string } = request.query;
@@ -284,7 +293,9 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		}]);
 
-		router.get("/" + cache_root + ":user_id/*", [gatekeeper.default, (request: { params: any, query: { u: string, c: string }, user: object, headers: { range: string } }, response: any, next: () => void): void => {
+		router.get("/" + cache_root + ":user_id/*", [gatekeeper.default,
+			(request: any, response: any, next: () => void): void => {
+				logger.trace(request.url);
 			gatekeeper.catch(response, (): void => {
 
 				const params = request.params;
@@ -303,7 +314,6 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			});
 		}]);
 	} else {
-		console.error("init error. (files) " + error.message);
 		logger.fatal("init error. (files) ", error.message);
 		process.exit(1);
 	}

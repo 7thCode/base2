@@ -32,48 +32,56 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
 		router.get("/pages/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					pages.query(request, response);
 				});
 			}]);
 
 		router.get("/pages/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					pages.count(request, response);
 				});
 			}]);
 
 		router.get("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					pages.get(request, response);
 				});
 			}]);
 
 		router.post("/pages/auth", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					pages.post(request, response);
 				});
 			}]);
 
 		router.put("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					pages.put(request, response);
 				});
 			}]);
 
 		router.delete("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					pages.delete(request, response);
 				});
 			}]);
 
-		router.get("/pages/get/*", [gatekeeper.default,(request: { params: string[], query: { u: string, t: string }, user: object }, response: object, next: () => void): void => {
+		router.get("/pages/get/*", [gatekeeper.default,
+			(request: any, response: object, next: () => void): void => {
+				logger.trace(request.url);
 			gatekeeper.catch(response, () => {
 				const path: any = request.params[0];
 				const query: { u: string, t: string } = request.query;
@@ -130,7 +138,6 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 		}]);
 
 	} else {
-		console.error("init error. (pages) " + error.message);
 		logger.fatal("init error. (pages) ", error.message);
 		process.exit(1);
 	}

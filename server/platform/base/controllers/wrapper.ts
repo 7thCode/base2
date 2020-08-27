@@ -79,6 +79,7 @@ export abstract class Wrapper {
 	 * @returns none
 	 */
 	protected SendInfo(response: IJSONResponse, error: IErrorObject): void {
+		this.logger.info(JSON.stringify(error));
 		if (response) {
 			response.jsonp(new result(error.code, error.message, error));
 		}

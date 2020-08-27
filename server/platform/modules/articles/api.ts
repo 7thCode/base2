@@ -27,49 +27,54 @@ articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void
 	if (!error) {
 
 		router.get("/articles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					articles.query(request, response);
 				});
 			}]);
 
 		router.get("/articles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					articles.count(request, response);
 				});
 			}]);
 
 		router.get("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: { params: { id: string } }, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					articles.get(request, response);
 				});
 			}]);
 
 		router.post("/articles/auth", [gatekeeper.default, gatekeeper.authenticate,
-			(request: object, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					articles.post(request, response);
 				});
 			}]);
 
 		router.put("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: { params: { id: string } }, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					articles.put(request, response);
 				});
 			}]);
 
 		router.delete("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: { params: { id: string } }, response: object): void => {
+			(request: any, response: object): void => {
+				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					articles.delete(request, response);
 				});
 			}]);
 
 	} else {
-		console.error("init error. (article) " + error.message);
 		logger.fatal("init error. (article) ", error.message);
 		process.exit(1);
 	}
