@@ -255,7 +255,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		} else {
 			const resultDialogContent: any = {title: "File", message: "Delete this?."};
 			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
-				width: "fit-content",
+				width: "30%",
+				minWidth: "500px",
 				height: "fit-content",
 				data: {
 					session: this.currentSession,

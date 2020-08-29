@@ -29,6 +29,8 @@ export class Auth extends Mail {
 
 	private readonly content: any = {mails: [], nickname: "", tokens: {}};
 	private readonly passport: any;
+	private readonly message: any;
+	private readonly errors: any[];
 
 	/**
 	 *
@@ -40,6 +42,18 @@ export class Auth extends Mail {
 	constructor(event: object, config: object, logger: object, passport: object) {
 		super(event, config, logger);
 		this.passport = passport;
+		this.message = this.systemsConfig.message;
+		this.errors = [
+			{code: 1, message: "not logged in."},
+			{code: 2, message: "already logged in."},
+			{code: 3, message: "account disabled."},
+			{code: 4, message: "only local account."},
+			{code: 5, message: "no permission."},
+			{code: 6, message: "code mismatch."},
+			{code: 7, message: "unknown error."},
+			{code: 8, message: this.message.usernamealreadyregist},
+			{code: 9, message: this.message.usernamenotfound}
+		];
 	}
 
 	/**
@@ -87,7 +101,7 @@ export class Auth extends Mail {
 				callback(null, JSON.parse(crypted));
 			}
 		} catch (error) {
-			callback({code: 3, message: "unknown error. 7713"}, {});
+			callback(this.error[6], {});
 		}
 	}
 
@@ -96,7 +110,7 @@ export class Auth extends Mail {
 	 * @param callback
 	 */
 	private init_definition(callback: (error: IErrorObject) => void): void {
-		fs.open(path.join(_config, "account_definition.json"), "r", 384, (error: IErrorObject, fd:number) => {
+		fs.open(path.join(_config, "account_definition.json"), "r", 384, (error: IErrorObject, fd: number) => {
 			if (!error) {
 				const addition: any = JSON.parse(fs.readFileSync(path.join(_config, "account_definition.json"), "utf-8"));
 				fs.close(fd, () => {
@@ -466,29 +480,29 @@ export class Auth extends Mail {
 																// this.event.emitter.emit("client:send", {username: value.username});
 																this.SendSuccess(response, {is_2fa});
 															} else {
-																this.SendError(response, {code: 4, message: "unknown error."});
+																this.SendError(response, this.errors[6]);
 															}
 														});
 													}
 												} else {
-													this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+													this.SendError(response, this.errors[8]);
 												}
 											} else {
-												this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+												this.SendError(response, this.errors[8]);
 											}
 										})(request, response);
 									} else {
-										this.SendError(response, {code: 2, message: "account disabled."});
+										this.SendError(response, this.errors[2]);
 									}
 								} else {
-									this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+									this.SendError(response, this.errors[8]);
 								}
 							});
 						});
 					});
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "already logged in."});
+				this.SendError(response, this.errors[1]);
 			}
 		} catch (error) {
 			this.SendFatal(response, error);
@@ -521,24 +535,24 @@ export class Auth extends Mail {
 												if (!error) {
 													this.SendSuccess(response, {});
 												} else {
-													this.SendError(response, {code: 4, message: "unknown error.(auth 1) 7710"});
+													this.SendError(response, this.errors[6]);
 												}
 											});
 										} else {
-											this.SendError(response, {code: 5, message: "code mismatch.(auth 1) 8212"});
+											this.SendError(response, this.errors[5]);
 										}
 									} else {
-										this.SendError(response, {code: 2, message: "account disabled.(auth 1) 7087"});
+										this.SendError(response, this.errors[2]);
 									}
 								} else {
-									this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 963"});
+									this.SendError(response, this.errors[8]);
 								}
 							});
 						});
 					});
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "already logged in.(auth 2) 9286"});
+				this.SendError(response, this.errors[1]);
 			}
 		} catch (error) {
 			this.SendFatal(response, error);
@@ -569,17 +583,17 @@ export class Auth extends Mail {
 											});
 										});
 									} else {
-										this.SendError(response, {code: 2, message: "account disabled.(auth 2) 618"});
+										this.SendError(response, this.errors[2]);
 									}
 								} else {
-									this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 226"});
+									this.SendError(response, this.errors[8]);
 								}
 							});
 						});
 					});
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(auth 3) 5325"});
+				this.SendError(response, this.errors[0]);
 			}
 		} catch (error) {
 			this.SendFatal(response, error);
@@ -616,29 +630,29 @@ export class Auth extends Mail {
 																// this.event.emitter.emit("client:send", {username: value.username});
 																this.SendSuccess(response, {is_2fa});
 															} else {
-																this.SendError(response, {code: 4, message: "unknown error.(auth 3) 7573"});
+																this.SendError(response, this.errors[6]);
 															}
 														});
 													}
 												} else {
-													this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 6405"});
+													this.SendError(response, this.errors[8]);
 												}
 											} else {
-												this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 691"});
+												this.SendError(response, this.errors[8]);
 											}
 										})(request, response);
 									} else {
-										this.SendError(response, {code: 2, message: "account disabled.(auth 4) 4470"});
+										this.SendError(response, this.errors[2]);
 									}
 								} else {
-									this.SendError(response, {code: 3, message: this.message.usernamenotfound + " 5442"});
+									this.SendError(response, this.errors[8]);
 								}
 							});
 						});
 					});
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "already logged in.(auth 5) 6635"});
+				this.SendError(response, this.errors[1]);
 			}
 		} catch (error) {
 			this.SendFatal(response, error);
@@ -682,7 +696,7 @@ export class Auth extends Mail {
 								}, response);
 
 							} else {
-								this.SendWarn(response, {code: 1, message: this.message.usernamealreadyregist});
+								this.SendWarn(response, this.errors[7]);
 							}
 						});
 					});
@@ -776,7 +790,7 @@ export class Auth extends Mail {
 									});
 								});
 							} else {
-								this.SendWarn(response, {code: 1, message: this.message.usernamealreadyregist});
+								this.SendWarn(response, this.errors[7]);
 							}
 						});
 					});
@@ -820,14 +834,11 @@ export class Auth extends Mail {
 										link,
 										result_object: {code: 0, message: ""},
 									}, response);
-									// 			} else {
-									// 				this.SendWarn(response, {code: 5, message: "No permission. 4455"});
-									// 			}
 								} else {
-									this.SendWarn(response, {code: 4, message: "Only local account. 4252"});
+									this.SendWarn(response, this.errors[3]);
 								}
 							} else {
-								this.SendWarn(response, {code: 3, message: this.message.usernamenotfound + " 7275"});
+								this.SendWarn(response, this.errors[8]);
 							}
 						});
 					});
@@ -872,7 +883,7 @@ export class Auth extends Mail {
 											}
 										});
 									} else {
-										response.status(200).render("error", {message: "Only local account. 3805", status: 200}); // already
+										response.status(200).render("error", this.errors[3]); // already
 									}
 								} else {
 									response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
@@ -918,13 +929,13 @@ export class Auth extends Mail {
 											});
 										});
 									} else {
-										this.SendWarn(response, {code: 5, message: "No permission. 2389"});
+										this.SendWarn(response, this.errors[4]);
 									}
 								} else {
-									this.SendWarn(response, {code: 4, message: "Only local account. 2326"});
+									this.SendWarn(response, this.errors[3]);
 								}
 							} else {
-								this.SendWarn(response, {code: 3, message: this.message.usernamenotfound + " 6947"});
+								this.SendWarn(response, this.errors[8]);
 							}
 						});
 					});
@@ -955,17 +966,17 @@ export class Auth extends Mail {
 										request.logout();
 										this.SendSuccess(response, null);
 									} else {
-										this.SendError(response, {code: 4, message: "unknown error."});
+										this.SendError(response, this.errors[6]);
 									}
 								});
 							} else {
-								this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+								this.SendError(response, this.errors[8]);
 							}
 						} else {
-							this.SendError(response, {code: 2, message: "account disabled."});
+							this.SendError(response, this.errors[2]);
 						}
 					} else {
-						this.SendError(response, {code: 3, message: this.message.usernamenotfound});
+						this.SendError(response, this.errors[8]);
 					}
 				});
 			});

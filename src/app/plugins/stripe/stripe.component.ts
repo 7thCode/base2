@@ -20,6 +20,8 @@ import {InfoDialogComponent} from "../../platform/base/components/info-dialog/in
 import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
 
+import * as _ from 'lodash';
+
 /*
 
 		Test Numbers
@@ -159,70 +161,65 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	 * @param callback
 	 */
 	public draw(callback: Callback<object[]>): void {
+
+		const attach_card_design = (card: any): any => {
+			card.view_title = "title";
+			card.view_class = "box-body";
+			let padding = "****-****-****-";
+			switch (card.brand) {
+				case "Visa":
+					card.view_title = "white-title";
+					card.view_class = "white-box-body";
+					break;
+				case "MasterCard":
+					card.view_title = "brown-title";
+					card.view_class = "brown-box-body";
+					break;
+				case "JCB":
+					card.view_title = "gold-title";
+					card.view_class = "gold-box-body";
+					break;
+				case "American Express":
+					card.view_title = "green-title";
+					card.view_class = "green-box-body";
+					padding = "****-******-*";
+					break;
+				case "Diners Club":
+					card.view_title = "blue-gray-title";
+					card.view_class = "blue-gray-box-body";
+					padding = "****-******-";
+					break;
+				default:
+			}
+			if (card.is_default) {
+				card.view_class = "default-" + card.view_class;
+			}
+
+			card.display_no = padding + card.last4;
+			return card;
+		}
+
 		this.Progress(true);
 		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
 			if (!error) {
 				if (result) {
 					const cards = result.sources.data;
 					const default_source = result.sources.default;
-					this.results = cards.map((card: any) => {
+
+					const results = cards.map((card: any) => {
 						card = this.toListView(card);
-
-						card.view_class = "box-body";
-						let padding = "****-****-****-";
-						switch (card.brand) {
-							case "Visa":
-								card.view_class = "visa-box-body";
-								break;
-							case "MasterCard":
-								card.view_class = "master-box-body";
-								break;
-							case "JCB":
-								card.view_class = "jcb-box-body";
-								break;
-							case "American Express":
-								card.view_class = "amex-box-body";
-								padding = "****-******-*";
-								break;
-							case "Diners Club":
-								card.view_class = "diners-box-body";
-								padding = "****-******-";
-								break;
-							default:
-						}
-						card.display_no = padding + card.last4;
-
-						card.is_default = false;
-						if (card.id === default_source) {
-							card.view_class = "default-box-body";
-							switch (card.brand) {
-								case "Visa":
-									card.view_class = "default-visa-box-body";
-									break;
-								case "MasterCard":
-									card.view_class = "default-master-box-body";
-									break;
-								case "JCB":
-									card.view_class = "default-jcb-box-body";
-									break;
-								case "American Express":
-									card.view_class = "default-amex-box-body";
-									break;
-								case "Diners Club":
-									card.view_class = "default-diners-box-body";
-									break;
-								default:
-							}
-							card.is_default = true;
-						}
-
-						return card;
+						card.is_default = (card.id === default_source);
+						return attach_card_design(card);
 					});
-					callback(null, cards);
+
+					this.results = _.sortBy(results, [(o) => {
+						return o.id;
+					}]);
+
 				} else {
 					this.results = [];
-					callback(null, null);
 				}
+				callback(null, this.results);
 			}
 			this.Progress(false);
 		})
@@ -241,7 +238,8 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(StripeCardCreateDialogComponent, {
-			width: "fit-content",
+			width: "30%",
+			minWidth: "500px",
 			height: "fit-content",
 			data: {content: initalData},
 			disableClose: true,
@@ -278,7 +276,8 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
 			if (!error) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(StripeCustomerUpdateDialogComponent, {
-					width: "fit-content",
+					width: "30%",
+					minWidth: "500px",
 					height: "fit-content",
 					data: {content: result.sources.updateable},
 					disableClose: true,
@@ -303,7 +302,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			}
 
 		})
-
 
 
 	}
@@ -364,7 +362,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 	public updateCustomer() {
 
-		const update =	{
+		const update = {
 			address: {  // The customer’s address.
 				city: "西宮市", // City, district, suburb, town, or village.
 				country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
@@ -387,7 +385,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 					postal_code: "662-0045", // ZIP or postal code.
 					state: "兵庫県" // State, county, province, or region.
 				},
-				name : "織田", // Customer name.
+				name: "織田", // Customer name.
 				phone: "", // Customer phone (including extension).
 			}
 		}
@@ -430,7 +428,8 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	public deleteSource(index: number): void {
 		const resultDialogContent: any = {title: "Card", message: "Delete this?."};
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
-			width: "fit-content",
+			width: "30%",
+			minWidth: "500px",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,

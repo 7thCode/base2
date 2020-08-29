@@ -2,14 +2,14 @@
 	<h1 mat-dialog-title>{{content.title}}</h1>
 
 	<div mat-dialog-content fxLayout="column">
-		<div style="margin:6px;">{{content.description}}</div>
+		<div class="description-text">{{content.description}}</div>
 	</div>
 
 	<div class="spacer"></div>
 
 	<div mat-dialog-actions fxLayout="column" fxLayoutAlign="space-around">
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-			<button mat-raised-button color="accent" [disabled]="progress" (click)="onAccept()" cdkFocusInitial>OK</button>
+			<button mat-raised-button color="accent" [disabled]="progress" (click)="onAccept()">OK</button>
 		</div>
 		<mat-divider style="margin:8px;"></mat-divider>
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">

@@ -42,6 +42,13 @@ router-outlet ~ * {
 }
 
 .input-text {
+	margin: 1rem 0;
 	font-size: 14px;
 	line-height: 14px;
+}
+
+.description-text {
+	margin:6px;
+	font-size: 12px;
+	line-height: 12px;
 }

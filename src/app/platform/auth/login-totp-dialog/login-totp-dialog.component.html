@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>{{content.title}}</h1>
 
 <div mat-dialog-content fxLayout="column">
-	<div style="margin:6px;">{{content.description}}</div>
+	<div class="description-text">{{content.description}}</div>
 	<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 		{{content.username}}
-		<mat-form-field class="form-field">
+		<mat-form-field class="input-text">
 			<mat-label>Code...</mat-label>
 			<input matInput autocomplete="off" type="text" placeholder="000000" [(ngModel)]="content.code" #code="ngModel" name="code" required minlength="6" maxlength="6">
 			<mat-error *ngIf="code.errors?.required;">入力してください</mat-error>

@@ -29,7 +29,8 @@ export class LoginDialogDirective {
 	public onClick(target: any): void {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(LoginDialogComponent, {
-			width: "fit-content",
+			width: "30%",
+			minWidth: "500px",
 			height: "fit-content",
 			data: {
 				content: {

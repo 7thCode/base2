@@ -2,7 +2,7 @@
 	<h1 mat-dialog-title>{{content.title}}</h1>
 
 	<div mat-dialog-content fxLayout="column">
-		<div style="margin:6px;">{{content.description}}</div>
+		<div class="description-text">{{content.description}}</div>
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 
 			<mat-form-field class="input-text">
@@ -16,7 +16,7 @@
 
 			<div fxLayout="row">
 
-				<mat-form-field fxFlex="90%">
+				<mat-form-field  class="input-text" fxFlex="90%">
 					<mat-label>Password...</mat-label>
 					<div *ngIf="password_visible; then visible_input; else invisible_input"></div>
 					<ng-template #visible_input>

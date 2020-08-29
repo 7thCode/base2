@@ -7,7 +7,7 @@
 	<div mat-dialog-content fxLayout="column">
 
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
-			<mat-form-field class="form-field">
+			<mat-form-field class="input-text">
 				<mat-label>Mail Address...</mat-label>
 				<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">
 				<mat-error *ngIf="username.errors?.email;">有効なメールアドレスで</mat-error>
@@ -25,7 +25,7 @@
 				<mat-error *ngIf="nickname.errors?.minlength">短すぎます</mat-error>
 			</mat-form-field>
 
-			<mat-form-field class="form-field">
+			<mat-form-field class="input-text">
 				<mat-label>Password...</mat-label>
 				<input matInput type="password" placeholder="xxxxxx..." [(ngModel)]="content.password" #password="ngModel" name="password" required minlength="6" maxlength="1000">
 				<mat-hint>6文字以上1000文字まで</mat-hint>
@@ -34,7 +34,7 @@
 				<mat-error *ngIf="password.errors?.minlength">短すぎます</mat-error>
 			</mat-form-field>
 
-			<mat-form-field class="form-field">
+			<mat-form-field class="input-text">
 				<mat-label>Password Again...</mat-label>
 				<input matInput type="password" placeholder="xxxxxx..." [(ngModel)]="content.confirm_password" #confirm_password="ngModel" name="confirm_password" required [validateEquals]="password">
 				<mat-hint>6文字以上1000文字まで</mat-hint>

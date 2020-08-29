@@ -38,6 +38,7 @@ import {StripeCustomerUpdateDialogComponent} from "./stripe-customer-update-dial
 
 import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
 	declarations: [
@@ -75,6 +76,7 @@ import {StripeService} from "./stripe.service";
 		MatGridListModule,
 
 		BaseModule,
+		MatTooltipModule,
 	],
 	exports: [
 		StripeComponent,

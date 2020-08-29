@@ -8,7 +8,7 @@
 
 import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
-// import {Cipher} from "../../../platform/base/library/cipher";
+
 
 const _: any = require("lodash");
 
@@ -17,7 +17,7 @@ const _: any = require("lodash");
 const _Stripe: any = require('stripe')
 
 const Cipher: any = require("../../../platform/base/library/cipher");
-const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
+const Mail: any = require("../../../platform/base/controllers/mail_controller");
 const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
 interface ICardInit {
@@ -36,7 +36,7 @@ interface ICharge {
 	customer: string
 }
 
-export class Stripe extends Wrapper {
+export class Stripe extends Mail {
 
 	private stripe: any;
 	private enable: boolean = false;
@@ -206,7 +206,7 @@ export class Stripe extends Wrapper {
 						if (customer_id) {
 							this.stripe.customers.retrieve(customer_id).then((full_customer: any) => {
 
-								const updateable =	{
+								const updateable = {
 									address: full_customer.address,
 									description: full_customer.description,
 									email: full_customer.email,
@@ -534,13 +534,189 @@ export class Stripe extends Wrapper {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.get_id(response, operator, (customer_id: string) => {
 						if (customer_id) {
-							const charge = request.body;
-							charge.customer = customer_id;
-							this.stripe.charges.create(request.body).then((charge: any) => {
-								this.SendSuccess(response, charge);
+
+							this.stripe.customers.retrieve(customer_id).then((customer: any) => {
+
+								/*
+								const resept = {
+									"id": "ch_1HLM4PKQOTxsQU5nIdOIiAzL",
+									"object": "charge",
+									"amount": 100,
+									"amount_refunded": 0,
+									"application": null,
+									"application_fee": null,
+									"application_fee_amount": null,
+									"balance_transaction": "txn_1HLM4QKQOTxsQU5ntsATZWce",
+									"billing_details": {
+										"address": {
+											"city": null,
+											"country": null,
+											"line1": null,
+											"line2": null,
+											"postal_code": null,
+											"state": null
+										},
+										"email": null,
+										"name": null,
+										"phone": null
+									},
+									"calculated_statement_descriptor": "Stripe",
+									"captured": true,
+									"created": 1598676821,
+									"currency": "jpy",
+									"customer": "cus_Hu792A3BKGiJ6a",
+									"description": "HOGE",
+									"destination": null,
+									"dispute": null,
+									"disputed": false,
+									"failure_code": null,
+									"failure_message": null,
+									"fraud_details": {},
+									"invoice": null,
+									"livemode": false,
+									"metadata": {},
+									"on_behalf_of": null,
+									"order": null,
+									"outcome": {
+										"network_status": "approved_by_network",
+										"reason": null,
+										"risk_level": "normal",
+										"risk_score": 51,
+										"seller_message": "Payment complete.",
+										"type": "authorized"
+									},
+									"paid": true,
+									"payment_intent": null,
+									"payment_method": "card_1HKJWYKQOTxsQU5niG8FIHFC",
+									"payment_method_details": {
+										"card": {
+											"brand": "visa",
+											"checks": {
+												"address_line1_check": null,
+												"address_postal_code_check": null,
+												"cvc_check": null
+											},
+											"country": "US",
+											"exp_month": 2,
+											"exp_year": 2022,
+											"fingerprint": "1Ed8BAGBi3S4kLkH",
+											"funding": "credit",
+											"installments": null,
+											"last4": "4242",
+											"network": "visa",
+											"three_d_secure": null,
+											"wallet": null
+										},
+										"type": "card"
+									},
+									"receipt_email": null,
+									"receipt_number": null,
+									"receipt_url": "https://pay.stripe.com/receipts/acct_1EXzuTKQOTxsQU5n/ch_1HLM4PKQOTxsQU5nIdOIiAzL/rcpt_HvCT7kuMhFtn6u5QJBnuPVFVmaUFV8H",
+									"refunded": false,
+									"refunds": {
+										"object": "list",
+										"data": [],
+										"has_more": false,
+										"total_count": 0,
+										"url": "/v1/charges/ch_1HLM4PKQOTxsQU5nIdOIiAzL/refunds"
+									},
+									"review": null,
+									"shipping": null,
+									"source": {
+										"id": "card_1HKJWYKQOTxsQU5niG8FIHFC",
+										"object": "card",
+										"address_city": null,
+										"address_country": null,
+										"address_line1": null,
+										"address_line1_check": null,
+										"address_line2": null,
+										"address_state": null,
+										"address_zip": null,
+										"address_zip_check": null,
+										"brand": "Visa",
+										"country": "US",
+										"customer": "cus_Hu792A3BKGiJ6a",
+										"cvc_check": null,
+										"dynamic_last4": null,
+										"exp_month": 2,
+										"exp_year": 2022,
+										"fingerprint": "1Ed8BAGBi3S4kLkH",
+										"funding": "credit",
+										"last4": "4242",
+										"metadata": {},
+										"name": null,
+										"tokenization_method": null
+									},
+									"source_transfer": null,
+									"statement_descriptor": null,
+									"statement_descriptor_suffix": null,
+									"status": "succeeded",
+									"transfer_data": null,
+									"transfer_group": null
+								}
+								*/
+								/*
+								const owner_detail = {
+									address: customer.address,
+									description: customer.description,
+									email: customer.email,
+									metadata: customer.metadata,
+									name: customer.name,
+									phone: customer.phone,
+									shipping: customer.shipping
+								}
+								*/
+
+								const charge = request.body;
+								charge.customer = customer_id;
+								this.stripe.charges.create(request.body).then((charge: any) => {
+									if (charge.payment_method_details.card) {
+										const card = charge.payment_method_details.card;
+										const receipt_mail = {
+											header: {
+												title: "Recept",
+												text: "Recept",
+											},
+											content: {
+												title: "Recept",
+												text: [
+													`amount: ¥${charge.amount}`,
+													`status: ${charge.outcome.seller_message}`,
+													`card: ${card.brand}`,
+													`last4: ${card.last4}`,
+													`expired: ${card.exp_month}/${card.exp_year}`,
+													`description: ${charge.description}`,
+													`${JSON.stringify(customer.shipping)}`
+												],
+											},
+											button: {
+												title: "Recept",
+											},
+											footer: {
+												text: "Copyright © 2020 seventh-code. All rights reserved.",
+											},
+										};
+
+										this.send_mail({
+											address: customer.email,
+											bcc: this.bcc,
+											title: "Recept",
+											template_url: "views/plugins/stripe/mail/mail_template.pug",
+											souce_object: receipt_mail,
+											link: charge.receipt_url,
+											result_object: {code: 0, message: ["Prease Wait.", ""]},
+										}, response);
+
+										this.SendSuccess(response, charge);
+									} else {
+										this.SendError(response, {code: 1000, message: "Stripe error."});
+									}
+								}).catch((error: any) => {
+									this.SendError(response, error);
+								})
 							}).catch((error: any) => {
 								this.SendError(response, error);
-							})
+							});
 						} else {
 							this.SendError(response, {code: 1, message: "not."});
 						}
@@ -556,46 +732,7 @@ export class Stripe extends Wrapper {
 		}
 	}
 
-	/**
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
-	/*
-	public createCard(request: { session: any, body: { data: object } }, response: IJSONResponse): void {
-		stripe.tokens.create({
-			card: {
-				"number": "4242424242424242",
-				"exp_month": "12",
-				"exp_year": "2020",
-				"cvc": "123"
-			}
-		}, (err: any, token: any) => {
-			// asynchronously called
-			const params = {
-				source: token.id
-			};
-			stripe.customers.createSource(id, params, (err: any, card: any) => {
-				console.log(card);
-			});
-		});
-	}
-*/
-	/**
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
-	/*
-	public charge(request: { session: any, body: { data: object } }, response: IJSONResponse): void {
-		const charge = stripe.charges.create({
-			amount: price,
-			currency: "jpy",
-			description: description,
-			customer: customer_id
-		})
-	}
-	*/
+
 }
 
 module.exports = Stripe;

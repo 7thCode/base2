@@ -12,33 +12,33 @@
 	color: #303030;
 }
 
-.default-visa-box-body {
-	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
-	background-color: #e0e0e0;
+.default-white-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(50, 81, 119, 0.8));
+	background-color: #d6d8eeff;
 	color: #6e6e6e;
 }
 
-.default-master-box-body {
-	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
-	background-color: #797877;
+.default-brown-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(50, 81, 119, 0.8));
+	background-color: #797877ff;
 	color: #fff59e;
 }
 
-.default-jcb-box-body {
-	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
-	background-color: #cd9d23;
+.default-gold-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(50, 81, 119, 0.8));
+	background-color: #cd9d23ff;
 	color: #522b2b;
 }
 
-.default-amex-box-body {
-	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
-	background-color: #87b57e;
+.default-green-box-body {
+	filter: drop-shadow(2px 6px 6px rgba(50, 81, 119, 0.8));
+	background-color: #87b57eff;
 	color: #f9f5ea;
 }
 
-.default-diners-box-body {
+.default-blue-gray-box-body {
 	filter: drop-shadow(2px 6px 6px rgba(71, 108, 154, 0.8));
-	background-color: #777676;
+	background-color: #76768dff;
 	color: #ffffff;
 }
 
@@ -51,38 +51,60 @@
 }
 
 
-.visa-box-body {
+.white-box-body {
 	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-	background-color: #e0e0e0;
+	background-color: #d6d8ee80;
 	color: #6e6e6e;
 }
 
-.master-box-body {
+.brown-box-body {
 	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-	background-color: #797877;
+	background-color: #79787780;
 	color: #fff59e;
 }
 
-.jcb-box-body {
+.gold-box-body {
 	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-	background-color: #cd9d23;
+	background-color: #cd9d2380;
 	color: #522b2b;
 }
 
-.amex-box-body {
+.green-box-body {
 	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-	background-color: #87b57e;
+	background-color: #87b57e80;
 	color: #f9f5ea;
 }
 
-.diners-box-body {
+.blue-gray-box-body {
 	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-	background-color: #777676;
+	background-color: #76768d80;
 	color: #ffffff;
 }
 
+.title {
+	color: #6e6e6e;
+}
 
 
+.white-title {
+	color: #3e4754;
+}
+
+.brown-title {
+	color: #e9d707;
+}
+
+.gold-title {
+	color: #522b2b;
+}
+
+.green-title {
+	color: #666964;
+}
+
+.blue-gray-title {
+	color: #ffffff;
+}
 
 
 .fab-center {

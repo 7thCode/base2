@@ -42,7 +42,8 @@ export class PasswordDialogDirective {
 		const resultDialogContent: any = {title: "Check mail", message: "Password Change Mail sent."};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(PasswordDialogComponent, {
-			width: "fit-content",
+			width: "30%",
+			minWidth: "500px",
 			height: "fit-content",
 			data: {
 				content: {
@@ -59,7 +60,8 @@ export class PasswordDialogDirective {
 		dialog.afterClosed().subscribe((result: any) => {
 			if (result) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
-					width: "fit-content",
+					width: "30%",
+					minWidth: "500px",
 					height: "fit-content",
 					data: {content: resultDialogContent},
 					disableClose: true,

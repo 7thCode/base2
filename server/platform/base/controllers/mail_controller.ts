@@ -29,7 +29,7 @@ const MailGun: any = require("../../../../server/platform/base/library/mail_send
  */
 export class Mail extends Wrapper {
 
-	protected message: any;
+	// protected message: any;
 	private mailer: any = null;
 	private bcc: string | any[] = "";
 
@@ -42,7 +42,7 @@ export class Mail extends Wrapper {
 	 */
 	constructor(event: any, config: any, logger: object) {
 		super(event, config, logger);
-		this.message = this.systemsConfig.message;
+		// this.message = this.systemsConfig.message;
 		const mailerSetting = this.systemsConfig.mailer;
 
 		switch (mailerSetting.type) {
