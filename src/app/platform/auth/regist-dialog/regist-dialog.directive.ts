@@ -46,7 +46,7 @@ export class RegistDialogDirective {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {
@@ -64,7 +64,7 @@ export class RegistDialogDirective {
 			if (result) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 					width: "30%",
-					minWidth: "500px",
+					minWidth: "320px",
 					height: "fit-content",
 					data: {content: resultDialogContent},
 					disableClose: true,

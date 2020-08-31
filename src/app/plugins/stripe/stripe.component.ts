@@ -239,7 +239,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(StripeCardCreateDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {content: initalData},
 			disableClose: true,
@@ -277,7 +277,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			if (!error) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(StripeCustomerUpdateDialogComponent, {
 					width: "30%",
-					minWidth: "500px",
+					minWidth: "320px",
 					height: "fit-content",
 					data: {content: result.sources.updateable},
 					disableClose: true,
@@ -429,7 +429,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		const resultDialogContent: any = {title: "Card", message: "Delete this?."};
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,

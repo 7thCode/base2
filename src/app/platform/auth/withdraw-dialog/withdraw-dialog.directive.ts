@@ -29,7 +29,7 @@ export class WithdrawDialogDirective {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(WithdrawDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {

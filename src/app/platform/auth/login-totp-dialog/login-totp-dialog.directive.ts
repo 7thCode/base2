@@ -39,7 +39,7 @@ export class LoginTotpDialogDirective {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(LoginTotpDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {

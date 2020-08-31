@@ -66,7 +66,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	protected infoDialog(title: string, message: string, callback: () => void): void {
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {content: {title, message}},
 			disableClose: true,

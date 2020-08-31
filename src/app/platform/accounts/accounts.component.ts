@@ -290,7 +290,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	public createDialog(): void {
 		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
 			width: "40%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,
@@ -348,7 +348,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				if (result) {
 					const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
 						width: "30%",
-						minWidth: "500px",
+						minWidth: "320px",
 						height: "fit-content",
 						data: {
 							session: this.currentSession,
@@ -416,7 +416,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,

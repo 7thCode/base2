@@ -98,7 +98,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
 			width: "50%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
@@ -155,7 +155,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 			if (!error) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
 					width: "50%",
-					minWidth: "500px",
+					minWidth: "320px",
 					height: "fit-content",
 					data: {content: this.toView(result)},
 					disableClose: true,
@@ -206,7 +206,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 			const resultDialogContent: any = {title: "Page", message: "Delete this?."};
 			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 				width: "30%",
-				minWidth: "500px",
+				minWidth: "320px",
 				height: "fit-content",
 				data: {
 					session: this.currentSession,

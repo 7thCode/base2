@@ -43,7 +43,7 @@ export class PasswordDialogDirective {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(PasswordDialogComponent, {
 			width: "30%",
-			minWidth: "500px",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {
@@ -61,7 +61,7 @@ export class PasswordDialogDirective {
 			if (result) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 					width: "30%",
-					minWidth: "500px",
+					minWidth: "320px",
 					height: "fit-content",
 					data: {content: resultDialogContent},
 					disableClose: true,
