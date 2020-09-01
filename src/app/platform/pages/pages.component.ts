@@ -18,6 +18,7 @@ import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.co
 
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
+import {Overlay} from "@angular/cdk/overlay";
 
 /**
  * ページ
@@ -43,11 +44,12 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
+		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		private pageSerrvice: PagesService,
 		private snackbar: MatSnackBar,
 	) {
-		super(session, matDialog);
+		super(session, overlay, matDialog);
 		this.service = pageSerrvice;
 	}
 

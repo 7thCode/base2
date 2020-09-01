@@ -46,9 +46,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	public device: string;
 
 	@ViewChild("sidenav") protected sidenav: MatSidenav;
-	// @ViewChild(AccountsComponent) protected accountsComponent: AccountsComponent;
-
-// 	private accountsService: AccountsService;
 
 	/**
 	 *
@@ -71,12 +68,11 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		private elementRef: ElementRef,
 		private matDialog: MatDialog,
 	) {
-		super(session, overlay, snackbar, breakpointObserver);
+		super(session, overlay, breakpointObserver);
 		this.widthValue = 0;
 		this.sock = null;
 		this.date = new Date();
 		this.device = "";
-		// this.accountsService = accountService;
 		this.sock = new WebSocket(environment.webSocket);
 	}
 

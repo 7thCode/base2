@@ -685,7 +685,7 @@ export class Auth extends Mail {
 
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/register/" + token;
-								this.send_mail({
+								this.sendMail({
 									address: value.username,
 									bcc: this.bcc,
 									title: this.message.registconfirmtext,
@@ -693,8 +693,13 @@ export class Auth extends Mail {
 									souce_object: this.message.registmail,
 									link,
 									result_object: {code: 0, message: ["Prease Wait.", ""]},
-								}, response);
-
+								}, (error: IErrorObject, result: any) => {
+									if (!error) {
+										this.SendSuccess(response, result);
+									} else {
+										this.SendError(response, error);
+									}
+								});
 							} else {
 								this.SendWarn(response, this.errors[7]);
 							}
@@ -825,7 +830,7 @@ export class Auth extends Mail {
 									};
 									const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 									const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
-									this.send_mail({
+									this.sendMail({
 										address: value.username,
 										bcc: this.bcc,
 										title: this.message.passwordconfirmtext,
@@ -833,7 +838,13 @@ export class Auth extends Mail {
 										souce_object: this.message.passwordmail,
 										link,
 										result_object: {code: 0, message: ""},
-									}, response);
+									}, (error: IErrorObject, result: any) => {
+										if (!error) {
+											this.SendSuccess(response, result);
+										} else {
+											this.SendError(response, error);
+										}
+									});
 								} else {
 									this.SendWarn(response, this.errors[3]);
 								}

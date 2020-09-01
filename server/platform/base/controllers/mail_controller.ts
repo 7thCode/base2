@@ -68,19 +68,23 @@ export class Mail extends Wrapper {
 	/**
 	 * send mail
 	 * @param mailConfig
-	 * @param response
-	 * @returns status
+	 * @param callback
+	 * @returns none
 	 */
-	protected send_mail(mailConfig: any, response: IJSONResponse): void {
+	protected sendMail(mailConfig: any, callback:(error:IErrorObject, result: any) => void): void {
 		fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
-			this.ifSuccess(response, error, (): void => {
+			if (!error) {
 				const doc: any = pug.render(data, {content: mailConfig.souce_object, link: mailConfig.link});
 				this.mailer.send(mailConfig.address, mailConfig.bcc, mailConfig.title, doc, (error: IErrorObject): void => {
-					this.ifSuccess(response, error, (): void => {
-						this.SendSuccess(response, mailConfig.result_object);
-					});
+					if (!error) {
+						callback(null, mailConfig.result_object);
+					} else {
+						callback(error, null);
+					}
 				});
-			});
+			} else {
+				callback(error, null);
+			}
 		});
 	}
 

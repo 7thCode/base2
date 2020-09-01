@@ -21,6 +21,7 @@ import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
 
 import * as _ from 'lodash';
+import {Overlay} from "@angular/cdk/overlay";
 
 /*
 
@@ -92,12 +93,13 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
+		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		private stripeService: StripeService,
 		protected snackbar: MatSnackBar,
 		public changeDetectorRef: ChangeDetectorRef
 	) {
-		super(session, matDialog);
+		super(session, overlay, matDialog);
 	}
 
 	/**
@@ -458,13 +460,38 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	}
 
 	public charge() {
+
 		const charge = {
 			amount: 100,
 			currency: "jpy",
 			description: "HOGE"
 		}
+
+		this.Progress(true);
 		this.stripeService.charge(charge, (error: IErrorObject, result: any) => {
-			console.log(result);
+			this.Progress(false);
+			if (!error) {
+				const resultDialogContent: any = {title: "Check mail", message: "Recept Mail sent."};
+
+				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+					width: "30%",
+					minWidth: "320px",
+					height: "fit-content",
+					data: {content: resultDialogContent},
+					disableClose: true,
+				});
+
+				dialog.afterClosed().subscribe((result: any) => {
+					if (result) {
+						this.complete.emit(result);
+					}
+				});
+			} else {
+				this.errorBar(error);
+			}
+
+		// 	console.log(result);
+
 		})
 	}
 }

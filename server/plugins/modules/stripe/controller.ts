@@ -216,6 +216,14 @@ export class Stripe extends Mail {
 									shipping: full_customer.shipping
 								}
 
+
+
+
+
+
+
+
+
 								const result_customer = {sources: {data: full_customer.sources.data, default: full_customer.default_source, updateable: updateable}};
 								this.SendSuccess(response, result_customer);
 							}).catch((error: any) => {
@@ -520,7 +528,6 @@ export class Stripe extends Mail {
 		}
 	}
 
-
 	/**
 	 * チャージ
 	 * @param request
@@ -697,7 +704,7 @@ export class Stripe extends Mail {
 											},
 										};
 
-										this.send_mail({
+										this.sendMail({
 											address: customer.email,
 											bcc: this.bcc,
 											title: "Recept",
@@ -705,9 +712,13 @@ export class Stripe extends Mail {
 											souce_object: receipt_mail,
 											link: charge.receipt_url,
 											result_object: {code: 0, message: ["Prease Wait.", ""]},
-										}, response);
-
-										this.SendSuccess(response, charge);
+										}, (error:IErrorObject, result: any) => {
+											if (!error) {
+												this.SendSuccess(response, charge);
+											} else {
+												this.SendError(response, error);
+											}
+										});
 									} else {
 										this.SendError(response, {code: 1000, message: "Stripe error."});
 									}
@@ -731,7 +742,6 @@ export class Stripe extends Mail {
 			this.SendError(response, error);
 		}
 	}
-
 
 }
 

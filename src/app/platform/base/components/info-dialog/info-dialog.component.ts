@@ -36,9 +36,9 @@ export class InfoDialogComponent implements OnInit {
 			this.data.content.ok_button = "OK"
 		}
 
-		if (!this.data.content.cancel_button) {
-			this.data.content.cancel_button = "Cancel"
-		}
+		// if (!this.data.content.cancel_button) {
+		// 	this.data.content.cancel_button = "Cancel"
+		// }
 	}
 
 	public ngOnInit(): void {

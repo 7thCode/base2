@@ -26,7 +26,7 @@ import {SessionService} from "../services/session.service";
  */
 
 @Directive()
-export abstract class ResponsiveComponent extends SessionableComponent implements OnInit, OnDestroy {
+export abstract class ResponsiveComponent extends SessionableComponent implements OnInit {
 
 	public isHandset: any;
 	public isTablet: any;
@@ -38,13 +38,11 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 	 *
 	 * @param session
 	 * @param overlay
-	 * @param snackbar
 	 * @param breakpointObserver
 	 */
 	protected constructor(
 		protected session: SessionService,
 		protected overlay: Overlay,
-		protected snackbar: MatSnackBar,
 		protected breakpointObserver: BreakpointObserver
 	) {
 		super(session);
@@ -60,20 +58,6 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 				.centerVertically(),
 		});
 	}
-
-	/**
-	 *
-	 * @param error
-	 */
-	/*
-	private errorBar(error: IErrorObject): void {
-		if (error) {
-			this.snackbar.open(error.message, "Close", {
-				duration: 0,
-			});
-		}
-	 }
-*/
 
 	/**
 	 * 処理中
@@ -107,10 +91,4 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 		]);
 	}
 
-	/**
-	 *
-	 */
-	public ngOnDestroy(): void {
-	// 	this.mobileQuery.removeListener(this.mobileQueryListener);
-	}
 }
