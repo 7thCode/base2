@@ -192,6 +192,66 @@ export class Stripe extends Mail {
 		}
 	}
 
+	private buildCustomer(customer: any): any {
+		const result = {
+			address: {
+				country: "",
+				postal_code: "",
+				state: "",
+				city: "",
+				line1: "",
+				line2: ""
+			},
+			description: "",
+			email: "",
+			name: "",
+			phone: "",
+			shipping: {
+				address: {
+					country: "",
+					postal_code: "",
+					state: "",
+					city: "",
+					line1: "",
+					line2: ""
+				},
+				name: "",
+				phone: ""
+			}
+		};
+
+		if (customer.address) {
+			const address = customer.address;
+			result.address.country = address.country || "";
+			result.address.postal_code = address.postal_code || "";
+			result.address.state = address.state || "";
+			result.address.city = address.city || "";
+			result.address.line1 = address.line1 || "";
+			result.address.line2 = address.line2 || "";
+		}
+		result.description = customer.description || "";
+		result.email = customer.email || "";
+		result.name = customer.name || "";
+		result.phone = customer.phone || "";
+
+		if (customer.shipping) {
+			const shipping = customer.shipping;
+			if (shipping.address) {
+				const address = shipping.address;
+				result.shipping.address.country = address.country || "";
+				result.shipping.address.postal_code = address.postal_code || "";
+				result.shipping.address.state = address.state || "";
+				result.shipping.address.city = address.city || "";
+				result.shipping.address.line1 = address.line1 || "";
+				result.shipping.address.line2 = address.line2 || "";
+			}
+			result.shipping.name = shipping.name || "";
+			result.shipping.phone = shipping.phone || "";
+		}
+		return result;
+	}
+
+
 	/**
 	 * @param request
 	 * @param response
@@ -206,7 +266,9 @@ export class Stripe extends Mail {
 						if (customer_id) {
 							this.stripe.customers.retrieve(customer_id).then((full_customer: any) => {
 
-								const updateable = {
+								const updateable = this.buildCustomer(full_customer);
+								/*
+								{
 									address: full_customer.address,
 									description: full_customer.description,
 									email: full_customer.email,
@@ -215,14 +277,7 @@ export class Stripe extends Mail {
 									phone: full_customer.phone,
 									shipping: full_customer.shipping
 								}
-
-
-
-
-
-
-
-
+*/
 
 								const result_customer = {sources: {data: full_customer.sources.data, default: full_customer.default_source, updateable: updateable}};
 								this.SendSuccess(response, result_customer);
@@ -528,6 +583,7 @@ export class Stripe extends Mail {
 		}
 	}
 
+
 	/**
 	 * チャージ
 	 * @param request
@@ -705,14 +761,14 @@ export class Stripe extends Mail {
 										};
 
 										this.sendMail({
-											address: customer.email,
+											address: customer.email || operator.username,
 											bcc: this.bcc,
 											title: "Recept",
 											template_url: "views/plugins/stripe/mail/mail_template.pug",
 											souce_object: receipt_mail,
 											link: charge.receipt_url,
 											result_object: {code: 0, message: ["Prease Wait.", ""]},
-										}, (error:IErrorObject, result: any) => {
+										}, (error: IErrorObject, result: any) => {
 											if (!error) {
 												this.SendSuccess(response, charge);
 											} else {
