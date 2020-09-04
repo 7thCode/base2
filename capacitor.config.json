@@ -1,6 +1,6 @@
 {
   "appId": "com.seventhcode.app",
-  "appName": "base1",
+  "appName": "base2",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "public"

@@ -39,7 +39,7 @@ export class PasswordDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "Check mail", message: "Password Change Mail sent."};
+		const resultDialogContent: any = {title: "Check mail", message: "Password Change Mail sent.", has_cancel: false};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(PasswordDialogComponent, {
 			width: "30%",

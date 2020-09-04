@@ -57,7 +57,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 0,
+				duration: 8000,
 			});
 		}
 	}
@@ -181,7 +181,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		if (event.shiftKey) { // dialog?
 			_delete(id);
 		} else {
-			const resultDialogContent: any = {title: "Articles", message: "Delete this?."};
+			const resultDialogContent: any = {title: "Articles", message: "Delete this?.", has_cancel: false};
 			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 				width: "30%",
 				minWidth: "320px",

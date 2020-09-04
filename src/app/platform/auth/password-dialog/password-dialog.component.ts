@@ -62,7 +62,7 @@ export class PasswordDialogComponent extends BaseDialogComponent implements OnIn
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 0,
+				duration: 8000,
 			});
 		}
 	}

@@ -109,7 +109,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 0,
+				duration: 8000,
 			});
 		}
 	}
@@ -277,8 +277,10 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
 			if (!error) {
+
+
 				const dialog: MatDialogRef<any> = this.matDialog.open(StripeCustomerUpdateDialogComponent, {
-					width: "30%",
+					width: "50%",
 					minWidth: "320px",
 					height: "fit-content",
 					data: {content: result.sources.updateable},
@@ -428,7 +430,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	}
 
 	public deleteSource(index: number): void {
-		const resultDialogContent: any = {title: "Card", message: "Delete this?."};
+		const resultDialogContent: any = {title: "Card", message: "Delete this?.", has_cancel: false};
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
@@ -471,7 +473,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		this.stripeService.charge(charge, (error: IErrorObject, result: any) => {
 			this.Progress(false);
 			if (!error) {
-				const resultDialogContent: any = {title: "Check mail", message: "Recept Mail sent."};
+				const resultDialogContent: any = {title: "Check mail", message: "Recept Mail sent.", has_cancel: false};
 
 				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 					width: "30%",

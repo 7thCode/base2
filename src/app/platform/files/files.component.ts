@@ -82,7 +82,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 0,
+				duration: 8000,
 			});
 		}
 	}
@@ -253,7 +253,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		if (event.shiftKey) { // dialog?
 			_delete(name);
 		} else {
-			const resultDialogContent: any = {title: "File", message: "Delete this?."};
+			const resultDialogContent: any = {title: "File", message: "Delete this?.", has_cancel: false};
 			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 				width: "30%",
 				minWidth: "320px",

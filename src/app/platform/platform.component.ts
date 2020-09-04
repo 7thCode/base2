@@ -11,12 +11,10 @@ import {Callback, IErrorObject} from "../../../types/platform/universe";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {MatSidenav} from "@angular/material/sidenav";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {AccountDialogComponent} from "./accounts/account-dialog/account-dialog.component";
-import {AccountsComponent} from "./accounts/accounts.component";
 import {ResponsiveComponent} from "./base/components/responsive.component";
 
 import {environment} from '../../environments/environment';
@@ -83,7 +81,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 0,
+				duration: 8000,
 			});
 		}
 	}

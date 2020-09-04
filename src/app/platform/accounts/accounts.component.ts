@@ -143,7 +143,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 0
+				duration: 8000
 			});
 		}
 	}
@@ -412,7 +412,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
-		const resultDialogContent: any = {title: "User", message: "Delete User?."};
+		const resultDialogContent: any = {title: "User", message: "Delete User?.", has_cancel: false};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "30%",
