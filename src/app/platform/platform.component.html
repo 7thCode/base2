@@ -10,9 +10,6 @@
 
 	<div *ngIf="login">
 		<span style="color:#fdfdfd;font-size:0.8rem;">{{currentSession.content.nickname}}</span>
-		<!-- <button mat-icon-button style="color:#fdfdfd;" (click)="updateDialog()">
-			<mat-icon>perm_identity</mat-icon>
-		</button> -->
 	</div>
 
 	<div *ngIf="!login">
@@ -103,13 +100,6 @@
 					test Stripe</a>
 			</mat-list-item>
 
-			<!-- <mat-list-item style="color:#fdfdfd;">
-				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-withdraw-button>
-					<mat-icon style="font-size:20px;" mat-list-icon>exit_to_app</mat-icon>
-					Withdraw
-				</button>
-			</mat-list-item> -->
-
 		</mat-list>
 
 	</mat-sidenav>
@@ -118,9 +108,6 @@
 		<div *ngIf="login">
 			<router-outlet #o="outlet"></router-outlet>
 		</div>
-	<!--	<div [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">
-			<router-outlet #o="outlet"></router-outlet>
-		</div> -->
 	</mat-sidenav-content>
 
 </mat-sidenav-container>

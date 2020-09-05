@@ -799,6 +799,7 @@ export class Stripe extends Mail {
 		}
 	}
 
+
 }
 
 module.exports = Stripe;

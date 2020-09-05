@@ -2,142 +2,129 @@
 	<h2 mat-dialog-title>Card</h2>
 	<div mat-dialog-content>
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
-<div fxLayout="row">
-	<mat-card fxLayout="column">
-		<mat-form-field class="input-text">
-			<mat-label>country...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.country" #address_country_field="ngModel" name="address_country" required maxlength="2">
-			<mat-error *ngIf="address_country_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="address_country_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>postal_code...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.postal_code" #address_postal_code_field="ngModel" name="address_postal_code" required maxlength="100">
-			<mat-error *ngIf="address_postal_code_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="address_postal_code_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>state...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.state" #address_state_field="ngModel" name="address_state" required maxlength="100">
-			<mat-error *ngIf="address_state_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="address_state_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>city...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.city" #address_city_field="ngModel" name="address_city" required maxlength="16">
-			<mat-error *ngIf="address_city_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="address_city_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>line1...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.line1" #address_line1_field="ngModel" name="address_line1" required maxlength="100">
-			<mat-error *ngIf="address_line1_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="address_line1_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>line2...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.line2" #address_line2_field="ngModel" name="address_line2" required maxlength="100">
-			<mat-error *ngIf="address_line2_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="address_line2_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-	</mat-card>
-	<mat-card fxLayout="column">
-		<mat-form-field class="input-text">
-			<mat-label>description...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.description" #description_field="ngModel" name="description" required maxlength="100">
-			<mat-error *ngIf="description_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="description_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>email...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.email" #email_field="ngModel" name="email" required maxlength="100">
-			<mat-error *ngIf="email_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="email_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>name...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.name" #name_field="ngModel" name="name" required maxlength="100">
-			<mat-error *ngIf="name_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="name_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>phone...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.phone" #phone_field="ngModel" name="phone" required maxlength="100">
-			<mat-error *ngIf="phone_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="phone_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-	</mat-card>
-	<mat-card fxLayout="column">
-		<mat-form-field class="input-text">
-			<mat-label>country...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.country" #shipping_address_country_field="ngModel" name="shipping_address_country" required maxlength="2">
-			<mat-error *ngIf="shipping_address_country_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_address_country_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>postal_code...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.postal_code" #shipping_address_postal_code_field="ngModel" name="shipping_address_postal_code" required maxlength="100">
-			<mat-error *ngIf="shipping_address_postal_code_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_address_postal_code_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>state...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.state" #shipping_address_state_field="ngModel" name="shipping_address_state" required maxlength="100">
-			<mat-error *ngIf="shipping_address_state_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_address_state_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>city...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.city" #shipping_address_city_field="ngModel" name="shipping_address_city" required maxlength="16">
-			<mat-error *ngIf="shipping_address_city_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_address_city_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>line1...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.line1" #shipping_address_line1_field="ngModel" name="shipping_address_line1" required maxlength="100">
-			<mat-error *ngIf="shipping_address_line1_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_address_line1_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>line2...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.line2" #shipping_address_line2_field="ngModel" name="shipping_address_line2" required maxlength="100">
-			<mat-error *ngIf="shipping_address_line2_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_address_line2_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>name...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.name" #shipping_name_field="ngModel" name="shipping_name" required maxlength="100">
-			<mat-error *ngIf="shipping_name_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_name_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-		<mat-form-field class="input-text">
-			<mat-label>phone...</mat-label>
-			<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.phone" #shipping_phone_field="ngModel" name="shipping_phone" required maxlength="100">
-			<mat-error *ngIf="shipping_phone_field.errors?.required;">入力してください</mat-error>
-			<mat-error *ngIf="shipping_phone_field.errors?.maxlength">長すぎます</mat-error>
-		</mat-form-field>
-	</mat-card>
-
-</div>
-			<!--
-			shipping.address.city: "西宮市",
-			shipping.address.country: "JP",
-			shipping.address.line1: "安井町",
-			shipping.address.line2: "5-4",
-			shipping.address.postal_code: "662-0045",
-			shipping.address.state: "兵庫県"
-
-			shipping.name : "織田",
-			shipping.phone: "",
-			-->
-
+			<div fxLayout="row">
+				<mat-card fxLayout="column">
+					<mat-form-field class="input-text">
+						<mat-label>country...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.country" #address_country_field="ngModel" name="address_country" required maxlength="2">
+						<mat-error *ngIf="address_country_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="address_country_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>postal_code...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.postal_code" #address_postal_code_field="ngModel" name="address_postal_code" required maxlength="100">
+						<mat-error *ngIf="address_postal_code_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="address_postal_code_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>state...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.state" #address_state_field="ngModel" name="address_state" required maxlength="100">
+						<mat-error *ngIf="address_state_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="address_state_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>city...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.city" #address_city_field="ngModel" name="address_city" required maxlength="16">
+						<mat-error *ngIf="address_city_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="address_city_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>line1...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.line1" #address_line1_field="ngModel" name="address_line1" required maxlength="100">
+						<mat-error *ngIf="address_line1_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="address_line1_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>line2...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.address.line2" #address_line2_field="ngModel" name="address_line2" required maxlength="100">
+						<mat-error *ngIf="address_line2_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="address_line2_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+				</mat-card>
+				<mat-card fxLayout="column">
+					<mat-form-field class="input-text">
+						<mat-label>description...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.description" #description_field="ngModel" name="description" required maxlength="100">
+						<mat-error *ngIf="description_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="description_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>email...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.email" #email_field="ngModel" name="email" required maxlength="100">
+						<mat-error *ngIf="email_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="email_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>name...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.name" #name_field="ngModel" name="name" required maxlength="100">
+						<mat-error *ngIf="name_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="name_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>phone...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.phone" #phone_field="ngModel" name="phone" required maxlength="100">
+						<mat-error *ngIf="phone_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="phone_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+				</mat-card>
+				<mat-card fxLayout="column">
+					<mat-form-field class="input-text">
+						<mat-label>country...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.country" #shipping_address_country_field="ngModel" name="shipping_address_country" required maxlength="2">
+						<mat-error *ngIf="shipping_address_country_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_address_country_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>postal_code...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.postal_code" #shipping_address_postal_code_field="ngModel" name="shipping_address_postal_code" required maxlength="100">
+						<mat-error *ngIf="shipping_address_postal_code_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_address_postal_code_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>state...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.state" #shipping_address_state_field="ngModel" name="shipping_address_state" required maxlength="100">
+						<mat-error *ngIf="shipping_address_state_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_address_state_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>city...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.city" #shipping_address_city_field="ngModel" name="shipping_address_city" required maxlength="16">
+						<mat-error *ngIf="shipping_address_city_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_address_city_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>line1...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.line1" #shipping_address_line1_field="ngModel" name="shipping_address_line1" required maxlength="100">
+						<mat-error *ngIf="shipping_address_line1_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_address_line1_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>line2...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.address.line2" #shipping_address_line2_field="ngModel" name="shipping_address_line2" required maxlength="100">
+						<mat-error *ngIf="shipping_address_line2_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_address_line2_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>name...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.name" #shipping_name_field="ngModel" name="shipping_name" required maxlength="100">
+						<mat-error *ngIf="shipping_name_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_name_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+					<mat-form-field class="input-text">
+						<mat-label>phone...</mat-label>
+						<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.phone" #shipping_phone_field="ngModel" name="shipping_phone" required maxlength="100">
+						<mat-error *ngIf="shipping_phone_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="shipping_phone_field.errors?.maxlength">長すぎます</mat-error>
+					</mat-form-field>
+				</mat-card>
+			</div>
 		</form>
 	</div>
 
 	<div class="spacer"></div>
 
 	<div mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()" >OK</button>
+		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()">OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</div>
 

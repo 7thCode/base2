@@ -21,13 +21,9 @@
 					<div *ngIf="password_visible; then visible_input; else invisible_input"></div>
 					<ng-template #visible_input>
 						<input matInput type="text" placeholder="Password" [(ngModel)]="content.password" #password="ngModel" name="password" required maxlength="1000">
-						<!-- <mat-error *ngIf="password.errors?.required;">入力してください</mat-error>
-						<mat-error *ngIf="password.errors?.maxlength">長すぎます</mat-error> -->
 					</ng-template>
 					<ng-template #invisible_input>
 						<input matInput type="password" placeholder="Password" [(ngModel)]="content.password" #password="ngModel" name="password" required maxlength="1000">
-						<!-- <mat-error *ngIf="password.errors?.required;">入力してください</mat-error>
-						<mat-error *ngIf="password.errors?.maxlength">長すぎます</mat-error> -->
 					</ng-template>
 				</mat-form-field>
 
@@ -54,7 +50,6 @@
 		<mat-divider style="margin:8px;"></mat-divider>
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
 			<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">Cancel</button>
-			<!-- <button mat-stroked-button color="warn" [disabled]="progress" auth-password-button>Forget Password...</button> -->
 		</div>
 	</div>
 

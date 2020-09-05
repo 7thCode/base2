@@ -820,33 +820,36 @@ export class Auth extends Mail {
 					LocalAccount.default_find_by_name({}, username, (error: IErrorObject, account: IAccountModel): void => {
 						this.ifSuccess(response, error, (): void => {
 							if (account) {
-								if (account.provider === "local") { // OAuthは除外
-									// 		if (this.permit_for_change_account(request.user, account)) {
-									const tokenValue: IPasswordToken = {
-										username: value.username,
-										password: value.password,
-										target: "/",
-										timestamp: Date.now(),
-									};
-									const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
-									const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
-									this.sendMail({
-										address: value.username,
-										bcc: this.bcc,
-										title: this.message.passwordconfirmtext,
-										template_url: "views/platform/auth/mail/mail_template.pug",
-										souce_object: this.message.passwordmail,
-										link,
-										result_object: {code: 0, message: ""},
-									}, (error: IErrorObject, result: any) => {
-										if (!error) {
-											this.SendSuccess(response, result);
-										} else {
-											this.SendError(response, error);
-										}
-									});
+								if (account.enabled) {
+									if (account.provider === "local") {
+										const tokenValue: IPasswordToken = {
+											username: value.username,
+											password: value.password,
+											target: "/",
+											timestamp: Date.now(),
+										};
+										const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
+										const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
+										this.sendMail({
+											address: value.username,
+											bcc: this.bcc,
+											title: this.message.passwordconfirmtext,
+											template_url: "views/platform/auth/mail/mail_template.pug",
+											souce_object: this.message.passwordmail,
+											link,
+											result_object: {code: 0, message: ""},
+										}, (error: IErrorObject, result: any) => {
+											if (!error) {
+												this.SendSuccess(response, result);
+											} else {
+												this.SendError(response, error);
+											}
+										});
+									} else {
+										this.SendWarn(response, this.errors[3]);
+									}
 								} else {
-									this.SendWarn(response, this.errors[3]);
+									this.SendError(response, this.errors[2]);
 								}
 							} else {
 								this.SendWarn(response, this.errors[8]);
@@ -879,22 +882,26 @@ export class Auth extends Mail {
 						LocalAccount.default_find_by_name({}, compositeUsername, (error: IErrorObject, account: any): void => {
 							this.ifSuccess(response, error, (): void => {
 								if (account) {
-									if (account.provider === "local") {　// OAuthは除外
-										account.setPassword(password, (error: IErrorObject): void => {
-											if (!error) {
-												account._save((error: IErrorObject, obj: any): void => {
-													if (!error) {
-														response.redirect(target);
-													} else {
-														response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
-													}
-												});
-											} else {
-												response.status(500).render("error", {message: "get_password_token " + error.message, status: 500}); // already
-											}
-										});
+									if (account.enabled) {
+										if (account.provider === "local") {　// OAuthは除外
+											account.setPassword(password, (error: IErrorObject): void => {
+												if (!error) {
+													account._save((error: IErrorObject, obj: any): void => {
+														if (!error) {
+															response.redirect(target);
+														} else {
+															response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
+														}
+													});
+												} else {
+													response.status(500).render("error", {message: "get_password_token " + error.message, status: 500}); // already
+												}
+											});
+										} else {
+											response.status(200).render("error", this.errors[3]); // already
+										}
 									} else {
-										response.status(200).render("error", this.errors[3]); // already
+										this.SendError(response, this.errors[2]);
 									}
 								} else {
 									response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
@@ -927,23 +934,27 @@ export class Auth extends Mail {
 					LocalAccount.default_find_by_name({}, username, (error: IErrorObject, account: any): void => {
 						this.ifSuccess(response, error, (): void => {
 							if (account) {
-								if (account.provider === "local") {　// OAuthは除外
-									if (this.permit_for_change_account(request.user, account)) {
-										const password: string = value.password;
-										account.setPassword(password, (error: IErrorObject): void => {
-											this.ifSuccess(response, error, (): void => {
-												account._save((error: IErrorObject, obj: any): void => {
-													this.ifSuccess(response, error, (): void => {
-														this.SendSuccess(response, {});
+								if (account.enabled) {
+									if (account.provider === "local") {　// OAuthは除外
+										if (this.permit_for_change_account(request.user, account)) {
+											const password: string = value.password;
+											account.setPassword(password, (error: IErrorObject): void => {
+												this.ifSuccess(response, error, (): void => {
+													account._save((error: IErrorObject, obj: any): void => {
+														this.ifSuccess(response, error, (): void => {
+															this.SendSuccess(response, {});
+														});
 													});
 												});
 											});
-										});
+										} else {
+											this.SendWarn(response, this.errors[4]);
+										}
 									} else {
-										this.SendWarn(response, this.errors[4]);
+										this.SendWarn(response, this.errors[3]);
 									}
 								} else {
-									this.SendWarn(response, this.errors[3]);
+									this.SendError(response, this.errors[2]);
 								}
 							} else {
 								this.SendWarn(response, this.errors[8]);
@@ -971,7 +982,7 @@ export class Auth extends Mail {
 				this.ifSuccess(response, error, (): void => {
 					if (account) {
 						if (account.enabled) {
-							if (account) {
+
 								LocalAccount.remove_by_id(null, operator.user_id, (error: IErrorObject): void => {
 									if (!error) {
 										request.logout();
@@ -980,9 +991,7 @@ export class Auth extends Mail {
 										this.SendError(response, this.errors[6]);
 									}
 								});
-							} else {
-								this.SendError(response, this.errors[8]);
-							}
+
 						} else {
 							this.SendError(response, this.errors[2]);
 						}

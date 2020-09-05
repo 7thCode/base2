@@ -2,32 +2,10 @@
 	<mat-card style="margin:2rem;">
 		<mat-card-header>
 			<div style="font-size: 32px;font-weight: 900;">Stripe</div>
-<!--
-			<button mat-button (click)="deleteCustomer()">
-				delete
-			</button>
-
-			<button mat-button (click)="retrieveCustomer()">
-				retrieveCustomer
-			</button>
-
-			<button mat-button (click)="updateCustomer()">
-				updateCustomer
-			</button>
--->
 			<button mat-icon-button (click)="updateCustomerDialog()">
 				<mat-icon color="primary">edit</mat-icon>
 			</button>
 
-	<!--
-			<button mat-button (click)="retrieveSource(0)">
-				retrieveSource
-			</button>
-
-			<button mat-button (click)="updateSource(0, {name: 'Jenny Rosen'})">
-				updateSource
-			</button>
-	-->
 			<button mat-button (click)="charge()">
 				charge
 			</button>
@@ -70,21 +48,6 @@
 						</button>
 					</mat-grid-tile-footer>
 
-
-					<!--<mat-grid-tile-header>
-						<div class="box-header" style="font-weight:900;font-size:14px;">{{card.brand}}</div>
-						<div style="font-size:9px;">{{card.message}}</div>
-						<div>{{card.exp_month}}/{{card.exp_year}}</div>
-					</mat-grid-tile-header>
-					<div fxLayout="row" fxLayoutAlign="center" style="font-weight:900;font-size:14px;">****-****-****-{{card.last4}}</div>
-					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-						<button mat-icon-button (click)="updateDialog(card.id)">
-							<mat-icon color="primary">edit</mat-icon>
-						</button>
-						<button mat-icon-button (click)="deleteSource(i)">
-							<mat-icon color="warn">delete_sweep</mat-icon>
-						</button>
-					</mat-grid-tile-footer> -->
 				</mat-grid-tile>
 			</mat-grid-list>
 		</mat-card-content>
