@@ -48,8 +48,6 @@ import {PlatformRoutingModule} from "./platform-routing.module";
 
 import {PlatformComponent} from "./platform.component";
 import {PersonalModule} from "./personal/personal.module";
-// import { PersonalComponent } from './personal/personal.component';
-
 
 @NgModule({
 	declarations: [
@@ -60,7 +58,6 @@ import {PersonalModule} from "./personal/personal.module";
 		BrowserAnimationsModule,
 		RouterModule,
 		HttpClientModule,
-
 
 		FlexLayoutModule,
 
