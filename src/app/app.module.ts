@@ -19,6 +19,9 @@ import {PlatformModule} from "./platform/platform.module";
 import {AppComponent} from "./app.component";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import { ApplicationComponent } from './application/application.component';
+import { TopComponent } from './application/top/top.component';
+import {ApplicationModule} from "./application/application.module";
 
 @NgModule({
 	declarations: [
@@ -31,6 +34,7 @@ import {environment} from '../environments/environment';
 		MatProgressSpinnerModule,
 		OverlayModule,
 		PlatformModule,
+		ApplicationModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
 	],
 	providers: [],

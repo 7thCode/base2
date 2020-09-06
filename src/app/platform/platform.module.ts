@@ -60,7 +60,7 @@ import {PersonalModule} from "./personal/personal.module";
 		BrowserAnimationsModule,
 		RouterModule,
 		HttpClientModule,
-		PlatformRoutingModule,
+
 
 		FlexLayoutModule,
 
@@ -81,6 +81,7 @@ import {PersonalModule} from "./personal/personal.module";
 		MatInputModule,
 		AceEditorModule,
 
+		PlatformRoutingModule,
 		ErrorModule,
 		AccountsModule,
 		ArticlesModule,
