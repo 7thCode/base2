@@ -20,7 +20,7 @@ module.exports = {
 		timeout: 100000,
 		bodysize: "200mb",
 
-		ua: "base2",
+		ua: "base1",
 		use_publickey: false,
 		dav: false,
 		logs: {
@@ -38,9 +38,9 @@ module.exports = {
 		db: {
 			protocol: "mongodb",
 			address: "localhost",
-			user: "base2master",
+			user: "base1master",
 			password: "33550336",
-			name: "base2",
+			name: "base1",
 			backup: {
 				hour: 0,
 				minute: 0
@@ -51,7 +51,7 @@ module.exports = {
 			member: true,
 			expire: 60
 		},
-		sessionname: "base2",
+		sessionname: "base1",
 		extendheader_enable: true,
 		extendheader: [
 			["Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"],
@@ -161,7 +161,7 @@ module.exports = {
 		//      clientID: "1676184429271661"
 		//      clientSecret: "f3a9ad16cf0d73cd38dfc3aa0843c2fe"
 		//
-		//      base OK
+		//      base1 OK
 		// 		clientID: "1091756834285901",
 		// 		clientSecret: "f26703b087f2c5c3e8c8c4e7fa335793",
 		//
@@ -183,7 +183,7 @@ module.exports = {
 				profileFields: ['id', 'email', 'name']
 			},
 		},
-		facebook: { // base2
+		facebook: { // base1
 			enable: "true",
 			redirect: "/",
 			key: {
@@ -191,6 +191,18 @@ module.exports = {
 				clientSecret: "17e3a37b4e7296c97f43c70acbac00f3",
 				callbackURL: "http://localhost:3000/auth/facebook/callback",
 				profileFields: ['id', 'email', 'name']
+			},
+		},
+		apple: {
+			enable: "true",
+			redirect: "/",
+			KeyFile: "authkey.p8",
+			key: {
+				clientID: "com.aigtokyo.service",
+				callbackURL: "http://localhost:3000/auth/apple/callback",
+				teamId: "G3L3422HGJ",
+				keyIdentifier: "L822486XZP",
+				privateKeyPath: "",
 			},
 		},
 		twitter1: {
@@ -208,7 +220,7 @@ module.exports = {
 			key: {
 				"clientID": "986729ad287241d08ff7616e8d3adc73",
 				"clientSecret": "69e57e2fad5541599725be4c9e95b2b9",
-				"callbackURL": "https://seventh-code.info/auth/instagram/callback"
+				"callbackURL": "https://seventh-code.com/auth/instagram/callback"
 			}
 		},
 		line1: {
@@ -217,7 +229,7 @@ module.exports = {
 			key: {
 				"channelID": "1504885300",
 				"channelSecret": "2ac60f3d920006fa5e985f5f133ec96d",
-				"callbackURL": "https://seventh-code.info/auth/line/callback"
+				"callbackURL": "https://seventh-code.com/auth/line/callback"
 			}
 		},
 		googleplus1: {
@@ -243,10 +255,10 @@ module.exports = {
 		},
 		mailer: {
 			type: "mailgun",
-			account: "postmaster@seventh-code.info",
+			account: "postmaster@seventh-code.com",
 			setting: {
 				"api_key": "key-65d5868f3829dfed0f285c3eb776a518",
-				"domain": "seventh-code.info"
+				"domain": "seventh-code.com"
 			}
 		},
 
@@ -259,7 +271,7 @@ module.exports = {
 			"long": "too long",
 			"mail_field": "Mail Address",
 			"mail": "Mail",
-			"memberconfirmdialogtitle": "Member Register Mail Sent",
+		// 	"memberconfirmdialogtitle": "Member Register Mail Sent",
 			"memberconfirmtext": "Add Member",
 			"memberdialogtitle": "Member Regist",
 			"nickname_field": "Nickname",
@@ -273,12 +285,16 @@ module.exports = {
 			"passwordconfirmtext": "Update Password Mail Sent.",
 			passwordmail: {
 				header: {
-					title: "base2...",
+					title: "base1...",
 					text: "password",
 				},
 				content: {
 					title: "Password change",
-					text: "Click on the Password change button within 30 minutes to complete the Password change.",
+					subtitle_reader:"",
+					subtitle_trailer:"",
+					text: [
+						"Click on the Password change button within 30 minutes to complete the Password change."
+					],
 				},
 				button: {
 					title: "change password",
@@ -287,18 +303,22 @@ module.exports = {
 					text: "Copyright © 2017 . All rights reserved.",
 				},
 			},
-			"passworddialogtitle": "Password Change",
+		//	"passworddialogtitle": "Password Change",
 
 			"registconfirmdialogtitle": "User Register Mail Sent.",
 			"registconfirmtext": "User Register Mail Sent.",
 			registmail: {
 				header: {
-					title: "base2...",
+					title: "base1...",
 					text: "regist...",
 				},
 				content: {
 					title: "User Regist",
-					text: "Click on the User Regist button within 30 minutes to complete the Regist.",
+					subtitle_reader:"",
+					subtitle_trailer:"",
+					text: [
+						"Click on the User Regist button within 30 minutes to complete the Regist."
+					],
 				},
 				button: {
 					title: "Regist",
@@ -307,10 +327,7 @@ module.exports = {
 					text: "Copyright © 2019 seventh-code. All rights reserved.",
 				},
 			},
-			"registdialogtitle": "User Regist",
-			"reserveconfirmdialogtitle": "Reserve Mail Sent.",
-			"reserveconfirmtext": "Reserve Mail Sent.",
-			"reservedialogtitle": "Reserve",
+
 			"regist": "Regist",
 			"retypepassword": "Retype Password",
 			"required": "Required",
