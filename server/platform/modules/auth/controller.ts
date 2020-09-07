@@ -683,6 +683,9 @@ export class Auth extends Mail {
 									timestamp: Date.now(),
 								};
 
+								const mail_object =	this.message.registmail;
+								mail_object.content.subtitle = mail_object.content.subtitle_reader + value.metadata.nickname + mail_object.content.subtitle_trailer;
+
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/register/" + token;
 								this.sendMail({
@@ -690,7 +693,7 @@ export class Auth extends Mail {
 									bcc: this.bcc,
 									title: this.message.registconfirmtext,
 									template_url: "views/platform/auth/mail/mail_template.pug",
-									souce_object: this.message.registmail,
+									souce_object: mail_object,
 									link,
 									result_object: {code: 0, message: ["Prease Wait.", ""]},
 								}, (error: IErrorObject, result: any) => {
@@ -814,7 +817,7 @@ export class Auth extends Mail {
 	 */
 	public post_local_password(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
+			Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 				this.ifSuccess(response, error, (): void => {
 					const username: string = value.username;
 					LocalAccount.default_find_by_name({}, username, (error: IErrorObject, account: IAccountModel): void => {
@@ -828,6 +831,10 @@ export class Auth extends Mail {
 											target: "/",
 											timestamp: Date.now(),
 										};
+
+										const mail_object =	this.message.passwordmail;
+										mail_object.content.subtitle = mail_object.content.subtitle_reader + account.content.nickname + mail_object.content.subtitle_trailer;
+
 										const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 										const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
 										this.sendMail({
@@ -835,7 +842,7 @@ export class Auth extends Mail {
 											bcc: this.bcc,
 											title: this.message.passwordconfirmtext,
 											template_url: "views/platform/auth/mail/mail_template.pug",
-											souce_object: this.message.passwordmail,
+											souce_object: mail_object,
 											link,
 											result_object: {code: 0, message: ""},
 										}, (error: IErrorObject, result: any) => {
@@ -983,14 +990,14 @@ export class Auth extends Mail {
 					if (account) {
 						if (account.enabled) {
 
-								LocalAccount.remove_by_id(null, operator.user_id, (error: IErrorObject): void => {
-									if (!error) {
-										request.logout();
-										this.SendSuccess(response, null);
-									} else {
-										this.SendError(response, this.errors[6]);
-									}
-								});
+							LocalAccount.remove_by_id(null, operator.user_id, (error: IErrorObject): void => {
+								if (!error) {
+									request.logout();
+									this.SendSuccess(response, null);
+								} else {
+									this.SendError(response, this.errors[6]);
+								}
+							});
 
 						} else {
 							this.SendError(response, this.errors[2]);

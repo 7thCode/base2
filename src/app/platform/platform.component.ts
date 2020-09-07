@@ -10,7 +10,7 @@ import {Callback, IErrorObject} from "../../../types/platform/universe";
 
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, VERSION} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSidenav} from "@angular/material/sidenav";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -42,6 +42,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	public date: Date;
 
 	public device: string;
+	public angular: string;
 
 	@ViewChild("sidenav") protected sidenav: MatSidenav;
 
@@ -154,6 +155,8 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 */
 	public ngOnInit(): void {
 		super.ngOnInit();
+
+		this.angular = VERSION.full;
 
 		this.Progress(true);
 
