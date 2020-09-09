@@ -41,11 +41,12 @@ export class CustomerLoginQrDialogDirective {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(CustomerLoginQrDialogComponent, {
 			width: "60%",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {
 					title: "QRコードでログイン",
-					description: "ようこそAIGへ！",
+					description: "ようこそ！",
 					username: "",
 					password: "",
 					code: "",

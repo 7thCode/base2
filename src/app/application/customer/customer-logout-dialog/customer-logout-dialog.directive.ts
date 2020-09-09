@@ -43,10 +43,11 @@ export class CustomerLogoutDialogDirective {
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(CustomerLogoutDialogComponent, {
 			width: "40%",
+			minWidth: "320px",
 			height: "fit-content",
 			data: {content: {
 				title: "ログアウト",
-				description: "AIGからログアウトします。"
+				description: "ログアウトします。"
 			}},
 			disableClose: true,
 		});

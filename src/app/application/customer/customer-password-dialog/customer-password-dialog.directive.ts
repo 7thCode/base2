@@ -40,7 +40,7 @@ export class CustomerPasswordDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "メール送信完了", message: "パスワード変更のメールをお送りしました。メールをご確認ください。"};
+		const resultDialogContent: any = {title: "メール送信完了", message: "パスワード変更のメールをお送りしました。"};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(CustomerPasswordDialogComponent, {
 			width: "50%",
@@ -49,7 +49,7 @@ export class CustomerPasswordDialogDirective {
 			data: {
 				content: {
 					title: "パスワード",
-					description: "パスワードの再設定を行います。ご登録時のメールアドレスをご入力いただき、新たに設定したいパスワードをご入力の上、送信ボタンを押してください。",
+					description: "パスワードの再設定を行います。",
 					username: "",
 					password: "",
 					confirm_password: "",
