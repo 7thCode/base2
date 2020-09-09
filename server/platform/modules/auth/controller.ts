@@ -44,15 +44,15 @@ export class Auth extends Mail {
 		this.passport = passport;
 		this.message = this.systemsConfig.message;
 		this.errors = [
-			{code: 1, message: "not logged in."},
-			{code: 2, message: "already logged in."},
-			{code: 3, message: "account disabled."},
-			{code: 4, message: "only local account."},
-			{code: 5, message: "no permission."},
-			{code: 6, message: "code mismatch."},
-			{code: 7, message: "unknown error."},
-			{code: 8, message: this.message.usernamealreadyregist},
-			{code: 9, message: this.message.usernamenotfound}
+			{code: 1, message: this.message.not_logged_in},
+			{code: 2, message: this.message.already_logged_in},
+			{code: 3, message: this.message.account_disabled},
+			{code: 4, message: this.message.only_local_account},
+			{code: 5, message: this.message.no_permission},
+			{code: 6, message: this.message.code_mismatch},
+			{code: 7, message: this.message.unknown_error},
+			{code: 8, message: this.message.username_already_regist},
+			{code: 9, message: this.message.username_notfound}
 		];
 	}
 
