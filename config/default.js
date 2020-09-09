@@ -263,23 +263,6 @@ module.exports = {
 		},
 
 		message: {
-			"cancel": "Cancel",
-			"invalid_mail_format": "invalid mail format",
-			"login": "Login",
-			"logindialogtitle": "Login",
-			"logout": "Logout",
-			"long": "too long",
-			"mail_field": "Mail Address",
-			"mail": "Mail",
-		// 	"memberconfirmdialogtitle": "Member Register Mail Sent",
-			"memberconfirmtext": "Add Member",
-			"memberdialogtitle": "Member Regist",
-			"nickname_field": "Nickname",
-			"nickname": "Nickname",
-			"ok": "OK",
-			"password_field": "Password",
-			"password_missmatch": "password missmatch",
-			"password": "Password",
 
 			"passwordconfirmdialogtitle": "Update Password Mail Sent.",
 			"passwordconfirmtext": "Update Password Mail Sent.",
@@ -303,7 +286,6 @@ module.exports = {
 					text: "Copyright © 2017 . All rights reserved.",
 				},
 			},
-		//	"passworddialogtitle": "Password Change",
 
 			"registconfirmdialogtitle": "User Register Mail Sent.",
 			"registconfirmtext": "User Register Mail Sent.",
@@ -328,12 +310,15 @@ module.exports = {
 				},
 			},
 
-			"regist": "Regist",
-			"retypepassword": "Retype Password",
-			"required": "Required",
-			"short": "too short",
-			"usernamenotfound": "password missmatch or user not found.",
-			"usernamealreadyregist": "username already exist."
+			not_logged_in:	 "not logged in.",
+			already_logged_in:	 "already logged in.",
+			account_disabled:	 "account disabled.",
+			only_local_account:	 "only local account.",
+			no_permission:	 "no permission.",
+			code_mismatch:	 "code mismatch.",
+			unknown_error:	 "unknown error.",
+			username_notfound: "password missmatch or user not found.",
+			username_already_regist: "username already exist."
 		}
 	},
 	users: {
