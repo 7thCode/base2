@@ -9,11 +9,17 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {TopComponent} from "./top.component";
+import {CustomerModule} from "../customer/customer.module";
+import {MatButtonModule} from "@angular/material/button";
+
 
 @NgModule({
 	declarations: [TopComponent],
 	imports: [
-		CommonModule
+		CommonModule,
+		CustomerModule,
+		MatButtonModule,
+
 	]
 })
 export class TopModule {

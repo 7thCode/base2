@@ -1,0 +1,13 @@
+.form-field {
+    margin: 1rem 0;
+}
+
+.fix-action-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.spacer {
+    flex-grow: 1;
+}

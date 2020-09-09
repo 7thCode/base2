@@ -19,7 +19,11 @@
 			<h1>Transitive</h1>
 			<p>A full responsive, business-oriented HTML5/CSS3 template<br/>
 				built by <a href="https://templated.co/">Templated</a> and released under the <a href="https://templated.co/license">Creative Commons</a>.</p>
-			<a href="#one" class="button special scrolly">Get Started</a>
+
+			<button mat-raised-button customer-login-button (complete)="onLogin($event)">
+				<span>Login</span>
+			</button>
+
 		</div>
 	</section>
 
