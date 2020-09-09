@@ -4,21 +4,31 @@
  * opensource.org/licenses/mit-license.php
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 
 @Component({
-  selector: 'app-top',
-  templateUrl: './top.component.html',
-  styleUrls: ['./top.component.css']
+	selector: "app-top",
+	templateUrl: "./top.component.html",
+	styleUrls: ["./top.component.css"]
 })
 export class TopComponent implements OnInit {
 
-  constructor() { }
+	constructor() {
+	}
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
-  public onLogin(event: any) {
+	public onLogin(event: any) {
 
-  }
+	}
+
+	public onRegist(event: any) {
+
+	}
+
+	public onPassword(event: any) {
+
+	}
+
 }

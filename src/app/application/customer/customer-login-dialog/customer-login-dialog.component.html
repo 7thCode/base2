@@ -5,7 +5,7 @@
 		<div style="margin:6px;">{{content.description}}</div>
 		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
 
-			<mat-form-field style="margin:6px;">
+			<mat-form-field class="input-text">
 				<mat-label>メールアドレス</mat-label>
 				<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">
 				<mat-error *ngIf="username.errors?.email;">有効なメールアドレスで</mat-error>
@@ -14,7 +14,7 @@
 				<mat-error *ngIf="username.errors?.minlength">短すぎます</mat-error>
 			</mat-form-field>
 
-			<div fxLayout="row" style="margin:6px;">
+			<div fxLayout="row" class="input-text">
 				<mat-form-field fxFlex="90%">
 					<mat-label>パスワード</mat-label>
 					<div *ngIf="password_visible; then visible_input; else invisible_input"></div>
@@ -43,7 +43,7 @@
 			<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()">ログイン</button>
 			<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">キャンセル</button>
 			<!-- <a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="color:#fdfdfd;" href="/auth/facebook"><i class="fab fa-facebook-square fa-lg"></i><span style="margin-left:4px">Facebook</span></a>
-			<a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="background-color:#fdfdfd;color:#303030;" href="/auth/apple"><i class="fab fa-apple fa-lg"></i><span style="margin-left:4px">Apple</span></a> -->
+			 <a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="background-color:#fdfdfd;color:#303030;" href="/auth/apple"><i class="fab fa-apple fa-lg"></i><span style="margin-left:4px">Apple</span></a> -->
 		</div>
 		<mat-divider style="margin:8px;"></mat-divider>
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around" fxLayoutAlign.lt-sm="center">
