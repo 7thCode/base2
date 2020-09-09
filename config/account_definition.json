@@ -1,7 +1,18 @@
 {
-  "mails": [],
-  "nickname": "",
-  "id": "",
-  "description": "",
-  "image": ""
+	"mails": [],
+	"nickname": "",
+	"id": "",
+	"stripe_id": "",
+	"name": "",
+	"phone": "",
+	"address": {
+		"country": "",
+		"postal_code": "",
+		"state": "",
+		"city": "",
+		"line1": "",
+		"line2": ""
+	},
+	"description": "",
+	"image": ""
 }
