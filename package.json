@@ -94,7 +94,7 @@
 		"saslprep": "^1.0.3",
 		"save-dev": "0.0.1-security",
 		"serve-favicon": "~2.5.0",
-		"sharp": "^0.25.3",
+		"sharp": "^0.26.0",
 		"source-map": "^0.7.3",
 		"spdy": "^4.0.2",
 		"speakeasy": "^2.0.0",
