@@ -129,8 +129,8 @@ $ sudo service mongodb restart
 
 ##### 個々のDBの認証(auth-dbはtarget-db自体)
 
-    > use base2
-    > db.createUser({user:"base2master", pwd:"33550336", roles:[ "readWrite", "dbOwner" ]})
+    > use rassemble
+    > db.createUser({user:"rassemblemaster", pwd:"sBf^N*b%tQU3", roles:[ "readWrite", "dbOwner" ]})
 
 ##### Index
 

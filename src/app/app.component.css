@@ -60,4 +60,12 @@ body, input, textarea, select {
     font-size: 17px;
 }
 
+::ng-deep.mat-dialog-container {
+	backdrop-filter: blur(12px);
+	background-color: #fdfdfddf;
+}
+
+::ng-deep.cdk-overlay-backdrop {
+}
+
 /*# sourceMappingURL=progress.css.map */
