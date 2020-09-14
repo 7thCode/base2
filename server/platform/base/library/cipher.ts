@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Callback} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 const cipherCrypto: any = require("crypto");
 const NodeRSA: any = require("node-rsa");
@@ -128,7 +128,7 @@ export class Cipher {
 			} else {
 				callback({code: 1, message: "account not found. 2419"}, null);
 			}
-		}).catch((error: any): void => {
+		}).catch((error: IErrorObject): void => {
 			callback(error, null);
 		});
 	}
@@ -151,7 +151,7 @@ export class Cipher {
 					} else {
 						callback({code: 1, message: "account not found. 8119"}, null);
 					}
-				}).catch((error: any): void => {
+				}).catch((error: IErrorObject): void => {
 					callback(error, "");
 				});
 			} else {

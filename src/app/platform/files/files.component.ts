@@ -282,7 +282,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.filesService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
-				const option = {sort: {"content.start": -1}, skip: this.size * this.page, limit: this.size};
+				const option = {sort: {uploadDate: -1}, skip: this.size * this.page, limit: this.size};
 				this.filesService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[] | null): void => {
 					if (!error) {
 						const filtered: any[] = [];

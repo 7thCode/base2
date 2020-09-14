@@ -39,6 +39,15 @@ export interface IPasswordToken {
 	timestamp: any;
 }
 
+
+
+export interface IUserNameToken {
+	original_username: string;
+	update_username: string;
+	target: string;
+	timestamp: any;
+}
+
 export interface IUserToken {
 	auth: number;
 	username: string;

@@ -42,6 +42,8 @@ import {AuthService} from "./auth.service";
 import {WithdrawDialogComponent} from "./withdraw-dialog/withdraw-dialog.component";
 import {WithdrawDialogDirective} from "./withdraw-dialog/withdraw-dialog.directive";
 import {HttpService} from "../base/services/http.service";
+import {UserNameDialogComponent} from "./username-dialog/username-dialog.component";
+import {UserNameDialogDirective} from "./username-dialog/username-dialog.directive";
 
 @NgModule({
 	declarations: [
@@ -50,6 +52,7 @@ import {HttpService} from "../base/services/http.service";
 		LoginTotpDialogDirective,
 		RegistDialogDirective,
 		PasswordDialogDirective,
+		UserNameDialogDirective,
 		LogoutDialogDirective,
 		WithdrawDialogDirective,
 		LoginDialogComponent,
@@ -57,6 +60,7 @@ import {HttpService} from "../base/services/http.service";
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,
+		UserNameDialogComponent,
 		LogoutDialogComponent,
 		WithdrawDialogComponent,
 
@@ -89,6 +93,7 @@ import {HttpService} from "../base/services/http.service";
 		LoginTotpDialogDirective,
 		RegistDialogDirective,
 		PasswordDialogDirective,
+		UserNameDialogDirective,
 		LogoutDialogDirective,
 		WithdrawDialogDirective,
 	],
@@ -98,6 +103,7 @@ import {HttpService} from "../base/services/http.service";
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,
+		UserNameDialogComponent,
 		LogoutDialogComponent,
 		WithdrawDialogComponent,
 	],

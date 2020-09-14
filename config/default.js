@@ -287,6 +287,29 @@ module.exports = {
 				},
 			},
 
+			"usernameconfirmdialogtitle": "Update UserName Mail Sent.",
+			"usernameconfirmtext": "Update UserName Mail Sent.",
+			usernamemail: {
+				header: {
+					title: "base1...",
+					text: "username",
+				},
+				content: {
+					title: "UserName change",
+					subtitle_reader:"",
+					subtitle_trailer:"",
+					text: [
+						"Click on the Password change button within 30 minutes to complete the Password change."
+					],
+				},
+				button: {
+					title: "change username",
+				},
+				footer: {
+					text: "Copyright © 2017 . All rights reserved.",
+				},
+			},
+
 			"registconfirmdialogtitle": "User Register Mail Sent.",
 			"registconfirmtext": "User Register Mail Sent.",
 			registmail: {

@@ -79,6 +79,13 @@
 				</button>
 			</mat-list-item>
 
+			<mat-list-item style="color:#fdfdfd;" *ngIf="provider === 'local'">
+				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-username-button (complete)="onUsername($event);">
+					<mat-icon style="font-size:20px;" mat-list-icon>vpn_key</mat-icon>
+					Username
+				</button>
+			</mat-list-item>
+
 			<mat-list-item style="color:#fdfdfd;">
 				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-logout-button (complete)="onLogout($event);">
 					<mat-icon style="font-size:20px;" mat-list-icon>exit_to_app</mat-icon>

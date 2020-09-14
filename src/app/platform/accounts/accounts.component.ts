@@ -412,7 +412,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
-		const resultDialogContent: any = {title: "User", message: "Delete User?.", has_cancel: false};
+		const resultDialogContent: any = {title: "User", message: "Delete User?.", has_cancel: true};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 			width: "30%",

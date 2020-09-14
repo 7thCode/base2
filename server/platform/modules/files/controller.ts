@@ -63,7 +63,7 @@ export class Files extends Wrapper {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 		};
-		let connectUrl: string =  config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
+		let connectUrl: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 		if (config.db.noauth) {
 			connectUrl = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
 		}
@@ -241,8 +241,7 @@ export class Files extends Wrapper {
 							this.collection.createIndex({
 								"filename": 1,
 								"metadata.user_id": 1,
-							}, (error: IErrorObject) => {
-								if (!error) {
+							}).then(() => {
 									const save = (doc: any): Promise<any> => {
 										return new Promise((resolve: any, reject: any): void => {
 											const path: string = project_root + doc.path;
@@ -254,8 +253,8 @@ export class Files extends Wrapper {
 											const type: number = doc.type;
 											const query: object = {filename};
 
-											this.collection.findOne(query, (error: IErrorObject, item: object): void => {
-												if (!error) {
+											this.collection.findOne(query).then((item: object): void => {
+
 													if (!item) {
 														this.fromLocal(path, user, filename, category, description, mimetype, (error: IErrorObject, file: any): void => {
 															if (!error) {
@@ -267,9 +266,9 @@ export class Files extends Wrapper {
 													} else {
 														resolve(item);
 													}
-												} else {
-													reject(error);
-												}
+
+											}).catch((error: IErrorObject) => {
+												reject(error);
 											});
 										});
 									};
@@ -282,7 +281,8 @@ export class Files extends Wrapper {
 									}).catch((error: IErrorObject): void => {
 										callback(error, null);
 									});
-								}
+							}).catch((error: IErrorObject): void => {
+								callback(error, null);
 							});
 						} else {
 							callback(null, null);
@@ -307,16 +307,16 @@ export class Files extends Wrapper {
 	public getRecord(user_id: string, name: string, callback: Callback<any>): void {
 		try {
 			const query: object = Files.query_by_user_read({user_id, auth: AuthLevel.public}, {filename: name});
-			this.collection.findOne(query, (error: IErrorObject, item: object): void => {
-				if (!error) {
-					if (item) {
-						callback(null, item);
-					} else {
-						callback({code: -1, message: "no item" + " 148"}, null);
-					}
+			this.collection.findOne(query).then((item: object): void => {
+
+				if (item) {
+					callback(null, item);
 				} else {
-					callback(error, null);
+					callback({code: -1, message: "no item" + " 148"}, null);
 				}
+
+			}).catch((error: IErrorObject) => {
+				callback(error, null);
 			});
 		} catch (e) {
 			callback(e, null);
@@ -333,16 +333,16 @@ export class Files extends Wrapper {
 	public getRecordById(_id: string, callback: Callback<any>): void {
 		try {
 			const id = new mongodb.ObjectId(_id);
-			this.collection.findOne({_id: id}, (error: IErrorObject, item: object): void => {
-				if (!error) {
-					if (item) {
-						callback(null, item);
-					} else {
-						callback({code: -1, message: "no item" + " 5629"}, null);
-					}
+			this.collection.findOne({_id: id}).then((item: object): void => {
+
+				if (item) {
+					callback(null, item);
 				} else {
-					callback(error, null);
+					callback({code: -1, message: "no item" + " 5629"}, null);
 				}
+
+			}).catch((error: IErrorObject) => {
+				callback(error, null);
 			});
 		} catch (e) {
 			callback(e, null);
@@ -400,10 +400,10 @@ export class Files extends Wrapper {
 					this.Decode(request.params.option, (error: IErrorObject, option: IQueryOption): void => {
 						this.ifSuccess(response, error, (): void => {
 							const operator: IAccountModel = this.Transform(request.user);
-							this.collection.find(Files.query_by_user_read(operator, query), option).limit(option.limit).skip(option.skip).toArray((error: IErrorObject, docs: any): void => {
-								this.ifSuccess(response, error, (): void => {
-									this.SendRaw(response, docs);
-								});
+							this.collection.find(Files.query_by_user_read(operator, query), option).limit(option.limit).skip(option.skip).toArray().then((docs: any): void => {
+								this.SendRaw(response, docs);
+							}).catch((error: IErrorObject) => {
+								this.SendError(response, error);
 							});
 						});
 					});
@@ -426,10 +426,10 @@ export class Files extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
 					// const auth: number = user.auth;
-					this.collection.find(Files.query_by_user_read(operator, query)).count((error: IErrorObject, count: number): void => {
-						this.ifSuccess(response, error, (): void => {
-							this.SendSuccess(response, count);
-						});
+					this.collection.find(Files.query_by_user_read(operator, query)).count().then((count: number): void => {
+						this.SendSuccess(response, count);
+					}).catch((error: IErrorObject) => {
+						this.SendError(response, error);
 					});
 				});
 			});
@@ -455,29 +455,29 @@ export class Files extends Wrapper {
 			};
 
 			const query: object = Files.query_by_user_read(operator, {filename: path});
-			this.collection.findOne(query, (error: IErrorObject, item: { _id: object, metadata: { type: string } }): void => {
-				this.ifSuccess(response, error, (): void => {
-					if (item) {
-						let buffer: Buffer = Buffer.alloc(0);
-						const readstream: any = this.gfs.openDownloadStream(item._id);
-						if (readstream) {
-							readstream.on("data", (chunk: any): void => {
-								buffer = Buffer.concat([buffer, Buffer.from(chunk)]);
-							});
-							readstream.on("end", (): void => {
-								const dataurl: string = "data:" + item.metadata.type + ";base64," + BinaryToBase64(buffer);
-								this.SendSuccess(response, dataurl);
-							});
-							readstream.on("error", (error: IErrorObject): void => {
-								this.SendError(response, error);
-							});
-						} else {
-							this.SendError(response, {code: 2, message: "no stream.(file 1)" + " 7191"});
-						}
+			this.collection.findOne(query).then((item: { _id: object, metadata: { type: string } }): void => {
+				if (item) {
+					let buffer: Buffer = Buffer.alloc(0);
+					const readstream: any = this.gfs.openDownloadStream(item._id);
+					if (readstream) {
+						readstream.on("data", (chunk: any): void => {
+							buffer = Buffer.concat([buffer, Buffer.from(chunk)]);
+						});
+						readstream.on("end", (): void => {
+							const dataurl: string = "data:" + item.metadata.type + ";base64," + BinaryToBase64(buffer);
+							this.SendSuccess(response, dataurl);
+						});
+						readstream.on("error", (error: IErrorObject): void => {
+							this.SendError(response, error);
+						});
 					} else {
-						this.SendError(response, {code: 1, message: "no item.(file 1)" + " 6086"});
+						this.SendError(response, {code: 2, message: "no stream.(file 1)" + " 7191"});
 					}
-				});
+				} else {
+					this.SendError(response, {code: 1, message: "no item.(file 1)" + " 6086"});
+				}
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
 			});
 		} catch (error) {
 			this.SendFatal(response, error);
@@ -500,32 +500,32 @@ export class Files extends Wrapper {
 
 			if (path) {
 				const query: object = Files.query_by_user_write(operator, {filename: path});
-				this.collection.findOne(query, (error: IErrorObject, item: object): void => {
-					this.ifSuccess(response, error, (): void => {
-						if (!item) {
+				this.collection.findOne(query).then((item: object): void => {
+					if (!item) {
+						this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
+							this.ifSuccess(response, error, (): void => {
+								this.SendSuccess(response, result);
+							});
+						});
+					} else {
+						this.collection.deleteOne(query).then((): void => {
 							this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
 								this.ifSuccess(response, error, (): void => {
 									this.SendSuccess(response, result);
 								});
 							});
-						} else {
-							this.collection.deleteOne(query, (error: IErrorObject): void => {
-								this.ifSuccess(response, error, (): void => {
-									this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
-										this.ifSuccess(response, error, (): void => {
-											this.SendSuccess(response, result);
-										});
-									});
-								});
-							});
-						}
-					});
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, error);
+						});
+					}
+				}).catch((error: IErrorObject) => {
+					this.SendError(response, error);
 				});
 			} else {
 				this.SendWarn(response, {code: 1, message: "no name" + " 3964"});
 			}
-		} catch (e) {
-			this.SendFatal(response, e);
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
@@ -541,13 +541,13 @@ export class Files extends Wrapper {
 			const operator: IAccountModel = this.Transform(request.user);
 
 			const query: object = Files.query_by_user_write(operator, {filename: path});
-			this.collection.findOneAndDelete(query, (error: IErrorObject): void => {
-				this.ifSuccess(response, error, (): void => {
-					this.SendSuccess(response, {});
-				});
+			this.collection.findOneAndDelete(query).then((): void => {
+				this.SendSuccess(response, {});
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
 			});
-		} catch (e) {
-			this.SendFatal(response, e);
+		} catch (error) {
+			this.SendFatal(response, error);
 		}
 	}
 
