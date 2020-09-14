@@ -1,13 +1,14 @@
-<h1 mat-dialog-title>{{content.title}}</h1>
+<div class="fix-action-dialog">
+	<h1 mat-dialog-title>{{content.title}}</h1>
 
-<div mat-dialog-content fxLayout="column">
-	<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between" style="font-size: 14px;margin: 24px;">
+	<div mat-dialog-content fxLayout="column">
 		<div>{{content.message}}</div>
-	</form>
-</div>
+	</div>
 
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around">
-	<button mat-raised-button color="accent" (click)="onAccept()">{{content.ok_button}}</button>
-	<button *ngIf="content.has_cancel" mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">{{content.cancel_button}}</button>
-</div>
+	<div class="spacer"></div>
 
+	<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around">
+		<button mat-raised-button color="accent" (click)="onAccept()">{{content.ok_button}}</button>
+		<button mat-stroked-button color="warn" *ngIf="content.has_cancel" mat-dialog-close="" (click)="cancel()">{{content.cancel_button}}</button>
+	</div>
+</div>

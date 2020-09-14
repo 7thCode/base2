@@ -8,18 +8,7 @@
 
 import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {
-	IAccountModel,
-	IDeleteRequest,
-	IDParam,
-	IGetByIDRequest,
-	IJSONResponse,
-	IPostRequest,
-	IPutRequest,
-	IQueryParam,
-	IQueryRequest,
-	IUpdatableModel,
-} from "../../../../types/platform/server";
+import {IAccountModel, IDeleteRequest, IDParam, IGetByIDRequest, IJSONResponse, IPostRequest, IPutRequest, IQueryParam, IQueryRequest, IUpdatableModel,} from "../../../../types/platform/server";
 
 const Wrapper: any = require("./wrapper");
 
@@ -113,15 +102,15 @@ export abstract class Updatable extends Wrapper {
 								}
 							}
 							const operator: IAccountModel = this.Transform(request.user);
-							this.Model.default_find(operator, query, option, (error: IErrorObject, objects: IUpdatableModel[]): void => {
-								this.ifSuccess(response, error, (): void => {
-									const filtered: any[] = [];
-									objects.forEach((object) => {
-										filtered.push(object.public());
-									});
-									this.SendRaw(response, filtered);
+							this.Model.default_find_promise(operator, query, option).then((objects: IUpdatableModel[]): void => {
+								const filtered: any[] = [];
+								objects.forEach((object) => {
+									filtered.push(object.public());
 								});
-							});
+								this.SendRaw(response, filtered);
+							}).catch((error: IErrorObject) => {
+								this.SendError(response, error);
+							})
 						});
 					});
 				});
@@ -142,10 +131,10 @@ export abstract class Updatable extends Wrapper {
 			this.Decode(params.query, (error: IErrorObject, query: object): void => {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
-					this.Model.default_find(operator, query, {}, (error: IErrorObject, objects: IUpdatableModel[]): void => {
-						this.ifSuccess(response, error, (): void => {
-							this.SendSuccess(response, objects.length);
-						});
+					this.Model.default_find_promise(operator, query, {}).then((objects: IUpdatableModel[]): void => {
+						this.SendSuccess(response, objects.length);
+					}).catch((error: IErrorObject) => {
+						this.SendError(response, error);
 					});
 				});
 			});
@@ -163,15 +152,15 @@ export abstract class Updatable extends Wrapper {
 		try {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.default_find_by_id(operator, target.id, (error: IErrorObject, object: IUpdatableModel): void => {
-				this.ifSuccess(response, error, (): void => {
-					if (object) {
-						this.SendSuccess(response, object.public());
-					} else {
-						this.SendWarn(response, {code: 1, message: "not found. 8035"});
-					}
-				});
-			});
+			this.Model.default_find_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
+				if (object) {
+					this.SendSuccess(response, object.public());
+				} else {
+					this.SendWarn(response, {code: 1, message: "not found. 8035"});
+				}
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
+			})
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -207,11 +196,11 @@ export abstract class Updatable extends Wrapper {
 			const target: IDParam = request.params;
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.update_by_id(operator, target.id, body, (error: IErrorObject, object: IUpdatableModel): void => {
-				this.ifSuccess(response, error, (): void => {
-					this.SendSuccess(response, object.public());
-				});
-			});
+			this.Model.update_by_id_promise(operator, target.id, body).then((object: IUpdatableModel): void => {
+				this.SendSuccess(response, object.public());
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
+			})
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -226,10 +215,10 @@ export abstract class Updatable extends Wrapper {
 		try {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.remove_by_id(operator, target.id, (error: IErrorObject, object: IUpdatableModel): void => {
-				this.ifSuccess(response, error, (): void => {
-					this.SendSuccess(response, {});
-				});
+			this.Model.remove_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
+				this.SendSuccess(response, {});
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
 			});
 		} catch (error) {
 			this.SendError(response, error);
@@ -243,43 +232,43 @@ export abstract class Updatable extends Wrapper {
 	 */
 	public init(objects: object[], callback: Callback<any>): void {
 		if (objects) {
-			this.Model.default_count(this.default_user(null), {}, (error: IErrorObject, count: number) => {
-				if (!error) {
-					if (count === 0) {
-						const promises: object[] = [];
-						objects.forEach((object: any): void => {
-							promises.push(new Promise((resolve: any, reject: any): void => {
-								if (object) {
-									const record: IUpdatableModel = new this.Model();
-									record._create(this.default_user({
-										user_id: object.user_id,
-										auth: 1,
-									}), object, (error: IErrorObject, object: IUpdatableModel): void => {
-										if (!error) {
-											resolve(object);
-										} else {
-											reject(error);
-										}
-									});
-								} else {
-									reject({code: -1, message: "? 2303"});
-								}
-							}));
-						});
+			this.Model.default_count_promise(this.default_user(null), {}).then((error: IErrorObject, count: number) => {
 
-						Promise.all(promises).then((objects): void => {
-							callback(null, objects);
-						}).catch((error): void => {
-							this.logger.fatal(error.message);
-							callback(error, null);
-						});
-					} else {
+				if (count === 0) {
+					const promises: object[] = [];
+					objects.forEach((object: any): void => {
+						promises.push(new Promise((resolve: any, reject: any): void => {
+							if (object) {
+								const record: IUpdatableModel = new this.Model();
+								record._create(this.default_user({
+									user_id: object.user_id,
+									auth: 1,
+								}), object, (error: IErrorObject, object: IUpdatableModel): void => {
+									if (!error) {
+										resolve(object);
+									} else {
+										reject(error);
+									}
+								});
+							} else {
+								reject({code: -1, message: "? 2303"});
+							}
+						}));
+					});
+
+					Promise.all(promises).then((objects): void => {
 						callback(null, objects);
-					}
+					}).catch((error): void => {
+						this.logger.fatal(error.message);
+						callback(error, null);
+					});
 				} else {
-					callback(error, null);
+					callback(null, objects);
 				}
-			});
+
+			}).catch((error: IErrorObject) => {
+				callback(error, null);
+			})
 		} else {
 			callback({code: -1, message: "config error. 6744"}, null);
 		}

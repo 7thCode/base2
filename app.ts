@@ -356,6 +356,7 @@ const normal: () => void = () => {
 
 		process.on("SIGINT", (): void => { // for pm2 cluster.
 			mongoose.connection.close(() => {
+				mongoose.disconnect();
 				logger.info("Stop by SIGINT.");
 				log4js.shutdown((err: any) => {
 					process.exit(0);

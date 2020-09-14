@@ -43,14 +43,14 @@ export abstract class Publishable extends Updatable {
 									delete option.limit;
 								}
 							}
-							this.Model.publish_find(query, option, (error: IErrorObject, objects: IPublishModel[]): void => {
-								this.ifSuccess(response, error, (): void => {
-									const filtered: object[] = [];
-									objects.forEach((object): void => {
-										filtered.push(object.public());
-									});
-									this.SendRaw(response, filtered);
+							this.Model.publish_find_promise(query, option).then((objects: IPublishModel[]): void => {
+								const filtered: object[] = [];
+								objects.forEach((object): void => {
+									filtered.push(object.public());
 								});
+								this.SendRaw(response, filtered);
+							}).catch((error: IErrorObject) => {
+								this.SendError(response, error);
 							});
 						});
 					});
@@ -72,10 +72,10 @@ export abstract class Publishable extends Updatable {
 			const params: IQueryParam = request.params;
 			this.Decode(params.query, (error: IErrorObject, query: object): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.Model.publish_find(query, {}, (error: IErrorObject, objects: IPublishModel[]): void => {
-						this.ifSuccess(response, error, (): void => {
-							this.SendSuccess(response, objects.length);
-						});
+					this.Model.publish_find_promise(query, {}).then((objects: IPublishModel[]): void => {
+						this.SendSuccess(response, objects.length);
+					}).catch((error: IErrorObject) => {
+						this.SendError(response, error);
 					});
 				});
 			});
@@ -93,14 +93,14 @@ export abstract class Publishable extends Updatable {
 	protected publish_get(request: IGetByIDRequest, response: IJSONResponse): void {
 		try {
 			const target: IDParam = request.params;
-			this.Model.publish_find_by_id(target.id, (error: IErrorObject, object: IPublishModel): void => {
-				this.ifSuccess(response, error, (): void => {
-					if (object) {
-						this.SendSuccess(response, object);
-					} else {
-						this.SendWarn(response, {code: 2, message: "not found. 7606"});
-					}
-				});
+			this.Model.publish_find_by_id_promise(target.id).then((object: IPublishModel): void => {
+				if (object) {
+					this.SendSuccess(response, object);
+				} else {
+					this.SendWarn(response, {code: 2, message: "not found. 7606"});
+				}
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
 			});
 		} catch (error) {
 			this.SendError(response, error);

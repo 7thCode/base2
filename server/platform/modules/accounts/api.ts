@@ -105,7 +105,7 @@ router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 */
 router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
-		auth.is_own_by_id(request, response, next);
+		auth.is_manager(request, response, next);
 	},
 	(request: any, response: object): void => {
 		logger.trace(request.url);

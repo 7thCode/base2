@@ -207,6 +207,22 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
+		router.post("/auth/local/username", [gatekeeper.default,
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.post_local_username(request, response);
+				});
+			}]);
+
+		router.get("/auth/username/:token", [gatekeeper.default,
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.get_username_token(request, response);
+				});
+			}]);
+
 		router.get("/auth/logout", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);

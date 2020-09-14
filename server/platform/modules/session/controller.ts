@@ -60,7 +60,7 @@ export class Session extends Wrapper {
 				request.session.save();
 				this.SendSuccess(response, user);
 			} else {
-				this.SendError(response, {code: -1, message: "not logged in.(session 2) 7352"});
+				this.SendError(response, {code: -1, message: "not logged in. 7352"});
 			}
 		} catch (error) {
 			this.SendError(response, error);

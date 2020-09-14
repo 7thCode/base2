@@ -41,6 +41,8 @@ export class Stripe extends Mail {
 	private stripe: any;
 	private enable: boolean = false;
 
+	private message: any;
+
 	/**
 	 *
 	 * @param event
@@ -50,6 +52,7 @@ export class Stripe extends Mail {
 	 */
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
+		this.message = config.systems.message;
 		if (config.systems.modules.stripe) {
 			if (config.systems.modules.stripe.key) {
 				// const key = config.plugins.stripe.key;
@@ -75,6 +78,65 @@ export class Stripe extends Mail {
 		} catch (e) {
 			callback(e, "");
 		}
+	}
+
+	private static buildCustomer(customer: any): any {
+		const result = {
+			address: {
+				country: "",
+				postal_code: "",
+				state: "",
+				city: "",
+				line1: "",
+				line2: ""
+			},
+			description: "",
+			email: "",
+			name: "",
+			phone: "",
+			shipping: {
+				address: {
+					country: "",
+					postal_code: "",
+					state: "",
+					city: "",
+					line1: "",
+					line2: ""
+				},
+				name: "",
+				phone: ""
+			}
+		};
+
+		if (customer.address) {
+			const address = customer.address;
+			result.address.country = address.country || "";
+			result.address.postal_code = address.postal_code || "";
+			result.address.state = address.state || "";
+			result.address.city = address.city || "";
+			result.address.line1 = address.line1 || "";
+			result.address.line2 = address.line2 || "";
+		}
+		result.description = customer.description || "";
+		result.email = customer.email || "";
+		result.name = customer.name || "";
+		result.phone = customer.phone || "";
+
+		if (customer.shipping) {
+			const shipping = customer.shipping;
+			if (shipping.address) {
+				const address = shipping.address;
+				result.shipping.address.country = address.country || "";
+				result.shipping.address.postal_code = address.postal_code || "";
+				result.shipping.address.state = address.state || "";
+				result.shipping.address.city = address.city || "";
+				result.shipping.address.line1 = address.line1 || "";
+				result.shipping.address.line2 = address.line2 || "";
+			}
+			result.shipping.name = shipping.name || "";
+			result.shipping.phone = shipping.phone || "";
+		}
+		return result;
 	}
 
 	/**
@@ -106,11 +168,12 @@ export class Stripe extends Mail {
 	 * @returns none
 	 */
 	private get_self(operator: IAccountModel, callback: (error: IErrorObject, result: any) => void): void {
-		LocalAccount.default_find_by_id(operator, operator.user_id, (error: IErrorObject, account: IAccountModel): void => {
-			callback(error, account);
+		LocalAccount.default_find_by_id_promise(operator, operator.user_id).then(( account: IAccountModel): void => {
+			callback(null, account);
+		}).catch((error: IErrorObject) => {
+			callback(error, null);
 		});
 	}
-
 
 	/**
 	 * アカウントプット
@@ -120,12 +183,11 @@ export class Stripe extends Mail {
 	 * @returns none
 	 */
 	private put_self(operator: IAccountModel, update: object, callback: (error: IErrorObject, result: any) => void): void {
-		// 	const update: any = {
-		// 		"content.stripe_id": id,
-		// 	};
-		LocalAccount.set_by_id(operator, operator.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
-			callback(error, account);
-		});
+		LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
+			callback(null, account);
+		}).catch((error: IErrorObject)=> {
+			callback(error, null);
+		})
 	}
 
 	/**
@@ -192,66 +254,6 @@ export class Stripe extends Mail {
 		}
 	}
 
-	private buildCustomer(customer: any): any {
-		const result = {
-			address: {
-				country: "",
-				postal_code: "",
-				state: "",
-				city: "",
-				line1: "",
-				line2: ""
-			},
-			description: "",
-			email: "",
-			name: "",
-			phone: "",
-			shipping: {
-				address: {
-					country: "",
-					postal_code: "",
-					state: "",
-					city: "",
-					line1: "",
-					line2: ""
-				},
-				name: "",
-				phone: ""
-			}
-		};
-
-		if (customer.address) {
-			const address = customer.address;
-			result.address.country = address.country || "";
-			result.address.postal_code = address.postal_code || "";
-			result.address.state = address.state || "";
-			result.address.city = address.city || "";
-			result.address.line1 = address.line1 || "";
-			result.address.line2 = address.line2 || "";
-		}
-		result.description = customer.description || "";
-		result.email = customer.email || "";
-		result.name = customer.name || "";
-		result.phone = customer.phone || "";
-
-		if (customer.shipping) {
-			const shipping = customer.shipping;
-			if (shipping.address) {
-				const address = shipping.address;
-				result.shipping.address.country = address.country || "";
-				result.shipping.address.postal_code = address.postal_code || "";
-				result.shipping.address.state = address.state || "";
-				result.shipping.address.city = address.city || "";
-				result.shipping.address.line1 = address.line1 || "";
-				result.shipping.address.line2 = address.line2 || "";
-			}
-			result.shipping.name = shipping.name || "";
-			result.shipping.phone = shipping.phone || "";
-		}
-		return result;
-	}
-
-
 	/**
 	 * @param request
 	 * @param response
@@ -266,7 +268,7 @@ export class Stripe extends Mail {
 						if (customer_id) {
 							this.stripe.customers.retrieve(customer_id).then((full_customer: any) => {
 
-								const updateable = this.buildCustomer(full_customer);
+								const updateable = Stripe.buildCustomer(full_customer);
 								/*
 								{
 									address: full_customer.address,
@@ -278,7 +280,6 @@ export class Stripe extends Mail {
 									shipping: full_customer.shipping
 								}
 */
-
 								const result_customer = {sources: {data: full_customer.sources.data, default: full_customer.default_source, updateable: updateable}};
 								this.SendSuccess(response, result_customer);
 							}).catch((error: any) => {
@@ -759,6 +760,8 @@ export class Stripe extends Mail {
 												text: "Copyright © 2020 seventh-code. All rights reserved.",
 											},
 										};
+
+										// 		const mail_object =	this.message.registmail;
 
 										this.sendMail({
 											address: customer.email || operator.username,

@@ -13,13 +13,15 @@ import {IAccountContent, IAccountModel, IAccountRequest, IJSONResponse, IQueryPa
 const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
 
-const Wrapper: any = require( "../../../../server/platform/base/controllers/wrapper");
+const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 const LocalAccount: any = require("../../../../models/platform/accounts/account");
 
 /**
  *
  */
 export class Accounts extends Wrapper {
+
+	private readonly message: any;
 
 	/**
 	 *
@@ -30,6 +32,7 @@ export class Accounts extends Wrapper {
 	 */
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
+		this.message = this.systemsConfig.message;
 	}
 
 	/**
@@ -87,15 +90,17 @@ export class Accounts extends Wrapper {
 									}
 								}
 								const default_query: object = {$and: [query, {auth: {$gte: operator.auth}}]};
-								LocalAccount.default_find(operator, default_query, option, (error: IErrorObject, accounts: IAccountModel[]): void => {
-									this.ifSuccess(response, error, (): void => {
-										const result: object[] = [];
-										accounts.forEach((account) => {
-											result.push(account.public());
-										});
-										this.SendRaw(response, result);
+								LocalAccount.default_find_promise(operator, default_query, option).then((accounts: IAccountModel[]): void => {
+
+									const result: object[] = [];
+									accounts.forEach((account) => {
+										result.push(account.public());
 									});
-								});
+									this.SendRaw(response, result);
+
+								}).catch((error: IErrorObject) => {
+									this.SendError(response, error);
+								})
 							});
 						});
 					});
@@ -120,11 +125,11 @@ export class Accounts extends Wrapper {
 				this.Decode(params.query, (error: IErrorObject, query: object): void => {
 					this.ifSuccess(response, error, (): void => {
 						const q: object = {$and: [query, {auth: {$gte: operator.auth}}]};
-						LocalAccount.default_find(operator, q, {}, (error: IErrorObject, accounts: IAccountModel[]): void => {
-							this.ifSuccess(response, error, (): void => {
-								this.SendSuccess(response, accounts.length);
-							});
-						});
+						LocalAccount.default_find_promise(operator, q, {}).then((accounts: IAccountModel[]): void => {
+							this.SendSuccess(response, accounts.length);
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, error);
+						})
 					});
 				});
 			});
@@ -146,22 +151,21 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, {}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id(operator, target.user_id, (error: IErrorObject, account: IAccountModel): void => {
-							this.ifSuccess(response, error, (): void => {
-								if (account) {
-									// this.SendSuccess(response, account.public(current_user));
-									this.SendSuccess(response, account.public());
-								} else {
-									this.SendWarn(response, {code: 3, message: "not found. 3443"});
-								}
-							});
-						});
+						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+							if (account) {
+								this.SendSuccess(response, account.public());
+							} else {
+								this.SendWarn(response, {code: 3, message: "not found. 3443"});
+							}
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, error);
+						})
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable.(account 2) 9613"});
+						this.SendError(response, {code: 2, message: "unreadable. 9613"});
 					}
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(account 1) 3865"});
+				this.SendError(response, {code: 1, message: "not logged in. 3865"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -195,18 +199,18 @@ export class Accounts extends Wrapper {
 
 				this.ifExist(response, {}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
-						LocalAccount.set_by_id(operator, target.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
-							this.ifSuccess(response, error, (): void => {
-								this.SendSuccess(response, account.public());
-							});
-						});
+						LocalAccount.set_by_id_promise(operator, target.user_id, update).then((account: IAccountModel): void => {
+							this.SendSuccess(response, account.public());
+						}).catch((error: any) => {
+							this.SendError(response, error);
+						})
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable.(account 1) 8692"});
+						this.SendError(response, {code: 2, message: "unreadable. 8692"});
 					}
 				});
 
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(account 2) 8657"});
+				this.SendError(response, {code: 1, message: "not logged in. 8657"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -225,17 +229,17 @@ export class Accounts extends Wrapper {
 			const operator: IAccountModel = this.Transform(request.user);
 			this.ifExist(response, {}, operator.login, () => {
 				if (this.own_by_id(operator, target.user_id)) {
-					LocalAccount.default_find_by_id(operator, target.user_id, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							LocalAccount.remove_by_id(operator, target.user_id, (error: IErrorObject): void => {
-								this.ifSuccess(response, error, (): void => {
-									this.SendSuccess(response, {});
-								});
-							});
-						});
-					});
+					LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.remove_by_id_promise(operator, target.user_id).then((): void => {
+							this.SendSuccess(response, {});
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, error);
+						})
+					}).catch((error: IErrorObject) => {
+						this.SendError(response, error);
+					})
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable.(account 2) 1618"});
+					this.SendError(response, {code: 2, message: "unreadable. 1618"});
 				}
 			});
 		} catch (error) {
@@ -255,14 +259,14 @@ export class Accounts extends Wrapper {
 			const operator: IAccountModel = this.Transform(request.user);
 			this.ifExist(response, {}, operator.login, () => {
 				if (this.own_by_id(operator, target.user_id)) {
-					LocalAccount.default_find_by_id(operator, target.user_id, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							const is_2fa: boolean = (account.secret !== "");
-							this.SendSuccess(response, {is_2fa});
-						});
+					LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						const is_2fa: boolean = (account.secret !== "");
+						this.SendSuccess(response, {is_2fa});
+					}).catch((error: IErrorObject) => {
+						this.SendError(response, error);
 					});
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable.(account 3) 1209"});
+					this.SendError(response, {code: 2, message: "unreadable. 1209"});
 				}
 			});
 		} catch (error) {
@@ -287,38 +291,40 @@ export class Accounts extends Wrapper {
 			const operator: IAccountModel = this.Transform(request.user);
 			this.ifExist(response, {}, operator.login, () => {
 				if (this.own_by_name(operator, target.username)) {
-					LocalAccount.default_find_by_name(operator, target.username, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							if (!account.secret) {
-								const secret: any = SpeakEasy.generateSecret({
-									length: 20,
-									name: target.username,
-									issuer: this.systemsConfig.ua,
-								});
-								const update: object = {
-									secret: secret.base32,
-								};
+					LocalAccount.default_find_by_name_promise(operator, target.username).then((account: IAccountModel): void => {
 
-								const qr_url: string = SpeakEasy.otpauthURL({ // data url encode of secret QR code.
-									secret: secret.ascii,
-									label: encodeURIComponent(usernameToMail(target.username)),
-									issuer: this.systemsConfig.ua,
-								});
+						if (!account.secret) {
+							const secret: any = SpeakEasy.generateSecret({
+								length: 20,
+								name: target.username,
+								issuer: this.systemsConfig.ua,
+							});
+							const update: object = {
+								secret: secret.base32,
+							};
 
-								LocalAccount.set_by_name(operator, target.username, update, (error: IErrorObject, account: object): void => {
+							const qr_url: string = SpeakEasy.otpauthURL({ // data url encode of secret QR code.
+								secret: secret.ascii,
+								label: encodeURIComponent(usernameToMail(target.username)),
+								issuer: this.systemsConfig.ua,
+							});
+
+							LocalAccount.set_by_name_promise(operator, target.username, update).then((account: object): void => {
+								QRCode.toDataURL(qr_url, (error: IErrorObject, qrcode: any): void => {
 									this.ifSuccess(response, error, (): void => {
-										QRCode.toDataURL(qr_url, (error: IErrorObject, qrcode: any): void => {
-											this.ifSuccess(response, error, (): void => {
-												this.SendSuccess(response, {qrcode});
-											});
-										});
+										this.SendSuccess(response, {qrcode});
 									});
 								});
-							}
-						});
-					});
+							}).catch((error: any) => {
+								this.SendError(response, error);
+							})
+						}
+
+					}).catch((error: any) => {
+						this.SendError(response, error);
+					})
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable.(account 4) 9927"});
+					this.SendError(response, {code: 2, message: "unreadable. 9927"});
 				}
 			});
 		} catch (error) {
@@ -341,13 +347,13 @@ export class Accounts extends Wrapper {
 					const update: object = {
 						secret: "",
 					};
-					LocalAccount.set_by_name(operator, target.username, update, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							this.SendSuccess(response, {});
-						});
-					});
+					LocalAccount.set_by_name_promise(operator, target.username, update).then((account: IAccountModel): void => {
+						this.SendSuccess(response, {});
+					}).catch((error: any) => {
+						this.SendError(response, error);
+					})
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable.(account 5) 7639"});
+					this.SendError(response, {code: 2, message: "unreadable. 7639"});
 				}
 			});
 		} catch (error) {
@@ -368,21 +374,21 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, {}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id(operator, target.user_id, (error: IErrorObject, account: IAccountModel): void => {
-							this.ifSuccess(response, error, (): void => {
-								if (account) {
-									this.SendSuccess(response, account.public());
-								} else {
-									this.SendWarn(response, {code: 3, message: "not found. 5674"});
-								}
-							});
-						});
+						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+							if (account) {
+								this.SendSuccess(response, account.public());
+							} else {
+								this.SendWarn(response, {code: 3, message: "not found. 5674"});
+							}
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, error);
+						})
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable.(account 6) 9360"});
+						this.SendError(response, {code: 2, message: "unreadable. 9360"});
 					}
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(account 3) 3917"});
+				this.SendError(response, {code: 1, message: "not logged in. 3917"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -416,18 +422,17 @@ export class Accounts extends Wrapper {
 
 				this.ifExist(response, {}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
-						LocalAccount.set_by_id(operator, target.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
-							this.ifSuccess(response, error, (): void => {
-								this.SendSuccess(response, account.public());
-							});
-						});
+						LocalAccount.set_by_id_promise(operator, target.user_id, update).then((account: IAccountModel): void => {
+							this.SendSuccess(response, account.public());
+						}).catch((error: any) => {
+							this.SendError(response, error);
+						})
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable.(account 7) 3818"});
+						this.SendError(response, {code: 2, message: "unreadable. 3818"});
 					}
 				});
-
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(account 1) 597"});
+				this.SendError(response, {code: 1, message: "not logged in. 597"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -446,17 +451,17 @@ export class Accounts extends Wrapper {
 			const operator: IAccountModel = this.Transform(request.user);
 			this.ifExist(response, {}, operator.login, () => {
 				if (this.own_by_id(operator, target.user_id)) {
-					LocalAccount.default_find_by_id(operator, target.user_id, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							LocalAccount.remove_by_id(operator, target.user_id, (error: IErrorObject): void => {
-								this.ifSuccess(response, error, (): void => {
-									this.SendSuccess(response, {});
-								});
-							});
+					LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.remove_by_id_promise(operator, target.user_id).then((): void => {
+							this.SendSuccess(response, {});
+						}).catch((error: any) => {
+							this.SendError(response, error);
 						});
-					});
+					}).catch((error: any) => {
+						this.SendError(response, error);
+					})
 				} else {
-					this.SendError(response, {code: 2, message: "unreadable.(account 8) 2245"});
+					this.SendError(response, {code: 2, message: "unreadable. 2245"});
 				}
 			});
 		} catch (error) {
@@ -475,18 +480,18 @@ export class Accounts extends Wrapper {
 			if (request.user) {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, {}, operator.login, () => {
-					LocalAccount.default_find_by_id(operator, operator.user_id, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							if (account) {
-								this.SendSuccess(response, account.content);
-							} else {
-								this.SendWarn(response, {code: 3, message: "not found. 3403"});
-							}
-						});
-					});
+					LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
+						if (account) {
+							this.SendSuccess(response, account.content);
+						} else {
+							this.SendWarn(response, {code: 3, message: "not found. 3403"});
+						}
+					}).catch((error: any) => {
+						this.SendError(response, error);
+					})
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(account 1) 3865"});
+				this.SendError(response, {code: 1, message: "not logged in. 3865"});
 			}
 		} catch (error) {
 			this.SendError(response, error);
@@ -512,14 +517,14 @@ export class Accounts extends Wrapper {
 					"content.mails": content.mails,
 				};
 				this.ifExist(response, {}, operator.login, () => {
-					LocalAccount.set_by_id(operator, operator.user_id, update, (error: IErrorObject, account: IAccountModel): void => {
-						this.ifSuccess(response, error, (): void => {
-							this.SendSuccess(response, account.content);
-						});
-					});
+					LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
+						this.SendSuccess(response, account.content);
+					}).catch((error: any) => {
+						this.SendError(response, error);
+					})
 				});
 			} else {
-				this.SendError(response, {code: 1, message: "not logged in.(account 2) 8257"});
+				this.SendError(response, {code: 1, message: "not logged in. 8257"});
 			}
 		} catch (error) {
 			this.SendError(response, error);

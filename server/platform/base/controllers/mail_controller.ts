@@ -23,6 +23,7 @@ const Wrapper: any = require("./wrapper");
 const Mailer: any = require("../../../../server/platform/base/library/mail_sender");
 const Mailer2: any = require("../../../../server/platform/base/library/mail_sender_2");
 const MailGun: any = require("../../../../server/platform/base/library/mail_sender_mailgun");
+const SendGrid: any = require("../../../../server/platform/base/library/mail_sender_sendgrid");
 
 /**
  *
@@ -56,6 +57,10 @@ export class Mail extends Wrapper {
 				break;
 			case "mailgun":
 				this.mailer = new MailGun(mailerSetting.setting, mailerSetting.account);
+				this.bcc = [];
+				break;
+			case "sendgrid":
+				this.mailer = new SendGrid(mailerSetting.setting, mailerSetting.account);
 				this.bcc = [];
 				break;
 			default:
