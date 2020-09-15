@@ -306,6 +306,11 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
+		router.post("/receive", [gatekeeper.default,
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+			}]);
+
 		const TCipher: any = Cipher;
 		const cipher = new TCipher();
 
