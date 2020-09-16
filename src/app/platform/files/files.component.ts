@@ -17,6 +17,7 @@ import {UploadableComponent} from "../base/components/uploadable.component";
 import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
+import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 
 /**
  * ファイル
@@ -253,8 +254,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		if (event.shiftKey) { // dialog?
 			_delete(name);
 		} else {
-			const resultDialogContent: any = {title: "File", message: "Delete this?.", has_cancel: false};
-			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+			const resultDialogContent: any = {title: "File", message: "Delete this?"};
+			const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
 				width: "30%",
 				minWidth: "320px",
 				height: "fit-content",

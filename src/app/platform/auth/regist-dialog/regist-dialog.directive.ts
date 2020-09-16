@@ -42,7 +42,7 @@ export class RegistDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "Check mail", message: "Register Mail sent.", has_cancel: false};
+		const resultDialogContent: any = {title: "Check mail", message: "Register Mail sent."};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
 			width: "30%",

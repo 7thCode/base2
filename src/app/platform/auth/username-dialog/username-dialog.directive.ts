@@ -39,7 +39,7 @@ export class UserNameDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "Check mail", message: "Username Change Mail sent.", has_cancel: false};
+		const resultDialogContent: any = {title: "Check mail", message: "Username Change Mail sent."};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(UserNameDialogComponent, {
 			width: "30%",
