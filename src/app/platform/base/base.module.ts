@@ -14,6 +14,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatDialogModule} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "./components/info-dialog/info-dialog.component";
+import {YesNoDialogComponent} from "./components/yes-no-dialog/yes-no-dialog.component";
 import {EqualsValidator} from "./directives/equals-validator.directive";
 import {HighlightDirective} from "./directives/highlight.directive";
 
@@ -31,6 +32,7 @@ import {SessionService} from "./services/session.service";
 		EqualsValidator,
 		HighlightDirective,
 		InfoDialogComponent,
+		YesNoDialogComponent,
 	],
 	imports: [
 
@@ -45,9 +47,11 @@ import {SessionService} from "./services/session.service";
 		EqualsValidator,
 		HighlightDirective,
 		InfoDialogComponent,
+		YesNoDialogComponent,
 	],
 	bootstrap: [
 		InfoDialogComponent,
+		YesNoDialogComponent
 	],
 })
 

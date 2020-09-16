@@ -20,6 +20,7 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 import {AuthService} from "../auth/auth.service";
 import {SessionService} from "../base/services/session.service";
 import {AccountsService} from "./accounts.service";
+import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 
 /**
  * アカウントレコード
@@ -412,9 +413,9 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * @returns none
 	 */
 	public deleteDialog(id: string): void {
-		const resultDialogContent: any = {title: "User", message: "Delete User?.", has_cancel: true};
+		const resultDialogContent: any = {title: "User", message: "Delete User?"};
 
-		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+		const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
 			height: "fit-content",

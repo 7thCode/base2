@@ -11,9 +11,9 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
-	selector: "info-dialog",
-	styleUrls: ["./info-dialog.component.css"],
-	templateUrl: "./info-dialog.component.html",
+	selector: "yes-no-dialog",
+	styleUrls: ["./yes-no-dialog.component.css"],
+	templateUrl: "./yes-no-dialog.component.html",
 })
 
 /**
@@ -21,7 +21,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
  *
  * @since 0.01
  */
-export class InfoDialogComponent implements OnInit {
+export class YesNoDialogComponent implements OnInit {
 
 	get content(): any {
 		return this.data.content;
@@ -30,12 +30,15 @@ export class InfoDialogComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<InfoDialogComponent>) {
+		public matDialogRef: MatDialogRef<YesNoDialogComponent>) {
 
 		if (!this.data.content.ok_button) {
 			this.data.content.ok_button = "OK"
 		}
 
+		 if (!this.data.content.cancel_button) {
+		 	this.data.content.cancel_button = "Cancel"
+		 }
 	}
 
 	public ngOnInit(): void {

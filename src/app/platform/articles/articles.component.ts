@@ -19,6 +19,7 @@ import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.co
 import {SessionService} from "../base/services/session.service";
 import {ArticlesService} from "./articles.service";
 import {Overlay} from "@angular/cdk/overlay";
+import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 
 /**
  * アーティクル
@@ -181,8 +182,8 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		if (event.shiftKey) { // dialog?
 			_delete(id);
 		} else {
-			const resultDialogContent: any = {title: "Articles", message: "Delete this?.", has_cancel: false};
-			const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+			const resultDialogContent: any = {title: "Articles", message: "Delete this?"};
+			const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
 				width: "30%",
 				minWidth: "320px",
 				height: "fit-content",

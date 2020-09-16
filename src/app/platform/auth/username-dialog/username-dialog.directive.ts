@@ -10,16 +10,13 @@ import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "../../base/components/info-dialog/info-dialog.component";
-import {RegistDialogComponent} from "./regist-dialog.component";
+import {UserNameDialogComponent} from "./username-dialog.component";
 
 @Directive({
-	selector: "[auth-regist-button]",
+	selector: "[auth-username-button]",
 })
 
-/**
- *
- */
-export class RegistDialogDirective {
+export class UserNameDialogDirective {
 
 	/**
 	 *
@@ -42,15 +39,15 @@ export class RegistDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "Check mail", message: "Register Mail sent."};
+		const resultDialogContent: any = {title: "Check mail", message: "Username Change Mail sent."};
 
-		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
+		const dialog: MatDialogRef<any> = this.matDialog.open(UserNameDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {
-					title: "Regist",
+					title: "Username",
 					description: "Lorem ipsum...",
 					username: "",
 					password: "",

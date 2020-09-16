@@ -253,7 +253,7 @@ module.exports = {
 				}
 			}
 		},
-		mailer: {
+		mailer2: {
 			type: "mailgun",
 			account: "postmaster@seventh-code.com",
 			setting: {
@@ -261,7 +261,14 @@ module.exports = {
 				"domain": "seventh-code.com"
 			}
 		},
-
+		mailer: {
+			type: "sendgrid",
+			account: "postmaster@seventh-code.info",
+			setting: {
+				"api_key": "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",
+				"domain": "seventh-code.info"
+			}
+		},
 		message: {
 
 			"passwordconfirmdialogtitle": "Update Password Mail Sent.",

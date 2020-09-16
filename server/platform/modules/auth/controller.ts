@@ -1366,6 +1366,42 @@ export class Auth extends Mail {
 		this.SendSuccess(response, new Date());
 	}
 
+
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public test(request: IContentRequest, response: IJSONResponse): void {
+		try {
+
+			const mail_object = this.message.passwordmail;
+			mail_object.content.subtitle = "";
+
+			const link: string = "";
+			this.sendMail({
+				address: "",
+				bcc: this.bcc,
+				title: this.message.passwordconfirmtext,
+				template_url: "views/platform/auth/mail/mail_template.pug",
+				souce_object: mail_object,
+				link,
+				result_object: {code: 0, message: ""},
+			}, (error: IErrorObject, result: any) => {
+				if (!error) {
+					this.SendSuccess(response, result);
+				} else {
+					this.SendError(response, error);
+				}
+			});
+
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
+	}
+
 }
 
 module.exports = Auth;

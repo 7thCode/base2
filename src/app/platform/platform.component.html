@@ -72,16 +72,16 @@
 					Articles</a>
 			</mat-list-item>
 
-			<mat-list-item style="color:#fdfdfd;" *ngIf="provider === 'local'">
+			<mat-list-item style="height: 34px;" *ngIf="provider === 'local'">
 				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-password-button (complete)="onPassword($event);">
-					<mat-icon style="font-size:20px;" mat-list-icon>vpn_key</mat-icon>
+					<mat-icon style="color:#fd7f8f;font-size:20px;" mat-list-icon>vpn_key</mat-icon>
 					Password
 				</button>
 			</mat-list-item>
 
-			<mat-list-item style="color:#fdfdfd;" *ngIf="provider === 'local'">
+			<mat-list-item style="height: 34px;" *ngIf="provider === 'local'">
 				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-username-button (complete)="onUsername($event);">
-					<mat-icon style="font-size:20px;" mat-list-icon>vpn_key</mat-icon>
+					<mat-icon style="color:#7ebdf5;font-size:20px;" mat-list-icon>contact_mail</mat-icon>
 					Username
 				</button>
 			</mat-list-item>

@@ -22,6 +22,7 @@ import {StripeService} from "./stripe.service";
 
 import * as _ from 'lodash';
 import {Overlay} from "@angular/cdk/overlay";
+import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 
 /*
 
@@ -430,8 +431,8 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	}
 
 	public deleteSource(index: number): void {
-		const resultDialogContent: any = {title: "Card", message: "Delete this?.", has_cancel: false};
-		const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
+		const resultDialogContent: any = {title: "Card", message: "Delete this?"};
+		const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
@@ -473,7 +474,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		this.stripeService.charge(charge, (error: IErrorObject, result: any) => {
 			this.Progress(false);
 			if (!error) {
-				const resultDialogContent: any = {title: "Check mail", message: "Recept Mail sent.", has_cancel: false};
+				const resultDialogContent: any = {title: "Check mail", message: "Recept Mail sent."};
 
 				const dialog: MatDialogRef<any> = this.matDialog.open(InfoDialogComponent, {
 					width: "30%",
