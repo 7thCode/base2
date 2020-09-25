@@ -41,6 +41,7 @@ import {ErrorModule} from "./error/error.module";
 import {FilesModule} from "./files/files.module";
 import {ImageModule} from "./image/image.module";
 import {PagesModule} from "./pages/pages.module";
+import {TopModule} from "./top/top.module";
 
 import {StripeModule} from "../plugins/stripe/stripe.module";
 
@@ -48,6 +49,7 @@ import {PlatformRoutingModule} from "./platform-routing.module";
 
 import {PlatformComponent} from "./platform.component";
 import {PersonalModule} from "./personal/personal.module";
+import {MailerModule} from "./mailer/mailer.module";
 // import { PersonalComponent } from './personal/personal.component';
 
 
@@ -89,7 +91,10 @@ import {PersonalModule} from "./personal/personal.module";
 		ImageModule,
 		FilesModule,
 		PersonalModule,
+		TopModule,
+
 		StripeModule,
+		MailerModule,
 		BasePipeModule,
 
 	],

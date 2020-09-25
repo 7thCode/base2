@@ -14,7 +14,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {GridViewComponent} from "../base/components/gridview.component";
 import {PageDialogComponent} from "./page-dialog/page-dialog.component";
-import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
@@ -39,7 +38,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 * @constructor
 	 * @param session
 	 * @param pageSerrvice
-	 * @param change
+	 * @param overlay
 	 * @param matDialog
 	 * @param snackbar
 	 */

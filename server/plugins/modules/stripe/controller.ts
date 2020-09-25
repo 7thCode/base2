@@ -768,7 +768,7 @@ export class Stripe extends Mail {
 											bcc: this.bcc,
 											title: "Recept",
 											template_url: "views/plugins/stripe/mail/mail_template.pug",
-											souce_object: receipt_mail,
+											source_object: receipt_mail,
 											link: charge.receipt_url,
 											result_object: {code: 0, message: ["Prease Wait.", ""]},
 										}, (error: IErrorObject, result: any) => {

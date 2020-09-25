@@ -88,9 +88,11 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	/**
 	 *
 	 * @param session
+	 * @param overlay
 	 * @param snackbar
 	 * @param matDialog
 	 * @param stripeService
+	 * @param changeDetectorRef
 	 */
 	constructor(
 		protected session: SessionService,
@@ -498,4 +500,3 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		})
 	}
 }
-

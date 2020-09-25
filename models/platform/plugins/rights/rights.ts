@@ -22,6 +22,7 @@ module.exports = exports = function RightsPlugin(schema: any, options: any) {
 	});
 
 	schema.pre("save", function(next: any) {
+		// @ts-ignore
 		this.rights = {read: AuthLevel.public, write: AuthLevel.user};
 		next();
 	});

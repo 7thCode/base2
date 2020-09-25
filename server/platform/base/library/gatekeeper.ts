@@ -10,7 +10,8 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 const result: any = require("./result");
 
-const ConfigModule: any = require("../../../../config/default");
+// const ConfigModule: any = require("../../../../config/default");
+const ConfigModule: any = require("config");
 const systemsConfig: any = ConfigModule.systems;
 
 /**

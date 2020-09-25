@@ -7,58 +7,218 @@
 "use strict";
 
 import {IErrorObject} from "../../../../types/platform/universe";
+import {IMailReceiverModule} from "../../../../types/platform/server";
 
-export class MailReceiver {
+const inbox = require("inbox");
 
-	private inbox: any;
-	private conv: any;
+// const simpleParser = require('mailparser').simpleParser;
+
+// const iconv = require('iconv');
+// const conv = new iconv.Iconv("ISO-2022-JP", "UTF-8");
+
+const Iconv = require('iconv').Iconv;
+const simpleParser = require('mailparser').simpleParser;
+
+export class MailReceiver implements IMailReceiverModule {
+
+	private type: string;
+	private server: string;
+	private user: string;
+	private password: string;
 
 	/**
 	 *
 	 */
-	constructor() {
-		const iconv = require("iconv");
-		this.conv = new iconv.Iconv("UTF-8", "UTF-8");
-		this.inbox = require("inbox");
+	constructor(setting: any) {
+		this.type = setting.type;
+		this.server = setting.setting.server;
+		this.user = setting.account;
+		this.password = setting.password;
 	}
 
 	/**
 	 *
-	 * @param receiverSetting
-	 * @param connect
-	 * @param receive
 	 */
-	public connect(receiverSetting: any, connect: (error: IErrorObject) => {}, receive: (message: any, body: any) => {}): void {
-
-		let imap: any = null;
-
-		if (receiverSetting.type === "imap") {
-			imap = this.inbox.createConnection(
-				false, receiverSetting.address, {
-					secureConnection: true,
-					auth: receiverSetting.auth,
-				},
-			);
-
-			imap.on("connect", () => {
-				imap.openMailbox("INBOX", (error: IErrorObject) => {
-					connect(error);
+	public addFlags(imap: any,UID: string, flags: string[], callback: (error: any, flags: any) => void) {
+		try {
+			if (imap) {
+				imap.addFlags(UID, flags, (error: any, flags: any) => {
+					callback(error, flags);
 				});
-			});
-
-			imap.on("new", (message: any) => {
-				const stream = imap.createMessageStream(message.UID);
-				const simpleParser = require("mailparser").simpleParser;
-				simpleParser(stream).then((mail): void => {
-					receive(message, mail);
-				}).catch((error): void => {
-
-				});
-			});
-
-			imap.connect();
+			} else {
+				callback({code: 1, message: "not imap"}, null);
+			}
+		} catch (error) {
+			callback(error, null);
 		}
 	}
+
+	/**
+	 *
+	 */
+	public removeFlags(imap: any,UID: string, flags: string[], callback: (error: any, flags: any) => void) {
+		try {
+			if (imap) {
+				imap.removeFlags(UID, flags, (error: any, flags: any) => {
+					callback(error, flags);
+				});
+			} else {
+				callback({code: 1, message: "not imap"}, null);
+			}
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public listMessages(imap: any, start: number, limit: number, callback: (error: any, messages: any) => void) {
+		try {
+			if (imap) {
+				imap.listMessages(start, limit, (error: any, messages: any) => {
+					callback(error, messages);
+				});
+			} else {
+				callback({code: 1, message: "not imap"}, null);
+			}
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public getMessage(imap: any, UID: string, callback: (error: IErrorObject, mail: any) => void): void {
+		try {
+			if (imap) {
+				const stream = imap.createMessageStream(UID);
+				simpleParser(stream, { Iconv }, (error:IErrorObject, mail: any) => {
+					if (!error) {
+						callback(null, mail);
+					} else {
+						callback(error, null);
+					}
+				});
+
+			// 	simpleParser(stream)
+			// 		.then((mail: any) => {
+			// 			callback(null, mail);
+			// 		})
+			// 		.catch((error: IErrorObject) => {
+			// 			callback(error, null);
+			// 		});
+			} else {
+				callback({code: 1, message: "not imap"}, null);
+			}
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public deleteMessage(imap: any, uid: string, callback:(error: IErrorObject) => void): void {
+		try {
+			if (imap) {
+				imap.deleteMessage(uid, callback)
+			} else {
+				callback({code: 1, message: "not imap"});
+			}
+		} catch (error) {
+			callback(error);
+		}
+	}
+
+
+	/**
+	 * @param handler
+	 */
+	public connect(handler: (error: any, imap: any, type: string, message: any) => void): void {
+		try {
+			if (this.type === "imap") {
+				const imap = inbox.createConnection(false, this.server, {
+					secureConnection: true,
+					auth: {
+						user: this.user,
+						pass: this.password
+					}
+				})
+
+				imap.on("connect", () => {
+					handler(null, imap,"connect", null);
+				})
+
+				imap.on("new", (message: any) => {
+					handler(null, imap, "new", message);
+				});
+
+				imap.on('close', () => {
+					handler(null, imap,"close", null);
+				})
+
+				imap.connect()
+
+			} else {
+				handler({code: 1, message: "not imap"}, null,"", null);
+			}
+		} catch (error) {
+			handler(error, null,"", null);
+		}
+
+	}
+
+	/**
+	 * @param imap
+	 * @param name
+	 * @param callback
+	 */
+	public open(imap: any, name: string, callback: (error: any, message: any) => void): void {
+		try {
+			if (imap) {
+				imap.openMailbox(name, (error: any, info: any) => {
+					if (!error) {
+						callback(null, info);
+					} else {
+						callback(error, null);
+					}
+				})
+			} else {
+				callback({code: 1, message: "not imap"}, null);
+			}
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public close(imap: any): void {
+		try {
+			if (imap) {
+				imap.close()
+			}
+		} catch (error) {
+		}
+	}
+
 }
 
+
 module.exports = MailReceiver;
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,10 +6,10 @@
 
 "use strict";
 
-import {IMailModule, IMailSender} from "../../../../types/platform/server";
+import {IMailSenderModule, IMailSender} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
 
-export class MailSenderMailgun implements IMailModule {
+export class MailSenderMailgun implements IMailSenderModule {
 
 	private account: any;
 	private apiKey: string;
@@ -34,18 +34,20 @@ export class MailSenderMailgun implements IMailModule {
 	 * @param mailAddress
 	 * @param bccAddress
 	 * @param title
-	 * @param message
+	 * @param text
+	 * @param html
 	 * @param callback
 	 * @returns none
 	 */
-	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
+	public send(mailAddress: string, bccAddress: string, title: string, text: string, html: string, callback: (error: IErrorObject) => void): void {
 
 		const data: IMailSender = {
 			from: this.account,
 			to: mailAddress,
 			bcc: bccAddress,
 			subject: title,
-			html: message,
+			text: text,
+			html: html,
 		};
 
 		this.mailgun.messages().send(data, (error: IErrorObject, body: any): void => {

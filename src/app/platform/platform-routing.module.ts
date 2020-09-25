@@ -17,6 +17,7 @@ import {PlatformComponent} from "./platform.component";
 import {TopComponent} from "./top/top.component";
 import {PersonalComponent} from "./personal/personal.component";
 import {StripeComponent} from "../plugins/stripe/stripe.component";
+import {MailerComponent} from "./mailer/mailer.component";
 
 const routes: Routes = [
 	{
@@ -28,6 +29,7 @@ const routes: Routes = [
 			{path: "accounts", component: AccountsComponent},
 			{path: "personal", component: PersonalComponent},
 			{path: "stripe", component: StripeComponent},
+			{path: "mailer", component: MailerComponent},
 		],
 	},
 ];
