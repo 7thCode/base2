@@ -30,13 +30,13 @@ module.exports = exports = function lastModifiedPlugin(schema: any, options: any
 	});
 
 	schema.pre("save", function(next: () => void) {
+		// @ts-ignore
 		if (!this.create) {
-		// 	this.create = new Date();
-		 	this.create = localtime();
+		 	// @ts-ignore
+			this.create = localtime();
 		}
-
-	 // 	this.modify = new Date();
-	 	this.modify = localtime();
+	 	// @ts-ignore
+		this.modify = localtime();
 		next();
 	});
 
@@ -44,8 +44,8 @@ module.exports = exports = function lastModifiedPlugin(schema: any, options: any
 	});
 
 	schema.pre("update", function(next: () => void) {
-	// 	this.update({}, {$set: {modify: new Date()}});
-	 	this.update({}, {$set: {modify: localtime()}});
+	 	// @ts-ignore
+		this.update({}, {$set: {modify: localtime()}});
 		next();
 	});
 
@@ -53,8 +53,8 @@ module.exports = exports = function lastModifiedPlugin(schema: any, options: any
 	});
 
 	schema.pre(["updateOne", "findOneAndUpdate"], function(next: () => void) {
- 	// 	this.update({}, {$set: {modify: new Date()}});
-	 	this.update({}, {$set: {modify: localtime()}});
+	 	// @ts-ignore
+		this.update({}, {$set: {modify: localtime()}});
 		next();
 	});
 

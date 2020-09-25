@@ -57,7 +57,6 @@ export class AccountsService extends QueryableService {
 	/**
 	 * 単一のオブジェクトを返す
 	 *
-	 * @param id オブジェクトID
 	 * @param callback オブジェクトを返すコールバック
 	 */
 	public get_self(callback: Callback<object>): void {

@@ -6,10 +6,10 @@
 
 "use strict";
 
-import {IMailModule, IMailSender} from "../../../../types/platform/server";
+import {IMailSenderModule, IMailSender} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
 
-export class MailSenderSendgrid implements IMailModule {
+export class MailSenderSendgrid implements IMailSenderModule {
 
 	private account: any;
 	private apiKey: string;
@@ -35,18 +35,19 @@ export class MailSenderSendgrid implements IMailModule {
 	 * @param mailAddress
 	 * @param bccAddress
 	 * @param title
-	 * @param message
+	 * @param text
+	 * @param html
 	 * @param callback
 	 * @returns none
 	 */
-	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
+	public send(mailAddress: string, bccAddress: string, title: string, text: string, html: string, callback: (error: IErrorObject) => void): void {
 
 		const data = {
 			from: this.account,
 			to: mailAddress,
 			subject: title,
-	// 		text: message,
-			html: message,
+	 		text: text,
+			html: html,
 		};
 		this.sendgrid.send(data).then(() => {
 			callback(null);

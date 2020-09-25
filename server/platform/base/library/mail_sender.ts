@@ -6,10 +6,10 @@
 
 "use strict";
 
-import {IMailModule, IMailSender} from "../../../../types/platform/server";
+import {IMailSenderModule, IMailSender} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
 
-export class MailSender implements IMailModule {
+export class MailSender implements IMailSenderModule {
 
 	private mailer: any;
 	private mailsetting: any;
@@ -33,11 +33,12 @@ export class MailSender implements IMailModule {
 	 * @param mailAddress
 	 * @param bccAddress
 	 * @param title
-	 * @param message
+	 * @param text_message
+	 * @param html_message*
 	 * @param callback
 	 * @returns none
 	 */
-	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
+	public send(mailAddress: string, bccAddress: string, title: string, text_message: string, html_message: string, callback: (error: IErrorObject) => void): void {
 
 		this.smtpUser = this.mailer.createTransport(this.mailsetting); // SMTPの接続
 
@@ -47,7 +48,8 @@ export class MailSender implements IMailModule {
 				to: mailAddress,
 				bcc: bccAddress,
 				subject: title,
-				html: message,
+				text: text_message,
+				html: html_message,
 			};
 
 			try {

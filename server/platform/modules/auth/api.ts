@@ -308,11 +308,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 
 		router.post("/receive", [gatekeeper.default,
 			(request: any, response: object): void => {
-				console.log("ok");
 				logger.trace(request.url);
-				gatekeeper.catch(response, (): void => {
-					auth.test(request, response);
-				});
 			}]);
 
 		const TCipher: any = Cipher;

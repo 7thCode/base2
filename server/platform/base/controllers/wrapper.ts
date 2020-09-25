@@ -107,7 +107,7 @@ export abstract class Wrapper {
 	protected SendError(response: IJSONResponse, error: IErrorObject): void {
 		this.logger.error(JSON.stringify(error));
 		if (response) {
-			response.jsonp(new result(error.code, error.message, error));
+			response.jsonp(new result(error.code || 1, error.message || "error.", error));
 		}
 	}
 
@@ -143,7 +143,8 @@ export abstract class Wrapper {
 	 * @param object
 	 * @returns none
 	 */
-	protected SendRaw(response: IJSONResponse, object: object): void {
+	protected SendRaw(response: any, object: any): void {
+		this.logger.trace(response.req.url);
 		if (response) {
 			response.jsonp(object);
 		}

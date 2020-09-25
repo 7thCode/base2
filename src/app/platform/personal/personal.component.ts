@@ -24,7 +24,6 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	public create: Date;
 	public username: string;
 	public provider: string;
-// 	public _auth: number;
 
 	@Input() public nickname: string;
 	@Input() public description: string;

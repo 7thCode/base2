@@ -26,7 +26,10 @@ const session: any = require("express-session");
 const log4js: any = require("log4js");
 const rotatestream: any = require("logrotate-stream");
 
-const _ConfigModule: any = require("./config/default");
+// const _ConfigModule: any = require("./config/default");
+
+const _ConfigModule: any = require("config");
+
 const Scheduler: any = require("./server/platform/base/library/scheduler");
 const Unix: any = require("./server/platform/base/library/commandar");
 const Cipher: any = require("./server/platform/base/library/cipher");
@@ -167,6 +170,7 @@ const normal: () => void = () => {
 			useUnifiedTopology: true,
 			// 	useUnifiedTopology: true,
 		};
+
 		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
 		if (config.db.noauth) {
 			connect_url = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
@@ -288,6 +292,11 @@ const normal: () => void = () => {
 					description: {
 						display: "File",
 					},
+				},
+				mailer: {
+					type: "required",
+					path: "/platform/modules/",
+					description: {},
 				},
 			};
 

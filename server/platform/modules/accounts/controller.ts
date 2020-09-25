@@ -79,7 +79,7 @@ export class Accounts extends Wrapper {
 		try {
 			const params: IQueryParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				this.Decode(params.query, (error: IErrorObject, query: object): void => {
 					this.ifSuccess(response, error, (): void => {
 						this.Decode(params.option, (error: IErrorObject, option: IQueryOption): void => {
@@ -121,7 +121,7 @@ export class Accounts extends Wrapper {
 		try {
 			const params: IQueryParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				this.Decode(params.query, (error: IErrorObject, query: object): void => {
 					this.ifSuccess(response, error, (): void => {
 						const q: object = {$and: [query, {auth: {$gte: operator.auth}}]};
@@ -149,7 +149,7 @@ export class Accounts extends Wrapper {
 			if (request.user) {
 				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response, {}, operator.login, () => {
+				this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
 						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
 							if (account) {
@@ -197,7 +197,7 @@ export class Accounts extends Wrapper {
 					update.enabled = content.enabled;
 				}
 
-				this.ifExist(response, {}, operator.login, () => {
+				this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
 						LocalAccount.set_by_id_promise(operator, target.user_id, update).then((account: IAccountModel): void => {
 							this.SendSuccess(response, account.public());
@@ -227,7 +227,7 @@ export class Accounts extends Wrapper {
 		try {
 			const target: IUserIDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				if (this.own_by_id(operator, target.user_id)) {
 					LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
 						LocalAccount.remove_by_id_promise(operator, target.user_id).then((): void => {
@@ -257,7 +257,7 @@ export class Accounts extends Wrapper {
 		try {
 			const target: IUserIDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				if (this.own_by_id(operator, target.user_id)) {
 					LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
 						const is_2fa: boolean = (account.secret !== "");
@@ -289,7 +289,7 @@ export class Accounts extends Wrapper {
 		try {
 			const target: IUsernameParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				if (this.own_by_name(operator, target.username)) {
 					LocalAccount.default_find_by_name_promise(operator, target.username).then((account: IAccountModel): void => {
 
@@ -342,7 +342,7 @@ export class Accounts extends Wrapper {
 		try {
 			const target: IUsernameParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				if (this.own_by_name(operator, target.username)) {
 					const update: object = {
 						secret: "",
@@ -372,7 +372,7 @@ export class Accounts extends Wrapper {
 			if (request.user) {
 				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response, {}, operator.login, () => {
+				this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
 						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
 							if (account) {
@@ -420,7 +420,7 @@ export class Accounts extends Wrapper {
 					update.enabled = content.enabled;
 				}
 
-				this.ifExist(response, {}, operator.login, () => {
+				this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 					if (this.own_by_id(operator, target.user_id)) {
 						LocalAccount.set_by_id_promise(operator, target.user_id, update).then((account: IAccountModel): void => {
 							this.SendSuccess(response, account.public());
@@ -449,7 +449,7 @@ export class Accounts extends Wrapper {
 		try {
 			const target: IUserIDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {}, operator.login, () => {
+			this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 				if (this.own_by_id(operator, target.user_id)) {
 					LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
 						LocalAccount.remove_by_id_promise(operator, target.user_id).then((): void => {
@@ -479,7 +479,7 @@ export class Accounts extends Wrapper {
 		try {
 			if (request.user) {
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response, {}, operator.login, () => {
+				this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 					LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
 						if (account) {
 							this.SendSuccess(response, account.content);
@@ -516,7 +516,7 @@ export class Accounts extends Wrapper {
 					"content.id": content.id,
 					"content.mails": content.mails,
 				};
-				this.ifExist(response, {}, operator.login, () => {
+				this.ifExist(response, {code: -1, message: "not loged in.."}, operator.login, () => {
 					LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
 						this.SendSuccess(response, account.content);
 					}).catch((error: any) => {

@@ -13,7 +13,8 @@ const NodeRSA: any = require("node-rsa");
 const cipherMode: string = "aes-256-cbc";
 const seed: string = "0123456789abcdef";
 
-const ConfigModule: any = require("../../../../config/default");
+// const ConfigModule: any = require("../../../../config/default");
+const ConfigModule: any = require("config");
 const config: any = ConfigModule.systems;
 
 const LocalAccount: any = require("../../../../models/platform/accounts/account");

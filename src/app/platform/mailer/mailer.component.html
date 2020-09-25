@@ -1,0 +1,24 @@
+<ng-container>
+    <mat-card style="margin:2rem;">
+		<mat-card-header>
+			<div style="font-size: 32px;font-weight: 900;">Mailer</div>
+		</mat-card-header>
+        <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-paginator [length]="count" [pageSize]="size" (page)="onPage($event)">
+				</mat-paginator>
+                <button mat-fab color="primary" [disabled]="progress" (click)="onSend()" class="fab-center">+</button>
+			</div>
+			<mat-list>
+				<mat-list-item *ngFor="let message of results" [ngStyle]="isSeenStyle(message)"  fxLayout="row" fxLayoutAlign="space-between">
+					<div fxFlex="40px">
+						<button mat-icon-button color="warn" [disabled]="progress" (click)="onDelete(message)"><mat-icon>delete</mat-icon></button>
+					</div>
+					<div fxFlex="140px">{{messageDate(message)}}</div>
+					<div fxFlex="240px">{{message.from.name}}</div>
+					<div fxFlex class="pointer_cursor" (click)="onReply(message)">{{message.title}}</div>
+				</mat-list-item>
+			</mat-list>
+        </mat-card-content>
+    </mat-card>
+</ng-container>

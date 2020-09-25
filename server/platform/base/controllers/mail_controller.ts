@@ -8,9 +8,8 @@
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
-import {IJSONResponse} from "../../../../types/platform/server";
+import {IMailReceiverModule, IMailSenderModule} from "../../../../types/platform/server";
 
-// const _: any = require("lodash");
 const fs: any = require("graceful-fs");
 const pug: any = require("pug");
 
@@ -20,8 +19,10 @@ const project_root = path.join(__dirname, "../../../..");
 
 const Wrapper: any = require("./wrapper");
 
+const Receiver: any = require("../../../../server/platform/base/library/mail_receiver");
+
 const Mailer: any = require("../../../../server/platform/base/library/mail_sender");
-const Mailer2: any = require("../../../../server/platform/base/library/mail_sender_2");
+const GMail: any = require("../../../../server/platform/base/library/mail_gmail");
 const MailGun: any = require("../../../../server/platform/base/library/mail_sender_mailgun");
 const SendGrid: any = require("../../../../server/platform/base/library/mail_sender_sendgrid");
 
@@ -30,8 +31,8 @@ const SendGrid: any = require("../../../../server/platform/base/library/mail_sen
  */
 export class Mail extends Wrapper {
 
-	// protected message: any;
-	private mailer: any = null;
+	private sender: IMailSenderModule = null;
+	private receiver: IMailReceiverModule = null;
 	private bcc: string | any[] = "";
 
 	/**
@@ -43,28 +44,33 @@ export class Mail extends Wrapper {
 	 */
 	constructor(event: any, config: any, logger: object) {
 		super(event, config, logger);
-		// this.message = this.systemsConfig.message;
-		const mailerSetting = this.systemsConfig.mailer;
 
-		switch (mailerSetting.type) {
+		const senderSetting = this.systemsConfig.mailer.sender;
+		const receiverSetting = this.systemsConfig.mailer.receiver;
+
+		if (receiverSetting) {
+			this.receiver = new Receiver(receiverSetting);
+		}
+
+		switch (senderSetting.type) {
 			case "mail":
-				this.mailer = new Mailer(mailerSetting.setting, mailerSetting.account);
+				this.sender = new Mailer(senderSetting.setting, senderSetting.account);
 				this.bcc = "";
 				break;
 			case "gmail":
-				this.mailer = new Mailer2(mailerSetting.setting, mailerSetting.account);
+				this.sender = new GMail(senderSetting.setting, senderSetting.account);
 				this.bcc = "";
 				break;
 			case "mailgun":
-				this.mailer = new MailGun(mailerSetting.setting, mailerSetting.account);
+				this.sender = new MailGun(senderSetting.setting, senderSetting.account);
 				this.bcc = [];
 				break;
 			case "sendgrid":
-				this.mailer = new SendGrid(mailerSetting.setting, mailerSetting.account);
+				this.sender = new SendGrid(senderSetting.setting, senderSetting.account);
 				this.bcc = [];
 				break;
 			default:
-				this.mailer = new Mailer2(mailerSetting.setting, mailerSetting.account);
+				this.sender = new GMail(senderSetting.setting, senderSetting.account);
 				this.bcc = "";
 				break;
 		}
@@ -76,23 +82,238 @@ export class Mail extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	protected sendMail(mailConfig: any, callback:(error:IErrorObject, result: any) => void): void {
-		fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
-			if (!error) {
-				const doc: any = pug.render(data, {content: mailConfig.souce_object, link: mailConfig.link});
-				this.mailer.send(mailConfig.address, mailConfig.bcc, mailConfig.title, doc, (error: IErrorObject): void => {
-					if (!error) {
-						callback(null, mailConfig.result_object);
+	private parseContent(mailConfig: any, callback: (error: IErrorObject, text: string, html: string) => void): void {
+		try {
+			if (mailConfig) {
+				if (mailConfig.source_object) {
+					if (mailConfig.template_url) {
+						fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
+							if (!error) {
+								const html: string = pug.render(data, {content: mailConfig.source_object, link: mailConfig.link});
+
+								let _text = "";
+								const text_lines = mailConfig.source_object.content.text;
+								if (text_lines) {
+									text_lines.forEach((line: string) => {
+										_text += line + "\n";
+									})
+								}
+								const text: string = `${_text}
+
+								${mailConfig.link}`;
+
+								callback(null, text, html);
+							} else {
+								callback(error, "", "");
+							}
+						});
 					} else {
-						callback(error, null);
+						if (mailConfig.source_object.content) {
+							let text = "";
+							const text_lines = mailConfig.source_object.content.text;
+							if (text_lines) {
+								text_lines.forEach((line: string) => {
+									text += line + "\n";
+								})
+								callback(null, text, text);
+							} else {
+								callback({code: 1, message: "error"}, "", "");
+							}
+						}
 					}
-				});
+				} else {
+					callback({code: 1, message: "no source_object"}, "", "");
+				}
 			} else {
-				callback(error, null);
+				callback({code: 1, message: "no content"}, "", "");
 			}
-		});
+		} catch (error) {
+			callback(error, "", "");
+		}
+	}
+
+	/**
+	 * send mail
+	 * @param mailConfig
+	 * @param callback
+	 * @returns none
+	 */
+	protected sendMail(mailConfig: any, callback: (error: IErrorObject, result: any) => void): void {
+		if (this.sender) {
+			this.parseContent(mailConfig, (error, text, html) => {
+				if (!error) {
+					this.sender.send(mailConfig.address, mailConfig.bcc, mailConfig.title, text, html, (error: IErrorObject): void => {
+						if (!error) {
+							callback(null, mailConfig.result_object);
+						} else {
+							callback(error, null);
+						}
+					});
+				} else {
+					callback(error, null);
+				}
+			});
+		} else {
+			callback({code: 1, message: "no sender"}, null);
+		}
+	}
+
+	/**
+	 * receive mail
+	 * @param start
+	 * @param limit
+	 * @param callback
+	 * @returns none
+	 */
+	// protected receiveMail(start: number,limit: number, callback:(error:IErrorObject, result: any) => void): void {
+	// 	if (this.receiver) {
+	// 		this.receiver.connect("INBOX", start, limit, callback);
+	// 	} else {
+	// 		callback({code : 1, message: "no receiver"}, null);
+	// 	}
+	// }
+
+	/**
+	 * get message
+	 * @param handler
+	 * @returns none
+	 */
+	protected connect(handler: (error: any, type: string, message: any) => void): void {
+		if (this.receiver) {
+			this.receiver.connect(handler);
+		} else {
+			handler({code: 1, message: "no receiver"}, "", null);
+		}
+	}
+
+	/**
+	 * get message
+	 * @param name
+	 * @param callback
+	 * @returns none
+	 */
+	protected open(imap: any, name: string, callback: (error: any, message: any) => void): void {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.open(imap, name, callback);
+			} else {
+				callback({code: 1, message: "no receiver"}, null);
+			}
+		} else {
+			callback({code: 1, message: "not opened."}, null);
+		}
+	}
+
+	/**
+	 * get message
+	 * @returns none
+	 */
+	protected close(imap: any): void {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.close(imap);
+			}
+		}
+	}
+
+	/**
+	 * list messages
+	 * @param start
+	 * @param limit
+	 * @param callback
+	 * @returns none
+	 */
+	protected listMessages(imap: any, start: number, limit: number, callback: (error: any, messages: any) => void) {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.listMessages(imap, start, limit, callback);
+			} else {
+				callback({code: 1, message: "no receiver"}, null);
+			}
+		} else {
+			callback({code: 1, message: "not opened."}, null);
+		}
+	}
+
+	/**
+	 * get message
+	 * @param imap
+	 * @param UID
+	 * @param callback
+	 * @returns none
+	 */
+	protected getMessage(imap: any, UID: string, callback: (error: IErrorObject, result: any) => void): void {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.getMessage(imap, UID, callback);
+			} else {
+				callback({code: 1, message: "no receiver"}, null);
+			}
+		} else {
+			callback({code: 1, message: "not opened."}, null);
+		}
+	}
+
+	/**
+	 * delete message
+	 * @param imap
+	 * @param UID
+	 * @param callback
+	 * @returns none
+	 */
+	protected deleteMessage(imap: any, UID: string, callback: (error: IErrorObject) => void): void {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.deleteMessage(imap, UID, callback);
+			} else {
+				callback({code: 1, message: "no receiver"});
+			}
+		} else {
+			callback({code: 1, message: "not opened."});
+		}
+	}
+
+	/**
+	 * delete message
+	 * @param imap
+	 * @param UID
+	 * @param flags
+	 * @param callback
+	 * @returns none
+	 */
+	protected addFlags(imap: any, UID: string, flags: string[], callback: (error: IErrorObject) => void): void {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.addFlags(imap, UID, flags, callback);
+			} else {
+				callback({code: 1, message: "no receiver"});
+			}
+		} else {
+			callback({code: 1, message: "not opened."});
+		}
+	}
+
+	/**
+	 * delete message
+	 * @param imap
+	 * @param UID
+	 * @param flags
+	 * @param callback
+	 * @returns none
+	 */
+	protected removeFlags(imap: any, UID: string, flags: string[], callback: (error: IErrorObject) => void): void {
+		if (imap) {
+			if (this.receiver) {
+				this.receiver.removeFlags(imap, UID, flags, callback);
+			} else {
+				callback({code: 1, message: "no receiver"});
+			}
+		} else {
+			callback({code: 1, message: "not opened."});
+		}
 	}
 
 }
+
 
 module.exports = Mail;

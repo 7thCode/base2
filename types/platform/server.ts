@@ -21,10 +21,25 @@ export interface IMailSender {
 	bcc: string;
 	subject: string;
 	html: string;
+	text: string;
 }
 
-export interface IMailModule {
-	send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void;
+export interface IMailSenderModule {
+	send(mailAddress: string, bccAddress: string, title: string,  text: string, html: string, callback: (error: IErrorObject) => void): void;
+}
+
+export interface IMailReceiverModule {
+
+	connect(callback: (error: IErrorObject, imap: any,type: string, message: any) => void): void;
+	open(imap: any, name: string, callback:(error: IErrorObject, message: any) => void): void;
+	close(imap: any): void;
+
+	listMessages(imap: any, start: number, limit: number, callback: (error: IErrorObject, messages: any) => void): void;
+	getMessage(imap: any, UID: string, callback: (error: IErrorObject, mail: any) => void): void;
+	deleteMessage(imap: any, UID: string, callback:(error: IErrorObject) => void): void;
+	addFlags(imap: any, UID: string,flags:string[], callback:(error: IErrorObject) => void): void;
+	removeFlags(imap: any, UID: string,flags:string[], callback:(error: IErrorObject) => void): void;
+
 }
 
 export interface IAccountModel {

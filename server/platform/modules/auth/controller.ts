@@ -580,7 +580,6 @@ export class Auth extends Mail {
 							} else {
 								this.SendError(response, this.errors[8]);
 							}
-
 						}).catch((error: any) => {
 							this.SendError(response, error);
 						})
@@ -686,7 +685,7 @@ export class Auth extends Mail {
 								bcc: this.bcc,
 								title: this.message.registconfirmtext,
 								template_url: "views/platform/auth/mail/mail_template.pug",
-								souce_object: mail_object,
+								source_object: mail_object,
 								link,
 								result_object: {code: 0, message: ["Prease Wait.", ""]},
 							}, (error: IErrorObject, result: any) => {
@@ -831,7 +830,7 @@ export class Auth extends Mail {
 										bcc: this.bcc,
 										title: this.message.passwordconfirmtext,
 										template_url: "views/platform/auth/mail/mail_template.pug",
-										souce_object: mail_object,
+										source_object: mail_object,
 										link,
 										result_object: {code: 0, message: ""},
 									}, (error: IErrorObject, result: any) => {
@@ -952,7 +951,7 @@ export class Auth extends Mail {
 													bcc: this.bcc,
 													title: this.message.usernameconfirmtext,
 													template_url: "views/platform/auth/mail/mail_template.pug",
-													souce_object: mail_object,
+													source_object: mail_object,
 													link,
 													result_object: {code: 0, message: ""},
 												}, (error: IErrorObject, result: any) => {
@@ -1364,42 +1363,6 @@ export class Auth extends Mail {
 	 */
 	public get_server_date(request: object, response: IJSONResponse, next: () => void): void {
 		this.SendSuccess(response, new Date());
-	}
-
-
-
-	/**
-	 *
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
-	public test(request: IContentRequest, response: IJSONResponse): void {
-		try {
-
-			const mail_object = this.message.passwordmail;
-			mail_object.content.subtitle = "";
-
-			const link: string = "";
-			this.sendMail({
-				address: "",
-				bcc: this.bcc,
-				title: this.message.passwordconfirmtext,
-				template_url: "views/platform/auth/mail/mail_template.pug",
-				souce_object: mail_object,
-				link,
-				result_object: {code: 0, message: ""},
-			}, (error: IErrorObject, result: any) => {
-				if (!error) {
-					this.SendSuccess(response, result);
-				} else {
-					this.SendError(response, error);
-				}
-			});
-
-		} catch (error) {
-			this.SendFatal(response, error);
-		}
 	}
 
 }

@@ -36,6 +36,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	/**
 	 *
 	 * @param session
+	 * @param overlay
 	 * @param articleService
 	 * @param matDialog
 	 * @param snackbar
