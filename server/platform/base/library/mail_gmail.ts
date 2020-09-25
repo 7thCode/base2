@@ -6,10 +6,10 @@
 
 "use strict";
 
-import {IMailModule, IMailSender} from "../../../../types/platform/server";
+import {IMailSenderModule, IMailSender} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
 
-export class MailSender2 implements IMailModule {
+export class MailGMail implements IMailSenderModule {
 
 	private smtpUser: any;
 	private account: any;
@@ -20,7 +20,7 @@ export class MailSender2 implements IMailModule {
 		this.smtpUser = mailer.createTransport(mailsetting);
 	}
 
-	public send(mailAddress: string, bccAddress: string, title: string, message: string, callback: (error: IErrorObject) => void): void {
+	public send(mailAddress: string, bccAddress: string, title: string, text: string,html: string, callback: (error: IErrorObject) => void): void {
 
 		if (this.smtpUser) {
 			const resultMail: IMailSender = {
@@ -28,7 +28,8 @@ export class MailSender2 implements IMailModule {
 				to: mailAddress,
 				bcc: bccAddress,
 				subject: title,
-				html: message,
+				text: text,
+				html: html,
 			};
 
 			try {
@@ -45,4 +46,4 @@ export class MailSender2 implements IMailModule {
 	}
 }
 
-module.exports = MailSender2;
+module.exports = MailGMail;

@@ -1,0 +1,22 @@
+.box-header {
+    word-wrap: break-word;
+    width: 100%;
+    line-height: 1rem;
+    font-size: 0.8rem;
+}
+
+.fab-center {
+	position:relative;
+	top:-20px;
+	right:-20px;
+	font-size:20px;
+	font-weight:900;
+}
+
+mat-paginator {
+	background-color: rgba(255,255,255,0);
+}
+
+.pointer_cursor {
+	cursor: pointer !important;
+}
