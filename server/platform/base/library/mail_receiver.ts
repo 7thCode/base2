@@ -16,7 +16,7 @@ const inbox = require("inbox");
 // const iconv = require('iconv');
 // const conv = new iconv.Iconv("ISO-2022-JP", "UTF-8");
 
-const Iconv = require('iconv').Iconv;
+// const Iconv = require('iconv').Iconv;
 const simpleParser = require('mailparser').simpleParser;
 
 export class MailReceiver implements IMailReceiverModule {
@@ -94,7 +94,7 @@ export class MailReceiver implements IMailReceiverModule {
 		try {
 			if (imap) {
 				const stream = imap.createMessageStream(UID);
-				simpleParser(stream, { Iconv }, (error:IErrorObject, mail: any) => {
+				simpleParser(stream, (error:IErrorObject, mail: any) => {
 					if (!error) {
 						callback(null, mail);
 					} else {
