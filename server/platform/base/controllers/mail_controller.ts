@@ -77,6 +77,15 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
+	 */
+	private parseTemplate(string: string, values: any): string {
+		return string.replace(/\$\{(.*?)\}/g, (all: string, key: string): string => {
+			return Object.prototype.hasOwnProperty.call(values, key) ? values[key] : "";
+		});
+	}
+
+	/**
 	 * send mail
 	 * @param mailConfig
 	 * @param callback
@@ -87,30 +96,35 @@ export class Mail extends Wrapper {
 			if (mailConfig) {
 				if (mailConfig.source_object) {
 					if (mailConfig.template_url) {
-						fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
-							if (!error) {
-								const html: string = pug.render(data, {content: mailConfig.source_object, link: mailConfig.link});
+						if (mailConfig.source_object.html) {
+							const nickname = mailConfig.source_object.html.content.nickname;
+							mailConfig.source_object.html.content.subtitle = this.parseTemplate(mailConfig.source_object.html.content.subtitle, {nickname:nickname});
+							fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
+								if (!error) {
+									const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
 
-								let _text = "";
-								const text_lines = mailConfig.source_object.content.text;
-								if (text_lines) {
-									text_lines.forEach((line: string) => {
-										_text += line + "\n";
-									})
+									let text = "";
+									const text_lines = mailConfig.source_object.text.content.text;
+									const value = {link: mailConfig.link};
+									if (text_lines) {
+										text_lines.forEach((line: string) => {
+											text += this.parseTemplate(line, value) + "\n";
+										})
+										callback(null, text, html);
+									} else {
+										callback({code: 1, message: "error"}, "", "");
+									}
+								} else {
+									callback(error, "", "");
 								}
-								const text: string = `${_text}
-
-								${mailConfig.link}`;
-
-								callback(null, text, html);
-							} else {
-								callback(error, "", "");
-							}
-						});
+							});
+						} else {
+							callback({code: 1, message: "no html object."}, "", "");
+						}
 					} else {
-						if (mailConfig.source_object.content) {
+						if (mailConfig.source_object.text) {
 							let text = "";
-							const text_lines = mailConfig.source_object.content.text;
+							const text_lines = mailConfig.source_object.text.content.text;
 							if (text_lines) {
 								text_lines.forEach((line: string) => {
 									text += line + "\n";
@@ -119,6 +133,8 @@ export class Mail extends Wrapper {
 							} else {
 								callback({code: 1, message: "error"}, "", "");
 							}
+						} else {
+							callback({code: 1, message: "no text object."}, "", "");
 						}
 					}
 				} else {

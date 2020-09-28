@@ -123,7 +123,7 @@ export class Mailer extends Mail {
 				address: target.from,
 				bcc: target.bcc,
 				title: target.subject,
-				source_object: source_object,
+				source_object: {text:source_object},
 			};
 
 			this.sendMail(content, (error: IErrorObject, result: any): void => {

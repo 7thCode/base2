@@ -676,7 +676,7 @@ export class Auth extends Mail {
 							};
 
 							const mail_object = this.message.registmail;
-							mail_object.content.subtitle = mail_object.content.subtitle_reader + value.metadata.nickname + mail_object.content.subtitle_trailer;
+					 		mail_object.html.content.nickname = value.metadata.nickname;
 
 							const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 							const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/register/" + token;
@@ -821,7 +821,7 @@ export class Auth extends Mail {
 									};
 
 									const mail_object = this.message.passwordmail;
-									mail_object.content.subtitle = mail_object.content.subtitle_reader + account.content.nickname + mail_object.content.subtitle_trailer;
+							 		mail_object.html.content.nickname = account.content.nickname;
 
 									const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 									const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
@@ -943,7 +943,7 @@ export class Auth extends Mail {
 													timestamp: Date.now(),
 												};
 												const mail_object = this.message.usernamemail;
-												mail_object.content.subtitle = mail_object.content.subtitle_reader + account.content.nickname + mail_object.content.subtitle_trailer;
+									 			mail_object.html.content.nickname = account.content.nickname;
 												const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 												const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
 												this.sendMail({
