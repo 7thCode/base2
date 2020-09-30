@@ -23,6 +23,7 @@ import {AccountsService} from "./accounts/accounts.service";
 import {SessionService} from "./base/services/session.service";
 
 import {fadeAnimation} from "./base/library/fade-animation";
+import {Spinner} from "./base/library/spinner";
 
 /**
  * プラットフォーム
@@ -43,6 +44,8 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 
 	public device: string;
 	public angular: string;
+
+	private spinner: Spinner;
 
 	@ViewChild("sidenav") protected sidenav: MatSidenav;
 
@@ -67,12 +70,17 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		private elementRef: ElementRef,
 		private matDialog: MatDialog,
 	) {
-		super(session, overlay, breakpointObserver);
+		super(session, breakpointObserver);
 		this.widthValue = 0;
 		this.sock = null;
 		this.date = new Date();
 		this.device = "";
 		this.sock = new WebSocket(environment.webSocket);
+		this.spinner = new Spinner(overlay);
+	}
+
+	private Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/*
@@ -130,9 +138,9 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 */
 	public close(opened: any): void {
 		if (opened) {
-			this.sidenav.close().then(() => {
+			this.sidenav.close().then((): void => {
 
-			});
+			}).catch((error): void => {});
 		}
 	}
 

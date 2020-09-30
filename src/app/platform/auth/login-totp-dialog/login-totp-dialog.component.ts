@@ -36,12 +36,12 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 	/**
 	 *
 	 */
-	public progress: boolean = false;
+	// public progress: boolean = false;
 
 	/**
 	 *
 	 */
-	public password_visible: boolean = false;
+	// public password_visible: boolean = false;
 
 	// public emailFormControl = new FormControl("", [
 	// 	Validators.required,
@@ -81,16 +81,15 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 	 * @param value
 	 * @constructor
 	 */
-	public Progress(value: boolean): void {
-		this.progress = value;
-	}
+	// public Progress(value: boolean): void {
+	// 	this.progress = value;
+	// }
 
 	/**
 	 *
 	 */
 	public ngOnInit(): void {
-		this.Progress(false);
-		this.password_visible = false;
+// 		this.Progress(false);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import {ComponentPortal} from "@angular/cdk/portal";
 import {MatSpinner} from "@angular/material/progress-spinner";
 import {SendDialogComponent} from "./send-dialog/send-dialog.component";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
+import {Spinner} from "../base/library/spinner";
 
 const moment = require('moment');
 require('moment-timezone');
@@ -39,7 +40,7 @@ require('moment-timezone');
 export class MailerComponent extends SessionableComponent implements OnInit {
 
 	public get isProgress(): boolean {
-		return this.progress;
+		return this.spinner.progress;
 	}
 
 	public size: number = 20;
@@ -49,11 +50,13 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 
 	protected page: number = 0;
 
-	private spinnerRef: OverlayRef = this.cdkSpinnerCreate();
+	// private spinnerRef: OverlayRef = this.cdkSpinnerCreate();
 
 	private option: { start: number, limit: number } = {start: 0, limit: 0};
 
 	private mailbox: string = "INBOX";
+
+	private spinner: Spinner;
 
 	/**
 	 *
@@ -66,14 +69,20 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
-		protected overlay: Overlay,
+	 	protected overlay: Overlay,
 		private authService: AuthService,
 		private mailerService: MailerService,
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
 	) {
 		super(session);
+		this.spinner = new Spinner(overlay);
 	}
+
+	private Progress(value: boolean): void {
+		this.spinner.Progress(value);
+	}
+
 
 	private setPage(page: number): void {
 		this.page = page;
@@ -169,16 +178,16 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		}
 	}
 
-	private cdkSpinnerCreate(): OverlayRef {
-		return this.overlay.create({
-			hasBackdrop: true,
-			backdropClass: "dark-backdrop",
-			positionStrategy: this.overlay.position()
-				.global()
-				.centerHorizontally()
-				.centerVertically(),
-		});
-	}
+	// private cdkSpinnerCreate(): OverlayRef {
+	// 	return this.overlay.create({
+	// 		hasBackdrop: true,
+	// 		backdropClass: "dark-backdrop",
+	// 		positionStrategy: this.overlay.position()
+	// 			.global()
+	// 			.centerHorizontally()
+	// 			.centerVertically(),
+	// 	});
+	// }
 
 	/**
 	 * 再描画
@@ -205,19 +214,19 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	 * @param value
 	 * @constructor
 	 */
-	protected Progress(value: boolean): void {
-		if (value) {
-			if (!this.progress) {
-				setTimeout(() => this.spinnerRef.attach(new ComponentPortal(MatSpinner)));
-				this.progress = true;
-			}
-		} else {
-			if (this.progress) {
-				setTimeout(() => this.spinnerRef.detach());
-				this.progress = false;
-			}
-		}
-	}
+	// protected Progress(value: boolean): void {
+	// 	if (value) {
+	// 		if (!this.progress) {
+	// 			setTimeout(() => this.spinnerRef.attach(new ComponentPortal(MatSpinner)));
+	// 			this.progress = true;
+	// 		}
+	// 	} else {
+	// 		if (this.progress) {
+	// 			setTimeout(() => this.spinnerRef.detach());
+	// 			this.progress = false;
+	// 		}
+	// 	}
+	// }
 
 	/**
 	 * リストビューデコレータ

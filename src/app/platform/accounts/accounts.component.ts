@@ -11,8 +11,6 @@ import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {Component, OnInit} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-
-import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 import {SessionableComponent} from "../base/components/sessionable.component";
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
@@ -21,6 +19,8 @@ import {AuthService} from "../auth/auth.service";
 import {SessionService} from "../base/services/session.service";
 import {AccountsService} from "./accounts.service";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
+import {Spinner} from "../base/library/spinner";
+import {Overlay} from "@angular/cdk/overlay";
 
 /**
  * アカウントレコード
@@ -35,12 +35,12 @@ import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dial
 export class AccountsComponent extends SessionableComponent implements OnInit {
 
 	public get isProgress(): boolean {
-		return this.progress;
+		return this.spinner.progress;
 	}
 
 	public results: any[] = [];
 
-	public progress: boolean = false;
+	// public progress: boolean = false;
 
 	public nickname: string = "";
 	public size: number = 20;
@@ -50,6 +50,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 	protected query: object = {};
 	protected page: number = 0;
+
+	private spinner: Spinner;
 
 	/**
 	 *
@@ -61,12 +63,18 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
+		protected overlay: Overlay,
 		private authService: AuthService,
 		private accountService: AccountsService,
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
 	) {
 		super(session);
+		this.spinner = new Spinner(overlay);
+	}
+
+	private Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**
@@ -290,13 +298,14 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	public createDialog(): void {
 		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
-			width: "40%",
+			width: "80%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				session: this.currentSession,
 				content: {
 					title: "Regist",
+					description: "Lorem ipsum...",
 					username: "",
 					password: "",
 					nickname: "",
@@ -348,7 +357,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 			if (!error) {
 				if (result) {
 					const dialog: MatDialogRef<any> = this.matDialog.open(AccountDialogComponent, {
-						width: "30%",
 						minWidth: "320px",
 						height: "fit-content",
 						data: {

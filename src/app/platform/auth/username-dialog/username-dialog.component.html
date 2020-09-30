@@ -1,24 +1,30 @@
 <div class="fix-action-dialog">
 	<h1 mat-dialog-title>{{content.title}}</h1>
 
-	<div mat-dialog-content fxLayout="column">
-		<div class="description-text">{{content.description}}</div>
-		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
-			<mat-form-field class="input-text">
-				<mat-label>Mail Address...</mat-label>
-				<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.update_username" #update_username_field="ngModel" name="update_username" required minlength="3" maxlength="255">
-				<mat-error *ngIf="update_username_field.errors?.email;">有効なメールアドレスで</mat-error>
-				<mat-error *ngIf="update_username_field.errors?.required;">入力してください</mat-error>
-				<mat-error *ngIf="update_username_field.errors?.maxlength">長すぎます</mat-error>
-				<mat-error *ngIf="update_username_field.errors?.minlength">短すぎます</mat-error>
-			</mat-form-field>
-		</form>
-	</div>
+	<mat-dialog-content fxLayout="column">
+		<mat-card>
+			<mat-card-header>
+				<div class="description-text">{{content.description}}</div>
+			</mat-card-header>
+			<mat-card-content>
+				<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+					<mat-form-field class="input-text">
+						<mat-label>Mail Address...</mat-label>
+						<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.update_username" #update_username_field="ngModel" name="update_username" required minlength="3" maxlength="255">
+						<mat-error *ngIf="update_username_field.errors?.email;">有効なメールアドレスで</mat-error>
+						<mat-error *ngIf="update_username_field.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="update_username_field.errors?.maxlength">長すぎます</mat-error>
+						<mat-error *ngIf="update_username_field.errors?.minlength">短すぎます</mat-error>
+					</mat-form-field>
+				</form>
+			</mat-card-content>
+		</mat-card>
+	</mat-dialog-content>
 
 	<div class="spacer"></div>
 
-	<div mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
+	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
 		<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()">OK</button>
 		<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">Cancel</button>
-	</div>
+	</mat-dialog-actions>
 </div>

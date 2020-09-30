@@ -30,6 +30,7 @@ import {BaseModule} from "../base/base.module";
 
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 import {ImageComponent} from "./image.component";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
 	declarations: [
@@ -57,6 +58,7 @@ import {ImageComponent} from "./image.component";
 		ImageCropperModule,
 
 		BaseModule,
+		MatDialogModule,
 	],
 	exports: [
 		ImageComponent,

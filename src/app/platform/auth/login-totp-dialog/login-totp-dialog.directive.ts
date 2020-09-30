@@ -43,8 +43,8 @@ export class LoginTotpDialogDirective {
 			height: "fit-content",
 			data: {
 				content: {
-					title: "enter code...",
-					description: "Lorem ipsum...",
+					title: "Enter Code...",
+					description: "Google Authenticator, etc...",
 					username: "",
 					password: "",
 					code: "",

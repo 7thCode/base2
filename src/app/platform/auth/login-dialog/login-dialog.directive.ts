@@ -47,7 +47,12 @@ export class LoginDialogDirective {
 		dialog.afterClosed().subscribe((result: any) => {
 			if (result) {
 				if (result.is_2fa) {
+					result.content.title = "Enter Code.";
+					result.content.description = "Google Authenticator, etc...";
 					const dialog: MatDialogRef<any> = this.matDialog.open(LoginTotpDialogComponent, {
+						width: "30%",
+						minWidth: "320px",
+						height: "fit-content",
 						data: result,
 						disableClose: true,
 					});

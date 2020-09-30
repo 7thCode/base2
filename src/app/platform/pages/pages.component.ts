@@ -19,6 +19,7 @@ import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
 import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
+import {Spinner} from "../base/library/spinner";
 
 /**
  * ページ
@@ -32,7 +33,13 @@ import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dial
 })
 export class PagesComponent extends GridViewComponent implements OnInit {
 
+	public get isProgress(): boolean {
+		return this.spinner.progress;
+	}
+
 	public path = "";
+
+	protected spinner: Spinner;
 
 	/**
 	 * @constructor
@@ -46,11 +53,16 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 		protected session: SessionService,
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
-		private pageSerrvice: PagesService,
-		private snackbar: MatSnackBar,
+		protected pageSerrvice: PagesService,
+		protected snackbar: MatSnackBar,
 	) {
-		super(session, overlay, matDialog);
+		super(session, matDialog);
 		this.service = pageSerrvice;
+		this.spinner = new Spinner(overlay);
+	}
+
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**
@@ -156,7 +168,6 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
-					width: "50%",
 					minWidth: "320px",
 					height: "fit-content",
 					data: {content: this.toView(result)},

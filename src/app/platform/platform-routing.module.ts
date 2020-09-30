@@ -18,24 +18,25 @@ import {TopComponent} from "./top/top.component";
 import {PersonalComponent} from "./personal/personal.component";
 import {StripeComponent} from "../plugins/stripe/stripe.component";
 import {MailerComponent} from "./mailer/mailer.component";
+import {ErrorComponent} from "./error/error.component";
 
 const routes: Routes = [
 	{
 		path: "platform", component: PlatformComponent, children: [
-			{path: "", component: TopComponent},
-			{path: "pages", component: PagesComponent},
+			{path: "accounts", component: AccountsComponent},
 			{path: "articles", component: ArticlesComponent},
 			{path: "files", component: FilesComponent},
-			{path: "accounts", component: AccountsComponent},
+			{path: "pages", component: PagesComponent},
 			{path: "personal", component: PersonalComponent},
-			{path: "stripe", component: StripeComponent},
 			{path: "mailer", component: MailerComponent},
+			{path: "stripe", component: StripeComponent},
+			{path: "", component: TopComponent},
 		],
 	},
 ];
 
 @NgModule({
-	imports: [RouterModule.forRoot(routes)],
+	imports: [RouterModule.forChild(routes)],
 	exports: [RouterModule],
 })
 

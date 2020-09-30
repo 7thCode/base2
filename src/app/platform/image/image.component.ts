@@ -242,16 +242,16 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 			if (!rename) {
 				this.fileName = files[0].name;
 			}
-			this.Progress(true);
+		// 	this.Progress(true);
 			this.uploadFile(files[0], path + this.fileName, (error: IErrorObject, result: any): void => {
 				if (!error) {
 					this.draw(this.fileName);
-					this.Progress(false);
+			// 		this.Progress(false);
 					this.Complete("create",  this.fileName);
 				} else {
 					this.Complete("error", error);
 				}
-				this.Progress(false);
+		// 		this.Progress(false);
 			});
 		}
 	}
@@ -261,15 +261,14 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param event
 	 */
 	public updateDialog(event: any): void {
-
-		this.Progress(true);
+	// 	this.Progress(true);
 		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
 			data: {content: event.target, filename: this.fileName},
 			disableClose: true,
 		});
 
 		dialog.afterOpened().subscribe(() => {
-			this.Progress(false);
+	// 		this.Progress(false);
 		});
 
 		dialog.beforeClosed().subscribe((result: any): void => {
@@ -278,7 +277,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 					case "cancel":
 						break;
 					case "update":
-						this.Progress(true);
+			// 			this.Progress(true);
 						this.upload(this.fileName, result.content, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.draw(this.fileName);
@@ -286,18 +285,18 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 							} else {
 								this.Complete("error", error);
 							}
-							this.Progress(false);
+				// 			this.Progress(false);
 						});
 						break;
 					case "delete":
-						this.Progress(true);
+			// 			this.Progress(true);
 						this.delete(this.fileName, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.Complete("delete", this.fileName);
 							} else {
 								this.Complete("error", error);
 							}
-							this.Progress(false);
+			// 				this.Progress(false);
 						});
 						break;
 				}

@@ -14,10 +14,11 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {UploadableComponent} from "../base/components/uploadable.component";
-import {InfoDialogComponent} from "../base/components/info-dialog/info-dialog.component";
 
 import {SessionService} from "../base/services/session.service";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
+import {Overlay} from "@angular/cdk/overlay";
+import {Spinner} from "../base/library/spinner";
 
 /**
  * ファイル
@@ -30,6 +31,10 @@ import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dial
 	styleUrls: ["./files.component.css"],
 })
 export class FilesComponent extends UploadableComponent implements OnInit {
+
+	public get isProgress(): boolean {
+		return this.spinner.progress;
+	}
 
 	@ViewChild("fileInput") public fileInput: any;
 
@@ -44,6 +49,10 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	protected query: object = {};
 	protected page: number = 0;
 
+	private spinner: Spinner;
+
+	// private spinnerRef: OverlayRef = this.cdkSpinnerCreate();
+
 	/**
 	 *
 	 * @param session
@@ -54,11 +63,18 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	constructor(
 		protected session: SessionService,
 		protected http: HttpClient,
+		private overlay: Overlay,
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
 	) {
 		super(session, http);
+		this.spinner = new Spinner(overlay);
 	}
+
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
+	}
+
 
 	private widthToColumns(width: number): number {
 		let result: number = 4;

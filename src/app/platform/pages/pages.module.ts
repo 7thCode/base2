@@ -39,6 +39,7 @@ import {PagesComponent} from "./pages.component";
 
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
 	declarations: [
@@ -77,6 +78,7 @@ import {PagesService} from "./pages.service";
 		AceEditorModule,
 		AngularEditorModule,
 		BaseModule,
+		MatDialogModule,
 	],
 	exports: [
 		PagesComponent,

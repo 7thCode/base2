@@ -7,7 +7,7 @@
 			<div fxLayout="row" fxLayoutAlign="space-between">
 				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
 				</mat-paginator>
-				<button mat-fab color="primary" [disabled]="progress" (click)="createDialog()" class="fab-center">+</button>
+				<button mat-fab color="primary" [disabled]="isProgress" (click)="createDialog()" class="fab-center">+</button>
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" fxLayout.sm="column" style="width:100%;">

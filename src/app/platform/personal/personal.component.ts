@@ -13,6 +13,8 @@ import {AccountsService} from "../accounts/accounts.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
+import {Spinner} from "../base/library/spinner";
+import {Overlay} from "@angular/cdk/overlay";
 
 @Component({
 	selector: 'app-personal',
@@ -24,6 +26,8 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	public create: Date;
 	public username: string;
 	public provider: string;
+
+	private spinner: Spinner;
 
 	@Input() public nickname: string;
 	@Input() public description: string;
@@ -40,12 +44,18 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
+		protected overlay: Overlay,
 		private accountService: AccountsService,
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
 	) {
 		super(session);
 		this.mails = [];
+		this.spinner = new Spinner(overlay);
+	}
+
+	private Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**

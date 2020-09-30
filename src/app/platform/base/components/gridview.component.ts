@@ -27,7 +27,7 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 
 	public breakpoint: number = 4;
 
-	protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
+	// protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
 
 	/**
 	 *
@@ -37,22 +37,22 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 	 */
 	constructor(
 		protected session: SessionService,
-		protected overlay: Overlay,
+	// 	protected overlay: Overlay,
 		protected matDialog: MatDialog,
 	) {
 		super(session, matDialog);
 	}
 
-	protected cdkSpinnerCreate(): OverlayRef {
-		return this.overlay.create({
-			hasBackdrop: true,
-			backdropClass: "dark-backdrop",
-			positionStrategy: this.overlay.position()
-				.global()
-				.centerHorizontally()
-				.centerVertically(),
-		});
-	}
+	// protected cdkSpinnerCreate(): OverlayRef {
+	// 	return this.overlay.create({
+	// 		hasBackdrop: true,
+	// 		backdropClass: "dark-backdrop",
+	// 		positionStrategy: this.overlay.position()
+	// 			.global()
+	// 			.centerHorizontally()
+	// 			.centerVertically(),
+	// 	});
+	// }
 
 	/**
 	 * 処理中
@@ -60,19 +60,19 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 	 * @param value
 	 * @constructor
 	 */
-	protected Progress(value: boolean): void {
-		if (value) {
-			if (!this.progress) {
-				setTimeout(() => this.spinnerRef.attach(new ComponentPortal(MatSpinner)));
-				this.progress = true;
-			}
-		} else {
-			if (this.progress) {
-				setTimeout(() => this.spinnerRef.detach());
-				this.progress = false;
-			}
-		}
-	}
+	// protected Progress(value: boolean): void {
+	// 	if (value) {
+	// 		if (!this.progress) {
+	// 			setTimeout(() => this.spinnerRef.attach(new ComponentPortal(MatSpinner)));
+	// 			this.progress = true;
+	// 		}
+	// 	} else {
+	// 		if (this.progress) {
+	// 			setTimeout(() => this.spinnerRef.detach());
+	// 			this.progress = false;
+	// 		}
+	// 	}
+	// }
 
 	/*
 	* width to grid columns

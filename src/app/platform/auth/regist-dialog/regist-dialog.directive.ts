@@ -45,7 +45,7 @@ export class RegistDialogDirective {
 		const resultDialogContent: any = {title: "Check mail", message: "Register Mail sent."};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(RegistDialogComponent, {
-			width: "30%",
+			width: "50%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {

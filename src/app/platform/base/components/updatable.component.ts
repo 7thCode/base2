@@ -233,9 +233,9 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	/*
 	virtiual
 	*/
-	protected Progress(value: boolean): void {
-
-	}
+	// protected Progress(value: boolean): void {
+//
+// 	 }
 
 	public ngOnInit(): void {
 		this.page = 0;
@@ -262,7 +262,6 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	 * @param callback コールバック
 	 */
 	public draw(callback: Callback<object[]>): void {
-		this.Progress(true);
 		this.service.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
@@ -277,7 +276,6 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 					} else {
 						callback(error, null);
 					}
-					this.Progress(false);
 				});
 			} else {
 				callback(error, null);

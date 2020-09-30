@@ -23,6 +23,7 @@ import {StripeService} from "./stripe.service";
 import * as _ from 'lodash';
 import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
+import {Spinner} from "../../platform/base/library/spinner";
 
 /*
 
@@ -85,6 +86,8 @@ import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog
 })
 export class StripeComponent extends GridViewComponent implements OnInit {
 
+	private spinner: Spinner;
+
 	/**
 	 *
 	 * @param session
@@ -102,7 +105,12 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		protected snackbar: MatSnackBar,
 		public changeDetectorRef: ChangeDetectorRef
 	) {
-		super(session, overlay, matDialog);
+		super(session, matDialog);
+		this.spinner = new Spinner(overlay);
+	}
+
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**

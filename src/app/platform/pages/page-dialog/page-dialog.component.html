@@ -1,52 +1,56 @@
 <div class="fix-action-dialog">
 	<h2 mat-dialog-title>Page</h2>
 
-	<div mat-dialog-content fxLayout="column">
-		<div fxLayout="column">
-			<form #form="ngForm" novalidate fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between">
-				<mat-form-field class="input-text">
-					<mat-label>Path...</mat-label>
-					<input matInput type="text" placeholder="path/..." [(ngModel)]="content.path" #path="ngModel" name="path" required minlength="3" maxlength="255">
-					<mat-hint>3文字以上255文字まで</mat-hint>
-					<mat-error *ngIf="path.errors?.required;">入力してください</mat-error>
-					<mat-error *ngIf="path.errors?.maxlength">長すぎます</mat-error>
-					<mat-error *ngIf="path.errors?.minlength">短すぎます</mat-error>
-				</mat-form-field>
-				<mat-form-field class="input-text">
-					<mat-label>Select input Format</mat-label>
-					<mat-select [(value)]="content.category">
-						<mat-option>None</mat-option>
-						<mat-option value="HTML">HTML</mat-option>
-						<mat-option value="Jade">Pug/Jade</mat-option>
-						<mat-option value="EJS">EJS</mat-option>
-						<mat-option value="Markdown">Markdown</mat-option>
-					</mat-select>
-				</mat-form-field>
-				<mat-form-field class="input-text">
-					<mat-label>Select Target Mime</mat-label>
-					<mat-select [(value)]="content.type">
-						<mat-option>None</mat-option>
-						<mat-option value="text/html">text/html</mat-option>
-						<mat-option value="text/javascript">text/javascript</mat-option>
-						<mat-option value="text/css">text/css</mat-option>
-						<mat-option value="text/plain">text/plain</mat-option>
-						<mat-option value="text/markdown">text/markdown</mat-option>
-						<mat-option value="text/xml">text/xml</mat-option>
-					</mat-select>
-				</mat-form-field>
-			</form>
-		</div>
-		<div fxLayout="column">
-			<ace-editor [(text)]="content.value" [theme]="'chrome'" [mode]="content.category" #editor style="height: calc(100vh - 340px);border-style: solid; border-color: #d0d0d0;"></ace-editor>
-		</div>
-	</div>
+	<mat-dialog-content fxLayout="column">
+		<mat-card>
+			<mat-card-content>
+				<div fxLayout="column">
+					<form #form="ngForm" novalidate fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between">
+						<mat-form-field class="input-text">
+							<mat-label>Path...</mat-label>
+							<input matInput type="text" placeholder="path/..." [(ngModel)]="content.path" #path="ngModel" name="path" required minlength="3" maxlength="255">
+							<mat-hint>3文字以上255文字まで</mat-hint>
+							<mat-error *ngIf="path.errors?.required;">入力してください</mat-error>
+							<mat-error *ngIf="path.errors?.maxlength">長すぎます</mat-error>
+							<mat-error *ngIf="path.errors?.minlength">短すぎます</mat-error>
+						</mat-form-field>
+						<mat-form-field class="input-text">
+							<mat-label>Select input Format</mat-label>
+							<mat-select [(value)]="content.category">
+								<mat-option>None</mat-option>
+								<mat-option value="HTML">HTML</mat-option>
+								<mat-option value="Jade">Pug/Jade</mat-option>
+								<mat-option value="EJS">EJS</mat-option>
+								<mat-option value="Markdown">Markdown</mat-option>
+							</mat-select>
+						</mat-form-field>
+						<mat-form-field class="input-text">
+							<mat-label>Select Target Mime</mat-label>
+							<mat-select [(value)]="content.type">
+								<mat-option>None</mat-option>
+								<mat-option value="text/html">text/html</mat-option>
+								<mat-option value="text/javascript">text/javascript</mat-option>
+								<mat-option value="text/css">text/css</mat-option>
+								<mat-option value="text/plain">text/plain</mat-option>
+								<mat-option value="text/markdown">text/markdown</mat-option>
+								<mat-option value="text/xml">text/xml</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</form>
+				</div>
+				<div fxLayout="column">
+					<ace-editor [(text)]="content.value" [theme]="'chrome'" [mode]="content.category" #editor style="height: calc(100vh - 340px);border-style: solid; border-color: #d0d0d0;"></ace-editor>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</mat-dialog-content>
 
 	<div class="spacer"></div>
 
-	<div mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
+	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
 		<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
 		<button mat-raised-button color="accent" [disabled]="form.invalid || invalid()" (click)="onAccept()" cdkFocusInitial>OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
-	</div>
+	</mat-dialog-actions>
 
 </div>

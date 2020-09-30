@@ -24,9 +24,9 @@ export abstract class SessionableComponent {
 	/**
 	 * @returns 処理中か。
 	 */
-	protected get isProgress(): boolean {
-		return this.progress;
-	}
+	// protected get isProgress(): boolean {
+	// 	return this.progress;
+	// }
 
 	/**
 	 *  @returns 現行のセッション。
@@ -76,7 +76,7 @@ export abstract class SessionableComponent {
 	/**
 	 *
 	 */
-	public progress: boolean = false;
+	// public progress: boolean = false;
 
 	/**
 	 *
@@ -128,10 +128,10 @@ export abstract class SessionableComponent {
 	 * 動作中
 	 * @param value 動作中
 	 */
-	protected Progress(value: boolean): void {
-		this.progress = value;
-		this.onProgress.emit(value);
-	}
+	// protected Progress(value: boolean): void {
+	// 	this.progress = value;
+	// 	this.onProgress.emit(value);
+	// }
 
 	/**
 	 * セッション取得

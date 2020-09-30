@@ -7,12 +7,12 @@
             <div fxLayout="row" fxLayoutAlign="space-between">
 				<mat-paginator [length]="count" [pageSize]="size" (page)="onPage($event)">
 				</mat-paginator>
-                <button mat-fab color="primary" [disabled]="progress" (click)="onSend()" class="fab-center">+</button>
+                <button mat-fab color="primary" [disabled]="isProgress" (click)="onSend()" class="fab-center">+</button>
 			</div>
 			<mat-list>
 				<mat-list-item *ngFor="let message of results" [ngStyle]="isSeenStyle(message)"  fxLayout="row" fxLayoutAlign="space-between">
 					<div fxFlex="40px">
-						<button mat-icon-button color="warn" [disabled]="progress" (click)="onDelete(message)"><mat-icon>delete</mat-icon></button>
+						<button mat-icon-button color="warn" [disabled]="isProgress" (click)="onDelete(message)"><mat-icon>delete</mat-icon></button>
 					</div>
 					<div fxFlex="140px">{{messageDate(message)}}</div>
 					<div fxFlex="240px">{{message.from.name}}</div>
