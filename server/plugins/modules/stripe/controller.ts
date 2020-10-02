@@ -168,7 +168,7 @@ export class Stripe extends Mail {
 	 * @returns none
 	 */
 	private get_self(operator: IAccountModel, callback: (error: IErrorObject, result: any) => void): void {
-		LocalAccount.default_find_by_id_promise(operator, operator.user_id).then(( account: IAccountModel): void => {
+		LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
 			callback(null, account);
 		}).catch((error: IErrorObject) => {
 			callback(error, null);
@@ -185,7 +185,7 @@ export class Stripe extends Mail {
 	private put_self(operator: IAccountModel, update: object, callback: (error: IErrorObject, result: any) => void): void {
 		LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
 			callback(null, account);
-		}).catch((error: IErrorObject)=> {
+		}).catch((error: IErrorObject) => {
 			callback(error, null);
 		})
 	}
@@ -221,8 +221,8 @@ export class Stripe extends Mail {
 	 */
 	public createCustomer(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					const customer_email = request.body.email;
 					this.get_id(response, operator, (customer_id: string) => {
@@ -246,9 +246,7 @@ export class Stripe extends Mail {
 				} else {
 					this.SendError(response, {code: 1, message: "not logged in."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -261,13 +259,12 @@ export class Stripe extends Mail {
 	 */
 	public retrieveCustomer(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.get_id(response, operator, (customer_id: string) => {
 						if (customer_id) {
 							this.stripe.customers.retrieve(customer_id).then((full_customer: any) => {
-
 								const updateable = Stripe.buildCustomer(full_customer);
 								/*
 								{
@@ -292,9 +289,7 @@ export class Stripe extends Mail {
 				} else {
 					this.SendError(response, {code: 1, message: "not logged in."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -307,8 +302,8 @@ export class Stripe extends Mail {
 	 */
 	public updateCustomer(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.get_id(response, operator, (customer_id: string) => {
 						if (customer_id) {
@@ -324,9 +319,7 @@ export class Stripe extends Mail {
 				} else {
 					this.SendError(response, {code: 1, message: "not logged in."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -339,8 +332,8 @@ export class Stripe extends Mail {
 	 */
 	public deleteCustomer(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.get_id(response, operator, (customer_id: string) => {
 						if (customer_id) {
@@ -358,11 +351,9 @@ export class Stripe extends Mail {
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: 1, message: "disabled."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -378,8 +369,8 @@ export class Stripe extends Mail {
 	 */
 	public createSource(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					Stripe.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 						this.ifSuccess(response, error, (): void => {
 							const operator: IAccountModel = this.Transform(request.user);
@@ -437,11 +428,9 @@ export class Stripe extends Mail {
 						});
 					});
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: 1, message: "disabled."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -456,8 +445,8 @@ export class Stripe extends Mail {
 
 	public retrieveSource(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					const index = request.params.index;
 					this.get_id(response, operator, (customer_id: string) => {
@@ -483,11 +472,9 @@ export class Stripe extends Mail {
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: 1, message: "disabled."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -501,8 +488,8 @@ export class Stripe extends Mail {
 	 */
 	public updateSource(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					const index = request.params.index;
 					const content = request.body;
@@ -529,11 +516,9 @@ export class Stripe extends Mail {
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: 1, message: "disabled."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -547,8 +532,8 @@ export class Stripe extends Mail {
 	 */
 	public deleteSource(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					const index = request.params.index;
 					this.get_id(response, operator, (customer_id: string) => {
@@ -574,11 +559,9 @@ export class Stripe extends Mail {
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: 1, message: "disabled."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -593,8 +576,8 @@ export class Stripe extends Mail {
 	 */
 	public charge(request: any, response: IJSONResponse): void {
 		try {
-			if (this.enable) {
-				if (request.user) {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.get_id(response, operator, (customer_id: string) => {
 						if (customer_id) {
@@ -792,16 +775,13 @@ export class Stripe extends Mail {
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: 1, message: "disabled."});
 				}
-			} else {
-				this.SendError(response, {code: 1, message: "disabled."});
-			}
+			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
 	}
-
 
 }
 

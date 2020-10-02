@@ -17,8 +17,6 @@ const Mail: any = require("../../../../server/platform/base/controllers/mail_con
  */
 export class Mailer extends Mail {
 
-	private message: any;
-
 	/**
 	 *
 	 * @param event
@@ -30,6 +28,9 @@ export class Mailer extends Mail {
 		super(event, config, logger);
 	}
 
+	/**
+	 *
+	 */
 	private openMailbox(request: any, response: any, callback: (error: IErrorObject, imap: any, option: any) => void): void {
 		if (request.user) {
 			const params: any = request.params;

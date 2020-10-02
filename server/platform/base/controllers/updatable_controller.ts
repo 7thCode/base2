@@ -103,11 +103,13 @@ export abstract class Updatable extends Wrapper {
 							}
 							const operator: IAccountModel = this.Transform(request.user);
 							this.Model.default_find_promise(operator, query, option).then((objects: IUpdatableModel[]): void => {
-								const filtered: any[] = [];
-								objects.forEach((object) => {
-									filtered.push(object.public());
+								this.ifExist(response, {code: -1,message: "not found."}, objects, () => {
+									const filtered: any[] = [];
+									objects.forEach((object) => {
+										filtered.push(object.public());
+									});
+									this.SendRaw(response, filtered);
 								});
-								this.SendRaw(response, filtered);
 							}).catch((error: IErrorObject) => {
 								this.SendError(response, error);
 							})
@@ -132,7 +134,9 @@ export abstract class Updatable extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.Model.default_find_promise(operator, query, {}).then((objects: IUpdatableModel[]): void => {
-						this.SendSuccess(response, objects.length);
+						this.ifExist(response, {code: -1,message: "not found."}, objects, () => {
+							this.SendSuccess(response, objects.length);
+						});
 					}).catch((error: IErrorObject) => {
 						this.SendError(response, error);
 					});
@@ -153,11 +157,9 @@ export abstract class Updatable extends Wrapper {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.default_find_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
-				if (object) {
+				this.ifExist(response, {code: -1,message: "not found."}, object, () => {
 					this.SendSuccess(response, object.public());
-				} else {
-					this.SendWarn(response, {code: 1, message: "not found. 8035"});
-				}
+				});
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			})
@@ -178,7 +180,9 @@ export abstract class Updatable extends Wrapper {
 			const object: IUpdatableModel = new this.Model();
 			object._create(this.default_user(operator), body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.SendSuccess(response, object.public());
+					this.ifExist(response, {code: -1,message: "not found."}, object, () => {
+						this.SendSuccess(response, object.public());
+					});
 				});
 			});
 		} catch (error) {
@@ -197,7 +201,9 @@ export abstract class Updatable extends Wrapper {
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.update_by_id_promise(operator, target.id, body).then((object: IUpdatableModel): void => {
-				this.SendSuccess(response, object.public());
+				this.ifExist(response, {code: -1,message: "not found."}, object, () => {
+					this.SendSuccess(response, object.public());
+				});
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			})

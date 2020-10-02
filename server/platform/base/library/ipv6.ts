@@ -66,7 +66,7 @@ export class IPV6 {
 		const interfaces = os.networkInterfaces();
 
 		for (const dev in interfaces) {
-			interfaces[dev].forEach(function(details: any) {
+			interfaces[dev].forEach((details: any) => {
 				if (!details.internal) {
 					switch (details.family) {
 						case "IPv4":

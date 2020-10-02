@@ -117,8 +117,8 @@
 	</mat-sidenav>
 
 	<mat-sidenav-content style="background-color:#E1E2E1;">
-		<div *ngIf="login">
-			<router-outlet #o="outlet"></router-outlet>
+		<div *ngIf="login" [@fadeAnimation]="prepareRoute(outlet)">
+			<router-outlet #outlet="outlet"></router-outlet>
 		</div>
 	</mat-sidenav-content>
 

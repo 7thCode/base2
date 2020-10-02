@@ -34,7 +34,6 @@ export class Unix {
 	 */
 	public Backup(config: any): string {
 		const backup = "mongodump --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " -o " + "\"" + this.backupdir + "\"";
-		//     console.log(backup);
 		return "" + execSync(backup);
 	}
 
@@ -45,7 +44,6 @@ export class Unix {
 	 */
 	public Restore(config: any): string {
 		const restore = "mongorestore --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " " + "\"" + this.backupdir + "/" + config.name + "\"";
-		//     console.log(restore);
 		return "" + execSync(restore);
 	}
 

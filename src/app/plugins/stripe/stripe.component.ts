@@ -109,10 +109,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		this.spinner = new Spinner(overlay);
 	}
 
-	protected Progress(value: boolean): void {
-		this.spinner.Progress(value);
-	}
-
 	/**
 	 * エラー表示
 	 * @param error
@@ -123,6 +119,23 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 				duration: 8000,
 			});
 		}
+	}
+
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
+
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**

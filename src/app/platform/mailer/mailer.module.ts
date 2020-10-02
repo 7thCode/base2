@@ -42,7 +42,6 @@ import {SendDialogComponent} from "./send-dialog/send-dialog.component";
 import {SessionService} from "../base/services/session.service";
 import {MailerService} from "./mailer.service";
 
-
 @NgModule({
 	declarations: [
 		MailerComponent,

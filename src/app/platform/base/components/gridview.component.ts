@@ -12,9 +12,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {UpdatableComponent} from "./updatable.component";
 
 import {SessionService} from "../services/session.service";
-import {Overlay, OverlayRef} from "@angular/cdk/overlay";
-import {ComponentPortal} from "@angular/cdk/portal";
-import {MatSpinner} from "@angular/material/progress-spinner";
 
 /**
  * Angilar Material グリッドビュー基本
@@ -27,8 +24,6 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 
 	public breakpoint: number = 4;
 
-	// protected spinnerRef: OverlayRef = this.cdkSpinnerCreate();
-
 	/**
 	 *
 	 * @param session
@@ -37,42 +32,10 @@ export abstract class GridViewComponent extends UpdatableComponent implements On
 	 */
 	constructor(
 		protected session: SessionService,
-	// 	protected overlay: Overlay,
 		protected matDialog: MatDialog,
 	) {
 		super(session, matDialog);
 	}
-
-	// protected cdkSpinnerCreate(): OverlayRef {
-	// 	return this.overlay.create({
-	// 		hasBackdrop: true,
-	// 		backdropClass: "dark-backdrop",
-	// 		positionStrategy: this.overlay.position()
-	// 			.global()
-	// 			.centerHorizontally()
-	// 			.centerVertically(),
-	// 	});
-	// }
-
-	/**
-	 * 処理中
-	 * スピナー
-	 * @param value
-	 * @constructor
-	 */
-	// protected Progress(value: boolean): void {
-	// 	if (value) {
-	// 		if (!this.progress) {
-	// 			setTimeout(() => this.spinnerRef.attach(new ComponentPortal(MatSpinner)));
-	// 			this.progress = true;
-	// 		}
-	// 	} else {
-	// 		if (this.progress) {
-	// 			setTimeout(() => this.spinnerRef.detach());
-	// 			this.progress = false;
-	// 		}
-	// 	}
-	// }
 
 	/*
 	* width to grid columns

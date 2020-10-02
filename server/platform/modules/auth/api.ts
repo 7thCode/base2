@@ -159,19 +159,12 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
+
 		router.post("/auth/local/register", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_register(request, response);
-				});
-			}]);
-
-		router.post("/auth/immediate/register", [gatekeeper.default, gatekeeper.authenticate,
-			(request: any, response: object): void => {
-				logger.trace(request.url);
-				gatekeeper.catch(response, (): void => {
-					auth.post_immediate_register(request, response);
 				});
 			}]);
 
@@ -183,19 +176,23 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
+		router.post("/auth/immediate/register", [gatekeeper.default, gatekeeper.authenticate,
+			(request: object, response: object, next: any): void => {
+				auth.is_manager(request, response, next);
+			},
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.post_immediate_register(request, response);
+				});
+			}]);
+
+
 		router.post("/auth/local/password", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_password(request, response);
-				});
-			}]);
-
-		router.post("/auth/immediate/password", [gatekeeper.default, gatekeeper.authenticate,
-			(request: any, response: object): void => {
-				logger.trace(request.url);
-				gatekeeper.catch(response, (): void => {
-					auth.post_immediate_password(request, response);
 				});
 			}]);
 
@@ -206,6 +203,18 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 					auth.get_password_token(request, response);
 				});
 			}]);
+
+		router.post("/auth/immediate/password", [gatekeeper.default, gatekeeper.authenticate,
+			(request: object, response: object, next: any): void => {
+				auth.is_manager(request, response, next);
+			},
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.post_immediate_password(request, response);
+				});
+			}]);
+
 
 		router.post("/auth/local/username", [gatekeeper.default,
 			(request: any, response: object): void => {
@@ -223,19 +232,51 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.get("/auth/logout", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/auth/immediate/username", [gatekeeper.default, gatekeeper.authenticate,
+			(request: object, response: object, next: any): void => {
+				auth.is_manager(request, response, next);
+			},
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
-					auth.logout(request, response);
+					auth.post_immediate_username(request, response);
 				});
 			}]);
+
 
 		router.post("/auth/local/remove", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, (): void => {
 					auth.post_local_remove(request, response);
+				});
+			}]);
+
+		router.get("/auth/remove/:token", [gatekeeper.default,
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.get_remove_token(request, response);
+				});
+			}]);
+
+		router.post("/auth/immediate/remove", [gatekeeper.default, gatekeeper.authenticate,
+			(request: object, response: object, next: any): void => {
+				auth.is_manager(request, response, next);
+			},
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.post_immediate_remove(request, response);
+				});
+			}]);
+
+
+		router.get("/auth/logout", [gatekeeper.default, gatekeeper.authenticate,
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.logout(request, response);
 				});
 			}]);
 
@@ -290,6 +331,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 			});
 
 		// test
+		/*
 		router.get("/auth/mail/regist_mail", [gatekeeper.page_catch,
 			(request: any, response: any): void => {
 				logger.trace(request.url);
@@ -305,6 +347,8 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 					response.render("platform/auth/mail/password_mail", {config: systemsConfig, link: ""});
 				});
 			}]);
+*/
+
 
 		router.post("/receive", [gatekeeper.default,
 			(request: any, response: object): void => {

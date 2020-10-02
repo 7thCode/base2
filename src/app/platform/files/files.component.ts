@@ -51,12 +51,11 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 
 	private spinner: Spinner;
 
-	// private spinnerRef: OverlayRef = this.cdkSpinnerCreate();
-
 	/**
 	 *
 	 * @param session
 	 * @param http
+	 * @param overlay
 	 * @param matDialog
 	 * @param snackbar
 	 */
@@ -71,11 +70,10 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.spinner = new Spinner(overlay);
 	}
 
-	protected Progress(value: boolean): void {
-		this.spinner.Progress(value);
-	}
-
-
+	/**
+	 *
+	 * @param width
+	 */
 	private widthToColumns(width: number): number {
 		let result: number = 4;
 		if (width < 600) {
@@ -102,6 +100,26 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 				duration: 8000,
 			});
 		}
+	}
+
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
+
+	/**
+	 *
+	 */
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**
@@ -160,6 +178,9 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 */
 	public onResize(event: any): void {
 		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}

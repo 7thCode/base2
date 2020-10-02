@@ -11,6 +11,9 @@ import {Callback, IErrorObject} from "../../../types/platform/universe";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, VERSION} from "@angular/core";
+
+import {RouterOutlet} from '@angular/router';
+
 import {MatDialog} from "@angular/material/dialog";
 import {MatSidenav} from "@angular/material/sidenav";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -96,6 +99,19 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	}
 
 	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
+
+	/**
 	 * アカウント参照
 	 *
 	 * @param id アカウントレコードID
@@ -130,6 +146,10 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 			}
 			this.Progress(false);
 		});
+	}
+
+	public prepareRoute(outlet: RouterOutlet): any {
+		return (outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation);
 	}
 
 	/**

@@ -285,6 +285,7 @@ export interface IContentRequest {
 	};
 	params: any;
 	user: any;
+	login(user: object, callback: (error: IErrorObject) => void): void;
 }
 
 export interface IUserRequest {

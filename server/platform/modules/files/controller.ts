@@ -242,45 +242,45 @@ export class Files extends Wrapper {
 								"filename": 1,
 								"metadata.user_id": 1,
 							}).then(() => {
-									const save = (doc: any): Promise<any> => {
-										return new Promise((resolve: any, reject: any): void => {
-											const path: string = project_root + doc.path;
-											const filename: string = doc.name;
-											const user: { user_id: string, auth: number } = doc.user;
-											const mimetype: string = doc.content.type;
-											const category: string = doc.content.category;
-											const description: string = "";
-											const type: number = doc.type;
-											const query: object = {filename};
+								const save = (doc: any): Promise<any> => {
+									return new Promise((resolve: any, reject: any): void => {
+										const path: string = project_root + doc.path;
+										const filename: string = doc.name;
+										const user: { user_id: string, auth: number } = doc.user;
+										const mimetype: string = doc.content.type;
+										const category: string = doc.content.category;
+										const description: string = "";
+										const type: number = doc.type;
+										const query: object = {filename};
 
-											this.collection.findOne(query).then((item: object): void => {
+										this.collection.findOne(query).then((item: object): void => {
 
-													if (!item) {
-														this.fromLocal(path, user, filename, category, description, mimetype, (error: IErrorObject, file: any): void => {
-															if (!error) {
-																resolve(file);
-															} else {
-																reject(error);
-															}
-														});
+											if (!item) {
+												this.fromLocal(path, user, filename, category, description, mimetype, (error: IErrorObject, file: any): void => {
+													if (!error) {
+														resolve(file);
 													} else {
-														resolve(item);
+														reject(error);
 													}
+												});
+											} else {
+												resolve(item);
+											}
 
-											}).catch((error: IErrorObject) => {
-												reject(error);
-											});
+										}).catch((error: IErrorObject) => {
+											reject(error);
 										});
-									};
-
-									const docs: object[] = initfiles;
-									Promise.all(docs.map((doc: any): any => {
-										return save(doc);
-									})).then((results: any[]): void => {
-										callback(null, results);
-									}).catch((error: IErrorObject): void => {
-										callback(error, null);
 									});
+								};
+
+								const docs: object[] = initfiles;
+								Promise.all(docs.map((doc: any): any => {
+									return save(doc);
+								})).then((results: any[]): void => {
+									callback(null, results);
+								}).catch((error: IErrorObject): void => {
+									callback(error, null);
+								});
 							}).catch((error: IErrorObject): void => {
 								callback(error, null);
 							});
@@ -492,38 +492,42 @@ export class Files extends Wrapper {
 	 */
 	public postFile(request: IPostFile, response: IJSONResponse): void {
 		try {
-			const path: string = request.params[0];
-			const category: string = request.body.category;
-			const operator: IAccountModel = this.Transform(request.user);
-			const rights = {read: AuthLevel.public, write: AuthLevel.user};
-			const description: string = "";
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				this.ifExist(response, {code: 1, message: "no content."}, request.body.url, () => {
+					const path: string = request.params[0];
+					const category: string = request.body.category;
+					const operator: IAccountModel = this.Transform(request.user);
+					const rights = {read: AuthLevel.public, write: AuthLevel.user};
+					const description: string = "";
 
-			if (path) {
-				const query: object = Files.query_by_user_write(operator, {filename: path});
-				this.collection.findOne(query).then((item: object): void => {
-					if (!item) {
-						this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
-							this.ifSuccess(response, error, (): void => {
-								this.SendSuccess(response, result);
-							});
-						});
-					} else {
-						this.collection.deleteOne(query).then((): void => {
-							this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
-								this.ifSuccess(response, error, (): void => {
-									this.SendSuccess(response, result);
+					if (path) {
+						const query: object = Files.query_by_user_write(operator, {filename: path});
+						this.collection.findOne(query).then((item: object): void => {
+							if (!item) {
+								this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
+									this.ifSuccess(response, error, (): void => {
+										this.SendSuccess(response, result);
+									});
 								});
-							});
+							} else {
+								this.collection.deleteOne(query).then((): void => {
+									this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
+										this.ifSuccess(response, error, (): void => {
+											this.SendSuccess(response, result);
+										});
+									});
+								}).catch((error: IErrorObject) => {
+									this.SendError(response, error);
+								});
+							}
 						}).catch((error: IErrorObject) => {
 							this.SendError(response, error);
 						});
+					} else {
+						this.SendWarn(response, {code: 1, message: "no name" + " 3964"});
 					}
-				}).catch((error: IErrorObject) => {
-					this.SendError(response, error);
 				});
-			} else {
-				this.SendWarn(response, {code: 1, message: "no name" + " 3964"});
-			}
+			});
 		} catch (error) {
 			this.SendFatal(response, error);
 		}
@@ -537,14 +541,16 @@ export class Files extends Wrapper {
 	 */
 	public deleteFile(request: IDeleteFile, response: IJSONResponse): void {
 		try {
-			const path: string = request.params[0];
-			const operator: IAccountModel = this.Transform(request.user);
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				const path: string = request.params[0];
+				const operator: IAccountModel = this.Transform(request.user);
 
-			const query: object = Files.query_by_user_write(operator, {filename: path});
-			this.collection.findOneAndDelete(query).then((): void => {
-				this.SendSuccess(response, {});
-			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				const query: object = Files.query_by_user_write(operator, {filename: path});
+				this.collection.findOneAndDelete(query).then((): void => {
+					this.SendSuccess(response, {});
+				}).catch((error: IErrorObject) => {
+					this.SendError(response, error);
+				});
 			});
 		} catch (error) {
 			this.SendFatal(response, error);

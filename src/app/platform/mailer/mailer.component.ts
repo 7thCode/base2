@@ -17,9 +17,7 @@ import {AuthService} from "../auth/auth.service";
 import {SessionService} from "../base/services/session.service";
 import {MailerService} from "./mailer.service";
 import {ReplyDialogComponent} from "./reply-dialog/reply-dialog.component";
-import {Overlay, OverlayRef} from "@angular/cdk/overlay";
-import {ComponentPortal} from "@angular/cdk/portal";
-import {MatSpinner} from "@angular/material/progress-spinner";
+import {Overlay} from "@angular/cdk/overlay";
 import {SendDialogComponent} from "./send-dialog/send-dialog.component";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../base/library/spinner";
@@ -50,8 +48,6 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 
 	protected page: number = 0;
 
-	// private spinnerRef: OverlayRef = this.cdkSpinnerCreate();
-
 	private option: { start: number, limit: number } = {start: 0, limit: 0};
 
 	private mailbox: string = "INBOX";
@@ -79,11 +75,14 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		this.spinner = new Spinner(overlay);
 	}
 
+	/**
+	 */
 	private Progress(value: boolean): void {
 		this.spinner.Progress(value);
 	}
 
-
+	/**
+	 */
 	private setPage(page: number): void {
 		this.page = page;
 		this.count = 100;//  -(this.page * this.size);
@@ -178,16 +177,18 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		}
 	}
 
-	// private cdkSpinnerCreate(): OverlayRef {
-	// 	return this.overlay.create({
-	// 		hasBackdrop: true,
-	// 		backdropClass: "dark-backdrop",
-	// 		positionStrategy: this.overlay.position()
-	// 			.global()
-	// 			.centerHorizontally()
-	// 			.centerVertically(),
-	// 	});
-	// }
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
 
 	/**
 	 * 再描画
@@ -208,25 +209,6 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		});
 	}
 
-	/**
-	 * 処理中
-	 * スピナー
-	 * @param value
-	 * @constructor
-	 */
-	// protected Progress(value: boolean): void {
-	// 	if (value) {
-	// 		if (!this.progress) {
-	// 			setTimeout(() => this.spinnerRef.attach(new ComponentPortal(MatSpinner)));
-	// 			this.progress = true;
-	// 		}
-	// 	} else {
-	// 		if (this.progress) {
-	// 			setTimeout(() => this.spinnerRef.detach());
-	// 			this.progress = false;
-	// 		}
-	// 	}
-	// }
 
 	/**
 	 * リストビューデコレータ
@@ -272,6 +254,8 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		return result;
 	}
 
+	/**
+	 */
 	public messageDate(object: any): string {
 		return moment(object.date).format("YY-MM-DD hh:mm");
 	}

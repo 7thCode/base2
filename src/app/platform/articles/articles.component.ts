@@ -60,10 +60,6 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		this.spinner = new Spinner(overlay);
 	}
 
-	protected Progress(value: boolean): void {
-		this.spinner.Progress(value);
-	}
-
 	/**
 	 * エラー表示
 	 * @param error
@@ -74,6 +70,23 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 				duration: 8000,
 			});
 		}
+	}
+
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
+
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**
@@ -175,6 +188,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 * 削除
+	 * @param event
 	 * @param id ターゲット
 	 */
 	public onDelete(event: any, id: string): void {

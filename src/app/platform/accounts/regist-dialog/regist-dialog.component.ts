@@ -49,7 +49,6 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 		super();
 	}
 
-
 	/**
 	 *
 	 */

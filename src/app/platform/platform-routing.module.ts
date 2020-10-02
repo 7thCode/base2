@@ -23,14 +23,14 @@ import {ErrorComponent} from "./error/error.component";
 const routes: Routes = [
 	{
 		path: "platform", component: PlatformComponent, children: [
-			{path: "accounts", component: AccountsComponent},
-			{path: "articles", component: ArticlesComponent},
-			{path: "files", component: FilesComponent},
-			{path: "pages", component: PagesComponent},
-			{path: "personal", component: PersonalComponent},
-			{path: "mailer", component: MailerComponent},
-			{path: "stripe", component: StripeComponent},
-			{path: "", component: TopComponent},
+			{path: "accounts", component: AccountsComponent, data: {animation: "accounts"}},
+			{path: "articles", component: ArticlesComponent, data: {animation: "articles"}},
+			{path: "files", component: FilesComponent, data: {animation: "files"}},
+			{path: "pages", component: PagesComponent, data: {animation: "pages"}},
+			{path: "personal", component: PersonalComponent, data: {animation: "personal"}},
+			{path: "mailer", component: MailerComponent, data: {animation: "mailer"}},
+			{path: "stripe", component: StripeComponent, data: {animation: "stripe"}},
+			{path: "", component: TopComponent, data: {animation: "top"}},
 		],
 	},
 ];

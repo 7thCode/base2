@@ -38,6 +38,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	/**
 	 *
 	 * @param session
+	 * @param overlay
 	 * @param accountService
 	 * @param matDialog
 	 * @param snackbar
@@ -54,6 +55,9 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 		this.spinner = new Spinner(overlay);
 	}
 
+	/**
+	 * @param value
+	 */
 	private Progress(value: boolean): void {
 		this.spinner.Progress(value);
 	}

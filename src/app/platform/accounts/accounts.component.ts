@@ -40,8 +40,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 	public results: any[] = [];
 
-	// public progress: boolean = false;
-
 	public nickname: string = "";
 	public size: number = 20;
 	public count: number = 0;
@@ -56,6 +54,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	/**
 	 *
 	 * @param session
+	 * @param overlay
 	 * @param authService
 	 * @param accountService
 	 * @param matDialog
@@ -73,10 +72,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		this.spinner = new Spinner(overlay);
 	}
 
-	private Progress(value: boolean): void {
-		this.spinner.Progress(value);
-	}
-
 	/**
 	 * フォームコンバータ
 	 * @param data
@@ -91,6 +86,10 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 */
 	public static confirmToModel(data: object): object {
 		return data;
+	}
+
+	private Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**
@@ -153,6 +152,19 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
 				duration: 8000
+			});
+		}
+	}
+
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
 			});
 		}
 	}

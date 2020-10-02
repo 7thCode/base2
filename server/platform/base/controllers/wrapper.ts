@@ -25,6 +25,8 @@ export abstract class Wrapper {
 	protected readonly systemsConfig: any;
 	protected readonly usersConfig: any;
 	protected readonly logger: any;
+	protected readonly message: any;
+	protected readonly errors: {};
 
 	/**
 	 *
@@ -39,6 +41,19 @@ export abstract class Wrapper {
 		this.systemsConfig = config.systems;
 		this.usersConfig = config.users;
 		this.logger = logger;
+		this.message = this.systemsConfig.message;
+		this.errors = {
+			not_logged_in: {code: 1, message: this.message.not_logged_in},
+			already_logged_in: {code: 2, message: this.message.already_logged_in},
+			account_disabled: {code: 3, message: this.message.account_disabled},
+			only_local_account: {code: 4, message: this.message.only_local_account},
+			no_permission: {code: 5, message: this.message.no_permission},
+			code_mismatch: {code: 6, message: this.message.code_mismatch},
+			unknown_error: {code: 7, message: this.message.unknown_error},
+			username_already_regist: {code: 8, message: this.message.username_already_regist},
+			username_notfound: {code: 9, message: this.message.username_notfound},
+			account_enabled: {code: 10, message: this.message.account_enabled},
+		};
 	}
 
 	/**

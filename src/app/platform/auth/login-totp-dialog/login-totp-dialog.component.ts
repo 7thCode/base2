@@ -35,21 +35,6 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 
 	/**
 	 *
-	 */
-	// public progress: boolean = false;
-
-	/**
-	 *
-	 */
-	// public password_visible: boolean = false;
-
-	// public emailFormControl = new FormControl("", [
-	// 	Validators.required,
-	// 	Validators.email,
-	// ]);
-
-	/**
-	 *
 	 * @param data
 	 * @param matDialogRef
 	 * @param snackbar
@@ -77,19 +62,23 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 	}
 
 	/**
-	 *
-	 * @param value
-	 * @constructor
+	 * メッセージ表示
+	 * @param message
 	 */
-	// public Progress(value: boolean): void {
-	// 	this.progress = value;
-	// }
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
 
 	/**
 	 *
 	 */
 	public ngOnInit(): void {
-// 		this.Progress(false);
+
 	}
 
 	/**

@@ -9,7 +9,7 @@
 const express: any = require("express");
 export const router: any = express.Router();
 
-const event = module.parent.exports.event;
+const event: any = module.parent.exports.event;
 const config: any = module.parent.exports.config;
 const logger: any = module.parent.exports.logger;
 

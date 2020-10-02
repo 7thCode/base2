@@ -22,8 +22,6 @@ export class MailerService extends HttpService {
 
 	public model: string = "mailer";
 
-	// private mailbox: string;
-
 	/**
 	 *
 	 * @param http
@@ -32,7 +30,6 @@ export class MailerService extends HttpService {
 		public http: HttpClient,
 	) {
 		super(http);
-	// 	this.mailbox = "INBOX";
 	}
 
 	/**

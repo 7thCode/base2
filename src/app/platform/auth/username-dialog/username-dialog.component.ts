@@ -68,6 +68,19 @@ export class UserNameDialogComponent extends BaseDialogComponent implements OnIn
 	}
 
 	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
+
+	/**
 	 *
 	 */
 	public ngOnInit(): void {
