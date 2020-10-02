@@ -21,8 +21,7 @@ export class AppComponent implements OnInit {
 
 	private t = 0;
 
-	constructor(
-	) {
+	constructor() {
 	}
 
 	/**

@@ -57,16 +57,22 @@
 }
 
 body, input, textarea, select {
-    font-size: 17px;
+    font-size: 14px;
 }
 
 ::ng-deep.mat-dialog-container {
-	backdrop-filter: blur(12px);
+	backdrop-filter: blur(4px);
 	background-color: #fdfdfddf;
 }
 
+/*
 ::ng-deep.cdk-overlay-backdrop {
+	backdrop-filter: blur(4px);
 }
+*/
 
+::ng-deep.mat-form-field-flex {
+	background-color: rgba(0,0,0,.0);
+}
 
 /*# sourceMappingURL=progress.css.map */
