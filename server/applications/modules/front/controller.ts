@@ -11,9 +11,9 @@ export class Front {
 	/**
 	 *
 	 */
-// 	constructor() {
+	constructor() {
 
-// 	}
+	}
 
 }
 

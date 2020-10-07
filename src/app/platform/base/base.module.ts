@@ -15,12 +15,16 @@ import {MatDialogModule} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "./components/info-dialog/info-dialog.component";
 import {YesNoDialogComponent} from "./components/yes-no-dialog/yes-no-dialog.component";
+import {ResizeDialogComponent} from "../image/resize-dialog/resize-dialog.component";
+
 import {EqualsValidator} from "./directives/equals-validator.directive";
 import {HighlightDirective} from "./directives/highlight.directive";
 
 import {ProfileService} from "./services/profile.service";
 import {PublicKeyService} from "./services/publickey.service";
 import {SessionService} from "./services/session.service";
+import {MatCardModule} from "@angular/material/card";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
 	providers: [
@@ -33,6 +37,7 @@ import {SessionService} from "./services/session.service";
 		HighlightDirective,
 		InfoDialogComponent,
 		YesNoDialogComponent,
+		ResizeDialogComponent
 	],
 	imports: [
 
@@ -42,16 +47,20 @@ import {SessionService} from "./services/session.service";
 		MatCheckboxModule,
 		MatDialogModule,
 		FormsModule,
+		MatCardModule,
+		MatSelectModule,
 	],
 	exports: [
 		EqualsValidator,
 		HighlightDirective,
 		InfoDialogComponent,
 		YesNoDialogComponent,
+		ResizeDialogComponent
 	],
 	bootstrap: [
 		InfoDialogComponent,
-		YesNoDialogComponent
+		YesNoDialogComponent,
+		ResizeDialogComponent
 	],
 })
 

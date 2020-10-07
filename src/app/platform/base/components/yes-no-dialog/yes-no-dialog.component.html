@@ -2,7 +2,11 @@
 	<h1 mat-dialog-title>{{content.title}}</h1>
 
 	<mat-dialog-content fxLayout="column">
-		<div>{{content.message}}</div>
+		<mat-card>
+			<mat-card-content>
+				<div>{{content.message}}</div>
+			</mat-card-content>
+		</mat-card>
 	</mat-dialog-content>
 
 	<div class="spacer"></div>

@@ -1,22 +1,21 @@
-<div fxLayout="column" fxFill class="background" style="padding:10px;">
-	<h2 mat-dialog-title>Image</h2>
-	<div mat-dialog-subtitle>]/files/get/{{data.filename}}</div>
-	<div fxLayout="column" fxLayoutAlign="space-between" style="height:100%;">
-		<div fxLayout="column" fxLayoutAlign="start" style="height:100%;">
-			<div fxLayout="row" style="height:100%;">
-				<div fxFlex="80%" fxLayoutAlign="center center" style="padding:1rem;">
+<div class="fix-action-dialog">
+	<h2 mat-dialog-title>/files/get/{{data.filename}}</h2>
+	<mat-dialog-content>
+		<div fxLayout="column" fxLayoutAlign="start">
+			<div fxLayout="row">
+				<mat-card fxFlex="80%" fxLayoutAlign="center center" style="padding:1rem;">
 					<image-cropper
-							[imageChangedEvent]="imageChangedEvent"
-							[imageBase64]="imageBase64()"
-							[maintainAspectRatio]="false"
-							[format]="format()"
-							(imageCropped)="imageCropped($event)"
-							(imageLoaded)="imageLoaded()"
-							(cropperReady)="cropperReady()"
-							(loadImageFailed)="loadImageFailed()"
-							(rotate)="onRotate($event)">
+						[imageChangedEvent]="imageChangedEvent"
+						[imageBase64]="imageBase64()"
+						[maintainAspectRatio]="false"
+						[format]="format()"
+						(imageCropped)="imageCropped($event)"
+						(imageLoaded)="imageLoaded()"
+						(cropperReady)="cropperReady()"
+						(loadImageFailed)="loadImageFailed()"
+						(rotate)="onRotate($event)">
 					</image-cropper>
-				</div>
+				</mat-card>
 				<mat-card fxFlex="20%" fxLayout="column" fxLayoutAlign="center start">
 					<button mat-raised-button color="accent" style="margin:0.6rem auto;" (click)="rotateLeft()">
 						<i class="material-icons">rotate_left</i>
@@ -33,9 +32,13 @@
 				</mat-card>
 			</div>
 		</div>
-		<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-			<button mat-raised-button color="accent" (click)="onAccept()">OK</button>
-			<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
-		</mat-dialog-actions>
-	</div>
+	</mat-dialog-content>
+
+	<div class="spacer"></div>
+
+	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
+		<button mat-raised-button color="accent" (click)="onAccept()">OK</button>
+		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+	</mat-dialog-actions>
+
 </div>

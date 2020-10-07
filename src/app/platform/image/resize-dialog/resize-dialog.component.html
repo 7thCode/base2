@@ -1,0 +1,38 @@
+<div class="fix-action-dialog">
+	<h1 mat-dialog-title>{{content.title}}</h1>
+
+	<mat-dialog-content>
+		<mat-card>
+			<mat-card-content>
+				<div fxLayout="column">
+					<div style="margin:14px;">{{content.message}}</div>
+					<canvas #preview width="320" height="240"></canvas>
+					<div style="margin:12px;">{{image_size}}</div>
+					<mat-form-field class="input-text">
+						<mat-label>Resize Factor</mat-label>
+						<mat-select [(value)]="factor">
+							<mat-option value="1.0">100%</mat-option>
+							<mat-option value="0.9">90%</mat-option>
+							<mat-option value="0.8">80%</mat-option>
+							<mat-option value="0.7">70%</mat-option>
+							<mat-option value="0.6">60%</mat-option>
+							<mat-option value="0.5">50%</mat-option>
+							<mat-option value="0.4">40%</mat-option>
+							<mat-option value="0.3">30%</mat-option>
+							<mat-option value="0.2">20%</mat-option>
+							<mat-option value="0.1">10%</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</mat-dialog-content>
+
+	<div class="spacer"></div>
+
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around">
+		<button mat-raised-button color="accent" (click)="onResize()">Resize</button>
+		<button mat-raised-button color="primary" (click)="onAccept()">As Is</button>
+		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="onCancel()">{{content.cancel_button}}</button>
+	</mat-dialog-actions>
+</div>

@@ -184,6 +184,20 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	}
 
 	/**
+	 *
+	 * @mime
+	 */
+	protected mimeToType(mime: string): string {
+		let result = "";
+		const type: string[] = mime.split("/");
+		if (type.length >= 2) {
+			result = type[type.length - 1].toLocaleLowerCase();
+		}
+		return result;
+	}
+
+
+	/**
 	 * ファイルの拡張子
 	 *
 	 * @returns 拡張子

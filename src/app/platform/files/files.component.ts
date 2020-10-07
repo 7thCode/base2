@@ -19,6 +19,7 @@ import {SessionService} from "../base/services/session.service";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 import {Overlay} from "@angular/cdk/overlay";
 import {Spinner} from "../base/library/spinner";
+import {ResizeDialogComponent} from "../image/resize-dialog/resize-dialog.component";
 
 /**
  * ファイル
@@ -163,7 +164,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.page = 0;
 		this.query = {};
 		this.results = [];
-		this.breakpoint =  this.widthToColumns(window.innerWidth);
+		this.breakpoint = this.widthToColumns(window.innerWidth);
 
 		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
@@ -185,6 +186,73 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
+
+	public Upload(path: string, files: any[]) {
+		this.Progress(true);
+		this.uploadFiles(path, files, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				this.draw((error, results) => {
+					if (!error) {
+						if (results) {
+							this.results = results;
+							this.Complete("", results);
+						} else {
+							this.Complete("error", {code: -1, message: "error."});
+						}
+					} else {
+						this.Complete("error", error);
+					}
+				});
+			} else {
+				this.Complete("error", error);
+			}
+			this.Progress(false);
+		});
+	}
+
+	public resizeDialog(file: any, callback: (error: IErrorObject, result: any) => void): void {
+		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file};
+		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
+			width: "30%",
+			minWidth: "320px",
+			height: "fit-content",
+			data: {
+				session: this.currentSession,
+				content: resultDialogContent,
+			},
+			disableClose: true,
+		});
+
+		dialog.afterOpened().subscribe((result: any): void => {
+
+		});
+
+		dialog.beforeClosed().subscribe((result: any): void => {
+			if (result) { // if not cancel then
+				callback(null, result.content.file);
+			}
+		});
+
+		dialog.afterClosed().subscribe((result: any): void => {
+			this.Complete("", result);
+		});
+	}
+
+	/*
+*
+* */
+	public getImage(target_file: any, callback: (error: IErrorObject, result: any) => void): void {
+		const reader = new FileReader();
+		const image = new Image();
+		reader.onload = (event) => {
+			image.onload = () => {
+				callback(null, image);
+			}
+			image.src = (event.target.result as string);
+		}
+		reader.readAsDataURL(target_file);
+	}
+
 	/**
 	 * ファイルドロップハンドラー
 	 * @param path パス
@@ -192,28 +260,28 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 */
 	public onFileDrop(path: string, files: any[]): void {
 		if (files.length > 0) {
-			this.Progress(true);
-			this.uploadFiles(path, files, (error: IErrorObject, result: any): void => {
-				if (!error) {
-					this.draw((error, results) => {
-						if (!error) {
-							if (results) {
-								this.results = results;
-								this.Complete("", results);
-							} else {
-								this.Complete("error", {code: -1, message: "error."});
-							}
-						} else {
-							this.Complete("error", error);
-						}
-					});
-				} else {
-					this.Complete("error", error);
+			this.marshallingFiles(files).forEach((file, index) => {
+					const type = this.mimeToType(file.type);
+					switch (type) {  // resizeable?
+						case "jpeg":
+						case "png":
+							this.getImage(file, (error, image) => {
+								if (image.width > 1000) {
+									this.resizeDialog(file, (error: IErrorObject, result: any) => {
+										files[index] = result;
+										this.Upload(path, files);
+									});
+								} else {
+									this.Upload(path, files);
+								}
+							})
+							break;
+						default:
+							this.Upload(path, files);
+					}
 				}
-				this.Progress(false);
-			});
+			);
 		}
-		this.Progress(false);
 	}
 
 	/**
@@ -239,7 +307,6 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.query = {};
 		this.page = 0;
 
-	// 	this.count = 0;
 
 		if (this.filename) {
 			this.query = {filename: {$regex: this.filename}};
@@ -250,7 +317,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 				if (results) {
 					this.results = results;
 					this.Complete("", results);
-				}else {
+				} else {
 					this.Complete("error", {code: -1, message: "error."});
 				}
 			} else {
@@ -275,7 +342,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 								this.results = results;
 								this.Complete("", results);
 							} else {
-								this.Complete("error", {code: -1, message:"error."});
+								this.Complete("error", {code: -1, message: "error."});
 							}
 						} else {
 							this.Complete("error", error);
@@ -329,6 +396,30 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 								result.cols = 1;
 								result.rows = 1;
 								result.type = 0;
+
+								const type = this.mimeToType(result.metadata.type);
+								switch (type) {
+									case "jpg":
+									case "jpeg":
+									case "png":
+									case "bmp":
+									case "webp":
+										result.type = 1;
+										break;
+									case "svg+xml":
+										result.type = 2;
+										break;
+									case "mpg":
+									case "mp4":
+									case "avi":
+									case "mov":
+									case "m4v":
+									case "webm":
+										result.type = 3;
+										break;
+									default:
+								}
+								/*
 								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
 									result.type = 1;
 								} else if (this.hasExtension({name: result.filename}, "svg")) {
@@ -336,6 +427,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 								} else if (this.hasExtension({name: result.filename}, "mpg,mp4,avi,mov,m4v,webm")) {
 									result.type = 3;
 								}
+								*/
 								result.extension = this.Extension({name: result.filename});
 
 								filtered.push(result);

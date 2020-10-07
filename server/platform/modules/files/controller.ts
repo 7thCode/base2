@@ -221,6 +221,7 @@ export class Files extends Wrapper {
 							relations: {},
 							rights,  // {read: user.auth, write: user.auth},
 							type: Files.toMime(request),
+							count: 0,
 							category,
 							description,
 						},

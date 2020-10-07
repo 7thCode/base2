@@ -80,3 +80,31 @@ gulp.task('build', () => {
 gulp.task('default', gulp.series('clean', 'compile', 'prebuild', 'build'), () => {
 
 });
+
+// copy
+gulp.task('synch', () => {
+	return gulp.src([
+		'dualuse/*.*/*.*',
+		'models/platform/**/*.ts',
+		'server/applications/**/*.ts',
+		'server/platform/**/*.ts',
+		'server/platform/assets/**/*.*',
+		'server/plugins/**/*.ts',
+		'src/*.*',
+		'src/app/*.*',
+		'src/app/platform/**/*.*',
+		'src/app/plugins/**/*.*',
+		'src/assets/**/*.*',
+		'src/environments/*.ts',
+		'views/platform/**/*.pug',
+		'views/plugins/**/*.pug',
+		'types/platform/**/*.ts',
+		'gulpfile.js',
+		'app.ts',
+		'patch.js',
+		'package.json',
+		'package-lock.json',
+		'tsconfig*.json',
+	], {base: './', allowEmpty: true})
+		.pipe(gulp.dest('synch'));
+});
