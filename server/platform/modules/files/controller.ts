@@ -165,6 +165,29 @@ export class Files extends Wrapper {
 
 	/**
 	 *
+	 * @param gfs
+	 * @param collection
+	 * @param name
+	 * @param callback
+	 * @returns none
+	 */
+	private resultPublicFile(gfs: any, collection: any, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
+		collection.findOne({filename: name}, (error: IErrorObject, item: any): void => {
+			if (!error) {
+				if (item) {
+					const readstream: any = gfs.openDownloadStream(item._id);
+					callback(null, readstream, item);
+				} else {
+					callback({code: -1, message: "not found." + " 2010"}, null, "");
+				}
+			} else {
+				callback(error, null, "");
+			}
+		});
+	}
+
+	/**
+	 *
 	 * @param request
 	 * @param user
 	 * @param name
@@ -378,7 +401,7 @@ export class Files extends Wrapper {
 	public brankImage(callback: (error: IErrorObject, result: object, item: string) => void): void {
 		try {
 			// NOT FOUND IMAGE.
-			this.resultFile(this.gfs, this.collection, this.systemsConfig.default.user_id, "blank.png", (error, readstream, type: string) => {
+			this.resultPublicFile(this.gfs, this.collection, "blank.png", (error, readstream, type: string) => {
 				// 	item.metadata.type
 				callback(error, readstream, type);
 			});
