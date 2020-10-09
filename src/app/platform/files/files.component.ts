@@ -210,8 +210,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		});
 	}
 
-	public resizeDialog(file: any, callback: (error: IErrorObject, result: any) => void): void {
-		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file};
+	public resizeDialog(file: any, image:any, callback: (error: IErrorObject, result: any) => void): void {
+		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
@@ -260,6 +260,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 */
 	public onFileDrop(path: string, files: any[]): void {
 		if (files.length > 0) {
+
 			this.marshallingFiles(files).forEach((file, index) => {
 					const type = this.mimeToType(file.type);
 					switch (type) {  // resizeable?
@@ -267,7 +268,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 						case "png":
 							this.getImage(file, (error, image) => {
 								if (image.width > 1000) {
-									this.resizeDialog(file, (error: IErrorObject, result: any) => {
+									this.resizeDialog(file, image,(error: IErrorObject, result: any) => {
 										files[index] = result;
 										this.Upload(path, files);
 									});
@@ -281,6 +282,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 					}
 				}
 			);
+
+
 		}
 	}
 

@@ -9,7 +9,6 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from "@angular/core";
 
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {IErrorObject} from "../../../../../types/platform/universe";
 
 @Component({
 	selector: "resize-dialog",
@@ -30,11 +29,9 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 	public image_size: string;
 	@ViewChild("preview", {read: ElementRef}) private preview_ref: ElementRef;
 
-	private reader: FileReader = null;
 	private image: any = null;
 	private canvas: any = null;
 	private target_file: File = null;
-	private type_to: string = "image/jpeg";
 
 	get content(): any {
 		return this.data.content;
@@ -45,8 +42,6 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 		public data: any,
 		public matDialogRef: MatDialogRef<ResizeDialogComponent>) {
 
-		this.reader = new FileReader();
-		this.image = new Image();
 		this.canvas = document.createElement("canvas");
 		this.target_file = null;
 
@@ -61,6 +56,7 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 	public ngOnInit(): void {
 		this.factor = "0.5";
 		this.target_file = this.data.content.file;
+		this.image = this.data.content.image;
 	}
 
 	/*
@@ -69,9 +65,8 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 	public ngAfterViewInit(): void {
 		this.preview = this.preview_ref.nativeElement;
 		if (this.target_file.type === "image/jpeg" || this.target_file.type === "image/png") {
-			this.showPreview(this.preview, this.target_file, (error: IErrorObject, image: any) => {
-				this.image_size = image.width + " X " + image.height;
-			});
+			this.image_size = this.image.width + " X " + this.image.height;
+			this.showPreview(this.preview);
 		}
 	}
 
@@ -96,75 +91,48 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 		if (this.target_file.type === "image/jpeg" || this.target_file.type === "image/png") {
 			const factor = parseFloat(this.factor);
 			if (factor !== 0) {
-				this.resize(this.target_file, factor, (error, result) => {
-					if (!error) {
-						this.data.content.file = result;
-					}
-					this.matDialogRef.close(this.data);
-				});
+				this.data.content.file = this.resizeCanvasToFile(this.canvas, factor);
+				this.matDialogRef.close(this.data);
 			}
 		} else {
 			this.matDialogRef.close(this.data);
 		}
 	}
 
-
 	/*
 	*
 	* */
-	public showPreview(canvas: any, target_file: any, callback: (error: IErrorObject, result: any) => void): void {
-		const reader = new FileReader();
-		const image = new Image();
-		reader.onload = (event) => {
-			image.onload = () => {
-				const ctx: any = canvas.getContext("2d");
-				ctx.clearRect(0, 0, 360, 240);
-				ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, 360, 240);
-				callback(null, image);
-			}
-			image.src = (event.target.result as string);
-		}
-		reader.readAsDataURL(target_file);
+	public showPreview(canvas: any): void {
+		const ctx: any = canvas.getContext("2d");
+		ctx.clearRect(0, 0, 360, 240);
+		ctx.drawImage(this.image, 0, 0, this.image.width, this.image.height, 0, 0, 360, 240);
 	}
 
 	/*
 	*
 	* */
-	public resize(target_file: any, factor: number, callback: (error: IErrorObject, result: any) => void): void {
+	public resizeCanvasToFile(canvas: any, factor: number): File {
+		const result_width: number = this.image.width * factor;
+		const result_height: number = this.image.height * factor;
 
-		this.reader.onload = (event) => {
+		const ctx: any = canvas.getContext("2d");
 
-			this.image.onload = () => {
+		canvas.width = result_width;
+		canvas.height = result_height;
 
-				const result_width: number = this.image.width * factor;
-				const result_height: number = this.image.height * factor;
+		ctx.clearRect(0, 0, result_width, result_height);
+		ctx.drawImage(this.image, 0, 0, this.image.width, this.image.height, 0, 0, result_width, result_height);
 
-				const ctx: any = this.canvas.getContext("2d");
-
-				this.canvas.width = result_width;
-				this.canvas.height = result_height;
-
-				ctx.clearRect(0, 0, result_width, result_height);
-				ctx.drawImage(this.image, 0, 0, this.image.width, this.image.height, 0, 0, result_width, result_height);
-
-				const base64: any = this.canvas.toDataURL(this.type_to);
-				const bin: any = atob(base64.split("base64,")[1]);
-				const length: number = bin.length;
-				const binary_array: Uint8Array = new Uint8Array(length);
-				let index: number = 0;
-				while (index < length) {
-					binary_array[index] = bin.charCodeAt(index);
-					index++;
-				}
-
-				const file: File = new File([binary_array], target_file.name, {type: this.type_to});
-				callback(null, file);
-			}
-
-			this.image.src = (event.target.result as string);
+		const base64: any = canvas.toDataURL(this.target_file);
+		const bin: any = atob(base64.split("base64,")[1]);
+		const length: number = bin.length;
+		const binary_array: Uint8Array = new Uint8Array(length);
+		let index: number = 0;
+		while (index < length) {
+			binary_array[index] = bin.charCodeAt(index);
+			index++;
 		}
-
-		this.reader.readAsDataURL(target_file);
+		return new File([binary_array], this.target_file.name, {type: this.target_file.type});
 	}
 
 }

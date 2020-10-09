@@ -18,6 +18,7 @@ import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 import { environment } from '../../../environments/environment';
 
 import {SessionService} from "../base/services/session.service";
+import {ResizeDialogComponent} from "./resize-dialog/resize-dialog.component";
 
 /**
  * イメージ
@@ -231,6 +232,66 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		});
 	}
 
+	/*
+*
+* */
+	public resizeDialog(file: any, image:any, callback: (error: IErrorObject, result: any) => void): void {
+		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
+		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
+			width: "30%",
+			minWidth: "320px",
+			height: "fit-content",
+			data: {
+				session: this.currentSession,
+				content: resultDialogContent,
+			},
+			disableClose: true,
+		});
+
+		dialog.afterOpened().subscribe((result: any): void => {
+
+		});
+
+		dialog.beforeClosed().subscribe((result: any): void => {
+			if (result) { // if not cancel then
+				callback(null, result.content.file);
+			}
+		});
+
+		dialog.afterClosed().subscribe((result: any): void => {
+			this.Complete("", result);
+		});
+	}
+
+	/*
+	*
+	* */
+	public getImage(target_file: any, callback: (error: IErrorObject, result: any) => void): void {
+		const reader = new FileReader();
+		const image = new Image();
+		reader.onload = (event) => {
+			image.onload = () => {
+				callback(null, image);
+			}
+			image.src = (event.target.result as string);
+		}
+		reader.readAsDataURL(target_file);
+	}
+
+	/*
+	*
+	* */
+	public Upload(path:string, file: any) {
+		this.uploadFile(file,path + this.fileName, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				this.draw(this.fileName);
+				this.Complete("create",  {name: this.fileName});
+			} else {
+				this.Complete("error", error);
+			}
+		});
+	}
+
 	/**
 	 *
 	 * @param path
@@ -239,21 +300,28 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 */
 	public onFileDrop(path: string, files: File[], rename: boolean): void {
 		if (files.length > 0) {
+			const file = files[0];
 			if (!rename) {
-				this.fileName = files[0].name;
+				this.fileName = file.name;
 			}
-			// const  size = files[0].size;
-			// 	this.Progress(true);
-			this.uploadFile(files[0], path + this.fileName, (error: IErrorObject, result: any): void => {
-				if (!error) {
-					this.draw(this.fileName);
-					// 		this.Progress(false);
-					this.Complete("create",  {name: this.fileName});
-				} else {
-					this.Complete("error", error);
-				}
-				// 		this.Progress(false);
-			});
+
+			const type = this.mimeToType(file.type);
+			switch (type) {  // resizeable?
+				case "jpeg":
+				case "png":
+					this.getImage(file, (error: IErrorObject, image: any) => {
+						if (image.width > 1000) {
+							this.resizeDialog(file, image,(error: IErrorObject, result: any) => {
+								this.Upload(path, file);
+							});
+						} else {
+							this.Upload(path, file);
+						}
+					})
+					break;
+				default:
+					this.Upload(path, file);
+			}
 		}
 	}
 
@@ -262,14 +330,13 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param event
 	 */
 	public updateDialog(event: any): void {
-		// 	this.Progress(true);
+
 		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
 			data: {content: event.target, filename: this.fileName},
 			disableClose: true,
 		});
 
 		dialog.afterOpened().subscribe(() => {
-			// 		this.Progress(false);
 		});
 
 		dialog.beforeClosed().subscribe((result: any): void => {
@@ -278,7 +345,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 					case "cancel":
 						break;
 					case "update":
-						// 			this.Progress(true);
 						this.upload(this.fileName, result.content, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.draw(this.fileName);
@@ -286,18 +352,15 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 							} else {
 								this.Complete("error", error);
 							}
-							// 			this.Progress(false);
 						});
 						break;
 					case "delete":
-						// 			this.Progress(true);
 						this.delete(this.fileName, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.Complete("delete", {name: this.fileName});
 							} else {
 								this.Complete("error", error);
 							}
-							// 				this.Progress(false);
 						});
 						break;
 				}

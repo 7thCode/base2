@@ -24,9 +24,7 @@ gulp.task('clean', (cb) => {
 gulp.task('compile', () => {
 	return gulp.src([
 		'app.ts',
-		'main.ts',
 		'models/**/*.ts',
-		'bridge/**/*.ts',
 		'server/**/*.ts',
 		'types/**/*.ts'
 	], {base: './'})
@@ -49,7 +47,6 @@ gulp.task('prebuild', () => {
 gulp.task('build', () => {
 	return gulp.src([
 		'config/*.json',
-		'config/platform/logs.json',
 		'config/default.js',
 		'logs/*',
 		'models/**/*.js',
@@ -59,7 +56,6 @@ gulp.task('build', () => {
 		'public/**/*.html',
 		'public/images/*.*',
 		'public/favicon/*.*',
-		'bridge/**/*.js',
 		'server/**/*.js',
 		'server/**/*.pug',
 		'server/platform/**/*.js',
