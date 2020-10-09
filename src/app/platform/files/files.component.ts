@@ -46,6 +46,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public count: number = 0;
 
 	public breakpoint: number = 4;
+	public resizeThreshold: any;
 
 	protected query: object = {};
 	protected page: number = 0;
@@ -69,6 +70,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	) {
 		super(session, http);
 		this.spinner = new Spinner(overlay);
+		this.resizeThreshold = {width: 1000, height: 1000};
 	}
 
 	/**
@@ -153,7 +155,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public onDrop(event: any): void {
 		event.preventDefault();
 		const path: string = "";
-		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files));
+		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files), event.shiftKey);
 	}
 
 	/**
@@ -186,10 +188,12 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.breakpoint = this.widthToColumns(event.target.innerWidth);
 	}
 
-
-	public Upload(path: string, files: any[]) {
+	/**
+	 *
+	 */
+	public Upload(path: string, file: any) {
 		this.Progress(true);
-		this.uploadFiles(path, files, (error: IErrorObject, result: any): void => {
+		this.uploadFile(file, path + file.name, (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.draw((error, results) => {
 					if (!error) {
@@ -207,9 +211,12 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 				this.Complete("error", error);
 			}
 			this.Progress(false);
-		});
+		})
 	}
 
+	/*
+	*
+	*/
 	public resizeDialog(file: any, image:any, callback: (error: IErrorObject, result: any) => void): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
@@ -239,8 +246,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	}
 
 	/*
-*
-* */
+	*
+	*/
 	public getImage(target_file: any, callback: (error: IErrorObject, result: any) => void): void {
 		const reader = new FileReader();
 		const image = new Image();
@@ -258,31 +265,47 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * @param path パス
 	 * @param files ファイルオブジェクト
 	 */
-	public onFileDrop(path: string, files: any[]): void {
+	public onFileDrop(path: string, files: any[], escapeResize:boolean): void {
 		if (files.length > 0) {
 
-			this.marshallingFiles(files).forEach((file, index) => {
-					const type = this.mimeToType(file.type);
-					switch (type) {  // resizeable?
-						case "jpeg":
-						case "png":
-							this.getImage(file, (error, image) => {
-								if (image.width > 1000) {
-									this.resizeDialog(file, image,(error: IErrorObject, result: any) => {
-										files[index] = result;
-										this.Upload(path, files);
-									});
-								} else {
-									this.Upload(path, files);
-								}
-							})
-							break;
-						default:
-							this.Upload(path, files);
-					}
-				}
-			);
+			const promises: any[] = [];
+			this.marshallingFiles(files).forEach((file) => {
+				promises.push(new Promise((resolve, reject) => {
+					 const type = this.mimeToType(file.type);
+					 switch (type) {  // resizeable?
+						 case "jpeg":
+						 case "png":
+								 this.getImage(file, (error, image) => {
+									 if (!error) {
+										 if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
+											 this.resizeDialog(file, image, (error: IErrorObject, resized: any) => {
+												 if (!error) {
+													 resolve(resized);
+												 } else {
+													 reject(error);
+												 }
+											 });
+										 } else {
+											 resolve(file);
+										 }
+									 } else {
+										 reject(error);
+									 }
+								 })
+							 break;
+						 default:
+							 resolve(file);
+					 }
+				 }));
+			});
 
+			promises.forEach((promise) => {
+				promise.then((file: File) => {
+					this.Upload(path, file);
+				}).catch((error: IErrorObject) => {
+					this.errorBar(error);
+				})
+			})
 
 		}
 	}
@@ -300,7 +323,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public onChangeFileInput(): void {
 		const files: any[] = this.fileInput.nativeElement.files;
 		const path: string = "";
-		this.onFileDrop(path, files);
+		this.onFileDrop(path, files, false);
 	}
 
 	/**
