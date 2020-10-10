@@ -21,11 +21,11 @@ import {AuthService} from "../auth.service";
  * @since 0.01
  */
 @Component({
-	selector: "password-dialog",
+	selector: "password-immediate-dialog",
 	styleUrls: ["../auth.component.css"],
-	templateUrl: "./username-dialog.component.html",
+	templateUrl: "./password-immediate-dialog.component.html",
 })
-export class UserNameDialogComponent extends BaseDialogComponent implements OnInit {
+export class PasswordImmediateDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
@@ -33,6 +33,11 @@ export class UserNameDialogComponent extends BaseDialogComponent implements OnIn
 	get content(): any {
 		return this.data.content;
 	}
+
+	/**
+	 *
+	 */
+	public password_visible: boolean = false;
 
 	/**
 	 *
@@ -62,6 +67,7 @@ export class UserNameDialogComponent extends BaseDialogComponent implements OnIn
 		}
 	}
 
+
 	/**
 	 * メッセージ表示
 	 * @param message
@@ -80,6 +86,7 @@ export class UserNameDialogComponent extends BaseDialogComponent implements OnIn
 	 */
 	public ngOnInit(): void {
 		this.Progress(false);
+		this.password_visible = false;
 	}
 
 	/**
@@ -87,7 +94,7 @@ export class UserNameDialogComponent extends BaseDialogComponent implements OnIn
 	 */
 	public onAccept(): void {
 		this.Progress(true);
-		this.auth.username(this.content.update_username, (error: IErrorObject, result: any) => {
+		this.auth.password_immediate(this.content.username, this.content.password, (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.matDialogRef.close(this.data);
 			} else {

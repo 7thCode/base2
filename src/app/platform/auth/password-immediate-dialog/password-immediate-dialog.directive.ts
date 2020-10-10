@@ -6,17 +6,19 @@
 
 "use strict";
 
-import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
+import {Directive, EventEmitter, HostListener, Input, Output} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "../../base/components/info-dialog/info-dialog.component";
-import {UserNameDialogComponent} from "./username-dialog.component";
+import {PasswordImmediateDialogComponent} from "./password-immediate-dialog.component";
 
 @Directive({
-	selector: "[auth-username-button]",
+	selector: "[auth-password-immediate-button]",
 })
 
-export class UserNameDialogDirective {
+export class PasswordImmediateDialogDirective {
+
+	@Input() public username: string;
 
 	/**
 	 *
@@ -39,17 +41,19 @@ export class UserNameDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "Check mail", message: "Username Change Mail sent."};
+		const resultDialogContent: any = {title: "Changed.", message: "Success."};
 
-		const dialog: MatDialogRef<any> = this.matDialog.open(UserNameDialogComponent, {
+		const dialog: MatDialogRef<any> = this.matDialog.open(PasswordImmediateDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {
-					title: "Username",
-					description: "Lorem ipsum...",
-					username: "",
+					title: "Password",
+					description: "change password...",
+					username: this.username,
+					password: "",
+					confirm_password: "",
 				},
 			},
 			disableClose: true,

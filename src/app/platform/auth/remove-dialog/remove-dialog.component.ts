@@ -21,11 +21,11 @@ import {AuthService} from "../auth.service";
  * @since 0.01
  */
 @Component({
-	selector: "password-dialog",
+	selector: "remove-dialog",
 	styleUrls: ["../auth.component.css"],
-	templateUrl: "./username-dialog.component.html",
+	templateUrl: "./remove-dialog.component.html",
 })
-export class UserNameDialogComponent extends BaseDialogComponent implements OnInit {
+export class RemoveDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 *
@@ -87,7 +87,7 @@ export class UserNameDialogComponent extends BaseDialogComponent implements OnIn
 	 */
 	public onAccept(): void {
 		this.Progress(true);
-		this.auth.username(this.content.update_username, (error: IErrorObject, result: any) => {
+		this.auth.remove( (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.matDialogRef.close(this.data);
 			} else {

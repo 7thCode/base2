@@ -6,17 +6,20 @@
 
 "use strict";
 
-import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
+import {Directive, EventEmitter, HostListener, Input, Output} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "../../base/components/info-dialog/info-dialog.component";
-import {UserNameDialogComponent} from "./username-dialog.component";
+import {RemoveImmediateDialogComponent} from "./remove-immediate-dialog.component";
 
 @Directive({
-	selector: "[auth-username-button]",
+	selector: "[auth-remove-immediate-button]",
 })
 
-export class UserNameDialogDirective {
+export class RemoveImmediateDialogDirective {
+
+
+	@Input() public username: string;
 
 	/**
 	 *
@@ -39,17 +42,18 @@ export class UserNameDialogDirective {
 	@HostListener("click", ["$event.target"])
 	public onClick(target: any): void {
 
-		const resultDialogContent: any = {title: "Check mail", message: "Username Change Mail sent."};
+		const resultDialogContent: any = {title: "Changed.", message: "Sucsess."};
 
-		const dialog: MatDialogRef<any> = this.matDialog.open(UserNameDialogComponent, {
+		const dialog: MatDialogRef<any> = this.matDialog.open(RemoveImmediateDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {
 				content: {
 					title: "Username",
-					description: "Lorem ipsum...",
-					username: "",
+					description: "change username...",
+					original_username: this.username,
+					update_username: ""
 				},
 			},
 			disableClose: true,

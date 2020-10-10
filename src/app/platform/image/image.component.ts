@@ -93,18 +93,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.user_id) + "&r=" + this.randamString();
 	}
 
-	/**
-	 *
-	 * @param name
-	 * @param category
-	 */
-	protected getCategory(name: string, category: string): string {
-		let result: string = "";
-		if ((name === "avatar.jpg" || name === "blank.png")) {
-			result = "l";
-		}
-		return result;
-	}
 
 	/**
 	 *

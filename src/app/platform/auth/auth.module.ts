@@ -41,9 +41,16 @@ import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
 import {AuthService} from "./auth.service";
 import {WithdrawDialogComponent} from "./withdraw-dialog/withdraw-dialog.component";
 import {WithdrawDialogDirective} from "./withdraw-dialog/withdraw-dialog.directive";
-import {HttpService} from "../base/services/http.service";
 import {UserNameDialogComponent} from "./username-dialog/username-dialog.component";
 import {UserNameDialogDirective} from "./username-dialog/username-dialog.directive";
+import {PasswordImmediateDialogComponent} from "./password-immediate-dialog/password-immediate-dialog.component";
+import {PasswordImmediateDialogDirective} from "./password-immediate-dialog/password-immediate-dialog.directive";
+import {UsernameImmediateDialogDirective} from "./username-immediate-dialog/username-immediate-dialog.directive";
+import {UsernameImmediateDialogComponent} from "./username-immediate-dialog/username-immediate-dialog.component";
+import {RemoveImmediateDialogDirective} from "./remove-immediate-dialog/remove-immediate-dialog.directive";
+import {RemoveImmediateDialogComponent} from "./remove-immediate-dialog/remove-immediate-dialog.component";
+import {RemoveDialogComponent} from "./remove-dialog/remove-dialog.component";
+import {RemoveDialogDirective} from "./remove-dialog/remove-dialog.directive";
 
 @NgModule({
 	declarations: [
@@ -52,7 +59,11 @@ import {UserNameDialogDirective} from "./username-dialog/username-dialog.directi
 		LoginTotpDialogDirective,
 		RegistDialogDirective,
 		PasswordDialogDirective,
+		PasswordImmediateDialogDirective,
 		UserNameDialogDirective,
+		UsernameImmediateDialogDirective,
+		RemoveDialogDirective,
+		RemoveImmediateDialogDirective,
 		LogoutDialogDirective,
 		WithdrawDialogDirective,
 		LoginDialogComponent,
@@ -60,7 +71,11 @@ import {UserNameDialogDirective} from "./username-dialog/username-dialog.directi
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,
+		PasswordImmediateDialogComponent,
 		UserNameDialogComponent,
+		UsernameImmediateDialogComponent,
+		RemoveDialogComponent,
+		RemoveImmediateDialogComponent,
 		LogoutDialogComponent,
 		WithdrawDialogComponent,
 
@@ -93,7 +108,11 @@ import {UserNameDialogDirective} from "./username-dialog/username-dialog.directi
 		LoginTotpDialogDirective,
 		RegistDialogDirective,
 		PasswordDialogDirective,
+		PasswordImmediateDialogDirective,
 		UserNameDialogDirective,
+		UsernameImmediateDialogDirective,
+		RemoveDialogDirective,
+		RemoveImmediateDialogDirective,
 		LogoutDialogDirective,
 		WithdrawDialogDirective,
 	],
@@ -103,7 +122,11 @@ import {UserNameDialogDirective} from "./username-dialog/username-dialog.directi
 		LoginTotpDialogComponent,
 		RegistDialogComponent,
 		PasswordDialogComponent,
+		PasswordImmediateDialogComponent,
 		UserNameDialogComponent,
+		UsernameImmediateDialogComponent,
+		RemoveDialogComponent,
+		RemoveImmediateDialogComponent,
 		LogoutDialogComponent,
 		WithdrawDialogComponent,
 	],

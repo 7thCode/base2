@@ -10,13 +10,13 @@ import {Directive, EventEmitter, HostListener, Output} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 import {InfoDialogComponent} from "../../base/components/info-dialog/info-dialog.component";
-import {UserNameDialogComponent} from "./username-dialog.component";
+import {RemoveDialogComponent} from "./remove-dialog.component";
 
 @Directive({
-	selector: "[auth-username-button]",
+	selector: "[auth-remove-button]",
 })
 
-export class UserNameDialogDirective {
+export class RemoveDialogDirective {
 
 	/**
 	 *
@@ -41,7 +41,7 @@ export class UserNameDialogDirective {
 
 		const resultDialogContent: any = {title: "Check mail", message: "Username Change Mail sent."};
 
-		const dialog: MatDialogRef<any> = this.matDialog.open(UserNameDialogComponent, {
+		const dialog: MatDialogRef<any> = this.matDialog.open(RemoveDialogComponent, {
 			width: "30%",
 			minWidth: "320px",
 			height: "fit-content",

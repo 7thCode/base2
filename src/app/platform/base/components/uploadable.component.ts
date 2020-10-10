@@ -63,15 +63,10 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * @returns none
 	 */
 	protected upload(name: string, url: string, callback: Callback<any>): void {
-		this.filesService.upload(name, this.getCategory(name, ""), url, callback);
+		this.filesService.upload(name, "", url, callback);
 	}
 
-	/**
-	 * @returns none
-	 */
-	protected getCategory(name: string, category: string): string {
-		return category;
-	}
+
 
 	/**
 	 * 単一ファイルアップロード

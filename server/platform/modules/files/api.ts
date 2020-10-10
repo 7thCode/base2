@@ -174,7 +174,6 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 					next();
 				}
 			});
-
 		};
 
 		const render_id = (response: any, next: () => void, file: any, _id: string, query: any, range: string, command_string: string, callback: (result: any) => void): void => {
@@ -257,18 +256,19 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			(request: any, response: any, next: () => void): void => {
 			logger.trace(request.url);
 			gatekeeper.catch(response, (): void => {
-
 				const path: string = request.params[0];
+				const range: string = request.headers.range;
+
 				const query: { u: string, c: string } = request.query;
 				const user: IAccountModel = file.Transform(request.user);
-				const systems: any = systemsConfig.default;
 
-				let user_id: string = query.u || systems.user_id;
+				const _default: any = systemsConfig.default;
+
+				let user_id: string = query.u || _default.user_id;
 				if (user) {
-					user_id = query.u || user.user_id || systems.user_id;
+					user_id = query.u || user.user_id || _default.user_id;
 				}
 
-				const range: string = request.headers.range;
 				const command_string: string = query.c || "";
 
 				render_file(response, next, file, user_id, path, query, range, command_string, (result) => {
@@ -282,9 +282,10 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				logger.trace(request.url);
 			gatekeeper.catch(response, (): void => {
 				const _id = request.params.id;
+				const range: string = request.headers.range;
+
 				const query: { u: string, c: string } = request.query;
 
-				const range: string = request.headers.range;
 				const command_string: string = query.c || "";
 
 				render_id(response, next, file, _id, query, range, command_string, (result) => {
@@ -297,13 +298,13 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			(request: any, response: any, next: () => void): void => {
 				logger.trace(request.url);
 			gatekeeper.catch(response, (): void => {
-
 				const params = request.params;
+				const range: string = request.headers.range;
+
 				const path: string = params[0];
 				const user_id: string = params.user_id;
 				const query: { u: string, c: string } = request.query;
 
-				const range: string = request.headers.range;
 				const command_string: string = query.c || "";
 
 				render_file(response, next, file, user_id, path, query, range, command_string, (result) => {

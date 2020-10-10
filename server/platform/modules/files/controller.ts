@@ -148,20 +148,20 @@ export class Files extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private resultFile(gfs: any, collection: any, user_id: string, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
-		collection.findOne({$and: [{filename: name}, {"metadata.user_id": user_id}]}, (error: IErrorObject, item: any): void => {
-			if (!error) {
-				if (item) {
-					const readstream: any = gfs.openDownloadStream(item._id);
-					callback(null, readstream, item);
-				} else {
-					callback({code: -1, message: "not found." + " 2010"}, null, "");
-				}
-			} else {
-				callback(error, null, "");
-			}
-		});
-	}
+	// private resultFile(gfs: any, collection: any, user_id: string, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
+	// 	collection.findOne({$and: [{filename: name}, {"metadata.user_id": user_id}]}, (error: IErrorObject, item: any): void => {
+	// 		if (!error) {
+	// 			if (item) {
+	// 				const readstream: any = gfs.openDownloadStream(item._id);
+	// 				callback(null, readstream, item);
+	// 			} else {
+	// 				callback({code: -1, message: "not found." + " 2010"}, null, "");
+	// 			}
+	// 		} else {
+	// 			callback(error, null, "");
+	// 		}
+	// 	});
+	// }
 
 	/**
 	 *

@@ -99,7 +99,7 @@ export class AccountsService extends QueryableService {
 
 	/**
 	 *
-	 * @param id
+	 * @param user_id
 	 * @param callback
 	 */
 	public delete(user_id: string, callback: Callback<any>): void {

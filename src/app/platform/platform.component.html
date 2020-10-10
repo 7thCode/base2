@@ -86,6 +86,15 @@
 				</button>
 			</mat-list-item>
 
+
+			<mat-list-item style="height: 34px;" *ngIf="provider === 'local'">
+				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-remove-button (complete)="onRemove($event);">
+					<mat-icon style="color:#7ebdf5;font-size:20px;" mat-list-icon>contact_mail</mat-icon>
+					Remove
+				</button>
+			</mat-list-item>
+
+
 			<mat-list-item style="color:#fdfdfd;">
 				<button mat-button style="color:#fdfdfd;font-size:12px;" auth-logout-button (complete)="onLogout($event);">
 					<mat-icon style="font-size:20px;" mat-list-icon>exit_to_app</mat-icon>

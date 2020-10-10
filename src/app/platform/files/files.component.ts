@@ -125,18 +125,6 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.spinner.Progress(value);
 	}
 
-	/**
-	 *
-	 * @param name 名前
-	 * @param category カテゴリー
-	 */
-	protected getCategory(name: string, category: string): string {
-		let result: string = "";
-		if ((name === "avatar.jpg" || name === "blank.png")) {
-			result = "l";
-		}
-		return result;
-	}
 
 	/**
 	 *
@@ -410,11 +398,11 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 */
 	public draw(callback: Callback<object[]>): void {
 		this.Progress(true);
-		this.filesService.count({$and: [this.query, {"metadata.category": ""}]}, (error: IErrorObject, result: any): void => {
+		this.filesService.count(this.query, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.count = result.value;
 				const option = {sort: {uploadDate: -1}, skip: this.size * this.page, limit: this.size};
-				this.filesService.query({$and: [this.query, {"metadata.category": ""}]}, option, (error: IErrorObject, results: any[] | null): void => {
+				this.filesService.query(this.query, option, (error: IErrorObject, results: any[] | null): void => {
 					if (!error) {
 						const filtered: any[] = [];
 						if (results) {

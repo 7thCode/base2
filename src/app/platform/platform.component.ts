@@ -263,6 +263,13 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 *
 	 * @param data
 	 */
+	public onRemove(data: any): void { //
+	}
+
+	/**
+	 *
+	 * @param data
+	 */
 	public onLogin(data: any): void {
 		location.reload();
 	}

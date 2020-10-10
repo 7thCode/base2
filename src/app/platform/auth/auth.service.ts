@@ -333,6 +333,42 @@ export class AuthService extends HttpService {
 		});
 	}
 
+	/**
+	 * パスワード更新
+	 * メール存在確認なし
+	 *
+	 * @param username ユーザ名
+	 * @param password パスワード
+	 * @param callback コールバック
+	 */
+	public password_immediate(username: string, password: string, callback: Callback<any>): void {
+		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
+			if (!error) {
+				this.value_encrypt(key, {username, password}, (error: IErrorObject, value: any): void => {
+					if (!error) {
+						this.http.post(this.endPoint + "/auth/immediate/password", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+							if (result) {
+								if (result.code === 0) {
+									callback(null, result.value);
+								} else {
+									callback(result, null);
+								}
+							} else {
+								callback(this.networkError, null);
+							}
+						}, (error: HttpErrorResponse): void => {
+							callback({code: -1, message: error.message + " 7291"}, null);
+						});
+					} else {
+						callback(error, null);
+					}
+				});
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
 
 	/**
 	 * パスワード更新
@@ -370,19 +406,19 @@ export class AuthService extends HttpService {
 	}
 
 	/**
-	 * パスワード更新
+	 * yーザ名更新
 	 * メール存在確認なし
 	 *
-	 * @param username ユーザ名
-	 * @param password パスワード
+	 * @param original_username ユーザ名
+	 * @param update_username ユーザ名
 	 * @param callback コールバック
 	 */
-	public password_immediate(username: string, password: string, callback: Callback<any>): void {
+	public username_immediate(original_username: string, update_username: string, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
-				this.value_encrypt(key, {username, password}, (error: IErrorObject, value: any): void => {
+				this.value_encrypt(key, {original_username, update_username}, (error: IErrorObject, value: any): void => {
 					if (!error) {
-						this.http.post(this.endPoint + "/auth/immediate/password", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+						this.http.post(this.endPoint + "/auth/immediate/username", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 							if (result) {
 								if (result.code === 0) {
 									callback(null, result.value);
@@ -404,6 +440,82 @@ export class AuthService extends HttpService {
 			}
 		});
 	}
+
+
+
+	/**
+	 * パスワード更新
+	 * メール存在確認あり
+	 *
+	 * @param update_username ユーザ名(メールアドレス)
+	 * @param callback コールバック
+	 */
+	public remove(callback: Callback<any>): void {
+		this.PublicKey.fixed((error: IErrorObject, key): void => {
+			if (!error) {
+				this.value_encrypt(key, {}, (error: IErrorObject, value: any): void => {
+					if (!error) {
+						this.http.post(this.endPoint + "/auth/local/remove", {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+							if (result) {
+								if (result.code === 0) {
+									callback(null, result.value);
+								} else {
+									callback(result, null);
+								}
+							} else {
+								callback(this.networkError, null);
+							}
+						}, (error: HttpErrorResponse): void => {
+							callback({code: -1, message: error.message + " 6193"}, null);
+						});
+					} else {
+						callback(error, null);
+					}
+				});
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+	/**
+	 * yーザ名更新
+	 * メール存在確認なし
+	 *
+	 * @param original_username ユーザ名
+	 * @param update_username ユーザ名
+	 * @param callback コールバック
+	 */
+	public remove_immediate(original_username: string, update_username: string, callback: Callback<any>): void {
+		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
+			if (!error) {
+				this.value_encrypt(key, {original_username, update_username}, (error: IErrorObject, value: any): void => {
+					if (!error) {
+						this.http.post(this.endPoint + "/auth/immediate/remove", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+							if (result) {
+								if (result.code === 0) {
+									callback(null, result.value);
+								} else {
+									callback(result, null);
+								}
+							} else {
+								callback(this.networkError, null);
+							}
+						}, (error: HttpErrorResponse): void => {
+							callback({code: -1, message: error.message + " 7291"}, null);
+						});
+					} else {
+						callback(error, null);
+					}
+				});
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+
+
 
 	/**
 	 * ログアウト

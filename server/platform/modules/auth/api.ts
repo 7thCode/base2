@@ -243,7 +243,6 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-
 		router.post("/auth/local/remove", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);

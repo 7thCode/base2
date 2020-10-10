@@ -1084,7 +1084,7 @@ export class Auth extends Mail {
 							const operator: IAccountModel = this.Transform(request.user);
 							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 								this.ifSuccess(response, error, (): void => {
-									const original_username: string = operator.username;
+									const original_username: string = value.original_username;
 									const update_username: string = value.update_username;
 									LocalAccount.default_find_by_name_promise({}, original_username).then((account: IAccountModel): void => {
 										this.ifExist(response, this.errors.username_notfound, account, () => {
@@ -1138,46 +1138,40 @@ export class Auth extends Mail {
 	public post_local_remove(request: any, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
-				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
-					const operator: IAccountModel = this.Transform(request.user);
-					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
-						this.ifSuccess(response, error, (): void => {
-							const username: string = operator.username;
-							LocalAccount.default_find_by_name_promise({}, username).then((account: IAccountModel): void => {
-								this.ifExist(response, this.errors.username_notfound, account, () => {
-									this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
-										this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
-											const tokenValue: any = {
-												username: username,
-												target: "/",
-												timestamp: Date.now(),
-											};
-											const mail_object = this.message.removemail;
-											mail_object.html.content.nickname = account.content.nickname;
-											const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
-											const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
-											this.sendMail({
-												address: username,
-												bcc: this.bcc,
-												title: this.message.removeconfirmtext,
-												template_url: "views/platform/auth/mail/mail_template.pug",
-												source_object: mail_object,
-												link,
-												result_object: {code: 0, message: ""},
-											}, (error: IErrorObject, result: any) => {
-												this.ifSuccess(response, error, (): void => {
-													request.logout();
-													this.SendSuccess(response, result);
-												});
-											});
-										});
+				const operator: IAccountModel = this.Transform(request.user);
+				const username: string = operator.username;
+				LocalAccount.default_find_by_name_promise({}, username).then((account: IAccountModel): void => {
+					this.ifExist(response, this.errors.username_notfound, account, () => {
+						this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
+							this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+								const tokenValue: any = {
+									username: username,
+									target: "/",
+									timestamp: Date.now(),
+								};
+								const mail_object = this.message.removemail;
+								mail_object.html.content.nickname = account.content.nickname;
+								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
+								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/remove/" + token;
+								this.sendMail({
+									address: username,
+									bcc: this.bcc,
+									title: this.message.removeconfirmtext,
+									template_url: "views/platform/auth/mail/mail_template.pug",
+									source_object: mail_object,
+									link,
+									result_object: {code: 0, message: ""},
+								}, (error: IErrorObject, result: any) => {
+									this.ifSuccess(response, error, (): void => {
+										request.logout();
+										this.SendSuccess(response, result);
 									});
 								});
-							}).catch((error: any) => {
-								this.SendError(response, error);
 							});
 						});
 					});
+				}).catch((error: any) => {
+					this.SendError(response, error);
 				});
 			});
 		} catch (error) {
