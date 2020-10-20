@@ -254,66 +254,66 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 
 		router.get("/files/get/*", [gatekeeper.default,
 			(request: any, response: any, next: () => void): void => {
-			logger.trace(request.url);
-			gatekeeper.catch(response, (): void => {
-				const path: string = request.params[0];
-				const range: string = request.headers.range;
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					const path: string = request.params[0];
+					const range: string = request.headers.range;
 
-				const query: { u: string, c: string } = request.query;
-				const user: IAccountModel = file.Transform(request.user);
+					const query: { u: string, c: string } = request.query;
+					const user: IAccountModel = file.Transform(request.user);
 
-				const _default: any = systemsConfig.default;
+					const _default: any = systemsConfig.default;
 
-				let user_id: string = query.u || _default.user_id;
-				if (user) {
-					user_id = query.u || user.user_id || _default.user_id;
-				}
+					let username: string = query.u || _default.username;
+					if (user) {
+						username = query.u || user.username || _default.username;
+					}
 
-				const command_string: string = query.c || "";
+					const command_string: string = query.c || "";
 
-				render_file(response, next, file, user_id, path, query, range, command_string, (result) => {
+					render_file(response, next, file, username, path, query, range, command_string, (result) => {
 
+					});
 				});
-			});
-		}]);
+			}]);
 
 		router.get("/files/getid/:id", [gatekeeper.default,
 			(request: any, response: any, next: () => void): void => {
 				logger.trace(request.url);
-			gatekeeper.catch(response, (): void => {
-				const _id = request.params.id;
-				const range: string = request.headers.range;
+				gatekeeper.catch(response, (): void => {
+					const _id = request.params.id;
+					const range: string = request.headers.range;
 
-				const query: { u: string, c: string } = request.query;
+					const query: { u: string, c: string } = request.query;
 
-				const command_string: string = query.c || "";
+					const command_string: string = query.c || "";
 
-				render_id(response, next, file, _id, query, range, command_string, (result) => {
+					render_id(response, next, file, _id, query, range, command_string, (result) => {
 
+					});
 				});
-			});
-		}]);
+			}]);
 
 		router.get("/" + cache_root + ":user_id/*", [gatekeeper.default,
 			(request: any, response: any, next: () => void): void => {
 				logger.trace(request.url);
-			gatekeeper.catch(response, (): void => {
-				const params = request.params;
-				const range: string = request.headers.range;
+				gatekeeper.catch(response, (): void => {
+					const params = request.params;
+					const range: string = request.headers.range;
 
-				const path: string = params[0];
-				const user_id: string = params.user_id;
-				const query: { u: string, c: string } = request.query;
+					const path: string = params[0];
+					const user_id: string = params.user_id;
+					const query: { u: string, c: string } = request.query;
 
-				const command_string: string = query.c || "";
+					const command_string: string = query.c || "";
 
-				render_file(response, next, file, user_id, path, query, range, command_string, (result) => {
-					cache_write(user_id, path, result, () => {
+					render_file(response, next, file, user_id, path, query, range, command_string, (result) => {
+						cache_write(user_id, path, result, () => {
 
+						});
 					});
 				});
-			});
-		}]);
+			}]);
 	} else {
 		logger.fatal("init error. (files) ", error.message);
 		process.exit(1);

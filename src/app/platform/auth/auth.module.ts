@@ -7,7 +7,6 @@
 "use strict";
 
 import {CommonModule} from "@angular/common";
-import {HttpClientModule} from "@angular/common/http";
 import {NgModule} from "@angular/core";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -85,7 +84,6 @@ import {RemoveDialogDirective} from "./remove-dialog/remove-dialog.directive";
 	],
 	imports: [
 		CommonModule,
-		HttpClientModule,
 		FormsModule,
 
 		FlexLayoutModule,

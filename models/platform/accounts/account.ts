@@ -76,7 +76,6 @@ namespace AccountModel {
 		this.status = status;
 	};
 
-
 	Account.statics.default_find_by_name_promise = function (user: IAccountModel, name: string): Promise<any> {
 		return this.model("Account").findOne({username: name}).exec();
 	};

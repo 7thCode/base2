@@ -1,6 +1,6 @@
 <div class="fix-action-dialog">
 	<div fxLayout="row" fxLayoutAlign="start">
-		<app-image style="margin:0.8rem" [fileName]="'avatar.jpg'" [view]="'visible'" [width]="64" [height]="64" [user_id]="content.user_id" (onProgress)="onProgressed($event)" (complete)="onUpdateAvatar($event)"></app-image>
+		<app-image style="margin:0.8rem" [fileName]="'avatar.jpg'" [view]="'visible'" [width]="64" [height]="64" [username]="content.username" (onProgress)="onProgressed($event)" (complete)="onUpdateAvatar($event)"></app-image>
 		<h3 mat-dialog-title>{{content.username}}</h3>
 	</div>
 

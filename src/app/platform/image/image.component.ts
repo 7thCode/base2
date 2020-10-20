@@ -36,7 +36,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	@Input() public height: number = 0;
 	@Input() public view: string = "";
 	@Input() public fileName: string = "";
-	@Input() public user_id: string = "";
+	@Input() public username: string = "";
 	@Input() public extensions: string = "";
 
 	public endPoint: string;
@@ -90,9 +90,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param name
 	 */
 	private draw(name: string): void {
-		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.user_id) + "&r=" + this.randamString();
+		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
 	}
-
 
 	/**
 	 *
@@ -158,7 +157,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.width = ImageComponent.defaultValue(changes.width, 120);
 		this.height = ImageComponent.defaultValue(changes.height, 120);
 		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png");
-		this.user_id = ImageComponent.defaultValue(changes.user_id, null);
+		this.username = ImageComponent.defaultValue(changes.username, null);
 	}
 
 	/**
@@ -174,8 +173,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 
 		this.getSession((error: IErrorObject, session: any): void => {
 			if (session) {
-				if (!this.user_id) {
-					this.user_id = session.user_id;
+				if (!this.username) {
+					this.username = session.username;
 				}
 			}
 			this.draw(this.fileName);

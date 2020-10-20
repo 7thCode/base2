@@ -25,6 +25,7 @@ gulp.task('compile', () => {
 	return gulp.src([
 		'app.ts',
 		'models/**/*.ts',
+		'bridge/**/*.ts',
 		'server/**/*.ts',
 		'types/**/*.ts'
 	], {base: './'})
@@ -56,6 +57,7 @@ gulp.task('build', () => {
 		'public/**/*.html',
 		'public/images/*.*',
 		'public/favicon/*.*',
+		'bridge/**/*.js',
 		'server/**/*.js',
 		'server/**/*.pug',
 		'server/platform/**/*.js',
@@ -78,7 +80,7 @@ gulp.task('default', gulp.series('clean', 'compile', 'prebuild', 'build'), () =>
 });
 
 // copy
-gulp.task('synch', () => {
+gulp.task('base_core', () => {
 	return gulp.src([
 		'dualuse/*.*/*.*',
 		'models/platform/**/*.ts',
@@ -92,6 +94,7 @@ gulp.task('synch', () => {
 		'src/app/plugins/**/*.*',
 		'src/assets/**/*.*',
 		'src/environments/*.ts',
+		'views/*.pug',
 		'views/platform/**/*.pug',
 		'views/plugins/**/*.pug',
 		'types/platform/**/*.ts',
@@ -102,5 +105,5 @@ gulp.task('synch', () => {
 		'package-lock.json',
 		'tsconfig*.json',
 	], {base: './', allowEmpty: true})
-		.pipe(gulp.dest('synch'));
+		.pipe(gulp.dest('base_core'));
 });

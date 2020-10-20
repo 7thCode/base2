@@ -22,7 +22,7 @@ import {ErrorComponent} from "./error/error.component";
 
 const routes: Routes = [
 	{
-		path: "platform", component: PlatformComponent, children: [
+		path: "", component: PlatformComponent, children: [
 			{path: "accounts", component: AccountsComponent, data: {animation: "accounts"}},
 			{path: "articles", component: ArticlesComponent, data: {animation: "articles"}},
 			{path: "files", component: FilesComponent, data: {animation: "files"}},
@@ -31,8 +31,10 @@ const routes: Routes = [
 			{path: "mailer", component: MailerComponent, data: {animation: "mailer"}},
 			{path: "stripe", component: StripeComponent, data: {animation: "stripe"}},
 			{path: "", component: TopComponent, data: {animation: "top"}},
+			{path: '**', component: ErrorComponent},
 		],
 	},
+
 ];
 
 @NgModule({

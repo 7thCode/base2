@@ -32,15 +32,15 @@ export class Pages extends Updatable {
 
 	/**
 	 *
-	 * @param user_id
+	 * @param username
 	 * @param path
 	 * @param object
 	 * @param callback
 	 * @returns none
 	 */
-	protected getPage(user_id: string, path: string, object: any, callback: (error: IErrorObject, result: any, mimetype: string) => void): void {
+	protected getPage(username: string, path: string, object: any, callback: (error: IErrorObject, result: any, mimetype: string) => void): void {
 		try {
-			this.Model.get_page(user_id, path, object, (error: IErrorObject, result: string, mimetype: string): void => {
+			this.Model.get_page(username, path, object, (error: IErrorObject, result: string, mimetype: string): void => {
 				if (!error) {
 					callback(null, result, mimetype);
 				} else {

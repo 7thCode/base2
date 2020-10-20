@@ -24,8 +24,9 @@ namespace ArticleModel {
 
 	const Article = new Schema({
 		user_id: {type: String, default: ""},
+		username: {type: String, default: ""},
 		content: {
-			id: {type: String, required: true, index: {unique: true}},
+			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
 			relations: {type: mongoose.Schema.Types.Mixed},
 			enabled: {type: Boolean, default: true},
 			category: {type: String, default: ""},
@@ -52,17 +53,26 @@ namespace ArticleModel {
 
 	const query_by_user_read: any = (user: any, query: object): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
-		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
+		let result = query;
+		if (user) {
+			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
+		}
+		return result;
 	};
 
 	const query_by_user_write: any = (user: any, query: object): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
-		return {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
+		let result = query;
+		if (user) {
+			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
+		}
+		return result;
 	};
 
 	const init: any = (_id: any, body: any): IArticleModelContent => {
+		const id = new mongoose.Types.ObjectId();
 		const content: IArticleModelContent = {
-			id: setId(_id),
+			id:  id, // setId(_id),
 			parent_id: body.parent_id,
 			enabled: body.enabled,
 			category: body.category,
@@ -73,9 +83,9 @@ namespace ArticleModel {
 			accessory: body.accessory,
 		};
 
-		if (body.id) {
-			content.id = body.id;
-		}
+	// 	if (body.id) {
+	// 		content.id = body.id;
+	// 	}
 
 		return content;
 	};
@@ -87,36 +97,27 @@ namespace ArticleModel {
 
 	Article.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
 		this.user_id = user.user_id;
+		this.username = user.username;
 		this.content = init(this._id, body.content);
 		this.model("Article").findOne(query_by_user_write(user, {"content.id": this.content.id})).then((instance: any) => {
 				if (!instance) {
 					this.save(cb);
 				} else {
-					cb({code: -1, message: "already. 3500"}, null);
+					cb(null, null); // rlready
 				}
 		}).catch((error: IErrorObject) => {
 			cb(error, null);
 		});
 	};
 
-
 	Article.methods._save_promise = function(): Promise<any> {
 		return this.save().exec();
 	};
-
-// 	Article.methods._save = function(cb: Callback<any>): void {
-// 		this.save(cb);
-// 	};
 
 	Article.statics.set_rights_promise = function(user: IAccountModel, id: string, rights: IRights): Promise<any> {
 		const setter = {$set: {rights}};
 		return this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}).exec();
 	};
-
-	// Article.statics.set_rights = function(user: IAccountModel, id: string, rights: IRights, cb: Callback<any>): void {
-	// 	const setter = {$set: {rights}};
-	// 	this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}, cb);
-	// };
 
 	Article.statics.update_by_id_promise = function(user: IAccountModel, id: string, content: any): Promise<any> {
 		const setter = {
@@ -134,86 +135,37 @@ namespace ArticleModel {
 		return this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}).exec();
 	};
 
-	// Article.statics.update_by_id = function(user: IAccountModel, id: string, content: any, cb: Callback<any>): void {
-	// 	const setter = {
-	// 		$set: {
-	// 			"content.parent_id": content.parent_id,
-	// 			"content.enabled": content.enabled,
-	// 			"content.category": content.category,
-	// 			"content.status": content.status,
-	// 			"content.type": content.type,
-	// 			"content.name": content.name,
-	// 			"content.value": content.value,
-	// 			"content.accessory": content.accessory,
-	// 		},
-	// 	};
-	// 	this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}, cb);
-	// };
-
 	Article.statics.set_by_id_promise = function(user: IAccountModel, id: string, setter: object): Promise<any> {
 		return this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}).exec();
 	};
-
-	// Article.statics.set_by_id = function(user: IAccountModel, id: string, setter: object, cb: Callback<any>): void {
-	// 	this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}, cb);
-	// };
 
 	Article.statics.remove_by_id_promise = function(user: IAccountModel, id: string): Promise<any> {
 		return this.model("Article").findOneAndRemove(query_by_user_write(user, {"content.id": id})). exec();
 	};
 
-	// Article.statics.remove_by_id = function(user: IAccountModel, id: string, cb: Callback<any>): void {
-	// 	this.model("Article").findOneAndRemove(query_by_user_write(user, {"content.id": id}), cb);
-	// };
-
 	Article.statics.default_find_by_id_promise = function(user: IAccountModel, id: string): Promise<any> {
 		return this.model("Article").findOne(query_by_user_read(user, {"content.id": id})).exec();
 	};
-
-	// Article.statics.default_find_by_id = function(user: IAccountModel, id: string, cb: Callback<any>): void {
-	// 	this.model("Article").findOne(query_by_user_read(user, {"content.id": id}), cb);
-	// };
 
 	Article.statics.default_find_promise = function(user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
 		return this.model("Article").find(query_by_user_read(user, query), {}, option).exec();
 	};
 
-	// Article.statics.default_find = function(user: IAccountModel, query: object, option: IQueryOption, cb: Callback<any>): void {
-	// 	this.model("Article").find(query_by_user_read(user, query), {}, option, cb);
-	// };
-
 	Article.statics.default_count_promise = function(user: IAccountModel, query: object): Promise<any> {
 		return this.model("Article").countDocuments(query_by_user_read(user, query)).exec();
 	};
-
-
-	// Article.statics.default_count = function(user: IAccountModel, query: object, cb: Callback<any>): void {
-	// 	this.model("Article").countDocuments(query_by_user_read(user, query), cb);
-	// };
 
 	Article.statics.publish_find_promise = function(query: object, option: IQueryOption): Promise<any> {
 		return this.model("Article").find(query, {}, option);
 	};
 
-	// Article.statics.publish_find = function(query: object, option: IQueryOption, cb: Callback<any>): void {
-	// 	this.model("Article").find(query, {}, option, cb);
-	// };
-
 	Article.statics.publish_count_promise = function(query: object): Promise<any> {
 		return this.model("Article").countDocuments(query).exec();
 	};
 
-	// Article.statics.publish_count = function(query: object, cb: Callback<any>): void {
-	// 	this.model("Article").countDocuments(query, cb);
-	// };
-
 	Article.statics.publish_find_by_id_promise = function(id: string): Promise<any> {
 		return this.model("Article").findOne({"content.id": id}).exec();
 	};
-
-	// Article.statics.publish_find_by_id = function(id: string, cb: Callback<any>): void {
-	// 	this.model("Article").findOne({"content.id": id}, cb);
-	// };
 
 	module.exports = mongoose.model("Article", Article);
 }

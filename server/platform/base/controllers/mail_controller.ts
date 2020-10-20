@@ -98,7 +98,7 @@ export class Mail extends Wrapper {
 					if (mailConfig.template_url) {
 						if (mailConfig.source_object.html) {
 							const nickname = mailConfig.source_object.html.content.nickname;
-							mailConfig.source_object.html.content.subtitle = this.parseTemplate(mailConfig.source_object.html.content.subtitle, {nickname:nickname});
+							mailConfig.source_object.html.content.subtitle = this.parseTemplate(mailConfig.source_object.html.content.subtitle, {nickname: nickname});
 							fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 								if (!error) {
 									const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});

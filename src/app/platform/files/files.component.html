@@ -20,7 +20,7 @@
 			</div>
 			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
 				<mat-grid-tile class="box-body" [ngSwitch]="file.type" *ngFor="let file of results" [colspan]="file.cols" [rowspan]="file.rows">
-					<app-image *ngSwitchCase="1" [user_id]="file.metadata.user_id" [fileName]="file.filename" [view]="'editable'"></app-image>
+					<app-image *ngSwitchCase="1" [username]="file.metadata.username" [fileName]="file.filename" [view]="'editable'"></app-image>
 					<img *ngSwitchCase="2" style="height: 60%;" src="{{endPoint}}/files/get/{{file.filename}}" alt=""/>
 					<video *ngSwitchCase="3" style="height: 60%;" muted playsinline controls>
 						<source src="{{endPoint}}/files/get/{{file.filename}}">

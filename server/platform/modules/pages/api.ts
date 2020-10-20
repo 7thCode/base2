@@ -8,7 +8,6 @@
 
 import {IAccountModel} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
-import {ajaxGet} from "rxjs/internal-compatibility";
 
 const express: any = require("express");
 export const router: any = express.Router();
@@ -82,60 +81,60 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 		router.get("/pages/get/*", [gatekeeper.default,
 			(request: any, response: object, next: () => void): void => {
 				logger.trace(request.url);
-			gatekeeper.catch(response, () => {
-				const path: any = request.params[0];
-				const query: { u: string, t: string } = request.query;
-				const user: IAccountModel = pages.Transform(request.user);
-				const systems: any = systemsConfig.default;
+				gatekeeper.catch(response, () => {
+					const path: any = request.params[0];
+					const query: { u: string, t: string } = request.query;
+					const user: IAccountModel = pages.Transform(request.user);
+					const _default: any = systemsConfig.default;
 
-				let user_id: string = query.u || systems.user_id;
-				if (user) {
-					user_id = query.u || user.user_id || systems.user_id;
-				}
-
-				const enverope = (error: any, result: any, response: any): void => {
-					if (!error) {
-						if (result) {
-							pages.SendSuccess(response, result);
-						} else {
-							pages.SendError(response, {code: -1, message: "(page 1) 3766"});
-						}
-					} else {
-						pages.SendError(response, error);
+					let username: string = query.u || _default.username;
+					if (user) {
+						username = query.u || user.username || _default.username;
 					}
-				};
 
-				const page = (error: any, result: any, response: any, mimetype: string, next: () => void): void => {
-					if (!error) {
-						if (result) {
-							response.setHeader("Content-Type", mimetype);
-							response.send(result);
+					const enverope = (error: any, result: any, response: any): void => {
+						if (!error) {
+							if (result) {
+								pages.SendSuccess(response, result);
+							} else {
+								pages.SendError(response, {code: -1, message: "(page 1) 3766"});
+							}
+						} else {
+							pages.SendError(response, error);
+						}
+					};
+
+					const page = (error: any, result: any, response: any, mimetype: string, next: () => void): void => {
+						if (!error) {
+							if (result) {
+								response.setHeader("Content-Type", mimetype);
+								response.send(result);
+							} else {
+								next();
+							}
 						} else {
 							next();
 						}
-					} else {
-						next();
-					}
-				};
+					};
 
-				// value query....
-				const object = {result: "example..."};
-				// ?t=e - enveroped. result using for API.
-				pages.getPage(user_id, path, object, (error: IErrorObject, result: string, mimetype: string): void => {
-					if (query.t) {
-						switch (query.t) {
-							case "e":		 // for API(....?t=e)
-								enverope(error, result, response);
-								break;
-							default: // for Browser
-								page(error, result, response, mimetype, next);
+					// value query....
+					const object = {result: "example..."};
+					// ?t=e - enveroped. result using for API.
+					pages.getPage(username, path, object, (error: IErrorObject, result: string, mimetype: string): void => {
+						if (query.t) {
+							switch (query.t) {
+								case "e":		 // for API(....?t=e)
+									enverope(error, result, response);
+									break;
+								default: // for Browser
+									page(error, result, response, mimetype, next);
+							}
+						} else { // for Browser
+							page(error, result, response, mimetype, next);
 						}
-					} else { // for Browser
-						page(error, result, response, mimetype, next);
-					}
+					});
 				});
-			});
-		}]);
+			}]);
 
 	} else {
 		logger.fatal("init error. (pages) ", error.message);

@@ -99,7 +99,7 @@ export interface ISession {
 }
 
 export interface IContent {
-	id: string;
+	id: any;
 	parent_id: string;
 	enabled: boolean;
 	category: string;

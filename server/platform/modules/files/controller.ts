@@ -74,11 +74,16 @@ export class Files extends Wrapper {
 	 *
 	 * @param query
 	 * @param user
-	 * @returns none
+	 * @returns nonequery_by_user_read
 	 */
-	private static query_by_user_read(user: { user_id: string, auth: number }, query: object): object {
+	private static query_by_user_read(user: { username?: string, user_id?: string, auth: number }, query: object): object {
 		// return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.read": {$gte: user.auth}}]}, query]};
-		return {$and: [{"metadata.user_id": user.user_id}, {"metadata.rights.read": {$gte: user.auth}}, query]};
+		// return {$and: [{"metadata.username": user.username}, {"metadata.rights.read": {$gte: user.auth}}, query]};
+		let result = query;
+		if (user) {
+			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.user_id": user.user_id}]}, {"metadata.rights.read": {$gte: user.auth}}, query]};
+		}
+		return result;
 	}
 
 	/**
@@ -87,9 +92,14 @@ export class Files extends Wrapper {
 	 * @param user
 	 * @returns none
 	 */
-	private static query_by_user_write(user: { user_id: string, auth: number }, query: object): object {
+	private static query_by_user_write(user: { username?: string, user_id?: string, auth: number }, query: object): object {
 		// return {$and: [{$or: [{"metadata.user_id": {$eq: user.user_id}}, {"metadata.rights.write": {$gte: user.auth}}]}, query]};
-		return {$and: [{"metadata.user_id": user.user_id}, {"metadata.rights.write": {$gte: user.auth}}, query]};
+		// 	return {$and: [{"metadata.username": user.username}, {"metadata.rights.write": {$gte: user.auth}}, query]};
+		let result = query;
+		if (user) {
+			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.user_id": user.user_id}]}, {"metadata.rights.write": {$gte: user.auth}}, query]};
+		}
+		return result;
 	}
 
 	/**
@@ -103,12 +113,13 @@ export class Files extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private fromLocal(pathFrom: string, user: { user_id: string, auth: number }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
+	private fromLocal(pathFrom: string, user: { user_id: string, username: string, auth: number }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
 		try {
 			const writestream: any = this.gfs.openUploadStream(name,
 				{
 					metadata: {
 						user_id: user.user_id,
+						username: user.username,
 						relations: {},
 						rights: {read: user.auth, write: user.auth},
 						type: mimetype,
@@ -197,7 +208,7 @@ export class Files extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private insertFile(request: IPostFile, user: { user_id: string, auth: number }, name: string, rights: { read: number, write: number }, category: string, description: string, callback: Callback<any>): void {
+	private insertFile(request: IPostFile, user: { user_id: string, username: string, auth: number }, name: string, rights: { read: number, write: number }, category: string, description: string, callback: Callback<any>): void {
 
 		const parseDataURL: any = (dataURL: string): any => {
 			const result: any = {mediaType: null, encoding: null, isBase64: null, data: null};
@@ -218,6 +229,7 @@ export class Files extends Wrapper {
 					{
 						metadata: {
 							user_id: user.user_id,
+							username: user.username,
 							relations: {},
 							rights,  // {read: user.auth, write: user.auth},
 							type: Files.toMime(request),
@@ -264,13 +276,13 @@ export class Files extends Wrapper {
 							// ensureIndex
 							this.collection.createIndex({
 								"filename": 1,
-								"metadata.user_id": 1,
+								"metadata.username": 1,
 							}).then(() => {
 								const save = (doc: any): Promise<any> => {
 									return new Promise((resolve: any, reject: any): void => {
 										const path: string = project_root + doc.path;
 										const filename: string = doc.name;
-										const user: { user_id: string, auth: number } = doc.user;
+										const user: { user_id: string, username: string, auth: number } = doc.user;
 										const mimetype: string = doc.content.type;
 										const category: string = doc.content.category;
 										const description: string = "";
@@ -323,14 +335,14 @@ export class Files extends Wrapper {
 
 	/**
 	 *
-	 * @param user_id
+	 * @param username
 	 * @param name
 	 * @param callback
 	 * @returns none
 	 */
-	public getRecord(user_id: string, name: string, callback: Callback<any>): void {
+	public getRecord(username: string, name: string, callback: Callback<any>): void {
 		try {
-			const query: object = Files.query_by_user_read({user_id, auth: AuthLevel.public}, {filename: name});
+			const query: object = Files.query_by_user_read({username, auth: AuthLevel.public}, {filename: name});
 			this.collection.findOne(query).then((item: object): void => {
 
 				if (item) {
@@ -349,7 +361,7 @@ export class Files extends Wrapper {
 
 	/**
 	 *
-	 * @param user_id
+	 * @param _id
 	 * @param name
 	 * @param callback
 	 * @returns none

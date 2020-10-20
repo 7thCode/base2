@@ -57,6 +57,7 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 		this.factor = "0.5";
 		this.target_file = this.data.content.file;
 		this.image = this.data.content.image;
+		this.image_size = this.image.width + " X " + this.image.height;
 	}
 
 	/*
@@ -65,7 +66,6 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 	public ngAfterViewInit(): void {
 		this.preview = this.preview_ref.nativeElement;
 		if (this.target_file.type === "image/jpeg" || this.target_file.type === "image/png") {
-			this.image_size = this.image.width + " X " + this.image.height;
 			this.showPreview(this.preview);
 		}
 	}

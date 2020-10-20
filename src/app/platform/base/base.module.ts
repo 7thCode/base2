@@ -25,6 +25,7 @@ import {PublicKeyService} from "./services/publickey.service";
 import {SessionService} from "./services/session.service";
 import {MatCardModule} from "@angular/material/card";
 import {MatSelectModule} from "@angular/material/select";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
 	providers: [
@@ -41,6 +42,7 @@ import {MatSelectModule} from "@angular/material/select";
 	],
 	imports: [
 
+		CommonModule,
 		FlexLayoutModule,
 
 		MatButtonModule,

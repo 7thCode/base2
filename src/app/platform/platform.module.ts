@@ -6,10 +6,9 @@
 
 "use strict";
 
-import {HttpClientModule} from "@angular/common/http";
 import {NgModule} from "@angular/core";
-import {BrowserModule} from "@angular/platform-browser";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {CommonModule} from "@angular/common";
+
 import {RouterModule} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 
@@ -50,7 +49,6 @@ import {PlatformRoutingModule} from "./platform-routing.module";
 import {PlatformComponent} from "./platform.component";
 import {PersonalModule} from "./personal/personal.module";
 import {MailerModule} from "./mailer/mailer.module";
-// import { PersonalComponent } from './personal/personal.component';
 
 
 @NgModule({
@@ -58,10 +56,8 @@ import {MailerModule} from "./mailer/mailer.module";
 		PlatformComponent,
 	],
 	imports: [
-		BrowserModule,
-		BrowserAnimationsModule,
+		CommonModule,
 		RouterModule,
-		HttpClientModule,
 		PlatformRoutingModule,
 
 		FlexLayoutModule,

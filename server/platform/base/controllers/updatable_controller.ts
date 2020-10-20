@@ -72,16 +72,16 @@ export abstract class Updatable extends Wrapper {
 	 * @param user
 	 * @returns user
 	 */
-	protected default_user(user: any): IAccountModel {
-		let result: any = user;
-		if (!result) {
-			result = {
-				user_id: this.systemsConfig.default.user_id,
-				auth: 1,
-			};
-		}
-		return result;
-	}
+	// protected default_user(user: any): IAccountModel {
+	// 	let result: any = user;
+	// 	if (!result) {
+	// 		result = {
+	// 			user_id: this.systemsConfig.default.user_id,
+	// 			auth: 1,
+	// 		};
+	// 	}
+	// 	return result;
+	// }
 
 	/**
 	 * 検索
@@ -103,7 +103,7 @@ export abstract class Updatable extends Wrapper {
 							}
 							const operator: IAccountModel = this.Transform(request.user);
 							this.Model.default_find_promise(operator, query, option).then((objects: IUpdatableModel[]): void => {
-								this.ifExist(response, {code: -1,message: "not found."}, objects, () => {
+								this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
 									const filtered: any[] = [];
 									objects.forEach((object) => {
 										filtered.push(object.public());
@@ -134,7 +134,7 @@ export abstract class Updatable extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.Model.default_find_promise(operator, query, {}).then((objects: IUpdatableModel[]): void => {
-						this.ifExist(response, {code: -1,message: "not found."}, objects, () => {
+						this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
 							this.SendSuccess(response, objects.length);
 						});
 					}).catch((error: IErrorObject) => {
@@ -157,7 +157,7 @@ export abstract class Updatable extends Wrapper {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.default_find_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1,message: "not found."}, object, () => {
+				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {
@@ -178,9 +178,9 @@ export abstract class Updatable extends Wrapper {
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
 			const object: IUpdatableModel = new this.Model();
-			object._create(this.default_user(operator), body, (error: IErrorObject, object: IUpdatableModel): void => {
+			object._create(operator, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.ifExist(response, {code: -1,message: "not found."}, object, () => {
+					this.ifExist(response, {code: -1, message: "not found."}, object, () => {
 						this.SendSuccess(response, object.public());
 					});
 				});
@@ -201,7 +201,7 @@ export abstract class Updatable extends Wrapper {
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.update_by_id_promise(operator, target.id, body).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1,message: "not found."}, object, () => {
+				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {
@@ -238,18 +238,20 @@ export abstract class Updatable extends Wrapper {
 	 */
 	public init(objects: object[], callback: Callback<any>): void {
 		if (objects) {
-			this.Model.default_count_promise(this.default_user(null), {}).then((error: IErrorObject, count: number) => {
-
+			this.Model.default_count_promise(null, {}).then((count: number) => {
 				if (count === 0) {
 					const promises: object[] = [];
 					objects.forEach((object: any): void => {
 						promises.push(new Promise((resolve: any, reject: any): void => {
 							if (object) {
-								const record: IUpdatableModel = new this.Model();
-								record._create(this.default_user({
+								const user: IAccountModel = this.Transform({
+									provider: "local",
 									user_id: object.user_id,
+									username: object.username,
 									auth: 1,
-								}), object, (error: IErrorObject, object: IUpdatableModel): void => {
+								});
+								const record: IUpdatableModel = new this.Model();
+								record._create(user, object, (error: IErrorObject, object: IUpdatableModel): void => {
 									if (!error) {
 										resolve(object);
 									} else {

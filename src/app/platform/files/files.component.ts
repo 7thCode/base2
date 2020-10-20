@@ -40,7 +40,6 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	@ViewChild("fileInput") public fileInput: any;
 
 	public results: any[] = [];
-
 	public filename: string = "";
 	public size: number = 20;
 	public count: number = 0;
@@ -124,7 +123,6 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	protected Progress(value: boolean): void {
 		this.spinner.Progress(value);
 	}
-
 
 	/**
 	 *

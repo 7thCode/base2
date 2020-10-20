@@ -6,10 +6,15 @@
 
 "use strict";
 
-import {OverlayModule} from "@angular/cdk/overlay";
 import {NgModule} from "@angular/core";
+import {CommonModule} from "@angular/common";
+
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+import {HttpClientModule} from "@angular/common/http";
+
+import {OverlayModule} from "@angular/cdk/overlay";
 
 import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-spinner";
 
@@ -20,16 +25,22 @@ import {AppComponent} from "./app.component";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 
+
 @NgModule({
 	declarations: [
 		AppComponent,
 	],
 	imports: [
+		CommonModule,
 		BrowserModule,
 		BrowserAnimationsModule,
+
 		AppRoutingModule,
-		MatProgressSpinnerModule,
+		HttpClientModule,
 		OverlayModule,
+
+		MatProgressSpinnerModule,
+
 		PlatformModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
 	],

@@ -8,9 +8,9 @@
 
 import {IArticleModel} from "../../../../types/platform/server";
 
-const Updatable: any = require( "../../../../server/platform/base/controllers/updatable_controller");
+const Updatable: any = require("../../../../server/platform/base/controllers/updatable_controller");
 
-const Article: any = require( "../../../../models/platform/articles/article");
+const Article: any = require("../../../../models/platform/articles/article");
 
 export class Articles extends Updatable {
 

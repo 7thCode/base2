@@ -8,7 +8,7 @@
 
 import {IErrorObject} from "../../../../types/platform/universe";
 
-import {IAccountModel,} from "../../../../types/platform/server";
+import {IAccountModel} from "../../../../types/platform/server";
 
 const Mail: any = require("../../../../server/platform/base/controllers/mail_controller");
 
@@ -70,7 +70,7 @@ export class Mailer extends Mail {
 					this.Decode(request.params.option, (error: IErrorObject, option: { start: number, limit: number }): void => {
 						this.listMessages(imap, option.start, option.limit, (error: IErrorObject, messages: any): void => {
 							this.ifSuccess(response, error, (): void => {
-								this.SendSuccess(response, {info:info, messages: messages});
+								this.SendSuccess(response, {info: info, messages: messages});
 							});
 						})
 					});
@@ -124,7 +124,7 @@ export class Mailer extends Mail {
 				address: target.from,
 				bcc: target.bcc,
 				title: target.subject,
-				source_object: {text:source_object},
+				source_object: {text: source_object},
 			};
 
 			this.sendMail(content, (error: IErrorObject, result: any): void => {
@@ -170,7 +170,7 @@ export class Mailer extends Mail {
 			this.openMailbox(request, response, (error: IErrorObject, imap, option: any): void => {
 				this.ifSuccess(response, error, (): void => {
 					const flags = request.body.flags;
-					super.addFlags(imap, request.params.UID,flags, (error: IErrorObject): void => {
+					super.addFlags(imap, request.params.UID, flags, (error: IErrorObject): void => {
 						this.ifSuccess(response, error, (): void => {
 							this.SendSuccess(response, {});
 						});
@@ -193,7 +193,7 @@ export class Mailer extends Mail {
 			this.openMailbox(request, response, (error: IErrorObject, imap, option: any): void => {
 				this.ifSuccess(response, error, (): void => {
 					const flags = request.body.flags;
-					super.removeFlags(imap, request.params.UID,flags, (error: IErrorObject): void => {
+					super.removeFlags(imap, request.params.UID, flags, (error: IErrorObject): void => {
 						this.ifSuccess(response, error, (): void => {
 							this.SendSuccess(response, {});
 						});

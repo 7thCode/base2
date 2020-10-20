@@ -80,7 +80,7 @@ export class Accounts extends Wrapper {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const params: IQueryParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response,this.errors.not_logged_in, operator.login, () => {
+				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					this.Decode(params.query, (error: IErrorObject, query: object): void => {
 						this.ifSuccess(response, error, (): void => {
 							this.Decode(params.option, (error: IErrorObject, option: IQueryOption): void => {
