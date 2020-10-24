@@ -8,8 +8,9 @@
 
 import {CommonModule} from "@angular/common";
 import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
@@ -85,8 +86,11 @@ import {RemoveDialogDirective} from "./remove-dialog/remove-dialog.directive";
 	imports: [
 		CommonModule,
 		FormsModule,
+		ReactiveFormsModule,
 
 		FlexLayoutModule,
+
+		MatCardModule,
 		MatDividerModule,
 		MatButtonModule,
 		MatCheckboxModule,
@@ -96,9 +100,8 @@ import {RemoveDialogDirective} from "./remove-dialog/remove-dialog.directive";
 		MatSnackBarModule,
 		MatFormFieldModule,
 		MatSelectModule,
-		ReactiveFormsModule,
+
 		BaseModule,
-		MatCardModule,
 	],
 	exports: [
 		LoginDialogDirective,

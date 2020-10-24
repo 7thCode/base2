@@ -9,18 +9,22 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {Component, OnInit} from "@angular/core";
+
+import {Overlay} from "@angular/cdk/overlay";
+
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
+
+import {Spinner} from "../base/library/spinner";
+
 import {SessionableComponent} from "../base/components/sessionable.component";
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
+import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 
 import {AuthService} from "../auth/auth.service";
 import {SessionService} from "../base/services/session.service";
 import {AccountsService} from "./accounts.service";
-import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
-import {Spinner} from "../base/library/spinner";
-import {Overlay} from "@angular/cdk/overlay";
 
 /**
  * アカウントレコード
@@ -208,7 +212,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		this.page = 0;
 		this.query = {};
 
-		this.breakpoint =  this.widthToColumns(window.innerWidth);
+		this.breakpoint = this.widthToColumns(window.innerWidth);
 
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
@@ -217,7 +221,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 					if (accounts) {
 						this.results = accounts;
 					} else {
-						this.errorBar({code: -1, message:"error."});
+						this.errorBar({code: -1, message: "error."});
 					}
 				} else {
 					this.errorBar(error);
@@ -247,7 +251,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				if (accounts) {
 					this.results = accounts;
 				} else {
-					this.errorBar({code: -1, message:"error."});
+					this.errorBar({code: -1, message: "error."});
 				}
 			} else {
 				this.errorBar(error);
@@ -297,7 +301,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				if (accounts) {
 					this.results = accounts;
 				} else {
-					this.errorBar({code: -1, message:"error."});
+					this.errorBar({code: -1, message: "error."});
 				}
 			} else {
 				this.errorBar(error);
@@ -327,13 +331,13 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 			disableClose: true,
 		});
 
-		dialog.beforeClosed().subscribe((result: {content: {username: string, password: string, nickname: string}}): void => {
+		dialog.beforeClosed().subscribe((result: { content: { username: string, password: string, nickname: string } }): void => {
 			if (result) { // if not cancel then
 				this.Progress(true);
-				const content: {username: string, password: string, nickname: string} = result.content;
+				const content: { username: string, password: string, nickname: string } = result.content;
 				const username: string = content.username;
 				const password: string = content.password;
-				const metadata: {nickname: string, id: string} = {nickname: content.nickname, id: "1"};
+				const metadata: { nickname: string, id: string } = {nickname: content.nickname, id: "1"};
 				this.authService.regist_immediate(username, password, metadata, (error: IErrorObject, result: object): void => {
 					if (!error) {
 						this.draw((error: IErrorObject, accounts: object[]): void => {
@@ -392,8 +396,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 													this.results = accounts;
 													this.Complete("", result);
 												} else {
-													this.Complete("error", {code: -1, message:"error."});
-													this.errorBar({code: -1, message:"error."});
+													this.Complete("error", {code: -1, message: "error."});
+													this.errorBar({code: -1, message: "error."});
 												}
 											} else {
 												this.Complete("error", error);
@@ -401,8 +405,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 											}
 										});
 									} else {
-										this.Complete("error", {code: -1, message:"error."});
-										this.errorBar({code: -1, message:"error."});
+										this.Complete("error", {code: -1, message: "error."});
+										this.errorBar({code: -1, message: "error."});
 									}
 								} else {
 									this.Complete("error", error);
@@ -417,8 +421,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 					});
 				} else {
-					this.Complete("error", {code: -1, message:"error."});
-					this.errorBar({code: -1, message:"error."});
+					this.Complete("error", {code: -1, message: "error."});
+					this.errorBar({code: -1, message: "error."});
 				}
 			} else {
 				this.Complete("error", error);
@@ -449,7 +453,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 		dialog.afterClosed().subscribe((result: object) => {
 			if (result) { // if not cancel then
 				this.Progress(true);
-		 		this.delete(id, (error: IErrorObject, result: any): void => {
+				this.delete(id, (error: IErrorObject, result: any): void => {
 					if (!error) {
 						this.draw((error: IErrorObject, accounts: object[] | null): void => {
 							if (!error) {

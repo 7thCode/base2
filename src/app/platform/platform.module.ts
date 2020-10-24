@@ -6,28 +6,19 @@
 
 "use strict";
 
-import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
-
+import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 
 import {FlexLayoutModule} from "@angular/flex-layout";
 
 import {MatButtonModule} from "@angular/material/button";
-import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
-import {MatProgressSpinnerModule, MatSpinner} from "@angular/material/progress-spinner";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
-import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {MatTabsModule} from "@angular/material/tabs";
 import {MatSidenavModule} from "@angular/material/sidenav";
-import {MatSliderModule} from "@angular/material/slider";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
 
 import {AceEditorModule} from "ng2-ace-editor";
 
@@ -50,7 +41,6 @@ import {PlatformComponent} from "./platform.component";
 import {PersonalModule} from "./personal/personal.module";
 import {MailerModule} from "./mailer/mailer.module";
 
-
 @NgModule({
 	declarations: [
 		PlatformComponent,
@@ -58,27 +48,20 @@ import {MailerModule} from "./mailer/mailer.module";
 	imports: [
 		CommonModule,
 		RouterModule,
-		PlatformRoutingModule,
+		FormsModule,
 
 		FlexLayoutModule,
 
-		MatTabsModule,
-		MatCardModule,
-		MatListModule,
-		MatIconModule,
-		MatButtonModule,
-		MatSnackBarModule,
-		MatToolbarModule,
-		MatSidenavModule,
-		MatSliderModule,
-		MatMenuModule,
-		MatButtonToggleModule,
-		MatProgressSpinnerModule,
-		MatFormFieldModule,
-		FormsModule,
-		MatInputModule,
+ 		MatListModule,
+ 		MatIconModule,
+ 		MatButtonModule,
+ 		MatToolbarModule,
+ 		MatSidenavModule,
+ 		MatMenuModule,
+
 		AceEditorModule,
 
+		PlatformRoutingModule,
 		ErrorModule,
 		AccountsModule,
 		ArticlesModule,
@@ -92,11 +75,9 @@ import {MailerModule} from "./mailer/mailer.module";
 		StripeModule,
 		MailerModule,
 		BasePipeModule,
-
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],
-	entryComponents: [MatSpinner],
 })
 
 export class PlatformModule {

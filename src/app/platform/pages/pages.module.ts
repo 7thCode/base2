@@ -11,20 +11,13 @@ import {NgModule} from "@angular/core";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatExpansionModule} from "@angular/material/expansion";
-import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
-import {MatListModule} from "@angular/material/list";
-import {MatNativeDateModule} from "@angular/material/core";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
@@ -39,7 +32,6 @@ import {PagesComponent} from "./pages.component";
 
 import {SessionService} from "../base/services/session.service";
 import {PagesService} from "./pages.service";
-import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
 	declarations: [
@@ -57,28 +49,21 @@ import {MatDialogModule} from "@angular/material/dialog";
 
 		FlexLayoutModule,
 
-		MatCardModule,
-		MatIconModule,
-		MatButtonModule,
-		MatDatepickerModule,
-		MatNativeDateModule,
-		MatInputModule,
-		MatListModule,
-		MatCheckboxModule,
-		MatGridListModule,
-		MatSelectModule,
-		MatFormFieldModule,
-		MatExpansionModule,
-		MatAutocompleteModule,
-		MatProgressSpinnerModule,
-		MatPaginatorModule,
-		PageEditModule,
-		MatSlideToggleModule,
+ 		MatCardModule,
+ 		MatDialogModule,
+ 		MatIconModule,
+ 		MatButtonModule,
+ 		MatInputModule,
+ 		MatGridListModule,
+ 		MatSelectModule,
+ 		MatPaginatorModule,
+ 		MatSlideToggleModule,
 
 		AceEditorModule,
 		AngularEditorModule,
+		PageEditModule,
+
 		BaseModule,
-		MatDialogModule,
 	],
 	exports: [
 		PagesComponent,

@@ -11,18 +11,7 @@ import {NgModule} from "@angular/core";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
 
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatGridListModule} from "@angular/material/grid-list";
-import {MatIconModule} from "@angular/material/icon";
-import {MatInputModule} from "@angular/material/input";
-import {MatListModule} from "@angular/material/list";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatSelectModule} from "@angular/material/select";
-
 
 import {ImageCropperModule} from "ngx-image-cropper";
 
@@ -43,22 +32,13 @@ import {MatDialogModule} from "@angular/material/dialog";
 
 		FlexLayoutModule,
 
-		MatCardModule,
-		MatIconModule,
-		MatButtonModule,
-		MatInputModule,
-		MatListModule,
-		MatGridListModule,
-		MatCheckboxModule,
-		MatSelectModule,
-		MatFormFieldModule,
-		MatAutocompleteModule,
-		MatProgressSpinnerModule,
+	 	MatCardModule,
+	 	MatDialogModule,
 
 		ImageCropperModule,
 
 		BaseModule,
-		MatDialogModule,
+
 	],
 	exports: [
 		ImageComponent,
