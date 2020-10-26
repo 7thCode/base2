@@ -19,6 +19,9 @@ const path: any = require("path");
 
 const project_root = path.join(__dirname, "../../../..");
 
+const ConfigModule: any = module.parent.parent.exports.config;
+const systemsConfig: any = ConfigModule.systems;
+
 const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 
 export class Files extends Wrapper {
@@ -154,30 +157,6 @@ export class Files extends Wrapper {
 	 *
 	 * @param gfs
 	 * @param collection
-	 * @param user_id
-	 * @param name
-	 * @param callback
-	 * @returns none
-	 */
-	// private resultFile(gfs: any, collection: any, user_id: string, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
-	// 	collection.findOne({$and: [{filename: name}, {"metadata.user_id": user_id}]}, (error: IErrorObject, item: any): void => {
-	// 		if (!error) {
-	// 			if (item) {
-	// 				const readstream: any = gfs.openDownloadStream(item._id);
-	// 				callback(null, readstream, item);
-	// 			} else {
-	// 				callback({code: -1, message: "not found." + " 2010"}, null, "");
-	// 			}
-	// 		} else {
-	// 			callback(error, null, "");
-	// 		}
-	// 	});
-	// }
-
-	/**
-	 *
-	 * @param gfs
-	 * @param collection
 	 * @param name
 	 * @param callback
 	 * @returns none
@@ -259,6 +238,230 @@ export class Files extends Wrapper {
 
 	/**
 	 *
+	 * @param username
+	 * @param name
+	 * @param callback
+	 * @returns none
+	 */
+	private getRecord(username: string, name: string, callback: Callback<any>): void {
+		try {
+			const query: object = Files.query_by_user_read({username, auth: AuthLevel.public}, {filename: name});
+			this.collection.findOne(query).then((item: object): void => {
+
+				if (item) {
+					callback(null, item);
+				} else {
+					callback({code: -1, message: "no item" + " 148"}, null);
+				}
+
+			}).catch((error: IErrorObject) => {
+				callback(error, null);
+			});
+		} catch (e) {
+			callback(e, null);
+		}
+	}
+
+	/**
+	 *
+	 * @param _id
+	 * @param callback
+	 * @returns none
+	 */
+	private getRecordById(_id: string, callback: Callback<any>): void {
+		try {
+			const id = new mongodb.ObjectId(_id);
+			this.collection.findOne({_id: id}).then((item: object): void => {
+
+				if (item) {
+					callback(null, item);
+				} else {
+					callback({code: -1, message: "no item" + " 5629"}, null);
+				}
+
+			}).catch((error: IErrorObject) => {
+				callback(error, null);
+			});
+		} catch (e) {
+			callback(e, null);
+		}
+	}
+
+	/**
+	 *
+	 * @param _id
+	 * @param start
+	 * @param end
+	 * @param callback
+	 * @returns none
+	 */
+	private getPartial(_id: string, start: number, end: number, callback: Callback<any>): void {
+		try {
+			const readstream: object = this.gfs.openDownloadStream(_id, {start, end: end + 1});
+			if (readstream) {
+				callback(null, readstream);
+			} else {
+				callback({code: -1, message: "stream not found." + " 6058"}, null);
+			}
+		} catch (e) {
+			callback(e, null);
+		}
+	}
+
+	/**
+	 * NOT FOUND IMAGE.
+	 *
+	 * @param callback
+	 * @returns none
+	 */
+	private brankImage(callback: (error: IErrorObject, result: object, item: string) => void): void {
+		try {
+			this.resultPublicFile(this.gfs, this.collection, "blank.png", (error, readstream, type: string) => {
+				// 	item.metadata.type
+				callback(error, readstream, type);
+			});
+		} catch (e) {
+			callback(e, null, null);
+		}
+	}
+
+	/*
+	*
+	*/
+	private renderBlank(response: any, next: () => void, callback: (result: any) => void): void {
+		this.brankImage((error: IErrorObject, result: any, item: any): void => {
+			if (!error) {
+				// const mimetype = item.metadata.type;
+				const mimetype: string = "image/png";
+				const total: number = item.length;
+				const start: number = 0;
+				const end: number = total - 1;
+				const chunksize: number = (end - start) + 1;
+
+				response.status(200);
+				response.type(mimetype);
+				response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+				response.set("Accept-Ranges", "bytes");
+				response.set("Content-Length", chunksize);
+
+				result.pipe(response);
+				callback(result);
+			} else {
+				next();
+			}
+		});
+	}
+
+	/*
+	*
+	*/
+	private render(response: any, next: () => void, result: any, query: any, range: string, command_string: string, callback: (result: any) => void): void {
+
+		let command: string = command_string;
+
+		const mimetype: string = result.metadata.type;
+		const total: number = result.length;
+
+		let status: number = 200;
+
+		let start: number = 0;
+		let end: number = 0;
+		let chunksize: number = 0;
+
+		/*
+		* HTTP/1.1： 範囲要請
+		* RFC 7233, Range Requests
+		* https://triple-underscore.github.io/RFC7233-ja.html
+		 */
+		if (range) {　    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
+			command = "";
+
+			const parts: string[] = range.replace(/bytes=/, "").split("-");
+			const partialstart: string = parts[0];
+			const partialend: string = parts[1];
+
+			status = 206;	// Partial Content
+			start = partialstart ? parseInt(partialstart, 10) : 0;
+			end = partialend ? parseInt(partialend, 10) : total - 1;
+		} else { 			// Full Data.
+			status = 200;	// Full Content
+			start = 0;
+			end = total - 1;
+		}
+
+		chunksize = (end - start) + 1;
+
+		this.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				if (result) {
+					response.status(status);
+					response.type(mimetype);
+					response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+					response.set("Accept-Ranges", "bytes");
+					response.set("Content-Length", chunksize);
+
+					// c=[{"c":"resize","p":{"width":300,"height":100}}]
+					this.effect(mimetype, query, command, result, (error: any, result: any): void => {
+						if (!error) {
+							result.pipe(response);
+							callback(result);
+						} else {
+							next();
+						}
+					});
+				} else {
+					next();
+				}
+			} else {
+				next();
+			}
+		});
+	};
+
+	/*
+	*
+	*/
+	private renderByFile(response: any, next: () => void, user_id: string, path: string, query: any, range: string, command_string: string, callback: (result: any) => void): void {
+		this.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				if (result) {
+					if (result.metadata.rights.read === AuthLevel.public) {
+						this.render(response, next, result, query, range, command_string, callback);
+					} else {
+						response.status(403).render("error", {message: "Forbidden...", status: 403});
+					}
+				} else {
+					next();
+				}
+			} else {
+				this.renderBlank(response, next, callback);
+			}
+		});
+	};
+
+	/*
+	*
+	*/
+	private renderById(response: any, next: () => void, _id: string, query: any, range: string, command_string: string, callback: (result: any) => void): void {
+		this.getRecordById(_id, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				if (result) {
+					if (result.metadata.rights.read === AuthLevel.public) {
+						this.render(response, next, result, query, range, command_string, callback);
+					} else {
+						response.status(403).render("error", {message: "Forbidden...", status: 403});
+					}
+				} else {
+					next();
+				}
+			} else {
+				this.renderBlank(response, next, callback);
+			}
+		});
+	};
+
+	/**
+	 *
 	 * @param initfiles
 	 * @param callback
 	 * @returns none
@@ -335,96 +538,6 @@ export class Files extends Wrapper {
 
 	/**
 	 *
-	 * @param username
-	 * @param name
-	 * @param callback
-	 * @returns none
-	 */
-	public getRecord(username: string, name: string, callback: Callback<any>): void {
-		try {
-			const query: object = Files.query_by_user_read({username, auth: AuthLevel.public}, {filename: name});
-			this.collection.findOne(query).then((item: object): void => {
-
-				if (item) {
-					callback(null, item);
-				} else {
-					callback({code: -1, message: "no item" + " 148"}, null);
-				}
-
-			}).catch((error: IErrorObject) => {
-				callback(error, null);
-			});
-		} catch (e) {
-			callback(e, null);
-		}
-	}
-
-	/**
-	 *
-	 * @param _id
-	 * @param name
-	 * @param callback
-	 * @returns none
-	 */
-	public getRecordById(_id: string, callback: Callback<any>): void {
-		try {
-			const id = new mongodb.ObjectId(_id);
-			this.collection.findOne({_id: id}).then((item: object): void => {
-
-				if (item) {
-					callback(null, item);
-				} else {
-					callback({code: -1, message: "no item" + " 5629"}, null);
-				}
-
-			}).catch((error: IErrorObject) => {
-				callback(error, null);
-			});
-		} catch (e) {
-			callback(e, null);
-		}
-	}
-
-	/**
-	 *
-	 * @param _id
-	 * @param start
-	 * @param end
-	 * @param callback
-	 * @returns none
-	 */
-	public getPartial(_id: string, start: number, end: number, callback: Callback<any>): void {
-		try {
-			const readstream: object = this.gfs.openDownloadStream(_id, {start, end: end + 1});
-			if (readstream) {
-				callback(null, readstream);
-			} else {
-				callback({code: -1, message: "stream not found." + " 6058"}, null);
-			}
-		} catch (e) {
-			callback(e, null);
-		}
-	}
-
-	/**
-	 *
-	 * @param callback
-	 * @returns none
-	 */
-	public brankImage(callback: (error: IErrorObject, result: object, item: string) => void): void {
-		try {
-			// NOT FOUND IMAGE.
-			this.resultPublicFile(this.gfs, this.collection, "blank.png", (error, readstream, type: string) => {
-				// 	item.metadata.type
-				callback(error, readstream, type);
-			});
-		} catch (e) {
-			callback(e, null, null);
-		}
-	}
-
-	/**
-	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -482,7 +595,6 @@ export class Files extends Wrapper {
 	 */
 	public getFile(request: IGetFile, response: IJSONResponse): void {
 		try {
-			// const name: string = request.params.name;
 			const path: string = request.params[0];
 			const operator: IAccountModel = this.Transform(request.user);
 
@@ -539,13 +651,13 @@ export class Files extends Wrapper {
 					if (path) {
 						const query: object = Files.query_by_user_write(operator, {filename: path});
 						this.collection.findOne(query).then((item: object): void => {
-							if (!item) {
+							if (!item) { // new.
 								this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
 									this.ifSuccess(response, error, (): void => {
 										this.SendSuccess(response, result);
 									});
 								});
-							} else {
+							} else { // if already this then swap.
 								this.collection.deleteOne(query).then((): void => {
 									this.insertFile(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
 										this.ifSuccess(response, error, (): void => {
@@ -591,6 +703,41 @@ export class Files extends Wrapper {
 		} catch (error) {
 			this.SendFatal(response, error);
 		}
+	}
+
+	public renderFile(request: any, response: any, next: any): void {
+
+		const path: string = request.params[0];  // Because FilePath contains "/".
+		const range: string = request.headers.range;
+
+		const query: { u: string, c: string } = request.query;
+		const user: IAccountModel = this.Transform(request.user);
+
+		const _default: any = systemsConfig.default;
+
+		let username: string = query.u || _default.username;
+		if (user) {
+			username = query.u || user.username || _default.username;
+		}
+
+		const command_string: string = query.c || "";
+
+		this.renderByFile(response, next, username, path, query, range, command_string, (result) => {
+
+		});
+	}
+
+	public renderId(request: any, response: any, next: any): void {
+		const _id = request.params.id;
+		const range: string = request.headers.range;
+
+		const query: { u: string, c: string } = request.query;
+
+		const command_string: string = query.c || "";
+
+		this.renderById(response, next, _id, query, range, command_string, (result) => {
+
+		});
 	}
 
 	/**

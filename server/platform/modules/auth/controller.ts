@@ -229,7 +229,7 @@ export class Auth extends Mail {
 									_.merge(content, user.content);
 								}
 
-								LocalAccount.default_find_by_id_promise({}, user_id).then((account: any): void => {
+								LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
 
 									if (!account) {
 										const keypair: { private: string, public: string } = Cipher.KeyPair(512);

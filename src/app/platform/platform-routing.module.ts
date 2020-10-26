@@ -19,6 +19,7 @@ import {PersonalComponent} from "./personal/personal.component";
 import {StripeComponent} from "../plugins/stripe/stripe.component";
 import {MailerComponent} from "./mailer/mailer.component";
 import {ErrorComponent} from "./error/error.component";
+import {NativeFilesComponent} from "../plugins/native-files/native-files.component";
 
 const routes: Routes = [
 	{
@@ -30,6 +31,7 @@ const routes: Routes = [
 			{path: "personal", component: PersonalComponent, data: {animation: "personal"}},
 			{path: "mailer", component: MailerComponent, data: {animation: "mailer"}},
 			{path: "stripe", component: StripeComponent, data: {animation: "stripe"}},
+			{path: "nativefiles", component: NativeFilesComponent, data: {animation: "nativefiles"}},
 			{path: "", component: TopComponent, data: {animation: "top"}},
 			{path: '**', component: ErrorComponent},
 		],

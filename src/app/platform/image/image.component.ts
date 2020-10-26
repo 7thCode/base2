@@ -156,7 +156,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.view = ImageComponent.defaultValue(changes.view, "visible");
 		this.width = ImageComponent.defaultValue(changes.width, 120);
 		this.height = ImageComponent.defaultValue(changes.height, 120);
-		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png");
+		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png,webp");
 		this.username = ImageComponent.defaultValue(changes.username, null);
 	}
 

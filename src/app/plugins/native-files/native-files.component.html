@@ -1,0 +1,32 @@
+<ng-container>
+	<mat-card style="margin:2rem;">
+		<mat-card-header>
+			<div style="font-size: 32px;font-weight: 900;">Native Files</div>
+		</mat-card-header>
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				</mat-paginator>
+				<button mat-fab color="primary" (click)="createDialog()" class="fab-center">+</button>
+			</div>
+			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
+				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
+					<mat-grid-tile-header>
+						<div class="box-header">{{resource.id}}</div>
+					</mat-grid-tile-header>
+
+					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
+
+						<button mat-icon-button (click)="updateDialog(resource.id)">
+							<mat-icon color="primary">edit</mat-icon>
+						</button>
+						<button mat-icon-button (click)="onDelete($event, resource.id)">
+							<mat-icon color="warn">delete_sweep</mat-icon>
+						</button>
+
+					</mat-grid-tile-footer>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</mat-card-content>
+	</mat-card>
+</ng-container>

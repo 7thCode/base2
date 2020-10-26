@@ -40,6 +40,7 @@ import {PlatformRoutingModule} from "./platform-routing.module";
 import {PlatformComponent} from "./platform.component";
 import {PersonalModule} from "./personal/personal.module";
 import {MailerModule} from "./mailer/mailer.module";
+import {NativeFilesModule} from "../plugins/native-files/native-files.module";
 
 @NgModule({
 	declarations: [
@@ -74,6 +75,7 @@ import {MailerModule} from "./mailer/mailer.module";
 
 		StripeModule,
 		MailerModule,
+		NativeFilesModule,
 		BasePipeModule,
 	],
 	providers: [],

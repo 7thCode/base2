@@ -84,6 +84,7 @@ gulp.task('base_core', () => {
 	return gulp.src([
 		'dualuse/*.*/*.*',
 		'models/platform/**/*.ts',
+		'models/plugins/**/*.ts',
 		'server/applications/**/*.ts',
 		'server/platform/**/*.ts',
 		'server/platform/assets/**/*.*',
@@ -98,6 +99,7 @@ gulp.task('base_core', () => {
 		'views/platform/**/*.pug',
 		'views/plugins/**/*.pug',
 		'types/platform/**/*.ts',
+		'types/plugins/**/*.ts',
 		'gulpfile.js',
 		'app.ts',
 		'patch.js',
