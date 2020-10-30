@@ -10,6 +10,8 @@ import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {Component, HostListener, OnInit, ViewChild} from "@angular/core";
+import {Overlay} from "@angular/cdk/overlay";
+
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -17,9 +19,10 @@ import {UploadableComponent} from "../base/components/uploadable.component";
 
 import {SessionService} from "../base/services/session.service";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
-import {Overlay} from "@angular/cdk/overlay";
+
 import {Spinner} from "../base/library/spinner";
 import {ResizeDialogComponent} from "../image/resize-dialog/resize-dialog.component";
+import {FilesService} from "./files.service";
 
 /**
  * ファイル
@@ -31,6 +34,7 @@ import {ResizeDialogComponent} from "../image/resize-dialog/resize-dialog.compon
 	templateUrl: "./files.component.html",
 	styleUrls: ["./files.component.css"],
 })
+
 export class FilesComponent extends UploadableComponent implements OnInit {
 
 	public get isProgress(): boolean {
@@ -67,7 +71,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
 	) {
-		super(session, http);
+		super(session);
+		this.filesService = new FilesService(http);
 		this.spinner = new Spinner(overlay);
 		this.resizeThreshold = {width: 1000, height: 1000};
 	}

@@ -1,26 +1,46 @@
 <ng-container>
 	<mat-card style="margin:2rem;">
 		<mat-card-header>
-			<div style="font-size: 32px;font-weight: 900;">Native Files</div>
+			<div style="font-size: 32px;font-weight: 900;">NativeFiles</div>
 		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
 				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
 				</mat-paginator>
-				<button mat-fab color="primary" (click)="createDialog()" class="fab-center">+</button>
+				<input type="file" multiple style="display: none" #fileInput (change)="onChangeFileInput()"/>
+				<button mat-fab color="primary" [disabled]="isProgress" (click)="onClickFileInputButton()" class="fab-center">+</button>
+			</div>
+			<div fxLayout="row" fxLayout.lt-sm="column">
+				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
+					<input matInput autocomplete="off" type="text" placeholder="Find by..." [(ngModel)]="filename" (change)="findByFilename();">
+					<button mat-button matSuffix mat-icon-button aria-label="Clear" [disabled]="isProgress" (click)="filename='';findByFilename();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
 			</div>
 			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
-				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
+				<mat-grid-tile class="box-body" [ngSwitch]="file.type" *ngFor="let file of results" [colspan]="file.cols" [rowspan]="file.rows">
+					<app-image *ngSwitchCase="1" [username]="file.metadata.username" [fileName]="file.filename" [view]="'editable'"></app-image>
+					<img *ngSwitchCase="2" style="height: 60%;" src="{{endPoint}}/nfiles/get/{{file.filename}}" alt=""/>
+					<video *ngSwitchCase="3" style="height: 60%;" muted playsinline controls>
+						<source src="{{endPoint}}/nfiles/get/{{file.filename}}">
+					</video>
+					<div *ngSwitchDefault [ngSwitch]="file.extension">
+						<i *ngSwitchCase="'zip'" class="material-icons" style="color:#ff1744;font-size: 6rem;">insert_drive_file</i>
+						<i *ngSwitchDefault      class="material-icons" style="color:#90caf9;font-size: 6rem;">insert_drive_file</i>
+					</div>
+
 					<mat-grid-tile-header>
-						<div class="box-header">{{resource.id}}</div>
+						<div class="box-header">{{file.filename}}</div>
 					</mat-grid-tile-header>
-
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-
-						<button mat-icon-button (click)="updateDialog(resource.id)">
-							<mat-icon color="primary">edit</mat-icon>
-						</button>
-						<button mat-icon-button (click)="onDelete($event, resource.id)">
+						<a mat-icon-button href="{{endPoint}}/nfiles/get/{{file.filename}}" target=”_blank”>
+							<mat-icon color="accent">collections</mat-icon>
+						</a>
+						<a mat-icon-button href="{{endPoint}}/nfiles/get/{{file.filename}}" download>
+							<mat-icon color="primary">cloud_download</mat-icon>
+						</a>
+						<button mat-icon-button (click)="onDelete($event, file.filename)">
 							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
 

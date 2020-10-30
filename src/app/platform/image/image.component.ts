@@ -19,6 +19,7 @@ import {environment} from '../../../environments/environment';
 
 import {SessionService} from "../base/services/session.service";
 import {ResizeDialogComponent} from "./resize-dialog/resize-dialog.component";
+import {FilesService} from "../files/files.service";
 
 /**
  * イメージ
@@ -56,9 +57,10 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		protected http: HttpClient,
 		protected matDialog: MatDialog,
 	) {
-		super(session, http);
+		super(session);
 		this.description = "";
-		this.endPoint = environment.endPoint;
+		this.filesService = new FilesService(http);
+	// 	this.endPoint = environment.endPoint;
 		this.imagePath = this.endPoint + "/files/get/blank.png";
 		this.resizeThreshold = {width: 1000, height: 1000};
 	}

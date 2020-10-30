@@ -29,7 +29,7 @@ const nativeFiles: any = new NativeFiles(event, ConfigModule, logger);
 nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.get("/nativefiles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/nfiles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -37,7 +37,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.get("/nativefiles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/nfiles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -45,7 +45,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.get("/nativefiles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/nfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -53,7 +53,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.post("/nativefiles/auth", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/nfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -61,19 +61,35 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.put("/nativefiles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
-			(request: any, response: object): void => {
-				logger.trace(request.url);
-				gatekeeper.catch(response, () => {
-					nativeFiles.put(request, response);
-				});
-			}]);
-
-		router.delete("/nativefiles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.delete("/nfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
 					nativeFiles.delete(request, response);
+				});
+			}]);
+
+		router.get("/nfiles/get/*", [gatekeeper.default,
+			(request: any, response: any, next: () => void): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					nativeFiles.renderFile(request, response, next);
+				});
+			}]);
+
+		router.get("/nfiles/getid/:id", [gatekeeper.default,
+			(request: any, response: any, next: () => void): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					nativeFiles.renderId(request, response, next);
+				});
+			}]);
+
+		router.get("/images/*", [gatekeeper.default,
+			(request: any, response: any, next: () => void): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					nativeFiles.renderFile(request, response, next);
 				});
 			}]);
 

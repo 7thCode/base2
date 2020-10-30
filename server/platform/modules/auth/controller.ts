@@ -16,6 +16,8 @@ const crypto: any = require("crypto");
 const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
 
+const mongoose: any = require("mongoose");
+
 const path: any = require("path");
 const project_root = path.join(__dirname, "../../../..");
 
@@ -118,9 +120,10 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	private create_param(id_seed: string, username: string, adding_content: any, auth: number): any {
-		const shasum: any = crypto.createHash("sha1"); //
-		shasum.update(id_seed);                      // create userid from username.
-		const user_id: string = shasum.digest("hex"); //
+	// 	const shasum: any = crypto.createHash("sha1"); //
+	// 	shasum.update(id_seed);                      // create userid from username.
+	// 	const user_id: string = shasum.digest("hex"); //
+		const user_id = new mongoose.Types.ObjectId();
 
 		const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 
@@ -219,8 +222,9 @@ export class Auth extends Mail {
 							if (user) {
 								const auth: number = user.auth;
 
-								const user_id: string = user.user_id;
-								const username: string = user.username; // for multi tenant.
+							// 	const user_id: string = user.user_id;
+								const user_id = new mongoose.Types.ObjectId();
+								const username: string = user.username;
 								const rootpassword: string = user.password;
 
 								const content: any = _.cloneDeep(this.content);
@@ -230,17 +234,16 @@ export class Auth extends Mail {
 								}
 
 								LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
-
 									if (!account) {
 										const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 										const promise = new Promise((resolve: any, reject: any): void => {
 											LocalAccount.register(new LocalAccount({
-												user_id,
+												user_id: user_id,
 												username: username,
-												auth,
+												auth: auth,
 												privatekey: keypair.private,
 												publickey: keypair.public,
-												content,
+												content: content,
 											}), rootpassword).then(() => {
 												resolve({});
 											}).catch((error: any) => {

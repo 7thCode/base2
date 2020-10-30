@@ -26,10 +26,12 @@ namespace PageModel {
 	const Schema = mongoose.Schema;
 
 	const Page = new Schema({
-		user_id: {type: String, default: ""},
+	// 	user_id: {type: String, default: ""},
+		user_id: {type: Schema.Types.ObjectId},
 		username: {type: String, default: ""},
 		content: {
-			id: {type: String, required: true, index: {unique: true}},
+			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
+	// 		id: {type: String, required: true, index: {unique: true}},
 			relations: {type: mongoose.Schema.Types.Mixed},
 			enabled: {type: Boolean, default: true},
 			category: {type: String, default: ""},
@@ -47,12 +49,12 @@ namespace PageModel {
 
 	Page.index({"user_id": 1, "content.path": 1}, {unique: true});
 
-	const setId: any = (id: string): string => {
-		const idString: string = id.toString();
-		const shasum: any = crypto.createHash("sha1");
-		shasum.update(idString);
-		return shasum.digest("hex");
-	};
+	// const setId: any = (id: string): string => {
+	// 	const idString: string = id.toString();
+	// 	const shasum: any = crypto.createHash("sha1");
+	// 	shasum.update(idString);
+	// 	return shasum.digest("hex");
+	// };
 
 	const query_by_user_read: any = (user: any, query: any): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
@@ -73,8 +75,9 @@ namespace PageModel {
 	};
 
 	const init: any = (_id: any, body: any): IPageModelContent => {
+		const id = new mongoose.Types.ObjectId();
 		const content: IPageModelContent = {
-			id: setId(_id),
+			id: id, // setId(_id),
 			parent_id: body.parent_id,
 			enabled: body.enabled,
 			category: body.category,

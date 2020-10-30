@@ -24,8 +24,10 @@ namespace NativeFileModel {
 	const Schema: any = mongoose.Schema;
 
 	const NativeFile = new Schema({
-		user_id: {type: String, default: ""},
+	// 	user_id: {type: String, default: ""},
+		user_id: {type: Schema.Types.ObjectId},
 		username: {type: String, default: ""},
+		filepath: {type: String, default: ""},
 		content: {
 			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
 			relations: {type: mongoose.Schema.Types.Mixed},
@@ -45,12 +47,12 @@ namespace NativeFileModel {
 
 	NativeFile.index({"user_id": 1, "content.id": 1}, {unique: true});
 
-	const setId = (id: string): string => {
-		const idString = id.toString();
-		const shasum = crypto.createHash("sha1");
-		shasum.update(idString);
-		return shasum.digest("hex");
-	};
+	// const setId = (id: string): string => {
+	// 	const idString = id.toString();
+	// 	const shasum = crypto.createHash("sha1");
+	// 	shasum.update(idString);
+	// 	return shasum.digest("hex");
+	// };
 
 	const query_by_user_read: any = (user: any, query: object): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};

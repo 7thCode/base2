@@ -12,6 +12,8 @@ import {IAccountModel, IDeleteRequest, IDParam, IGetByIDRequest, IJSONResponse, 
 
 const Wrapper: any = require("./wrapper");
 
+const mongoose: any = require("mongoose");
+
 /**
  *
  */
@@ -244,9 +246,10 @@ export abstract class Updatable extends Wrapper {
 					objects.forEach((object: any): void => {
 						promises.push(new Promise((resolve: any, reject: any): void => {
 							if (object) {
+								const user_id = new mongoose.Types.ObjectId();
 								const user: IAccountModel = this.Transform({
 									provider: "local",
-									user_id: object.user_id,
+									user_id: user_id,
 									username: object.username,
 									auth: 1,
 								});

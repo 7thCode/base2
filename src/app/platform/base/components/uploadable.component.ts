@@ -15,6 +15,7 @@ import {SessionableComponent} from "./sessionable.component";
 
 import {FilesService} from "../../files/files.service";
 import {SessionService} from "../services/session.service";
+import {environment} from "../../../../environments/environment";
 
 /**
  * アップローダブルクラス
@@ -29,16 +30,17 @@ export abstract class UploadableComponent extends SessionableComponent implement
 
 	public endPoint: string;
 
-	protected filesService: FilesService;
+	protected filesService: any;
 	protected bodysize: number;
 
 	protected constructor(
 		protected session: SessionService,
-		protected http: HttpClient,
+	// 	protected http: HttpClient,
 	) {
 		super(session);
-		this.filesService = new FilesService(http);
-		this.endPoint = this.filesService.endPoint;
+	// 	this.filesService = new FilesService(http);
+	// 	this.endPoint = this.filesService.endPoint;
+		this.endPoint = environment.endPoint;
 		this.bodysize = 200 * 1000 * 1000;  // default.
 	}
 

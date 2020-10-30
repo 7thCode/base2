@@ -22,7 +22,8 @@ namespace AccountModel {
 	const Account = new Schema({
 		provider: {type: String, default: "local"},
 		auth: {type: Number, default: 200},
-		user_id: {type: String, required: true, index: {unique: true}},
+	// 	user_id: {type: String, required: true, index: {unique: true}},
+		user_id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
 		username: {type: String, required: true, index: {unique: true}},
 		password: {type: String},
 		relations: {type: mongoose.Schema.Types.Mixed},

@@ -113,14 +113,6 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			},
 		]);
 
-		router.get("/images/*", [gatekeeper.default,
-			(request: any, response: any, next: () => void): void => {
-				logger.trace(request.url);
-				gatekeeper.catch(response, (): void => {
-					file.renderFile(request, response, next);
-				});
-			}]);
-
 		router.get("/files/get/*", [gatekeeper.default,
 			(request: any, response: any, next: () => void): void => {
 				logger.trace(request.url);

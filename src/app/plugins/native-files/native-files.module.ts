@@ -14,30 +14,25 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
-import {MatDialogModule} from "@angular/material/dialog";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 import {BaseModule} from "../../platform/base/base.module";
+import {ImageModule} from "../../platform/image/image.module";
 
-import {NativeFileDialogComponent} from "./native-file-dialog/native-file-dialog.component";
 import {NativeFilesComponent} from "./native-files.component";
 
 import {SessionService} from "../../platform/base/services/session.service";
-import {NativeFilesService} from "./native-files.service";
 
 
 @NgModule({
 	declarations: [
 		NativeFilesComponent,
-		NativeFileDialogComponent,
 	],
 	providers: [
 		SessionService,
-		NativeFilesService,
 	],
 	imports: [
 		CommonModule,
@@ -45,22 +40,20 @@ import {NativeFilesService} from "./native-files.service";
 
 		FlexLayoutModule,
 
- 		MatDialogModule,
- 		MatCardModule,
- 		MatIconModule,
- 		MatButtonModule,
- 		MatInputModule,
- 		MatPaginatorModule,
- 		MatSlideToggleModule,
- 		MatGridListModule,
+		MatCardModule,
+		MatIconModule,
+		MatButtonModule,
+		MatInputModule,
+		MatGridListModule,
+		MatPaginatorModule,
 
 		BaseModule,
+		ImageModule,
 	],
 	exports: [
 		NativeFilesComponent,
 	],
 	bootstrap: [
-		NativeFileDialogComponent,
 	],
 })
 
