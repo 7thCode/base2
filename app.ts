@@ -70,7 +70,12 @@ const normal: () => void = () => {
 	mongoose.set('useCreateIndex', true);
 	mongoose.set("useFindAndModify", false);
 
-	const working: () => void = () => {
+	const EventEmitter: any = require("events").EventEmitter;
+	const localEvent: any = new EventEmitter();
+
+	localEvent.setMaxListeners(50);
+
+	const working: any = (callback: (server: any) => void) => {
 		const app: any = express();
 
 		// domain
@@ -86,11 +91,6 @@ const normal: () => void = () => {
 		app.use(helmet.hidePoweredBy({setTo: "JSF/1.2"}));  // impersonation
 
 		logger.info("Hundred.");
-
-		const EventEmitter: any = require("events").EventEmitter;
-		const localEvent: any = new EventEmitter();
-
-		localEvent.setMaxListeners(50);
 
 		if (config.socket_port) {
 			const socket_port: number = 1 * config.socket_port;
@@ -229,17 +229,6 @@ const normal: () => void = () => {
 			app.use(passport.session());
 			// passport
 
-
-			// const load_module: any = (root: string, modules: any): void => {
-			// 	if (modules) {
-			// 		modules.forEach((module: any) => {
-			// 			const path: string = root + module.path;
-			// 			const name: string = module.name;
-			// 			app.use("/", require(path + name + "/api"));
-			// 		});
-			// 	}
-			// };
-
 			const load_module: any = (root: string, modules: any): void => {
 				if (modules) {
 					Object.keys(modules).forEach((key: string) => {
@@ -305,20 +294,6 @@ const normal: () => void = () => {
 
 			logger.info("VR");
 
-			// backup
-
-			const scheduler: any = new Scheduler();
-
-			const command: any = new Unix();
-
-			if (config.db.backup) {
-				scheduler.Add({
-					timing: config.db.backup, name: "backup", job: () => {
-						command.Backup(config.db);
-					},
-				});
-			}
-
 			const server: Server = Serve(config, app);
 
 			// io.wait(config, event);
@@ -352,6 +327,8 @@ const normal: () => void = () => {
 					});
 				}
 			});
+
+			callback(server);
 		});
 
 		// database
@@ -398,41 +375,106 @@ const normal: () => void = () => {
 
 	const is_cluster: boolean = config.is_cluster;
 
-// 	cpu_count = 1;
+	// cpu_count = 16;
+
+	const scheduler: any = new Scheduler();
+	const emmiters = [];
+	const servers: Server[] = [];
+
+
+
+	const now = new Date();
+
+	const testcron1 =  {
+		hour: 0,
+		minute: 0
+	};
+
+	testcron1.hour = now.getHours();
+	testcron1.minute = now.getMinutes() + 1;
+	if(testcron1.minute === 59){
+		testcron1.minute = 0;
+		testcron1.hour++;
+	}
+
+
+	const testcron2 =  {
+		hour: 0,
+		minute: 0
+	};
+	testcron2.hour = now.getHours();
+	testcron2.minute = now.getMinutes() + 2;
+	if(testcron2.minute === 59){
+		testcron2.minute = 0;
+		testcron2.hour++;
+	}
+
+
+	// cron
+	const cron = () => {
+		const unix: any = new Unix();
+		if (config.db.backup) {
+			scheduler.Add({
+				timing: config.db.backup, name: "backup", job: () => {
+					unix.Backup(config.db);
+				},
+			});
+		}
+		localEvent.emit("site-open");
+
+		if (config.cron) {
+			scheduler.Add({
+				timing: testcron1, name: "site-close", job: () => {
+		// 			logger.info("site-close");
+		// 			localEvent.emit("site-close");
+	// 	 			servers.forEach((server: any) => {
+	// 	  				server.close(() => {
+	// 						localEvent.emit('compaction');
+//
+	// 						logger.log("emit!");
+//
+	// 						server.listen(config.port, "::0");
+	// 					});
+	// 	 			})
+				},
+			});
+
+			scheduler.Add({
+				timing: testcron2, name: "site-open", job: () => {
+		// 			logger.info("site-open");
+					localEvent.emit("site-open");
+				},
+			});
+		}
+	}
 
 	if (is_cluster) {
 		if (cluster.isMaster) {
 			message();
-			for (let i: number = 0; i < cpu_count; i++) {
+			for (let thread: number = 0; thread < cpu_count; thread++) {
 				cluster.fork();
 			}
+			cron();
 		} else {
-			working();
+ 			message();
+ 			working((server: Server) => {
+ 				servers.push(server);
+ 			});
+			cron();
 		}
 	} else {
-		message();
-		working();
+ 		message();
+ 		working((server: Server) => {
+ 			servers.push(server);
+ 		});
+ 		cron();
 	}
 
+
+// 	localEvent.emit('testtest');
 };
 
 const Serve = (config: any, app: any): any => {
-
-	function normalizePort(val: string): any {
-		const port: number = parseInt(val, 10);
-
-		if (isNaN(port)) {
-			// named pipe
-			return val;
-		}
-
-		if (port >= 0) {
-			// port number
-			return port;
-		}
-
-		return false;
-	}
 
 	function onError(error: any): void {
 		if (error.syscall === "listen") {
@@ -461,12 +503,6 @@ const Serve = (config: any, app: any): any => {
 	}
 
 	function onListening(): void {
-		/*
-		const addr: string | AddressInfo = server.address();
-		const bind: any = typeof addr === "string"
-			? "pipe " + addr
-			: "port " + addr.port;
-*/
 		process.send = process.send || function (message: string): boolean {
 			return true;
 		};  // for pm2 cluster.
@@ -475,7 +511,7 @@ const Serve = (config: any, app: any): any => {
 		logger.info("Steady flight.");
 	}
 
-	const port: any = normalizePort(process.env.PORT || config.port);
+	const port: any = config.port;
 	app.set("port", port);
 
 	let server: Server = null;

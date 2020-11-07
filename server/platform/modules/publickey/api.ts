@@ -9,9 +9,13 @@
 const express: any = require("express");
 export const router: any = express.Router();
 
-const event: any = module.parent.exports.event;
-const config: any = module.parent.exports.config;
-const logger: any = module.parent.exports.logger;
+// const event: any = module.parent.exports.event;
+// const config: any = module.parent.exports.config;
+// const logger: any = module.parent.exports.logger;
+
+const event: any = require.main.exports.event;
+const config: any = require.main.exports.config;
+const logger: any = require.main.exports.logger;
 
 const gatekeeper: any = require("../../base/library/gatekeeper");
 

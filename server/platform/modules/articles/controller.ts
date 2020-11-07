@@ -21,10 +21,17 @@ export class Articles extends Updatable {
 	 * @param config
 	 * @param logger
 	 */
-	constructor(event: any, config: object, logger: object) {
+	constructor(event: any, config: object, logger: any) {
 		super(event, config, logger);
 		this.Model = Article as IArticleModel;
+
+		event.on("compaction", () => {
+			logger.info("start compaction Articles");
+		});
+
 	}
+
+
 
 }
 

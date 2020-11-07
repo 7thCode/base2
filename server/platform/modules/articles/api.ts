@@ -11,11 +11,15 @@ import {IErrorObject} from "../../../../types/platform/universe";
 const express: any = require("express");
 export const router: any = express.Router();
 
-const event = module.parent.exports.event;
+// const event: any = module.parent.exports.event;
+const event: any = require.main.exports.event;
 
-const logger: any = module.parent.exports.logger;
+// const logger: any = module.parent.exports.logger;
+const logger: any = require.main.exports.logger;
 
-const ConfigModule: any = module.parent.exports.config;
+// const ConfigModule: any = module.parent.exports.config;
+const ConfigModule: any = require.main.exports.config;
+
 const usersConfig: any = ConfigModule.users;
 
 const gatekeeper: any = require("../../base/library/gatekeeper");

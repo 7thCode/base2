@@ -23,9 +23,8 @@ namespace ArticleModel {
 	const Schema: any = mongoose.Schema;
 
 	const Article = new Schema({
-	// 	user_id: {type: String, default: ""},
 		user_id: {type: Schema.Types.ObjectId},
-		username: {type: String, default: ""},
+	// 	username: {type: String, default: ""},
 		content: {
 			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
 			relations: {type: mongoose.Schema.Types.Mixed},
@@ -45,15 +44,7 @@ namespace ArticleModel {
 
 	Article.index({"user_id": 1, "content.id": 1}, {unique: true});
 
-	// const setId = (id: string): string => {
-	// 	const idString = id.toString();
-	// 	const shasum = crypto.createHash("sha1");
-	// 	shasum.update(idString);
-	// 	return shasum.digest("hex");
-	// };
-
 	const query_by_user_read: any = (user: any, query: object): any => {
-		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
 		let result = query;
 		if (user) {
 			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
@@ -62,7 +53,6 @@ namespace ArticleModel {
 	};
 
 	const query_by_user_write: any = (user: any, query: object): any => {
-		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
 		let result = query;
 		if (user) {
 			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
@@ -73,7 +63,7 @@ namespace ArticleModel {
 	const init: any = (_id: any, body: any): IArticleModelContent => {
 		const id = new mongoose.Types.ObjectId();
 		const content: IArticleModelContent = {
-			id:  id, // setId(_id),
+			id:  id,
 			parent_id: body.parent_id,
 			enabled: body.enabled,
 			category: body.category,
@@ -84,10 +74,6 @@ namespace ArticleModel {
 			accessory: body.accessory,
 		};
 
-	// 	if (body.id) {
-	// 		content.id = body.id;
-	// 	}
-
 		return content;
 	};
 
@@ -97,6 +83,7 @@ namespace ArticleModel {
 	};
 
 	Article.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
+
 		this.user_id = user.user_id;
 		this.username = user.username;
 		this.content = init(this._id, body.content);

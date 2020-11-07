@@ -101,17 +101,5 @@ namespace AccountModel {
 		return this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {user_id: id}]}).exec();
 	};
 
-// 	Account.statics.publish_find = function(query: object, option: IQueryOption, cb: Callback<any>): void {
-// 		cb(null, []);
-// 	};
-//
-// 	Account.statics.publish_count = function(query: object, cb: Callback<any>): void {
-// 		cb(null, 0);
-// 	};
-//
-// 	Account.statics.publish_find_by_id = function(id: any, cb: Callback<any>): void {
-// 		cb(null, {});
-// 	};
-
 	module.exports = mongoose.model("Account", Account);
 }

@@ -19,8 +19,9 @@ const path: any = require("path");
 
 const project_root = path.join(__dirname, "../../../..");
 
-const ConfigModule: any = module.parent.parent.exports.config;
-const systemsConfig: any = ConfigModule.systems;
+// const ConfigModule: any = module.parent.parent.exports.config;
+
+// const systemsConfig: any = ConfigModule.systems;
 
 const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 
@@ -36,8 +37,15 @@ export class Files extends Wrapper {
 	 * @param config
 	 * @param logger
 	 */
-	constructor(event: object, config: any, logger: object) {
+	constructor(event: any, config: any, logger: any) {
 		super(event, config, logger);
+
+		event.on("compaction", () => {
+			logger.info("start compaction Files");
+			this.db.command({compact: "fs.files"});
+			this.db.command({compact: "fs.chunks"});
+			logger.info("end compaction Files");
+		});
 	}
 
 	/**
@@ -84,7 +92,7 @@ export class Files extends Wrapper {
 		// return {$and: [{"metadata.username": user.username}, {"metadata.rights.read": {$gte: user.auth}}, query]};
 		let result = query;
 		if (user) {
-			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.user_id": user.user_id}]}, {"metadata.rights.read": {$gte: user.auth}}, query]};
+			result = {$and: [{"metadata.username": user.username}, {"metadata.rights.read": {$gte: user.auth}}, query]};
 		}
 		return result;
 	}
@@ -100,7 +108,7 @@ export class Files extends Wrapper {
 		// 	return {$and: [{"metadata.username": user.username}, {"metadata.rights.write": {$gte: user.auth}}, query]};
 		let result = query;
 		if (user) {
-			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.user_id": user.user_id}]}, {"metadata.rights.write": {$gte: user.auth}}, query]};
+			result = {$and: [{"metadata.username": user.username}, {"metadata.rights.write": {$gte: user.auth}}, query]};
 		}
 		return result;
 	}
@@ -468,8 +476,8 @@ export class Files extends Wrapper {
 	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
-			Files.connect(this.systemsConfig).then((client: any): void => {
-				this.db = client.db(this.systemsConfig.db.name);
+			Files.connect(this.config.systems).then((client: any): void => {
+				this.db = client.db(this.config.systems.db.name);
 				this.db.collection("fs.files", (error: IErrorObject, collection: object): void => {
 					this.gfs = new mongodb.GridFSBucket(this.db, {});
 					this.collection = collection;
@@ -713,7 +721,7 @@ export class Files extends Wrapper {
 		const query: { u: string, c: string } = request.query;
 		const user: IAccountModel = this.Transform(request.user);
 
-		const _default: any = systemsConfig.default;
+		const _default: any = this.config.systems.default;
 
 		let username: string = query.u || _default.username;
 		if (user) {

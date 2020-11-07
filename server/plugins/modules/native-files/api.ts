@@ -11,11 +11,14 @@ import {IErrorObject} from "../../../../types/platform/universe";
 const express: any = require("express");
 export const router: any = express.Router();
 
-const event = module.parent.exports.event;
+// const event: any = module.parent.exports.event;
+// const logger: any = module.parent.exports.logger;
+// const ConfigModule: any = module.parent.exports.config;
 
-const logger: any = module.parent.exports.logger;
+const event: any = require.main.exports.event;
+const logger: any = require.main.exports.logger;
+const ConfigModule: any = require.main.exports.config;
 
-const ConfigModule: any = module.parent.exports.config;
 const systemsConfig: any = ConfigModule.systems;
 const modules = systemsConfig.modules;
 const nativefiles = modules["native-files"];

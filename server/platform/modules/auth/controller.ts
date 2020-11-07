@@ -39,9 +39,13 @@ export class Auth extends Mail {
 	 * @param logger
 	 * @param passport
 	 */
-	constructor(event: object, config: object, logger: object, passport: object) {
+	constructor(event: any, config: object, logger: any, passport: object) {
 		super(event, config, logger);
 		this.passport = passport;
+
+		event.on("compaction", () => {
+			logger.info("start compaction Auth");
+		});
 	}
 
 	/**

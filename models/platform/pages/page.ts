@@ -13,8 +13,6 @@ namespace PageModel {
 
 	const mongoose: any = require("mongoose");
 
-	const crypto: any = require("crypto");
-
 	const pug: any = require("pug");
 	const ejs: any = require("ejs");
 	const marked: any = require("marked");
@@ -26,12 +24,10 @@ namespace PageModel {
 	const Schema = mongoose.Schema;
 
 	const Page = new Schema({
-	// 	user_id: {type: String, default: ""},
 		user_id: {type: Schema.Types.ObjectId},
-		username: {type: String, default: ""},
+	// 	username: {type: String, default: ""},
 		content: {
 			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
-	// 		id: {type: String, required: true, index: {unique: true}},
 			relations: {type: mongoose.Schema.Types.Mixed},
 			enabled: {type: Boolean, default: true},
 			category: {type: String, default: ""},
@@ -49,12 +45,6 @@ namespace PageModel {
 
 	Page.index({"user_id": 1, "content.path": 1}, {unique: true});
 
-	// const setId: any = (id: string): string => {
-	// 	const idString: string = id.toString();
-	// 	const shasum: any = crypto.createHash("sha1");
-	// 	shasum.update(idString);
-	// 	return shasum.digest("hex");
-	// };
 
 	const query_by_user_read: any = (user: any, query: any): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};

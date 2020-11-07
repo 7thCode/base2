@@ -30,9 +30,13 @@ export class Accounts extends Wrapper {
 	 * @param logger
 	 * @constructor
 	 */
-	constructor(event: object, config: any, logger: object) {
+	constructor(event: any, config: any, logger: any) {
 		super(event, config, logger);
 		this.message = this.systemsConfig.message;
+
+		event.on("compaction", () => {
+			logger.info("start compaction Accounts");
+		});
 	}
 
 	/**

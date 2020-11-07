@@ -34,41 +34,40 @@ export abstract class Updatable extends Wrapper {
 		super(event, config, logger);
 	}
 
-
 	/**
 	 *
 	 * @param current
 	 * @param username
 	 * @returns own
 	 */
-	private own_by_name(current: any, username: string): boolean {
-		// マネージャ以上は、自分以外のアカウントを変更できる。
-		let readable: boolean = false;
-		if (current.auth < AuthLevel.user) { // is not manager?
-			readable = true;
-		} else {
-			readable = (current.username === username); // is self?
-		}
-		return readable;
-	}
-
-	/**
-	 *
-	 * @param current
-	 * @param user_id
-	 * @returns own
-	 */
-	private own_by_id(current: any, user_id: string): boolean {
-		// マネージャ以上は、自分以外のアカウントを変更できる。
-		let readable: boolean = false;
-		if (current.auth < AuthLevel.user) { // is not manager?
-			readable = true;
-		} else {
-			readable = (current.user_id === user_id); // is self?
-		}
-		return readable;
-	}
-
+	// private own_by_name(current: any, username: string): boolean {
+	// 	// マネージャ以上は、自分以外のアカウントを変更できる。
+	// 	let readable: boolean = false;
+	// 	if (current.auth < AuthLevel.user) { // is not manager?
+	// 		readable = true;
+	// 	} else {
+	// 		readable = (current.username === username); // is self?
+	// 	}
+	// 	return readable;
+	// }
+//
+	// /**
+	//  *
+	//  * @param current
+	//  * @param user_id
+	//  * @returns own
+	//  */
+	// private own_by_id(current: any, user_id: string): boolean {
+	// 	// マネージャ以上は、自分以外のアカウントを変更できる。
+	// 	let readable: boolean = false;
+	// 	if (current.auth < AuthLevel.user) { // is not manager?
+	// 		readable = true;
+	// 	} else {
+	// 		readable = (current.user_id === user_id); // is self?
+	// 	}
+	// 	return readable;
+	// }
+//
 	/**
 	 *
 	 * @param user

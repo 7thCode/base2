@@ -9,7 +9,7 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {INativeFileModel} from "../../../../types/plugins/server";
-import {IAccountModel, IDeleteRequest, IDParam, IJSONResponse, IPostRequest, IUpdatableModel} from "../../../../types/platform/server";
+import {IAccountModel, IDeleteFile, IDeleteRequest, IDParam, IJSONResponse, IPostFile, IPostRequest, IUpdatableModel} from "../../../../types/platform/server";
 
 const Updatable: any = require("../../../platform/base/controllers/updatable_controller");
 
@@ -61,10 +61,12 @@ export class NativeFiles extends Updatable {
 	 * @param request
 	 * @param response
 	 */
-	public post(request: IPostRequest<object>, response: IJSONResponse): void {
+	public post(request: IPostFile, response: IJSONResponse): void {
 		try {
-			const body: object = request.body;
+			const path: string = request.params[0];
+			const body: any = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
+			body.filepath = "image/" + NativeFiles.mailAddressToFileName(operator.username) + "/" + path;
 			const object: IUpdatableModel = new this.Model();
 			object._create(operator, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
@@ -83,11 +85,12 @@ export class NativeFiles extends Updatable {
 	 * @param request
 	 * @param response
 	 */
-	public delete(request: IDeleteRequest, response: IJSONResponse): void {
+	public delete(request: IDeleteFile, response: IJSONResponse): void {
 		try {
-			const target: IDParam = request.params;
+			const path: string = request.params[0];
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.remove_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
+			const target_path = "image/" + this.mailAddressToFileName(operator.username) + "/" + path;
+			this.Model.remove_by_name_promise(operator, target_path).then((object: IUpdatableModel): void => {
 				this.SendSuccess(response, {});
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
@@ -96,7 +99,6 @@ export class NativeFiles extends Updatable {
 			this.SendError(response, error);
 		}
 	}
-
 
 	public renderFile(request: any, response: any, next: any): void {
 

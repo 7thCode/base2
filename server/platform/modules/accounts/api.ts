@@ -9,11 +9,14 @@
 const express: any = require("express");
 export const router: any = express.Router();
 
-const event = module.parent.exports.event;
+// const event = module.parent.exports.event;
+const event = require.main.exports.event;
 
-const logger: any = module.parent.exports.logger;
+// const logger: any = module.parent.exports.logger;
+const logger: any = require.main.exports.logger;
 
-const ConfigModule: any = module.parent.exports.config;
+// const ConfigModule: any = module.parent.exports.config;
+const ConfigModule: any = require.main.exports.config;
 
 const gatekeeper: any = require("../../base/library/gatekeeper");
 const Auth: any = require("../../../../server/platform/modules/auth/controller");

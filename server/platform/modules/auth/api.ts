@@ -28,11 +28,14 @@ const TwitterStrategy: any = require("passport-twitter").Strategy;
 const InstagramStrategy: any = require("passport-instagram").Strategy;
 const LineStrategy: any = require("passport-line").Strategy;
 
-const event = module.parent.exports.event;
+// const event = module.parent.exports.event;
+// const ConfigModule: any = module.parent.exports.config;
+// const logger: any = module.parent.exports.logger;
 
-const logger: any = module.parent.exports.logger;
+const event: any = require.main.exports.event;
+const logger: any = require.main.exports.logger;
+const ConfigModule: any = require.main.exports.config;
 
-const ConfigModule: any = module.parent.exports.config;
 const systemsConfig: any = ConfigModule.systems;
 const usersConfig: any = ConfigModule.users;
 
@@ -116,8 +119,8 @@ if (usersConfig.initusers) {
 auth.init(init_users, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		// for Preflight request. (CORS)
-		router.options("*", [gatekeeper.default]);
+	// 	// for Preflight request. (CORS)
+	// 	router.options("*", [gatekeeper.default]);
 
 		router.get("/auth/local/is_logged_in", [gatekeeper.default,
 			(request: any, response: object): void => {
@@ -347,7 +350,6 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 */
-
 
 		router.post("/receive", [gatekeeper.default,
 			(request: any, response: object): void => {

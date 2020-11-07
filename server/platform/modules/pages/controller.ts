@@ -25,9 +25,13 @@ export class Pages extends Updatable {
 	 * @param logger
 	 * @constructor
 	 */
-	constructor(event: object, config: object, logger: object) {
+	constructor(event: any, config: object, logger: any) {
 		super(event, config, logger);
 		this.Model = Page as IPageModel;
+
+		event.on("compaction", () => {
+			logger.info("start compaction Pages");
+		});
 	}
 
 	/**

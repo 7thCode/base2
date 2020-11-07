@@ -5,8 +5,8 @@
  */
 import {IContent} from "../platform/universe";
 
-export interface INativeFileModelContent extends IContent {
-	name: string;
-	value: {};
-	accessory: {};
+export interface INativeFileModelContent {
+	id: any;
+	path: string;
+	category:string;
 }

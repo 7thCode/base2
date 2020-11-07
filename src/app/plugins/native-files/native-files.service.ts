@@ -103,10 +103,7 @@ export class NativeFilesService extends HttpService {
 	 * @param callback
 	 */
 	public upload(filename: string, category: string, dataUrl: string, callback: Callback<any>): void {
-		this.http.post(this.endPoint + "/nfiles/auth/" + filename, {
-			url: dataUrl,
-			category,
-		}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+		this.http.post(this.endPoint + "/nfiles/auth/" + filename, {url: dataUrl, category}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
