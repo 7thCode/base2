@@ -135,6 +135,6 @@
 		"ts-node": "~8.10.2",
 		"tsickle": "^0.38.0",
 		"tslint": "^6.1.2",
-		"typescript": "~3.9.6"
+		"typescript": "~3.9.7"
 	}
 }
