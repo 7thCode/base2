@@ -45,6 +45,8 @@
 						<mat-error *ngIf="confirm_password.errors?.validateEquals">確認用パスワードが一致しません</mat-error>
 					</mat-form-field>
 
+					<mat-checkbox [(ngModel)]="agree" (change)="changeAgree($event)"><a>利用規約</a>に同意します</mat-checkbox>
+
 					<ng-container>
 						{{completeMessage}}
 					</ng-container>
@@ -56,7 +58,7 @@
 	<div class="spacer"></div>
 
 	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
+		<button mat-raised-button color="accent" [disabled]="!agree || form.invalid || progress" (click)="onAccept()">OK</button>
 		<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">Cancel</button>
 	</mat-dialog-actions>
 </div>

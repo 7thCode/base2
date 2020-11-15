@@ -375,58 +375,82 @@ const normal: () => void = () => {
 
 	const is_cluster: boolean = config.is_cluster;
 
-	// cpu_count = 16;
+	// cpu_count = 1;
 
 	const scheduler: any = new Scheduler();
-	const emmiters = [];
+
 	const servers: Server[] = [];
 
-
+	// todo: debug.
 
 	const now = new Date();
 
-	const testcron1 =  {
+	const testcron1 = {
 		hour: 0,
 		minute: 0
 	};
 
 	testcron1.hour = now.getHours();
 	testcron1.minute = now.getMinutes() + 1;
-	if(testcron1.minute === 59){
+	if (testcron1.minute === 59) {
 		testcron1.minute = 0;
 		testcron1.hour++;
 	}
 
-
-	const testcron2 =  {
+	const testcron2 = {
 		hour: 0,
 		minute: 0
 	};
+
 	testcron2.hour = now.getHours();
 	testcron2.minute = now.getMinutes() + 2;
-	if(testcron2.minute === 59){
+	if (testcron2.minute === 59) {
 		testcron2.minute = 0;
 		testcron2.hour++;
 	}
 
+	//
 
 	// cron
-	const cron = () => {
-		const unix: any = new Unix();
-		if (config.db.backup) {
-			scheduler.Add({
-				timing: config.db.backup, name: "backup", job: () => {
-					unix.Backup(config.db);
-				},
-			});
-		}
-		localEvent.emit("site-open");
+	const cron = (cluster_id: number): void => {
+		if (cluster_id === 1) {
 
-		if (config.cron) {
-			scheduler.Add({
-				timing: testcron1, name: "site-close", job: () => {
-		// 			logger.info("site-close");
-		// 			localEvent.emit("site-close");
+			const unix: any = new Unix();
+			if (config.db.backup) {
+				scheduler.Add({
+					timing: config.db.backup, name: "backup", job: () => {
+						unix.Backup(config.db);
+					},
+				});
+			}
+
+			if (config.cron) {
+				if (config.cron.close) {
+					scheduler.Add({
+						timing: testcron1, name: "site-close", job: () => { // config.cron.close
+							localEvent.emit("site-close");
+							localEvent.emit("begin-maintenance");
+							localEvent.emit("maintenance");
+							localEvent.emit("end-maintenance");
+							localEvent.emit("site-open");
+						},
+					});
+				}
+			}
+
+			if (config.cron) {
+				if (config.cron.open) {
+					scheduler.Add({
+						timing: testcron2, name: "site-open", job: () => { // config.cron.open
+							// 				localEvent.emit("site-open");
+						},
+					});
+				}
+			}
+
+		}
+	}
+
 	// 	 			servers.forEach((server: any) => {
 	// 	  				server.close(() => {
 	// 						localEvent.emit('compaction');
@@ -436,17 +460,6 @@ const normal: () => void = () => {
 	// 						server.listen(config.port, "::0");
 	// 					});
 	// 	 			})
-				},
-			});
-
-			scheduler.Add({
-				timing: testcron2, name: "site-open", job: () => {
-		// 			logger.info("site-open");
-					localEvent.emit("site-open");
-				},
-			});
-		}
-	}
 
 	if (is_cluster) {
 		if (cluster.isMaster) {
@@ -454,20 +467,19 @@ const normal: () => void = () => {
 			for (let thread: number = 0; thread < cpu_count; thread++) {
 				cluster.fork();
 			}
-			cron();
 		} else {
- 			message();
- 			working((server: Server) => {
- 				servers.push(server);
- 			});
-			cron();
+			message();
+			working((server: Server) => {
+				servers.push(server);
+			});
+			cron(cluster.worker.id);
 		}
 	} else {
- 		message();
- 		working((server: Server) => {
- 			servers.push(server);
- 		});
- 		cron();
+		message();
+		working((server: Server) => {
+			servers.push(server);
+		});
+		cron(1);
 	}
 
 

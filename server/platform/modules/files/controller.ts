@@ -40,11 +40,13 @@ export class Files extends Wrapper {
 	constructor(event: any, config: any, logger: any) {
 		super(event, config, logger);
 
-		event.on("compaction", () => {
+		event.on("end-maintenance", () => {
+
 			logger.info("start compaction Files");
-			this.db.command({compact: "fs.files"});
-			this.db.command({compact: "fs.chunks"});
+// 			this.db.command({compact: "fs.files"});
+// 			this.db.command({compact: "fs.chunks"});
 			logger.info("end compaction Files");
+
 		});
 	}
 

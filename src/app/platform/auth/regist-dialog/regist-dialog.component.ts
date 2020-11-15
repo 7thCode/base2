@@ -27,6 +27,8 @@ import {AuthService} from "../auth.service";
 })
 export class RegistDialogComponent extends BaseDialogComponent implements OnInit {
 
+	public agree: boolean = false;
+
 	/**
 	 *
 	 */
@@ -87,6 +89,12 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 		this.Progress(false);
 	}
 
+	/**
+	 *
+	 */
+	public changeAgree(event: any): void {
+		this.agree = event.checked;
+	}
 	/**
 	 *
 	 */
