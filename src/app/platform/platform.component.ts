@@ -20,7 +20,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {ResponsiveComponent} from "./base/components/responsive.component";
 
-import {environment} from '../../environments/environment';
+// import {environment} from '../../environments/environment';
 
 import {AccountsService} from "./accounts/accounts.service";
 import {SessionService} from "./base/services/session.service";
@@ -42,7 +42,7 @@ import {Spinner} from "./base/library/spinner";
 export class PlatformComponent extends ResponsiveComponent implements OnInit, OnDestroy {
 
 	public widthValue: number;
-	public sock: any;
+// 	public sock: any;
 	public date: Date;
 
 	public device: string;
@@ -75,10 +75,10 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	) {
 		super(session, breakpointObserver);
 		this.widthValue = 0;
-		this.sock = null;
+	// 	this.sock = null;
 		this.date = new Date();
 		this.device = "";
-		this.sock = new WebSocket(environment.webSocket);
+	// 	this.sock = new WebSocket(environment.webSocket);
 		this.spinner = new Spinner(overlay);
 	}
 
@@ -148,6 +148,9 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		});
 	}
 
+	/**
+	 *
+	 */
 	public prepareRoute(outlet: RouterOutlet): any {
 		return (outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation);
 	}
@@ -207,18 +210,18 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		});
 
 		// for ws
-		this.sock.addEventListener("open", (e: any) => {
-		});
-
-		this.sock.addEventListener("message", (e: any) => {
-		});
-
-		this.sock.addEventListener("close", (e: any) => {
-		});
-
-		this.sock.addEventListener("error", (e: any) => {
-		});
-
+	// 	this.sock.addEventListener("open", (e: any) => {
+	// 	});
+//
+	// 	this.sock.addEventListener("message", (e: any) => {
+	// 	});
+//
+	// 	this.sock.addEventListener("close", (e: any) => {
+	// 	});
+//
+	// 	this.sock.addEventListener("error", (e: any) => {
+	// 	});
+//
 		this.getSession((error: IErrorObject, session: object | null): void => {
 			this.widthValue = 200;
 			this.Progress(false);
@@ -308,11 +311,6 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 				break;
 			default:
 		}
-		// if (this.accountsComponent) {
-		// 	this.accountsComponent.draw((error, results) => {
-		// 		this.change.detectChanges();
-		// 	});
-		// }
 	}
 
 	/**

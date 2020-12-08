@@ -22,8 +22,8 @@ import {SendDialogComponent} from "./send-dialog/send-dialog.component";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../base/library/spinner";
 
-const moment = require('moment');
-require('moment-timezone');
+// const moment = require('moment');
+// require('moment-timezone');
 
 /**
  * メーラー
@@ -257,7 +257,8 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	/**
 	 */
 	public messageDate(object: any): string {
-		return moment(object.date).format("YY-MM-DD hh:mm");
+		return object.date.toDateString();
+	// 	return moment(object.date).format("YY-MM-DD hh:mm");
 	}
 
 	/**

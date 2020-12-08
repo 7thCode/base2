@@ -6,17 +6,18 @@
 
 "use strict";
 
-import {Component, HostListener, OnInit} from "@angular/core";
+import {Component, HostListener, OnInit} from '@angular/core';
 
 /**
  * アプリケーション
  * @since 0.01
  */
 @Component({
-	selector: "app-root",
-	templateUrl: "./app.component.html",
-	styleUrls: ["./app.component.css"],
+	"selector": "app-root",
+	"templateUrl": "./app.component.html",
+	"styleUrls": ["./app.component.css"],
 })
+
 export class AppComponent implements OnInit {
 
 	private t = 0;
@@ -51,5 +52,4 @@ export class AppComponent implements OnInit {
 	public ngOnInit(): void {
 
 	}
-
 }

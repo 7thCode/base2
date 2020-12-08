@@ -33,7 +33,13 @@ export class Unix {
 	 * @returns status
 	 */
 	public Backup(config: any): string {
-		const backup = "mongodump --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " -o " + "\"" + this.backupdir + "\"";
+
+		let backupdir = this.backupdir;
+		if (config.backup.dir) {
+			backupdir = config.backup.dir;
+		}
+
+		const backup = "mongodump --authenticationDatabase " + config.name + " -u " + config.user + " -p " + config.password + " -d " + config.name + " -o " + "\"" + backupdir + "\"";
 		return "" + execSync(backup);
 	}
 

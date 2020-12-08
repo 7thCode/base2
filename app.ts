@@ -16,8 +16,6 @@ const morgan: any = require("morgan");
 const mongoose: any = require("mongoose");
 const passport: any = require("passport");
 
-// const domain = require('express-domain-middleware');
-
 const cookieParser: any = require("cookie-parser");
 const bodyParser: any = require("body-parser");
 
@@ -26,14 +24,12 @@ const session: any = require("express-session");
 const log4js: any = require("log4js");
 const rotatestream: any = require("logrotate-stream");
 
-// const _ConfigModule: any = require("./config/default");
-
 const _ConfigModule: any = require("config");
 
 const Scheduler: any = require("./server/platform/base/library/scheduler");
 const Unix: any = require("./server/platform/base/library/commandar");
-const Cipher: any = require("./server/platform/base/library/cipher");
-const IPV6: any = require("./server/platform/base/library/ipv6");
+// const Cipher: any = require("./server/platform/base/library/cipher");
+// const IPV6: any = require("./server/platform/base/library/ipv6");
 
 let logger: any;
 
@@ -160,51 +156,38 @@ const normal: () => void = () => {
 		app.use(express.static("./public"));
 
 		// database
-		const MongoStore: any = require("connect-mongo")(session);
-		const options: any = {
-			keepAlive: 1,
-			connectTimeoutMS: 1000000,
-			// 	reconnectTries: 30,
-			// 	reconnectInterval: 2000,
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			// 	useUnifiedTopology: true,
-		};
 
-		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
-		if (config.db.noauth) {
-			connect_url = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
-		}
+		mongoose.connection.on("connected", () => {
+			logger.info("connected");
+		});
+
+		mongoose.connection.on("error", (error: IErrorObject) => {
+			logger.error("Mongoose default connection error: " + error);
+			log4js.shutdown((err: any) => {
+				process.exit(1);
+			})
+		});
+
+		mongoose.connection.on("closed", () => {
+			logger.info("Mongoose default connection closed");
+		});
+
+		mongoose.connection.on("disconnected", () => {
+			logger.error("Mongoose default connection disconnected");
+			log4js.shutdown((err: any) => {
+				process.exit(1);
+			})
+		});
+
+		mongoose.connection.on("reconnected", () => {
+			logger.info("reconnected");
+		});
 
 		mongoose.connection.once("open", () => {
 
-			mongoose.connection.on("connected", () => {
-				logger.info("connected");
-			});
+			module.exports.connection = mongoose.connections;
 
-			mongoose.connection.on("closed", () => {
-				// 	logger.info("Mongoose default connection disconnected");
-				// 	process.exit(1);
-			});
-
-			mongoose.connection.on("disconnected", () => {
-				logger.error("Mongoose default connection disconnected");
-				log4js.shutdown((err: any) => {
-					process.exit(1);
-				})
-			});
-
-			mongoose.connection.on("reconnected", () => {
-				logger.info("reconnected");
-			});
-
-			mongoose.connection.on("error", (error: IErrorObject) => {
-				logger.error("Mongoose default connection error: " + error);
-				log4js.shutdown((err: any) => {
-					process.exit(1);
-				})
-			});
-
+			const MongoStore: any = require("connect-mongo")(session);
 			const sessionMiddleware: any = session({
 				name: config.sessionname,
 				secret: config.sessionsecret,
@@ -221,7 +204,6 @@ const normal: () => void = () => {
 				}),
 			});
 
-			// 		app.session = sessionMiddleware;
 			app.use(sessionMiddleware);
 
 			// passport
@@ -331,6 +313,22 @@ const normal: () => void = () => {
 			callback(server);
 		});
 
+
+		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
+		if (config.db.noauth) {
+			connect_url = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
+		}
+
+		const options: any = {
+			keepAlive: 1,
+			connectTimeoutMS: 1000000,
+			// 	reconnectTries: 30,
+			// 	reconnectInterval: 2000,
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			// 	useUnifiedTopology: true,
+		};
+
 		// database
 		mongoose.connect(connect_url, options)
 			.catch((error: any) => {
@@ -340,7 +338,32 @@ const normal: () => void = () => {
 				})
 			});
 
-		process.on("SIGINT", (): void => { // for pm2 cluster.
+		// Housekeeping GC
+		// kill -s SIGUSR1 id...
+		// pm2 start app.js -n aig --node-args="--expose-gc"
+		process.on("SIGUSR1", (): void => {
+			const pre_gc = Math.floor(process.memoryUsage().heapUsed / 1000 / 1000);
+			global.gc();
+			logger.info("pre gc	:	" + pre_gc + "M" + "	post gc	:	" + Math.floor(process.memoryUsage().heapUsed / 1000 / 1000) + "M" + "	descending	:	" + (pre_gc - Math.floor(process.memoryUsage().heapUsed / 1000 / 1000)) + "M");
+		});
+
+		// Backup
+		// kill -s SIGUSR2 id...
+		process.on("SIGUSR2", (): void => {
+
+			const unix: any = new Unix();
+			unix.Backup(config.db);
+
+			localEvent.emit("site-close");
+			localEvent.emit("begin-maintenance");
+			localEvent.emit("maintenance");
+			localEvent.emit("end-maintenance");
+			localEvent.emit("site-open");
+
+		});
+
+		// for pm2 cluster.
+		process.on("SIGINT", (): void => {
 			mongoose.connection.close(() => {
 				mongoose.disconnect();
 				logger.info("Stop by SIGINT.");
@@ -350,7 +373,8 @@ const normal: () => void = () => {
 			});
 		});
 
-		process.on("message", (msg): void => {  // for pm2 cluster on windows.
+		// for pm2 cluster on MS windows.
+		process.on("message", (msg): void => {
 			if (msg === "shutdown") {
 				logger.info("Stop by shutdown.");
 				setTimeout(() => {
@@ -363,14 +387,15 @@ const normal: () => void = () => {
 	}
 
 	const message = (): void => {
-		logger.info("TZ  : " + process.env.TZ);
-		logger.info("LC_CTYPE  : " + process.env.LC_CTYPE);
-		logger.info("PWD       : " + process.env.PWD);
-		logger.info("HOME      : " + process.env.HOME);
-		logger.info("ENV       : " + process.env.NODE_ENV);
-		logger.info("MODE      : " + config.status);
-		logger.info("DB ADDRESS: " + config.db.address);
-		logger.info("DB NAME   : " + config.db.name);
+		logger.info("PID		: " + process.pid);
+		logger.info("TZ			: " + process.env.TZ);
+		logger.info("LC_CTYPE	: " + process.env.LC_CTYPE);
+		logger.info("PWD		: " + process.env.PWD);
+		logger.info("HOME		: " + process.env.HOME);
+		logger.info("ENV		: " + process.env.NODE_ENV);
+		logger.info("MODE		: " + config.status);
+		logger.info("DB ADDRESS	: " + config.db.address);
+		logger.info("DB NAME	: " + config.db.name);
 	}
 
 	const is_cluster: boolean = config.is_cluster;
@@ -382,7 +407,7 @@ const normal: () => void = () => {
 	const servers: Server[] = [];
 
 	// todo: debug.
-
+/*
 	const now = new Date();
 
 	const testcron1 = {
@@ -408,12 +433,12 @@ const normal: () => void = () => {
 		testcron2.minute = 0;
 		testcron2.hour++;
 	}
-
+*/
 	//
 
 	// cron
 	const cron = (cluster_id: number): void => {
-		if (cluster_id === 1) {
+		if (cluster_id === 1) {  // only one.
 
 			const unix: any = new Unix();
 			if (config.db.backup) {
@@ -427,7 +452,7 @@ const normal: () => void = () => {
 			if (config.cron) {
 				if (config.cron.close) {
 					scheduler.Add({
-						timing: testcron1, name: "site-close", job: () => { // config.cron.close
+						timing: config.cron.close, name: "site-close", job: () => { // config.cron.close
 							localEvent.emit("site-close");
 							localEvent.emit("begin-maintenance");
 							localEvent.emit("maintenance");
@@ -441,7 +466,7 @@ const normal: () => void = () => {
 			if (config.cron) {
 				if (config.cron.open) {
 					scheduler.Add({
-						timing: testcron2, name: "site-open", job: () => { // config.cron.open
+						timing: config.cron.open, name: "site-open", job: () => { // config.cron.open
 							// 				localEvent.emit("site-open");
 						},
 					});
@@ -521,6 +546,13 @@ const Serve = (config: any, app: any): any => {
 
 		process.send("ready");
 		logger.info("Steady flight.");
+
+		if (cluster.worker.id === 1) {
+			console.info("for Houssekeeping GC");
+			console.info(" > kill -s SIGUSR1 " + process.pid);
+			console.info("for Backup & Compaction");
+			console.info(" > kill -s SIGUSR2 " + process.pid);
+		}
 	}
 
 	const port: any = config.port;

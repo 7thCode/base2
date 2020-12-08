@@ -43,6 +43,7 @@ export class Rsa {
 	 * @constructor
 	 */
 	public Encrypt(key: string, input: string): string {
+		// RSA
 		const rsa = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 		return rsa.encrypt(input, "base64");
 	}
@@ -54,6 +55,7 @@ export class Rsa {
 	 * @constructor
 	 */
 	public Decrypt(key: string, input: string): string {
+		// RSA
 		const rsa = new NodeRSA(key, "pkcs1-private-pem", {encryptionScheme: "pkcs1_oaep"});
 		return rsa.decrypt(input, "utf8");
 	}

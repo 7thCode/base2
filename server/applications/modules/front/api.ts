@@ -15,7 +15,7 @@ const path = require("path");
 
 const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
-const ConfigModule: any = require.main.exports.config;
+// const ConfigModule: any = require.main.exports.config;
 
 let opened = true;
 

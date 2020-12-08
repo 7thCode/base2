@@ -41,7 +41,7 @@ export abstract class UpdatableService extends QueryableService {
 	 * @param content　クリエイトデータ
 	 * @param callback コールバック
 	 */
-	public post(content: IContent, callback: Callback<any>): void {
+	public post(content: any, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/" + this.model + "/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
@@ -64,7 +64,7 @@ export abstract class UpdatableService extends QueryableService {
 	 * @param content 更新内容
 	 * @param callback コールバック
 	 */
-	public put(id: string, content: IContent, callback: Callback<any>): void {
+	public put(id: string, content: any, callback: Callback<any>): void {
 		this.http.put(this.endPoint + "/" + this.model + "/auth/" + encodeURIComponent(id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {

@@ -9,7 +9,7 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 const cipherCrypto: any = require("crypto");
-const NodeRSA: any = require("node-rsa");
+// const NodeRSA: any = require("node-rsa");
 const cipherMode: string = "aes-256-cbc";
 const seed: string = "0123456789abcdef";
 
@@ -87,8 +87,11 @@ export class Cipher {
 	 * @returns PublicKey
 	 */
 	public static KeyPair(bits: number): { private: string, public: string } {
-		const key: any = new NodeRSA({b: bits});
-		return {private: key.exportKey("pkcs1-private-pem"), public: key.exportKey("pkcs1-public-pem")};
+		// RSA
+	 // 	const key: any = new NodeRSA({b: bits});
+	 // 	return {private: key.exportKey("pkcs1-private-pem"), public: key.exportKey("pkcs1-public-pem")};
+
+	 	return { private: "", public: "" };
 	}
 
 	/**
@@ -98,8 +101,11 @@ export class Cipher {
 	 * @returns crypted text
 	 */
 	public static Encrypt(publickey: string, plain: string): string {
-		const rsa: any = new NodeRSA(publickey, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
-		return rsa.encrypt(plain, "base64");
+		// RSA
+	//  	const rsa: any = new NodeRSA(publickey, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+	//  	return rsa.encrypt(plain, "base64");
+
+	 	return plain;
 	}
 
 	/**
@@ -109,8 +115,11 @@ export class Cipher {
 	 * @returns plain text
 	 */
 	public static Decrypt(privatekey: string, crypted: string): string {
-		const rsa: any = new NodeRSA(privatekey, "pkcs1-private-pem", {encryptionScheme: "pkcs1_oaep"});
-		return rsa.decrypt(crypted, "utf8");
+		// RSA
+	// 	const rsa: any = new NodeRSA(privatekey, "pkcs1-private-pem", {encryptionScheme: "pkcs1_oaep"});
+	//  	return rsa.decrypt(crypted, "utf8");
+
+	 	return crypted;
 	}
 
 	/**

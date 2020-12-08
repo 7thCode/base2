@@ -25,7 +25,7 @@ namespace PageModel {
 
 	const Page = new Schema({
 		user_id: {type: Schema.Types.ObjectId},
-	// 	username: {type: String, default: ""},
+	 	username: {type: String, default: ""},
 		content: {
 			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
 			relations: {type: mongoose.Schema.Types.Mixed},

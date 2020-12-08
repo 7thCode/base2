@@ -14,7 +14,7 @@ namespace ArticleModel {
 
 	const mongoose: any = require("mongoose");
 
-	const crypto: any = require("crypto");
+	// const crypto: any = require("crypto");
 
 	const timestamp: any = require("../../../models/platform/plugins/timestamp/timestamp");
 	const grouped: any = require("../../../models/platform/plugins/grouped/grouped");

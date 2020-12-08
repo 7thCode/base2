@@ -20,7 +20,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatSidenavModule} from "@angular/material/sidenav";
 
-import {AceEditorModule} from "ng2-ace-editor";
+import {AceEditorModule} from "ngx-ace-editor-wrapper";
 
 import {BasePipeModule} from "./base/pipes/base-pipe.module";
 
@@ -32,15 +32,14 @@ import {FilesModule} from "./files/files.module";
 import {ImageModule} from "./image/image.module";
 import {PagesModule} from "./pages/pages.module";
 import {TopModule} from "./top/top.module";
-
+import {PersonalModule} from "./personal/personal.module";
+import {MailerModule} from "./mailer/mailer.module";
+import {NativeFilesModule} from "../plugins/native-files/native-files.module";
 import {StripeModule} from "../plugins/stripe/stripe.module";
 
 import {PlatformRoutingModule} from "./platform-routing.module";
 
 import {PlatformComponent} from "./platform.component";
-import {PersonalModule} from "./personal/personal.module";
-import {MailerModule} from "./mailer/mailer.module";
-import {NativeFilesModule} from "../plugins/native-files/native-files.module";
 
 @NgModule({
 	declarations: [

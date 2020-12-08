@@ -19,17 +19,13 @@ const path: any = require("path");
 
 const project_root = path.join(__dirname, "../../../..");
 
-// const ConfigModule: any = module.parent.parent.exports.config;
-
-// const systemsConfig: any = ConfigModule.systems;
-
 const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 
 export class Files extends Wrapper {
 
-	private db: any;
 	private gfs: any;
 	private collection: any;
+	private connection: any;
 
 	/**
 	 *
@@ -37,15 +33,17 @@ export class Files extends Wrapper {
 	 * @param config
 	 * @param logger
 	 */
-	constructor(event: any, config: any, logger: any) {
+	constructor(event: any, config: any, logger: any, connections: any) {
 		super(event, config, logger);
+
+		this.connection = connections[0];
 
 		event.on("end-maintenance", () => {
 
-			logger.info("start compaction Files");
+// 			logger.info("start compaction Files");
 // 			this.db.command({compact: "fs.files"});
 // 			this.db.command({compact: "fs.chunks"});
-			logger.info("end compaction Files");
+// 			logger.info("end compaction Files");
 
 		});
 	}
@@ -64,23 +62,6 @@ export class Files extends Wrapper {
 			}
 		}
 		return type;
-	}
-
-	/**
-	 *
-	 */
-	private static connect(config: any): any {
-		const options: object = {
-			keepAlive: 1,
-			connectTimeoutMS: 1000000,
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-		};
-		let connectUrl: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
-		if (config.db.noauth) {
-			connectUrl = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
-		}
-		return MongoClient.connect(connectUrl, options);
 	}
 
 	/**
@@ -165,23 +146,21 @@ export class Files extends Wrapper {
 
 	/**
 	 *
-	 * @param gfs
-	 * @param collection
 	 * @param name
 	 * @param callback
 	 * @returns none
 	 */
-	private resultPublicFile(gfs: any, collection: any, name: string, callback: (error: IErrorObject, result: object, type: string) => void): void {
-		collection.findOne({filename: name}, (error: IErrorObject, item: any): void => {
+	private resultPublicFile(name: string, callback: (error: IErrorObject, stream: object, length: number) => void): void {
+		this.collection.findOne({filename: name}, (error: IErrorObject, item: any): void => {
 			if (!error) {
 				if (item) {
-					const readstream: any = gfs.openDownloadStream(item._id);
-					callback(null, readstream, item);
+					const readstream: any = this.gfs.openDownloadStream(item._id);
+					callback(null, readstream, item.length);
 				} else {
-					callback({code: -1, message: "not found." + " 2010"}, null, "");
+					callback({code: -1, message: "not found." + " 2010"}, null, null);
 				}
 			} else {
-				callback(error, null, "");
+				callback(error, null, null);
 			}
 		});
 	}
@@ -257,13 +236,11 @@ export class Files extends Wrapper {
 		try {
 			const query: object = Files.query_by_user_read({username, auth: AuthLevel.public}, {filename: name});
 			this.collection.findOne(query).then((item: object): void => {
-
 				if (item) {
 					callback(null, item);
 				} else {
 					callback({code: -1, message: "no item" + " 148"}, null);
 				}
-
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
 			});
@@ -282,13 +259,11 @@ export class Files extends Wrapper {
 		try {
 			const id = new mongodb.ObjectId(_id);
 			this.collection.findOne({_id: id}).then((item: object): void => {
-
 				if (item) {
 					callback(null, item);
 				} else {
 					callback({code: -1, message: "no item" + " 5629"}, null);
 				}
-
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
 			});
@@ -324,59 +299,67 @@ export class Files extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private brankImage(callback: (error: IErrorObject, result: object, item: string) => void): void {
-		try {
-			this.resultPublicFile(this.gfs, this.collection, "blank.png", (error, readstream, type: string) => {
-				// 	item.metadata.type
-				callback(error, readstream, type);
-			});
-		} catch (e) {
-			callback(e, null, null);
-		}
+	// private brankImage(callback: (error: IErrorObject, stream: object, length: number) => void): void {
+	// 	try {
+	// 		this.resultPublicFile("blank.png", (error, readstream, length: number) => {
+	// 			callback(error, readstream, length);
+	// 		});
+	// 	} catch (e) {
+	// 		callback(e, null, null);
+	// 	}
+	// }
+
+	/*
+	*
+	* */
+	private setHeader(response: any, status: number, mimetype: string, start: number, end: number, total: number): void {
+		response.status(status);
+		response.type(mimetype);
+		response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
+		response.set("Accept-Ranges", "bytes");
+		response.set("Content-Length", (end - start) + 1);
 	}
 
 	/*
 	*
 	*/
-	private renderBlank(response: any, next: () => void, callback: (result: any) => void): void {
-		this.brankImage((error: IErrorObject, result: any, item: any): void => {
+	private renderBlank(response: any, next: () => void, callback: (stream: any) => void): void {
+		this.resultPublicFile("blank.png", (error: IErrorObject, stream: any, length: number): void => {
 			if (!error) {
-				// const mimetype = item.metadata.type;
-				const mimetype: string = "image/png";
-				const total: number = item.length;
-				const start: number = 0;
-				const end: number = total - 1;
-				const chunksize: number = (end - start) + 1;
-
-				response.status(200);
-				response.type(mimetype);
-				response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
-				response.set("Accept-Ranges", "bytes");
-				response.set("Content-Length", chunksize);
-
-				result.pipe(response);
-				callback(result);
+				this.setHeader(response, 200, "image/png", 0, length - 1, length);
+				stream.pipe(response);
+				callback(stream);
 			} else {
 				next();
 			}
 		});
 	}
 
+	private parse_range(range: string, total: number): { start: number, end: number } {
+		let start = 0;
+		let end = 0;
+		const header_range: string[] = range.replace(/bytes=/, "").split("-");
+		if (header_range.length >= 2) {
+			const partial_start: string = header_range[0];
+			const partial_end: string = header_range[1];
+			start = partial_start ? parseInt(partial_start, 10) : 0;
+			end = partial_end ? parseInt(partial_end, 10) : total - 1;
+		}
+		return {start: start, end: end};
+	}
+
 	/*
 	*
 	*/
-	private render(response: any, next: () => void, result: any, query: any, range: string, command_string: string, callback: (result: any) => void): void {
+	private render(response: any, next: () => void, data: any, query: any, range: string, command_string: string, callback: (result: any) => void): void {
 
-		let command: string = command_string;
+		const mimetype: string = data.metadata.type;
+		const total: number = data.length;
 
-		const mimetype: string = result.metadata.type;
-		const total: number = result.length;
-
+		let command: string = "";
 		let status: number = 200;
-
 		let start: number = 0;
 		let end: number = 0;
-		let chunksize: number = 0;
 
 		/*
 		* HTTP/1.1： 範囲要請
@@ -384,32 +367,22 @@ export class Files extends Wrapper {
 		* https://triple-underscore.github.io/RFC7233-ja.html
 		 */
 		if (range) {　    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
-			command = "";
-
-			const parts: string[] = range.replace(/bytes=/, "").split("-");
-			const partialstart: string = parts[0];
-			const partialend: string = parts[1];
-
-			status = 206;	// Partial Content
-			start = partialstart ? parseInt(partialstart, 10) : 0;
-			end = partialend ? parseInt(partialend, 10) : total - 1;
+			command = ""; // Because, in partial transfer, the effect cannot be used.
+			const target_range: { start: number, end: number } = this.parse_range(range, total);
+			status = 206;
+			start = target_range.start;
+			end = target_range.end;
 		} else { 			// Full Data.
-			status = 200;	// Full Content
+			command = command_string;
+			status = 200;
 			start = 0;
 			end = total - 1;
 		}
 
-		chunksize = (end - start) + 1;
-
-		this.getPartial(result._id, start, end, (error: IErrorObject, result: any): void => {
+		this.getPartial(data._id, start, end, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				if (result) {
-					response.status(status);
-					response.type(mimetype);
-					response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
-					response.set("Accept-Ranges", "bytes");
-					response.set("Content-Length", chunksize);
-
+					this.setHeader(response, status, mimetype, start, end, total);
 					// c=[{"c":"resize","p":{"width":300,"height":100}}]
 					this.effect(mimetype, query, command, result, (error: any, result: any): void => {
 						if (!error) {
@@ -431,7 +404,7 @@ export class Files extends Wrapper {
 	/*
 	*
 	*/
-	private renderByFile(response: any, next: () => void, user_id: string, path: string, query: any, range: string, command_string: string, callback: (result: any) => void): void {
+	private renderByFile(response: any, next: () => void, user_id: string, path: string, query: any, range: string, command_string: string, callback: (stream: any) => void): void {
 		this.getRecord(user_id, path, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				if (result) {
@@ -452,7 +425,7 @@ export class Files extends Wrapper {
 	/*
 	*
 	*/
-	private renderById(response: any, next: () => void, _id: string, query: any, range: string, command_string: string, callback: (result: any) => void): void {
+	private renderById(response: any, next: () => void, _id: string, query: any, range: string, command_string: string, callback: (stream: any) => void): void {
 		this.getRecordById(_id, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				if (result) {
@@ -478,12 +451,11 @@ export class Files extends Wrapper {
 	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
-			Files.connect(this.config.systems).then((client: any): void => {
-				this.db = client.db(this.config.systems.db.name);
-				this.db.collection("fs.files", (error: IErrorObject, collection: object): void => {
-					this.gfs = new mongodb.GridFSBucket(this.db, {});
+			const db = this.connection.db;
+			db.collection("fs.files", (error: IErrorObject, collection: object): void => {
+				if (!error) {
+					this.gfs = new mongodb.GridFSBucket(db, {});
 					this.collection = collection;
-
 					if (initfiles) {
 						if (initfiles.length > 0) {
 							// ensureIndex
@@ -499,7 +471,7 @@ export class Files extends Wrapper {
 										const mimetype: string = doc.content.type;
 										const category: string = doc.content.category;
 										const description: string = "";
-										const type: number = doc.type;
+										// const type: number = doc.type;
 										const query: object = {filename};
 
 										this.collection.findOne(query).then((item: object): void => {
@@ -537,9 +509,9 @@ export class Files extends Wrapper {
 							callback(null, null);
 						}
 					}
-				});
-			}).catch((error: IErrorObject): void => {
-				this.logger.info("mongo connection error: " + error);
+				} else {
+					callback(error, null);
+				}
 			});
 		} catch (e) {
 			callback(e, null);

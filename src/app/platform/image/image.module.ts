@@ -12,6 +12,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
 
 import {MatCardModule} from "@angular/material/card";
+import {MatDialogModule} from "@angular/material/dialog";
 
 import {ImageCropperModule} from "ngx-image-cropper";
 
@@ -19,7 +20,6 @@ import {BaseModule} from "../base/base.module";
 
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 import {ImageComponent} from "./image.component";
-import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
 	declarations: [
@@ -38,7 +38,6 @@ import {MatDialogModule} from "@angular/material/dialog";
 		ImageCropperModule,
 
 		BaseModule,
-
 	],
 	exports: [
 		ImageComponent,

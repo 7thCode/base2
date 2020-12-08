@@ -12,7 +12,9 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
-import * as NodeRSA from "node-rsa";
+// import * as NodeRSA from "node-rsa";
+import {  } from "crypto-js";
+
 
 import { environment } from '../../../environments/environment';
 
@@ -51,8 +53,11 @@ export class AuthService extends HttpService {
 	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-			const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
-			callback(null, rsa.encrypt(plain, "base64"));
+			// RSA
+		//  	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+		// 	callback(null, rsa.encrypt(plain, "base64"));
+
+		 	callback(null, plain);
 		} catch (e) {
 			callback(e, "");
 		}

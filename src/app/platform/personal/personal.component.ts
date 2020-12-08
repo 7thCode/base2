@@ -25,7 +25,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 
 	public create: Date;
 	public username: string;
-	public provider: string;
+	// public provider: string;
 
 	private spinner: Spinner;
 

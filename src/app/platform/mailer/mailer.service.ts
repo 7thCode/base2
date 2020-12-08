@@ -12,7 +12,6 @@ import {retry} from "rxjs/operators";
 
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {HttpService} from "../base/services/http.service";
-import {router} from "../../../../server/platform/modules/mailer/api";
 
 @Injectable({
 	providedIn: "root",

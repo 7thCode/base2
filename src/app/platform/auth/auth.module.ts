@@ -39,6 +39,7 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 import {RegistDialogDirective} from "./regist-dialog/regist-dialog.directive";
 
 import {AuthService} from "./auth.service";
+
 import {WithdrawDialogComponent} from "./withdraw-dialog/withdraw-dialog.component";
 import {WithdrawDialogDirective} from "./withdraw-dialog/withdraw-dialog.directive";
 import {UserNameDialogComponent} from "./username-dialog/username-dialog.component";

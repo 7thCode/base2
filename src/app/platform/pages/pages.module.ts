@@ -22,7 +22,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 import {AngularEditorModule} from "@kolkov/angular-editor";
-import {AceEditorModule} from "ng2-ace-editor";
+import {AceEditorModule} from "ngx-ace-editor-wrapper";
 
 import {BaseModule} from "../base/base.module";
 import {PageEditModule} from "../base/components/pageedit/pageedit.module";

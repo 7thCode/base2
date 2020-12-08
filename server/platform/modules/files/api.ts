@@ -16,21 +16,19 @@ const fs: any = require("graceful-fs");
 
 const project_root = path.join(__dirname, "../../../..");
 
-// const event: any = module.parent.exports.event;
 const event: any = require.main.exports.event;
-
-// const logger: any = module.parent.exports.logger;
 const logger: any = require.main.exports.logger;
 
 const gatekeeper: any = require("../../base/library/gatekeeper");
 
-// const ConfigModule: any = module.parent.exports.config;
 const ConfigModule: any = require.main.exports.config;
 
 const systemsConfig: any = ConfigModule.systems;
 
+const connection: any = require.main.exports.connection;
+
 const Files: any = require("./controller");
-const file: any = new Files(event, ConfigModule, logger);
+const file: any = new Files(event, ConfigModule, logger, connection);
 
 const cache_root: string = "files/cache/";
 

@@ -8,13 +8,13 @@
 
 import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import {Injectable} from "@angular/core";
+
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import { environment } from '../../../environments/environment';
-
 import {HttpService} from "../base/services/http.service";
-import {Injectable} from "@angular/core";
+
 
 /**
  * ファイル
@@ -25,6 +25,7 @@ import {Injectable} from "@angular/core";
 @Injectable({
 	providedIn: "root",
 })
+
 export class FilesService extends HttpService {
 
 	/**

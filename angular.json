@@ -38,11 +38,7 @@
 						"scripts": [],
 						"allowedCommonJsDependencies": [
 							"lodash",
-							"moment-timezone",
-							"node-rsa",
-							"crypto",
-							"asn1",
-							"hammerjs"
+							"crypto"
 						]
 					},
 					"configurations": {

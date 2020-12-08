@@ -24,14 +24,14 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {BasePipeModule} from "../base/pipes/base-pipe.module";
 import {BaseModule} from "../base/base.module";
 import {ImageModule} from "../image/image.module";
+import {AuthModule} from "../auth/auth.module";
+
+import {SessionService} from "../base/services/session.service";
+import {AccountsService} from "./accounts.service";
 
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts.component";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
-
-import {SessionService} from "../base/services/session.service";
-import {AccountsService} from "./accounts.service";
-import {AuthModule} from "../auth/auth.module";
 
 @NgModule({
 	declarations: [
