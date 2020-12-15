@@ -121,20 +121,22 @@ $ sudo service mongodb restart
 #### 初期化
 
 ##### DB全体の認証
-
+```bash
     $ mongo
+```
+```js
     > use admin
     > db.createUser({user: "user",pwd: "pass",roles:[{role: "userAdminAnyDatabase",db: "admin"}]})
-
+```
 ##### 個々のDBの認証(auth-dbはtarget-db自体)
-
+```js
     > use base2
-    > db.createUser({user:"base2master", pwd:"33550336", roles:[ "readWrite", "dbOwner" ]})
-
+    > db.createUser({user:"user", pwd:"pass", roles:[ "readWrite", "dbOwner" ]})
+```
 ##### Index
-
+```js
     > db.fs.files.createIndex({ "filename" : 1, "uploadDate" : 1 })
-
+```
 #### ログ
 ##### Ubuntu
 
@@ -149,41 +151,56 @@ $ sudo service mongodb restart
 #### Tips
 ##### クエリーロギング
 
-    スタート
-    db.setProfilingLevel(1,20)
-    ストップ
-    db.setProfilingLevel(0)
+スタート
+```js
+    > db.setProfilingLevel(1,20)
+```
+ストップ
+```js
+    > db.setProfilingLevel(0)
+```
 
 ##### mongodbたまに実行
-
+```bash
     $ mongo
+```
+```js
     > use admin
     > db.runCommand( { logRotate : 1 } )
+```
 
 ##### localでmongoをcsvで落とす方法（例）
-    mongoexport --host=127.0.0.1  --db test2 --collection businesscards --out businesscard.csv  --type=csv --fields=Template,UpdateDate
-
+```bash
+    $ mongoexport --host=127.0.0.1  --db test2 --collection businesscards --out businesscard.csv  --type=csv --fields=Template,UpdateDate
+```
 ##### メモリー使用量
     /proc/**PID**/statusのVmRSS
 
 ## pm2インストール
-    see http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/
-
-    > sudo npm install pm2 -g
-    > sudo pm2 startup ubuntu
+see http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/
+```bash
+    $ sudo npm install pm2 -g
+    $ sudo pm2 startup ubuntu
+```    
 ### Use
-    > sudo pm2 start start.json --env production
-    > sudo pm2 save
+```bash
+    $ sudo pm2 start start.json --env production
+    $ sudo pm2 save
+```
 ### Test
-    > sudo reboot
+```bash
+    $ sudo reboot
       .
       .
       .
-    > sudo pm2 list
+    $ sudo pm2 list
+```    
 ### メモリー（GC)
-    > sudo pm2 start app.js --node-args="--optimize_for_size --max_old_space_size=920 --gc_interval=100"
+```bash
+    $ sudo pm2 start app.js --node-args="--optimize_for_size --max_old_space_size=920 --gc_interval=100"
+```    
 ### Cluster
-
+```json
     cluster.json(例)
 
         {
@@ -204,9 +221,10 @@ $ sudo service mongodb restart
           }
           ]
         }
-
+```
+```bash
     > sudo pm2 start cluster.json --env production
-
+```
 ### Angular + Express
 
     ng new [PROJECT]
