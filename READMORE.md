@@ -112,7 +112,7 @@
 
 
     3.0以降
-    > sudo mongodump --authenticationDatabase admin -u oda -p zz0101
+    > sudo mongodump --authenticationDatabase admin -u user -p pass
 #### full restore
     3.0 以前
     // > sudo service mongodb stop

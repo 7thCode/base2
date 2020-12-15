@@ -5,7 +5,6 @@ $ mongo
 > db.createUser({user:"basemaster", pwd:"33550336", roles:[ "readWrite", "dbOwner" ]})
 ```
 
-
 ## 1.sudoでパスが通らない場合
 
     /etc/sudoers
@@ -125,7 +124,7 @@ $ sudo service mongodb restart
 
     $ mongo
     > use admin
-    > db.createUser({user: "admin",pwd: "zz0101",roles:[{role: "userAdminAnyDatabase",db: "admin"}]})
+    > db.createUser({user: "user",pwd: "pass",roles:[{role: "userAdminAnyDatabase",db: "admin"}]})
 
 ##### 個々のDBの認証(auth-dbはtarget-db自体)
 
