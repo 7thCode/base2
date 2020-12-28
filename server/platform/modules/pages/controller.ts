@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -14,6 +14,11 @@ const Updatable: any = require("../../../../server/platform/base/controllers/upd
 
 const Page: any = require("../../../../models/platform/pages/page");
 
+/*
+*
+*
+*
+*/
 export class Pages extends Updatable {
 
 	protected Model: any;
@@ -35,6 +40,8 @@ export class Pages extends Updatable {
 	}
 
 	/**
+	 *
+	 *
 	 *
 	 * @param username
 	 * @param path

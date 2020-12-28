@@ -67,6 +67,7 @@ gulp.task('build', () => {
 		'app.js',
 		'patch.js',
 		'package.json',
+		'package-lock.json',
 		'htdigest',
 		'cluster.json',
 		'*.p8'

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -12,6 +12,11 @@ const Updatable: any = require("../../../../server/platform/base/controllers/upd
 
 const Article: any = require("../../../../models/platform/articles/article");
 
+/**
+ *
+ *
+ *
+ */
 export class Articles extends Updatable {
 
 	protected Model: any;
@@ -24,14 +29,10 @@ export class Articles extends Updatable {
 	constructor(event: any, config: object, logger: any) {
 		super(event, config, logger);
 		this.Model = Article as IArticleModel;
-
 		event.on("compaction", () => {
 			logger.info("start compaction Articles");
 		});
-
 	}
-
-
 
 }
 

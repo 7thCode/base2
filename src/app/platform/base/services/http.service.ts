@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -10,6 +10,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 import { environment } from '../../../../environments/environment';
 import {Injectable} from "@angular/core";
+import {Callback} from "../../../../../types/platform/universe";
 
 /**
  * HTTPサービス
@@ -64,7 +65,7 @@ export abstract class HttpService {
 	 * @param data デシリアライズされるテキスト
 	 * @param callback オブジェクトを返すコールバック
 	 */
-	protected Decode(data: string, callback: (error: any, result: any) => void): void {
+	protected Decode(data: string, callback:  Callback<any>): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
 		} catch (error) {
@@ -78,7 +79,7 @@ export abstract class HttpService {
 	 * @param data シリアライズされるオブジェクト
 	 * @param callback シリアライズテキストを返すコールバック
 	 */
-	protected Encode(data: any, callback: (error: any, result: string) => void): void {
+	protected Encode(data: any, callback: Callback<any>): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
 		} catch (error) {
@@ -92,7 +93,7 @@ export abstract class HttpService {
 	 * @param data　デシリアライズされるテキスト
 	 * @param callback オブジェクトを返すコールバック
 	 */
-	protected Parse(data: string, callback: (error: any, result: any) => void): void {
+	protected Parse(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(data));
 		} catch (error) {

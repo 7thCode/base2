@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -13,8 +13,6 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 // import * as NodeRSA from "node-rsa";
-import {  } from "crypto-js";
-
 
 import { environment } from '../../../environments/environment';
 
@@ -53,11 +51,9 @@ export class AuthService extends HttpService {
 	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-			// RSA
-		//  	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+		// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 		// 	callback(null, rsa.encrypt(plain, "base64"));
-
-		 	callback(null, plain);
+			callback(null, plain);
 		} catch (e) {
 			callback(e, "");
 		}
@@ -74,13 +70,13 @@ export class AuthService extends HttpService {
 		try {
 			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
-				AuthService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
-					if (!error) {
-						callback(null, encryptedText);
-					} else {
-						callback(error, "");
-					}
-				});
+			 	AuthService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
+			 		if (!error) {
+			 			callback(null, encryptedText);
+			 		} else {
+			 			callback(error, "");
+			 		}
+			 	});
 			} else {
 				callback(null, JSON.stringify(plain));
 			}

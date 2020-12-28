@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -43,8 +43,9 @@ namespace PageModel {
 	Page.plugin(timestamp, {offset: 9});
 	Page.plugin(grouped);
 
+	Page.index({user_id: 1});
+	Page.index({username: 1});
 	Page.index({"user_id": 1, "content.path": 1}, {unique: true});
-
 
 	const query_by_user_read: any = (user: any, query: any): any => {
 		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};

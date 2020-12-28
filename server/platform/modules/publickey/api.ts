@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -8,10 +8,6 @@
 
 const express: any = require("express");
 export const router: any = express.Router();
-
-// const event: any = module.parent.exports.event;
-// const config: any = module.parent.exports.config;
-// const logger: any = module.parent.exports.logger;
 
 const event: any = require.main.exports.event;
 const config: any = require.main.exports.config;

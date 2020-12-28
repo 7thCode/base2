@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -30,7 +30,6 @@ namespace NativeFileModel {
 	NativeFile.plugin(rights);
 	NativeFile.plugin(timestamp, { offset: 9 });
 	NativeFile.plugin(grouped);
-
 
 	const query_by_user_read: any = (user: any, query: object): any => {
 		let result = query;

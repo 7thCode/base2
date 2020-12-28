@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -61,7 +61,7 @@ namespace ArticleModel {
 	};
 
 	const init: any = (_id: any, body: any): IArticleModelContent => {
-		const id = new mongoose.Types.ObjectId();
+		const id: any = new mongoose.Types.ObjectId();
 		const content: IArticleModelContent = {
 			id:  id,
 			parent_id: body.parent_id,
@@ -103,12 +103,12 @@ namespace ArticleModel {
 	};
 
 	Article.statics.set_rights_promise = function(user: IAccountModel, id: string, rights: IRights): Promise<any> {
-		const setter = {$set: {rights}};
+		const setter: {$set: any} = {$set: {rights}};
 		return this.model("Article").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}).exec();
 	};
 
 	Article.statics.update_by_id_promise = function(user: IAccountModel, id: string, content: any): Promise<any> {
-		const setter = {
+		const setter: {$set: any} = {
 			$set: {
 				"content.parent_id": content.parent_id,
 				"content.enabled": content.enabled,

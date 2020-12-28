@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -15,7 +15,6 @@ const path = require("path");
 
 const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
-// const ConfigModule: any = require.main.exports.config;
 
 let opened = true;
 

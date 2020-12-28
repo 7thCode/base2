@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -12,7 +12,6 @@ import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectR
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");
-const crypto: any = require("crypto");
 const SpeakEasy: any = require("speakeasy");
 const QRCode: any = require("qrcode");
 
@@ -65,6 +64,23 @@ export class Auth extends Mail {
 
 	/**
 	 *
+	 * @param operator
+	 * @param target
+	 * manager以上は任意のユーザのパスワード変更可能
+	 * それ以外は自身のパスワードのみ変更可能
+	 */
+	private static permit_for_change_account(operator: any, target: any): boolean {
+		let result: boolean;
+		if (operator.auth < AuthLevel.user) {
+			result = true;
+		} else {
+			result = (operator.user_id === target.user_id)
+		}
+		return result;
+	}
+
+	/**
+	 *
 	 * @param e
 	 */
 	public static error_handler(e: IErrorObject) {
@@ -82,13 +98,13 @@ export class Auth extends Mail {
 	public static value_decrypt(use_publickey: boolean, key: string, crypted: any, callback: Callback<any>): void {
 		try {
 			if (use_publickey) {
-				Auth.publickey_decrypt(key, crypted, (error, plain): void => {
-					if (!error) {
-						callback(null, JSON.parse(plain));
-					} else {
-						callback({code: 2, message: "no cookie? 5977"}, {});
-					}
-				});
+			 	Auth.publickey_decrypt(key, crypted, (error, plain): void => {
+			 		if (!error) {
+			 			callback(null, JSON.parse(plain));
+			 		} else {
+			 			callback({code: 2, message: "no cookie? 5977"}, {});
+			 		}
+			 	});
 			} else {
 				callback(null, JSON.parse(crypted));
 			}
@@ -193,22 +209,7 @@ export class Auth extends Mail {
 		});
 	}
 
-	/**
-	 *
-	 * @param operator
-	 * @param target
-	 * manager以上は任意のユーザのパスワード変更可能
-	 * それ以外は自身のパスワードのみ変更可能
-	 */
-	private permit_for_change_account(operator: any, target: any): boolean {
-		let result: boolean;
-		if (operator.auth < AuthLevel.user) {
-			result = true;
-		} else {
-			result = (operator.user_id === target.user_id)
-		}
-		return result;
-	}
+
 
 	/**
 	 * 初期ユーザ作成
@@ -225,8 +226,6 @@ export class Auth extends Mail {
 						promises.push(new Promise((resolve: any, reject: any): void => {
 							if (user) {
 								const auth: number = user.auth;
-
-							// 	const user_id: string = user.user_id;
 								const user_id = new mongoose.Types.ObjectId();
 								const username: string = user.username;
 								const rootpassword: string = user.password;
@@ -288,6 +287,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * operator is own or manager?
 	 *
 	 * @param request
 	 * @param response
@@ -317,6 +317,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * operator is own or manager?
 	 *
 	 * @param request
 	 * @param response
@@ -346,6 +347,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * operator is system?
 	 *
 	 * @param request
 	 * @param response
@@ -370,6 +372,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * operator is manager?
 	 *
 	 * @param request
 	 * @param response
@@ -394,6 +397,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * operator is user?
 	 *
 	 * @param request
 	 * @param response
@@ -418,6 +422,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * operator is logged in?
 	 *
 	 * @param request
 	 * @param response
@@ -436,6 +441,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * login
 	 *
 	 * @param request
 	 * @param response
@@ -472,7 +478,7 @@ export class Auth extends Mail {
 										})(request, response);
 									});
 								});
-							}).catch((error: any) => {
+							}).catch((error: IErrorObject) => {
 								this.SendError(response, error);
 							});
 						});
@@ -487,6 +493,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * login by totp
 	 *
 	 * @param request
 	 * @param response
@@ -520,7 +527,7 @@ export class Auth extends Mail {
 										this.SendError(response, this.errors.account_disabled);
 									}
 								});
-							}).catch((error: any) => {
+							}).catch((error: IErrorObject) => {
 								this.SendError(response, error);
 							})
 						});
@@ -535,6 +542,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * generate login token.
 	 *
 	 * @param request
 	 * @param response
@@ -560,7 +568,7 @@ export class Auth extends Mail {
 									this.SendError(response, this.errors.account_disabled);
 								}
 							});
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							this.SendError(response, error);
 						})
 					});
@@ -572,6 +580,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * token login.
 	 *
 	 * @param request
 	 * @param response
@@ -610,7 +619,7 @@ export class Auth extends Mail {
 										this.SendError(response, this.errors.account_disabled);
 									}
 								});
-							}).catch((error: any) => {
+							}).catch((error: IErrorObject) => {
 								this.SendError(response, error);
 							});
 						});
@@ -625,6 +634,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * send user regist mail.
 	 *
 	 * @param request
 	 * @param response
@@ -669,7 +680,7 @@ export class Auth extends Mail {
 							} else {
 								this.SendWarn(response, this.errors.username_already_regist);
 							}
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							this.SendError(response, error);
 						});
 					});
@@ -681,6 +692,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * register from token.
 	 *
 	 * @param request
 	 * @param response
@@ -718,7 +731,7 @@ export class Auth extends Mail {
 							} else {
 								response.redirect(target);
 							}
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							response.status(500).render("error", error);
 						});
 					} else {
@@ -734,6 +747,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * immediate register.
 	 *
 	 * @param request
 	 * @param response
@@ -765,7 +780,7 @@ export class Auth extends Mail {
 										} else {
 											this.SendWarn(response, this.errors.username_already_regist);
 										}
-									}).catch((error: any) => {
+									}).catch((error: IErrorObject) => {
 										this.SendError(response, error);
 									});
 								});
@@ -782,6 +797,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * send password change mail.
 	 *
 	 * @param request
 	 * @param response
@@ -825,7 +842,7 @@ export class Auth extends Mail {
 									});
 								});
 							});
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							this.SendError(response, error);
 						});
 					});
@@ -837,6 +854,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * password change by token.
 	 *
 	 * @param request
 	 * @param response
@@ -878,7 +897,7 @@ export class Auth extends Mail {
 							} else {
 								response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
 							}
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							response.status(500).render("error", error);
 						});
 					} else {
@@ -894,6 +913,7 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 * direct password change.
 	 *
 	 * @param request
 	 * @param response
@@ -913,7 +933,7 @@ export class Auth extends Mail {
 										this.ifExist(response, this.errors.username_notfound, account, () => {
 											this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 												this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
-													if (this.permit_for_change_account(request.user, account)) {
+													if (Auth.permit_for_change_account(request.user, account)) {
 														const password: string = value.password;
 														account.setPassword(password, (error: IErrorObject): void => {
 															this.ifSuccess(response, error, (): void => {
@@ -930,7 +950,7 @@ export class Auth extends Mail {
 												});
 											});
 										});
-									}).catch((error: any) => {
+									}).catch((error: IErrorObject) => {
 										this.SendError(response, error);
 									});
 								});
@@ -948,11 +968,13 @@ export class Auth extends Mail {
 
 	/**
 	 *
+	 * send username change mail.
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
 	 */
-	public post_local_username(request: any, response: IJSONResponse): void {
+	public post_local_username(request: IContentRequest, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
@@ -992,13 +1014,13 @@ export class Auth extends Mail {
 														});
 													});
 												});
-											}).catch((error: any) => {
+											}).catch((error: IErrorObject) => {
 												this.SendError(response, error);
 											});
 										});
 									});
 								});
-							}).catch((error: any) => {
+							}).catch((error: IErrorObject) => {
 								this.SendError(response, error);
 							});
 						});
@@ -1011,6 +1033,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * change username by token.
 	 *
 	 * @param request
 	 * @param response
@@ -1050,7 +1074,7 @@ export class Auth extends Mail {
 										} else {
 											response.status(200).render("error", {message: this.message.username_already_regist, status: 200}); // already
 										}
-									}).catch((error: any) => {
+									}).catch((error: IErrorObject) => {
 										response.status(500).render("error", error);
 									});
 								} else {
@@ -1060,7 +1084,7 @@ export class Auth extends Mail {
 								response.status(200).render("error", {message: this.message.already_logged_in, status: 200}); // already
 							}
 
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							response.status(500).render("error", error);
 						});
 					} else {
@@ -1076,6 +1100,8 @@ export class Auth extends Mail {
 	}
 
 	/**
+	 *
+	 * direct username change.
 	 *
 	 * @param request
 	 * @param response
@@ -1114,13 +1140,13 @@ export class Auth extends Mail {
 																});
 															});
 														});
-													}).catch((error: any) => {
+													}).catch((error: IErrorObject) => {
 														this.SendError(response, error);
 													});
 												});
 											});
 										});
-									}).catch((error: any) => {
+									}).catch((error: IErrorObject) => {
 										this.SendError(response, error);
 									});
 								});
@@ -1138,11 +1164,13 @@ export class Auth extends Mail {
 
 	/**
 	 *
+	 * send user remove mail.
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
 	 */
-	public post_local_remove(request: any, response: IJSONResponse): void {
+	public post_local_remove(request: IContentRequest, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
@@ -1177,7 +1205,7 @@ export class Auth extends Mail {
 							});
 						});
 					});
-				}).catch((error: any) => {
+				}).catch((error: IErrorObject) => {
 					this.SendError(response, error);
 				});
 			});
@@ -1188,11 +1216,13 @@ export class Auth extends Mail {
 
 	/**
 	 *
+	 * user remove by token.
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
 	 */
-	public get_remove_token(request: any, response: IRedirectResponse): void {
+	public get_remove_token(request: IContentRequest, response: IRedirectResponse): void {
 		try {
 			this.Parse(Cipher.FixedDecrypt(request.params.token, this.systemsConfig.tokensecret), (error: IErrorObject, token: any) => {
 				if (!error) {
@@ -1216,7 +1246,7 @@ export class Auth extends Mail {
 							} else {
 								response.status(200).render("error", {message: this.message.already_logged_in, status: 200}); // already
 							}
-						}).catch((error: any) => {
+						}).catch((error: IErrorObject) => {
 							response.status(500).render("error", error);
 						});
 					} else {
@@ -1233,11 +1263,13 @@ export class Auth extends Mail {
 
 	/**
 	 *
+	 * direct user remove
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
 	 */
-	public post_immediate_remove(request: any, response: IJSONResponse): void {
+	public post_immediate_remove(request: IContentRequest, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: any = request.user;
@@ -1252,7 +1284,7 @@ export class Auth extends Mail {
 							});
 						});
 					});
-				}).catch((error: any) => {
+				}).catch((error: IErrorObject) => {
 					this.SendError(response, error);
 				})
 			})
@@ -1292,7 +1324,7 @@ export class Auth extends Mail {
 					} else {
 						response.redirect("/");
 					}
-				}).catch((error: any) => {
+				}).catch((error: IErrorObject) => {
 					this.SendError(response, error);
 				})
 			});
@@ -1323,8 +1355,7 @@ export class Auth extends Mail {
 						newAccount.privatekey = keypair.private;
 						newAccount.publickey = keypair.public;
 						newAccount.content = operator.content;
-						// newAccount.registerDate = Date.now();
-						newAccount._save((error: IErrorObject, obj: any): void => {
+						newAccount._save((error: IErrorObject, obj: object): void => {
 							if (!error) {
 								response.redirect("/");
 							}
@@ -1332,7 +1363,7 @@ export class Auth extends Mail {
 					} else {
 						response.redirect("/");
 					}
-				}).catch((error: any) => {
+				}).catch((error: IErrorObject) => {
 					this.SendError(response, error);
 				})
 			});
@@ -1362,8 +1393,7 @@ export class Auth extends Mail {
 					newAccount.privatekey = keypair.private;
 					newAccount.publickey = keypair.public;
 					newAccount.content = this.content;
-					// newAccount.registerDate = Date.now();              // Legacy of v1
-					newAccount._save((error: IErrorObject, obj: any): void => {
+					newAccount._save((error: IErrorObject, obj: object): void => {
 						if (!error) {
 							response.redirect("/");
 						}
@@ -1372,7 +1402,7 @@ export class Auth extends Mail {
 					// Auth.auth_event("login:twitter", request.user.username);
 					response.redirect("/");
 				}
-			}).catch((error: any) => {
+			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			});
 		} catch (error) {
@@ -1401,8 +1431,7 @@ export class Auth extends Mail {
 					newAccount.privatekey = keypair.private;
 					newAccount.publickey = keypair.public;
 					newAccount.content = this.content;
-					// newAccount.registerDate = Date.now();              // Legacy of v1
-					newAccount._save((error: IErrorObject, obj: any): void => {
+					newAccount._save((error: IErrorObject, obj: object): void => {
 						if (!error) {
 							// Auth.auth_event("auth:instagram", newAccount);
 							response.redirect("/");
@@ -1413,7 +1442,7 @@ export class Auth extends Mail {
 					response.redirect("/");
 				}
 
-			}).catch((error: any) => {
+			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			});
 		} catch (error) {
@@ -1443,7 +1472,7 @@ export class Auth extends Mail {
 					newAccount.publickey = keypair.public;
 					newAccount.content = {mails: [], nickname: request.user.displayName, id: "", description: ""};
 					// newAccount.registerDate = Date.now();              // Legacy of v1
-					newAccount._save((error: IErrorObject, obj: any): void => {
+					newAccount._save((error: IErrorObject, obj: object): void => {
 						if (!error) {
 							// Auth.auth_event("auth:line", newAccount);
 							response.redirect("/");
@@ -1453,7 +1482,7 @@ export class Auth extends Mail {
 					// Auth.auth_event("login:line", request.user.username);
 					response.redirect("/");
 				}
-			}).catch((error: any) => {
+			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			});
 		} catch (error) {

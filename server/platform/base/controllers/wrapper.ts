@@ -1,5 +1,5 @@
 /**!
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * //opensource.org/licenses/mit-license.php
  */
@@ -13,7 +13,7 @@ import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 const result: any = require("../../../../server/platform/base/library/result");
 
 /**
- *
+ * APIベース
  */
 export abstract class Wrapper {
 

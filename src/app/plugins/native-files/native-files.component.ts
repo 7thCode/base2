@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -23,6 +23,7 @@ import {Spinner} from "../../platform/base/library/spinner";
 import {ResizeDialogComponent} from "../../platform/image/resize-dialog/resize-dialog.component";
 import {FilesService} from "../../platform/files/files.service";
 import {NativeFilesService} from "./native-files.service";
+import {IAccountModel} from "../../../../types/platform/server";
 
 /**
  * ファイル
@@ -207,7 +208,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	/*
 	*
 	*/
-	public resizeDialog(file: any, image:any, callback: (error: IErrorObject, result: any) => void): void {
+	public resizeDialog(file: any, image:any, callback: Callback<any>): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
 			width: "30%",
@@ -238,7 +239,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	/*
 	*
 	*/
-	public getImage(target_file: any, callback: (error: IErrorObject, result: any) => void): void {
+	public getImage(target_file: any, callback: Callback<any>): void {
 		const reader = new FileReader();
 		const image = new Image();
 		reader.onload = (event) => {

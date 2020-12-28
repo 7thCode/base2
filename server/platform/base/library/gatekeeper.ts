@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -10,12 +10,11 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 const result: any = require("./result");
 
-// const ConfigModule: any = require("../../../../config/default");
 const ConfigModule: any = require("config");
 const systemsConfig: any = ConfigModule.systems;
 
 /**
- *
+ * Gatekeeper for request.
  */
 export class Gatekeeper {
 
@@ -102,7 +101,7 @@ export class Gatekeeper {
 	 * @param next
 	 * @returns none
 	 */
-	public static default(request: any, response: any, next: any): void {
+	public static default(request: any, response: any, next: () => void): void {
 		if (systemsConfig.extendheader_enable) {
 			response = Gatekeeper.ExtendHeader(request, response, "");
 			next();
@@ -123,7 +122,7 @@ export class Gatekeeper {
 	 * @param next
 	 * @returns none
 	 */
-	public static authenticate(request: any, response: any, next: any): void {
+	public static authenticate(request: any, response: any, next: () => void): void {
 		if (request.user) {
 			switch (request.user.provider) {
 				case "local":
@@ -150,13 +149,13 @@ export class Gatekeeper {
 	 * @param next
 	 * @returns none
 	 */
-	public static page_catch(request: any, response: any, next: any): void {
+	public static page_catch(request: any, response: any, next: () => void): void {
 		try {
 			next();
 		} catch (e) {
 			response.status(500).render("error", {
 				status: 500,
-				message: "Internal Server Error...",
+				message: e.message,
 				url: request.url,
 			});
 		}
@@ -169,7 +168,7 @@ export class Gatekeeper {
 	 * @param next
 	 * @returns none
 	 */
-	public static page_guard(request: any, response: any, next: any): void {
+	public static page_guard(request: any, response: any, next: () => void): void {
 		try {
 			if (request.user) {
 				if (request.isAuthenticated()) {
@@ -183,7 +182,7 @@ export class Gatekeeper {
 		} catch (e) {
 			response.status(500).render("error", {
 				status: 500,
-				message: "Internal Server Error...",
+				message: e.message,
 				url: request.url,
 			});
 		}

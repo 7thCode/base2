@@ -10,7 +10,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
-
+// import * as NodeRSA from "node-rsa";
 import {PublicKeyService} from "../../platform/base/services/publickey.service";
 import {HttpService} from "../../platform/base/services/http.service";
 
@@ -35,7 +35,6 @@ export class StripeService extends HttpService {
 		// this.stripe = this.loadStripe();
 	}
 
-
 	// private async loadStripe() {
 	// 	return await loadStripe('pk_test_Ht8bLgBXv2BeLuDy7nXWpoJV00pQHaaDCK');
 	// }
@@ -47,12 +46,8 @@ export class StripeService extends HttpService {
 	*/
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-
-
-			// RSA
-			// 		const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
-			// 		callback(null, rsa.encrypt(plain, "base64"));
-
+			// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			// 	callback(null, rsa.encrypt(plain, "base64"));
 			callback(null, plain);
 		} catch (e) {
 			callback(e, "");
@@ -85,6 +80,27 @@ export class StripeService extends HttpService {
 	 */
 	protected decorator(value: any): any {
 		return value;
+	}
+
+	/**
+	 * is カスタマー
+	 *
+	 * @param callback コールバック
+	 */
+	public isCustomer(callback: Callback<any>): void {
+		this.http.get(this.endPoint + '/stripe/iscustomer', this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9911"}, null);
+		});
 	}
 
 	/**
@@ -176,6 +192,11 @@ export class StripeService extends HttpService {
 	}
 
 	/*
+	*
+	*  code 0: OK
+	*  code 1: no customer
+	*  else error
+	*
 	 * @param id
 	 * @param content
 	 * @param callback
@@ -194,6 +215,7 @@ export class StripeService extends HttpService {
 					if (!error) {
 						this.http.post(this.endPoint + "/stripe/source/create", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 							if (result) {
+								// 1: no customer
 								if (result.code === 0) {
 									callback(null, result);
 								} else {

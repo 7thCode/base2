@@ -25,6 +25,7 @@ import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../../platform/base/library/spinner";
 
+
 /*
 
 		Test Numbers
@@ -41,33 +42,30 @@ import {Spinner} from "../../platform/base/library/spinner";
 		3530111333300000	JCB
 		3566002020360505	JCB
 
-
-
-
 		const update =	{
 			address: {  // The customer’s address.
-				city: "西宮市", // City, district, suburb, town, or village.
+				city: "XX市", // City, district, suburb, town, or village.
 				country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-				line1: "安井町", // Address line 1 (e.g., street, PO Box, or company name).
-				line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
+				line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+				line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
 				postal_code: "662-0045", // ZIP or postal code.
-				state: "兵庫県" // State, county, province, or region.
+				state: "XX県" // State, county, province, or region.
 			},
 			description: "自分", // An arbitrary string attached to the object. Often useful for displaying to users.
-			email: "oda.mikio@gmail.com", // The customer’s email address.
+			email: "mail@address.com", // The customer’s email address.
 			metadata: {order_id: '6735'}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-			name: "7thCode",  // The customer’s full name or business name.
+			name: "XXXX",  // The customer’s full name or business name.
 			phone: "", // The customer’s phone number.
 			shipping: { // Mailing and shipping address for the customer. Appears on invoices emailed to this customer.
 				address: {
-					city: "西宮市", // City, district, suburb, town, or village.
+					city: "XX市", // City, district, suburb, town, or village.
 					country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-					line1: "安井町", // Address line 1 (e.g., street, PO Box, or company name).
+					line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
 					line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
 					postal_code: "662-0045", // ZIP or postal code.
-					state: "兵庫県" // State, county, province, or region.
+					state: "XX県" // State, county, province, or region.
 				},
-				name : "織田", // Customer name.
+				name : "山田", // Customer name.
 				phone: "", // Customer phone (including extension).
 			}
 		}
@@ -89,7 +87,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	private spinner: Spinner;
 
 	/**
-	 *
+	 * @param interactionService
 	 * @param session
 	 * @param overlay
 	 * @param snackbar
@@ -134,6 +132,8 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		}
 	}
 
+	/**
+	 */
 	protected Progress(value: boolean): void {
 		this.spinner.Progress(value);
 	}
@@ -246,6 +246,8 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 					this.results = [];
 				}
 				callback(null, this.results);
+			} else {
+				callback(error, null);
 			}
 			this.Progress(false);
 		})
@@ -275,8 +277,17 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			if (result) { // if not cancel then
 				this.Progress(true);
 				this.createSource(result.content, (error, cards) => {
-					if (error) {
-						this.errorBar(error);
+					if (!error) {
+
+					} else {
+						switch (error.code) {
+							case 1:
+								this.errorBar({code: 1, message:"住所登録が必要です。"});
+								break;
+							default:
+								this.errorBar(error);
+								break;
+						}
 					}
 					this.Progress(false);
 				});
@@ -302,7 +313,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
 			if (!error) {
 
-
 				const dialog: MatDialogRef<any> = this.matDialog.open(StripeCustomerUpdateDialogComponent, {
 					width: "50%",
 					minWidth: "320px",
@@ -315,8 +325,10 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 					if (result) { // if not cancel then
 						this.Progress(true);
 						this.stripeService.updateCustomer(result.content, (error: IErrorObject, result: any) => {
-							this.draw((error: IErrorObject, cards: object[] | null): void => {
-							});
+							if (!error) {
+								this.draw((error: IErrorObject, cards: object[] | null): void => {
+								});
+							}
 							this.Progress(false);
 						})
 					}
@@ -326,12 +338,10 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 					this.Complete("", result);
 				});
 			} else {
+				this.errorBar(error);
 				this.Complete("error", error);
 			}
-
 		})
-
-
 	}
 
 	/**
@@ -374,85 +384,151 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		*/
 	}
 
+	/**
+	 */
 	public createCustomer() {
 		this.stripeService.createCustomer({email: "test3@test.com"}, (error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (error) {
+						this.errorBar(error);
+					}
+				});
+			} else {
+				this.errorBar(error);
+			}
 		})
 	}
 
+	/**
+	 */
 	public retrieveCustomer() {
 		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (error) {
+						this.errorBar(error);
+					}
+				});
+			} else {
+				this.errorBar(error);
+			}
 		})
 	}
 
+	/**
+	 */
 	public updateCustomer() {
-
 		const update = {
 			address: {  // The customer’s address.
-				city: "西宮市", // City, district, suburb, town, or village.
+				city: "XX市", // City, district, suburb, town, or village.
 				country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-				line1: "安井町", // Address line 1 (e.g., street, PO Box, or company name).
-				line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
-				postal_code: "662-0045", // ZIP or postal code.
-				state: "兵庫県" // State, county, province, or region.
+				line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+				line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
+				postal_code: "100-0001", // ZIP or postal code.
+				state: "XX県" // State, county, province, or region.
 			},
 			description: "自分", // An arbitrary string attached to the object. Often useful for displaying to users.
-			email: "oda.mikio@gmail.com", // The customer’s email address.
+			email: "mail@address.com", // The customer’s email address.
 			metadata: {order_id: '6735'}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-			name: "7thCode",  // The customer’s full name or business name.
+			name: "XXXX",  // The customer’s full name or business name.
 			phone: "", // The customer’s phone number.
 			shipping: { // Mailing and shipping address for the customer. Appears on invoices emailed to this customer.
 				address: {
-					city: "西宮市", // City, district, suburb, town, or village.
+					city: "XX市", // City, district, suburb, town, or village.
 					country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-					line1: "安井町", // Address line 1 (e.g., street, PO Box, or company name).
-					line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
-					postal_code: "662-0045", // ZIP or postal code.
-					state: "兵庫県" // State, county, province, or region.
+					line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+					line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
+					postal_code: "100-0001", // ZIP or postal code.
+					state: "XX県" // State, county, province, or region.
 				},
-				name: "織田", // Customer name.
+				name: "山田", // Customer name.
 				phone: "", // Customer phone (including extension).
 			}
 		}
-
 		this.stripeService.updateCustomer(update, (error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (error) {
+						this.errorBar(error);
+					}
+				});
+			} else {
+				this.errorBar(error);
+			}
 		})
 	}
 
-	public deleteCustomer() {
+	/**
+	 */
+	public deleteCustomer(callback: Callback<any>): void {
 		this.stripeService.deleteCustomer((error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (!error) {
+						callback(error, cards);
+					} else {
+						callback(error, null);
+					}
+				});
+			} else {
+				callback(error, null);
+			}
 		})
 	}
 
-	public createSource(card: any, callback: (error: IErrorObject, result: any) => void): void {
+	/**
+	 */
+	public createSource(card: any, callback: Callback<any>): void {
 		this.stripeService.createSource({card: card}, (error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-				callback(error, cards);
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (!error) {
+						callback(error, cards);
+					} else {
+						callback(error, null);
+					}
+				});
+			} else {
+				callback(error, null);
+			}
 		})
 	}
 
+	/**
+	 */
 	public retrieveSource(index: number): void {
 		this.stripeService.retrieveSource(index, (error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (error) {
+						this.errorBar(error);
+					}
+				});
+			} else {
+				this.errorBar(error);
+			}
 		})
 	}
 
+	/**
+	 */
 	public updateSource(index: number, content: any): void {
 		this.stripeService.updateSource(index, content, (error: IErrorObject, result: any) => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+					if (error) {
+						this.errorBar(error);
+					}
+				});
+			} else {
+				this.errorBar(error);
+			}
 		})
 	}
 
+	/**
+	 */
 	public deleteSource(index: number): void {
 		const resultDialogContent: any = {title: "Card", message: "Delete this?"};
 		const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
@@ -468,29 +544,47 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		dialog.afterClosed().subscribe((result: object) => {
 			if (result) { // if not cancel then
 				this.stripeService.deleteSource(index, (error: IErrorObject, result: any) => {
-					this.draw((error: IErrorObject, cards: object[] | null): void => {
-					});
+					if (!error) {
+						this.draw((error: IErrorObject, cards: object[] | null): void => {
+							if (error) {
+								this.errorBar(error);
+							}
+						});
+					} else {
+						this.errorBar(error);
+					}
 				})
 			}
 		});
 	}
 
+	/**
+	 */
 	public updateDefault(id: string) {
 		this.stripeService.updateCustomer({default_source: id}, (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.draw((error: IErrorObject, cards: object[] | null): void => {
-					this.changeDetectorRef.detectChanges();
+					if (!error) {
+						this.changeDetectorRef.detectChanges();
+					} else {
+						this.errorBar(error);
+					}
 				});
+			} else {
+				this.errorBar(error);
 			}
 		})
 	}
 
+	/**
+	 */
 	public charge() {
 
 		const charge = {
 			amount: 100,
 			currency: "jpy",
-			description: "HOGE"
+			description: "HOGE",
+			capture: false
 		}
 
 		this.Progress(true);
@@ -515,8 +609,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			} else {
 				this.errorBar(error);
 			}
-
-		// 	console.log(result);
 
 		})
 	}

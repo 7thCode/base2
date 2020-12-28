@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -15,7 +15,7 @@ const Wrapper: any = require("./wrapper");
 const mongoose: any = require("mongoose");
 
 /**
- *
+ * *　データベースの更新を含むクラスのベース
  */
 export abstract class Updatable extends Wrapper {
 
@@ -33,56 +33,6 @@ export abstract class Updatable extends Wrapper {
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
 	}
-
-	/**
-	 *
-	 * @param current
-	 * @param username
-	 * @returns own
-	 */
-	// private own_by_name(current: any, username: string): boolean {
-	// 	// マネージャ以上は、自分以外のアカウントを変更できる。
-	// 	let readable: boolean = false;
-	// 	if (current.auth < AuthLevel.user) { // is not manager?
-	// 		readable = true;
-	// 	} else {
-	// 		readable = (current.username === username); // is self?
-	// 	}
-	// 	return readable;
-	// }
-//
-	// /**
-	//  *
-	//  * @param current
-	//  * @param user_id
-	//  * @returns own
-	//  */
-	// private own_by_id(current: any, user_id: string): boolean {
-	// 	// マネージャ以上は、自分以外のアカウントを変更できる。
-	// 	let readable: boolean = false;
-	// 	if (current.auth < AuthLevel.user) { // is not manager?
-	// 		readable = true;
-	// 	} else {
-	// 		readable = (current.user_id === user_id); // is self?
-	// 	}
-	// 	return readable;
-	// }
-//
-	/**
-	 *
-	 * @param user
-	 * @returns user
-	 */
-	// protected default_user(user: any): IAccountModel {
-	// 	let result: any = user;
-	// 	if (!result) {
-	// 		result = {
-	// 			user_id: this.systemsConfig.default.user_id,
-	// 			auth: 1,
-	// 		};
-	// 	}
-	// 	return result;
-	// }
 
 	/**
 	 * 検索
@@ -245,7 +195,7 @@ export abstract class Updatable extends Wrapper {
 					objects.forEach((object: any): void => {
 						promises.push(new Promise((resolve: any, reject: any): void => {
 							if (object) {
-								const user_id = new mongoose.Types.ObjectId();
+								const user_id: any = new mongoose.Types.ObjectId();
 								const user: IAccountModel = this.Transform({
 									provider: "local",
 									user_id: user_id,

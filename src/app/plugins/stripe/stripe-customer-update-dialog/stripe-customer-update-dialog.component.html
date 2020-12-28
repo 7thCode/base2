@@ -114,7 +114,7 @@
 							</mat-form-field>
 							<mat-form-field class="input-text">
 								<mat-label>phone...</mat-label>
-								<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.phone" #shipping_phone_field="ngModel" name="shipping_phone" required maxlength="100">
+								<input matInput autocomplete="off" type="text" [(ngModel)]="content.shipping.phone" #shipping_phone_field="ngModel" name="shipping_phone" required maxlength="14">
 								<mat-error *ngIf="shipping_phone_field.errors?.required;">入力してください</mat-error>
 								<mat-error *ngIf="shipping_phone_field.errors?.maxlength">長すぎます</mat-error>
 							</mat-form-field>

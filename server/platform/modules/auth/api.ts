@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -27,10 +27,6 @@ const AppleStrategy: any = require("passport-apple");
 const TwitterStrategy: any = require("passport-twitter").Strategy;
 const InstagramStrategy: any = require("passport-instagram").Strategy;
 const LineStrategy: any = require("passport-line").Strategy;
-
-// const event = module.parent.exports.event;
-// const ConfigModule: any = module.parent.exports.config;
-// const logger: any = module.parent.exports.logger;
 
 const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
@@ -119,9 +115,6 @@ if (usersConfig.initusers) {
 auth.init(init_users, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-	// 	// for Preflight request. (CORS)
-	// 	router.options("*", [gatekeeper.default]);
-
 		router.get("/auth/local/is_logged_in", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
@@ -162,7 +155,6 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-
 		router.post("/auth/local/register", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
@@ -190,7 +182,6 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-
 		router.post("/auth/local/password", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
@@ -217,7 +208,6 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 					auth.post_immediate_password(request, response);
 				});
 			}]);
-
 
 		router.post("/auth/local/username", [gatekeeper.default,
 			(request: any, response: object): void => {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -87,11 +87,9 @@ export class Cipher {
 	 * @returns PublicKey
 	 */
 	public static KeyPair(bits: number): { private: string, public: string } {
-		// RSA
-	 // 	const key: any = new NodeRSA({b: bits});
-	 // 	return {private: key.exportKey("pkcs1-private-pem"), public: key.exportKey("pkcs1-public-pem")};
-
-	 	return { private: "", public: "" };
+	// 	const key: any = new NodeRSA({b: bits});
+	// 	return {private: key.exportKey("pkcs1-private-pem"), public: key.exportKey("pkcs1-public-pem")};
+		return {private: "", public: ""};
 	}
 
 	/**
@@ -101,11 +99,9 @@ export class Cipher {
 	 * @returns crypted text
 	 */
 	public static Encrypt(publickey: string, plain: string): string {
-		// RSA
-	//  	const rsa: any = new NodeRSA(publickey, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
-	//  	return rsa.encrypt(plain, "base64");
-
-	 	return plain;
+	// 	const rsa: any = new NodeRSA(publickey, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+	// 	return rsa.encrypt(plain, "base64");
+		return plain;
 	}
 
 	/**
@@ -115,11 +111,9 @@ export class Cipher {
 	 * @returns plain text
 	 */
 	public static Decrypt(privatekey: string, crypted: string): string {
-		// RSA
 	// 	const rsa: any = new NodeRSA(privatekey, "pkcs1-private-pem", {encryptionScheme: "pkcs1_oaep"});
-	//  	return rsa.decrypt(crypted, "utf8");
-
-	 	return crypted;
+	// 	return rsa.decrypt(crypted, "utf8");
+		return crypted;
 	}
 
 	/**

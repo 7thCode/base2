@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -34,7 +34,7 @@ const cache_root: string = "files/cache/";
 
 file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
-
+/*
 		const cache_write = (user_id: string, _path: string, input: any, callback: (error: IErrorObject) => void): void => {
 			try {
 				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
@@ -61,7 +61,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				callback(error);
 			}
 		};
-
+*/
 		router.get("/files/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);

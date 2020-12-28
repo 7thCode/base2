@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -9,13 +9,8 @@
 const express: any = require("express");
 export const router: any = express.Router();
 
-// const event = module.parent.exports.event;
 const event = require.main.exports.event;
-
-// const logger: any = module.parent.exports.logger;
 const logger: any = require.main.exports.logger;
-
-// const ConfigModule: any = module.parent.exports.config;
 const ConfigModule: any = require.main.exports.config;
 
 const gatekeeper: any = require("../../base/library/gatekeeper");
@@ -26,7 +21,8 @@ const Account: any = require("./controller");
 const accounts: any = new Account(event, ConfigModule, logger);
 
 /*
-*
+* Account Query
+* only manager use.
 */
 router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -40,7 +36,8 @@ router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeepe
 	}]);
 
 /*
-*
+* Account Count
+* only manager use.
 */
 router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -54,7 +51,8 @@ router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authen
 	}]);
 
 /*
-*
+* Account Get
+* use own or manager only.
 */
 router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -68,7 +66,8 @@ router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 	}]);
 
 /*
-*
+* Account Put
+* use own or manager only.
 */
 router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -82,7 +81,8 @@ router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 	}]);
 
 /*
-*
+* Account get own
+* own use only.
 */
 router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 	(request: any, response: object): void => {
@@ -93,7 +93,8 @@ router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 	}]);
 
 /*
-*
+* Account put own
+* own use only.
 */
 router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 	(request: any, response: object): void => {
@@ -104,7 +105,8 @@ router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 	}]);
 
 /*
-*
+* Account Delete
+* use own or manager only.
 */
 router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -118,7 +120,8 @@ router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authent
 	}]);
 
 /*
-*
+* Account is 2 phase auth?
+* use own or manager only.
 */
 router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -132,7 +135,8 @@ router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.auth
 	}]);
 
 /*
-*
+* set Account 2 phase auth.
+* use own or manager only.
 */
 router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -146,7 +150,8 @@ router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.a
 	}]);
 
 /*
-*
+* reset Account 2 phase auth.
+* use own or manager only.
 */
 router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
@@ -160,8 +165,8 @@ router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper
 	}]);
 
 /*
-*
 */
+/*
 router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
@@ -172,10 +177,11 @@ router.get("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 			accounts.get_by_id(request, response);
 		});
 	}]);
-
+*/
 /*
 *
 */
+/*
 router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
@@ -186,10 +192,11 @@ router.put("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate
 			accounts.put_by_id(request, response);
 		});
 	}]);
-
+*/
 /*
 *
 */
+/*
 router.delete("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authenticate,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
@@ -200,5 +207,5 @@ router.delete("/accounts/id/:user_id", [gatekeeper.default, gatekeeper.authentic
 			accounts.delete_by_id(request, response);
 		});
 	}]);
-
+*/
 module.exports = router;

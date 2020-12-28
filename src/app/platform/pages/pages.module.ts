@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -21,7 +21,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
-import {AngularEditorModule} from "@kolkov/angular-editor";
+// import {AngularEditorModule} from "@kolkov/angular-editor";
 import {AceEditorModule} from "ngx-ace-editor-wrapper";
 
 import {BaseModule} from "../base/base.module";
@@ -60,7 +60,7 @@ import {PagesService} from "./pages.service";
  		MatSlideToggleModule,
 
 		AceEditorModule,
-		AngularEditorModule,
+// 		AngularEditorModule,
 		PageEditModule,
 
 		BaseModule,

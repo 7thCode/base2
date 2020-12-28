@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -26,6 +26,9 @@ export class Session extends Wrapper {
 	}
 
 	/**
+	 *
+	 *
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -43,8 +46,10 @@ export class Session extends Wrapper {
 		}
 	}
 
-
 	/**
+	 *
+	 *
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none

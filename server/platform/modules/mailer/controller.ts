@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -12,9 +12,11 @@ import {IAccountModel} from "../../../../types/platform/server";
 
 const Mail: any = require("../../../../server/platform/base/controllers/mail_controller");
 
-/**
- *
- */
+/*
+*
+*
+*
+*/
 export class Mailer extends Mail {
 
 	/**
@@ -30,6 +32,12 @@ export class Mailer extends Mail {
 
 	/**
 	 *
+	 *
+	 *
+	 * @param request
+	 * @param response
+	 * @param callback
+	 * @return none
 	 */
 	private openMailbox(request: any, response: any, callback: (error: IErrorObject, imap: any, option: any) => void): void {
 		if (request.user) {
@@ -59,6 +67,8 @@ export class Mailer extends Mail {
 
 	/**
 	 *
+	 * query message.
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -82,7 +92,9 @@ export class Mailer extends Mail {
 	}
 
 	/**
+	 *
 	 * Message Get
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -104,7 +116,9 @@ export class Mailer extends Mail {
 	}
 
 	/**
+	 *
 	 * SEND Message
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -138,6 +152,9 @@ export class Mailer extends Mail {
 	}
 
 	/**
+	 *
+	 * messagew delete.
+	 *
 	 * Message Delete
 	 * @param request
 	 * @param response
@@ -160,7 +177,9 @@ export class Mailer extends Mail {
 	}
 
 	/**
-	 * Message Delete
+	 *
+	 * set flag
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -183,6 +202,9 @@ export class Mailer extends Mail {
 	}
 
 	/**
+	 *
+	 * remove flag
+	 *
 	 * Message Delete
 	 * @param request
 	 * @param response

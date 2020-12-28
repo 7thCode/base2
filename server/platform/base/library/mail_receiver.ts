@@ -1,22 +1,16 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {IMailReceiverModule} from "../../../../types/platform/server";
 
 const inbox = require("inbox");
 
-// const simpleParser = require('mailparser').simpleParser;
-
-// const iconv = require('iconv');
-// const conv = new iconv.Iconv("ISO-2022-JP", "UTF-8");
-
-// const Iconv = require('iconv').Iconv;
 const simpleParser = require('mailparser').simpleParser;
 
 export class MailReceiver implements IMailReceiverModule {
@@ -39,7 +33,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public addFlags(imap: any,UID: string, flags: string[], callback: (error: any, flags: any) => void) {
+	public addFlags(imap: any,UID: string, flags: string[], callback: Callback<any>) {
 		try {
 			if (imap) {
 				imap.addFlags(UID, flags, (error: any, flags: any) => {
@@ -56,7 +50,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public removeFlags(imap: any,UID: string, flags: string[], callback: (error: any, flags: any) => void) {
+	public removeFlags(imap: any,UID: string, flags: string[], callback: Callback<any>) {
 		try {
 			if (imap) {
 				imap.removeFlags(UID, flags, (error: any, flags: any) => {
@@ -73,7 +67,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public listMessages(imap: any, start: number, limit: number, callback: (error: any, messages: any) => void) {
+	public listMessages(imap: any, start: number, limit: number, callback: Callback<any>) {
 		try {
 			if (imap) {
 				imap.listMessages(start, limit, (error: any, messages: any) => {
@@ -90,7 +84,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public getMessage(imap: any, UID: string, callback: (error: IErrorObject, mail: any) => void): void {
+	public getMessage(imap: any, UID: string, callback: Callback<any>): void {
 		try {
 			if (imap) {
 				const stream = imap.createMessageStream(UID);
@@ -175,7 +169,7 @@ export class MailReceiver implements IMailReceiverModule {
 	 * @param name
 	 * @param callback
 	 */
-	public open(imap: any, name: string, callback: (error: any, message: any) => void): void {
+	public open(imap: any, name: string, callback: Callback<any>): void {
 		try {
 			if (imap) {
 				imap.openMailbox(name, (error: any, info: any) => {

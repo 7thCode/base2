@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {HttpClient} from "@angular/common/http";
 import {Component, HostListener, Input, OnChanges, OnInit} from "@angular/core";
@@ -20,6 +20,7 @@ import {environment} from '../../../environments/environment';
 import {SessionService} from "../base/services/session.service";
 import {ResizeDialogComponent} from "./resize-dialog/resize-dialog.component";
 import {FilesService} from "../files/files.service";
+import {IAccountModel} from "../../../../types/platform/server";
 
 /**
  * イメージ
@@ -186,10 +187,10 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	/*
 *
 * */
-	public resizeDialog(file: any, image: any, callback: (error: IErrorObject, result: any) => void): void {
+	public resizeDialog(file: any, image: any, callback: Callback<any>): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
-			width: "30%",
+			// width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {
@@ -214,10 +215,58 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		});
 	}
 
+	/**
+	 *
+	 * @param event
+	 */
+	public updateDialog(event: any): void {
+
+		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
+			data: {content: event.target, filename: this.fileName},
+			disableClose: true,
+		});
+
+		dialog.afterOpened().subscribe(() => {
+		});
+
+		dialog.beforeClosed().subscribe((result: any): void => {
+			if (result) { // if not cancel then
+				switch (result.command) {
+					case "cancel":
+						break;
+					case "update":
+						this.upload(this.fileName, result.content, (error: IErrorObject, result: any): void => {
+							if (!error) {
+								this.draw(this.fileName);
+								this.Complete("update", {name: this.fileName});
+							} else {
+								this.Complete("error", error);
+							}
+						});
+						break;
+					case "delete":
+						this.delete(this.fileName, (error: IErrorObject, result: any): void => {
+							if (!error) {
+								this.Complete("delete", {name: this.fileName});
+							} else {
+								this.Complete("error", error);
+							}
+						});
+						break;
+				}
+			}
+		});
+
+		dialog.afterClosed().subscribe((result: any): void => {
+
+		});
+
+	}
+
 	/*
 	*
 	* */
-	public getImage(target_file: any, callback: (error: IErrorObject, result: any) => void): void {
+	public getImage(target_file: any, callback: Callback<any>): void {
 		const reader = new FileReader();
 		const image = new Image();
 		reader.onload = (event) => {
@@ -281,52 +330,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		}
 	}
 
-	/**
-	 *
-	 * @param event
-	 */
-	public updateDialog(event: any): void {
 
-		const dialog: MatDialogRef<any> = this.matDialog.open(ImageDialogComponent, {
-			data: {content: event.target, filename: this.fileName},
-			disableClose: true,
-		});
-
-		dialog.afterOpened().subscribe(() => {
-		});
-
-		dialog.beforeClosed().subscribe((result: any): void => {
-			if (result) { // if not cancel then
-				switch (result.command) {
-					case "cancel":
-						break;
-					case "update":
-						this.upload(this.fileName, result.content, (error: IErrorObject, result: any): void => {
-							if (!error) {
-								this.draw(this.fileName);
-								this.Complete("update", {name: this.fileName});
-							} else {
-								this.Complete("error", error);
-							}
-						});
-						break;
-					case "delete":
-						this.delete(this.fileName, (error: IErrorObject, result: any): void => {
-							if (!error) {
-								this.Complete("delete", {name: this.fileName});
-							} else {
-								this.Complete("error", error);
-							}
-						});
-						break;
-				}
-			}
-		});
-
-		dialog.afterClosed().subscribe((result: any): void => {
-
-		});
-
-	}
 
 }

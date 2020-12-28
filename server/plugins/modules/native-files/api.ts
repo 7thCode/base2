@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -10,10 +10,6 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 const express: any = require("express");
 export const router: any = express.Router();
-
-// const event: any = module.parent.exports.event;
-// const logger: any = module.parent.exports.logger;
-// const ConfigModule: any = module.parent.exports.config;
 
 const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;

@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
 
 "use strict";
 
-import {IErrorObject} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {IMailReceiverModule, IMailSenderModule} from "../../../../types/platform/server";
 
@@ -27,7 +27,7 @@ const MailGun: any = require("../../../../server/platform/base/library/mail_send
 const SendGrid: any = require("../../../../server/platform/base/library/mail_sender_sendgrid");
 
 /**
- *
+ * Base class for classes that need to send email.
  */
 export class Mail extends Wrapper {
 
@@ -86,7 +86,9 @@ export class Mail extends Wrapper {
 	}
 
 	/**
-	 * send mail
+	 *
+	 * parse content
+	 *
 	 * @param mailConfig
 	 * @param callback
 	 * @returns none
@@ -103,7 +105,7 @@ export class Mail extends Wrapper {
 								if (!error) {
 									const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
 
-									let text = "";
+									let text: string = "";
 									const text_lines = mailConfig.source_object.text.content.text;
 									const value = {link: mailConfig.link};
 									if (text_lines) {
@@ -123,8 +125,8 @@ export class Mail extends Wrapper {
 						}
 					} else {
 						if (mailConfig.source_object.text) {
-							let text = "";
-							const text_lines = mailConfig.source_object.text.content.text;
+							let text: string = "";
+							const text_lines: string[] = mailConfig.source_object.text.content.text;
 							if (text_lines) {
 								text_lines.forEach((line: string) => {
 									text += line + "\n";
@@ -149,14 +151,16 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * send mail
+	 *
 	 * @param mailConfig
 	 * @param callback
 	 * @returns none
 	 */
-	protected sendMail(mailConfig: any, callback: (error: IErrorObject, result: any) => void): void {
+	protected sendMail(mailConfig: any, callback: Callback<any>): void {
 		if (this.sender) {
-			this.parseContent(mailConfig, (error, text, html) => {
+			this.parseContent(mailConfig, (error: IErrorObject, text:string, html: string): void => {
 				if (!error) {
 					this.sender.send(mailConfig.address, mailConfig.bcc, mailConfig.title, text, html, (error: IErrorObject): void => {
 						if (!error) {
@@ -174,27 +178,15 @@ export class Mail extends Wrapper {
 		}
 	}
 
-	/**
-	 * receive mail
-	 * @param start
-	 * @param limit
-	 * @param callback
-	 * @returns none
-	 */
-	// protected receiveMail(start: number,limit: number, callback:(error:IErrorObject, result: any) => void): void {
-	// 	if (this.receiver) {
-	// 		this.receiver.connect("INBOX", start, limit, callback);
-	// 	} else {
-	// 		callback({code : 1, message: "no receiver"}, null);
-	// 	}
-	// }
 
 	/**
+	 *
 	 * get message
+	 *
 	 * @param handler
 	 * @returns none
 	 */
-	protected connect(handler: (error: any, type: string, message: any) => void): void {
+	protected connect(handler: (error: IErrorObject, type: string, message: any) => void): void {
 		if (this.receiver) {
 			this.receiver.connect(handler);
 		} else {
@@ -203,12 +195,14 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * get message
+	 *
 	 * @param name
 	 * @param callback
 	 * @returns none
 	 */
-	protected open(imap: any, name: string, callback: (error: any, message: any) => void): void {
+	protected open(imap: any, name: string, callback: Callback<any>): void {
 		if (imap) {
 			if (this.receiver) {
 				this.receiver.open(imap, name, callback);
@@ -221,7 +215,9 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * get message
+	 *
 	 * @returns none
 	 */
 	protected close(imap: any): void {
@@ -233,13 +229,16 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * list messages
+	 *
+	 * @param imap
 	 * @param start
 	 * @param limit
 	 * @param callback
 	 * @returns none
 	 */
-	protected listMessages(imap: any, start: number, limit: number, callback: (error: any, messages: any) => void) {
+	protected listMessages(imap: any, start: number, limit: number, callback: Callback<any>) {
 		if (imap) {
 			if (this.receiver) {
 				this.receiver.listMessages(imap, start, limit, callback);
@@ -252,13 +251,15 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * get message
+	 *
 	 * @param imap
 	 * @param UID
 	 * @param callback
 	 * @returns none
 	 */
-	protected getMessage(imap: any, UID: string, callback: (error: IErrorObject, result: any) => void): void {
+	protected getMessage(imap: any, UID: string, callback: Callback<any>): void {
 		if (imap) {
 			if (this.receiver) {
 				this.receiver.getMessage(imap, UID, callback);
@@ -271,7 +272,9 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * delete message
+	 *
 	 * @param imap
 	 * @param UID
 	 * @param callback
@@ -290,7 +293,9 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * delete message
+	 *
 	 * @param imap
 	 * @param UID
 	 * @param flags
@@ -310,7 +315,9 @@ export class Mail extends Wrapper {
 	}
 
 	/**
+	 *
 	 * delete message
+	 *
 	 * @param imap
 	 * @param UID
 	 * @param flags

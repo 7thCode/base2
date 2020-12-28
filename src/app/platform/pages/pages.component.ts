@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -124,7 +124,6 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 		};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
-			width: "50%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {content: this.toView(initalData)},

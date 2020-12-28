@@ -34,17 +34,17 @@
 					</div>
 
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-						<button mat-icon-button (click)="updateCardDialog(card.id)">
+					<!--	<button mat-icon-button (click)="updateCardDialog(card.id)">
 							<mat-icon color="primary">edit</mat-icon>
-						</button>
+						</button> -->
 						<button mat-icon-button *ngIf="card.is_default">
 							<mat-icon style="color:#ffefa9" matTooltip="Default">grade</mat-icon>
 						</button>
 						<button mat-icon-button *ngIf="!card.is_default" (click)="updateDefault(card.id)">
 							<mat-icon style="color:#c89e10"  matTooltip="to Default">star</mat-icon>
 						</button>
-						<button mat-icon-button  (click)="deleteSource(i)">
-							<mat-icon color="warn" *ngIf="!card.is_default" >delete_sweep</mat-icon>
+						<button mat-icon-button (click)="deleteSource(i)">
+							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
 					</mat-grid-tile-footer>
 

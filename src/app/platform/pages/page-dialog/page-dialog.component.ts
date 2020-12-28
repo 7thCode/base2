@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -11,7 +11,7 @@ import {IEmit} from "../../../../../types/platform/universe";
 import {Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {AngularEditorConfig} from "@kolkov/angular-editor";
+// import {AngularEditorConfig} from "@kolkov/angular-editor";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 /**
@@ -49,9 +49,11 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	public pageContent = new FormControl("");
 
 	// angular-html-editor
+
 	/**
 	 *
 	 */
+	/*
 	public editorConfig: AngularEditorConfig = {
 		editable: true,
 		spellcheck: true,
@@ -76,7 +78,7 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 			},
 		],
 	};
-
+*/
 	/**
 	 * @constructor
 	 * @param data
@@ -88,7 +90,6 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 		public matDialogRef: MatDialogRef<PageDialogComponent>) {
 		super();
 	}
-
 
 	// color
 	// date
@@ -134,7 +135,6 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	 *
 	 */
 	public test() {
-
 		// page-edit
 		this.description = {
 			type: "element", layout: "column", elements: [

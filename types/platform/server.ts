@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -286,6 +286,7 @@ export interface IContentRequest {
 	params: any;
 	user: any;
 	login(user: object, callback: (error: IErrorObject) => void): void;
+	logout(): void;
 }
 
 export interface IUserRequest {
@@ -302,7 +303,10 @@ export interface IRedirectResponse {
 }
 
 export interface IJSONResponse {
+	header(name:string, mime: string): void;
+	type(type: string): void;
 	jsonp(result: object): void;
+	send(result: string): void;
 	status(status: number): any;
 }
 

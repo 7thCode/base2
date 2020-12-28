@@ -9,10 +9,7 @@
 import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
-
 const _: any = require("lodash");
-
-// import Stripe from 'stripe';
 
 const _Stripe: any = require('stripe')
 
@@ -33,7 +30,8 @@ interface ICharge {
 	amount: number,
 	currency: string,
 	description: string,
-	customer: string
+	customer: string,
+	capture: boolean
 }
 
 export class Stripe extends Mail {
@@ -42,6 +40,7 @@ export class Stripe extends Mail {
 	private enable: boolean = false;
 
 	private message: any;
+	private module_config: any;
 
 	/**
 	 *
@@ -54,6 +53,7 @@ export class Stripe extends Mail {
 		super(event, config, logger);
 		this.message = config.systems.message;
 		if (config.systems.modules.stripe) {
+			this.module_config = config.systems.modules.stripe;
 			if (config.systems.modules.stripe.key) {
 				// const key = config.plugins.stripe.key;
 				const key = config.systems.modules.stripe.key;
@@ -153,11 +153,11 @@ export class Stripe extends Mail {
 				if (!error) {
 					callback(null, JSON.parse(plain));
 				} else {
-					callback({code: 2, message: "unknown error. 5977"}, {});
+					callback({code: -2, message: "unknown error. 5977"}, {});
 				}
 			});
 		} catch (error) {
-			callback({code: 3, message: "unknown error. 7713"}, {});
+			callback({code: -3, message: "unknown error. 7713"}, {});
 		}
 	}
 
@@ -167,7 +167,7 @@ export class Stripe extends Mail {
 	 * @param callback
 	 * @returns none
 	 */
-	private get_self(operator: IAccountModel, callback: (error: IErrorObject, result: any) => void): void {
+	private get_self(operator: IAccountModel, callback: Callback<any>): void {
 		LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
 			callback(null, account);
 		}).catch((error: IErrorObject) => {
@@ -182,7 +182,7 @@ export class Stripe extends Mail {
 	 * @param callback
 	 * @returns none
 	 */
-	private put_self(operator: IAccountModel, update: object, callback: (error: IErrorObject, result: any) => void): void {
+	private put_self(operator: IAccountModel, update: object, callback: Callback<IAccountModel>): void {
 		LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
 			callback(null, account);
 		}).catch((error: IErrorObject) => {
@@ -208,7 +208,7 @@ export class Stripe extends Mail {
 	/**
 	 *
 	 */
-	public put_id(response: any, operator: any, customer_id: string, callback: (result: string) => void) {
+	public put_id(response: any, operator: any, customer_id: string, callback: (customer_id: string) => void) {
 		this.put_self(operator, {"content.stripe_id": customer_id}, (error, account) => {
 			this.ifSuccess(response, error, (): void => {
 				callback(customer_id);
@@ -228,10 +228,38 @@ export class Stripe extends Mail {
 					this.get_id(response, operator, (customer_id: string) => {
 						if (!customer_id) {
 							this.logger.info('begin createCustomer. ' + customer_email);
-							this.stripe.customers.create({
+
+							const update = {
 								email: customer_email,
 								description: operator.user_id,
-							}).then((customer: any) => {
+								address: {  // The customer’s address.
+									city: "XX市", // City, district, suburb, town, or village.
+									country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
+									line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+									line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
+									postal_code: "100-0001", // ZIP or postal code.
+									state: "XX県" // State, county, province, or region.
+								},
+								metadata: {order_id: '6735'}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+								name: "XXXX",  // The customer’s full name or business name.
+								phone: "", // The customer’s phone number.
+								shipping: { // Mailing and shipping address for the customer. Appears on invoices emailed to this customer.
+									address: {
+										city: "XX市", // City, district, suburb, town, or village.
+										country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
+										line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+										line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
+										postal_code: "100-0001", // ZIP or postal code.
+										state: "XX県" // State, county, province, or region.
+									},
+									name: "山田", // Customer name.
+									phone: "", // Customer phone (including extension).
+								}
+							}
+
+							this.stripe.customers.create(
+								update
+							).then((customer: any) => {
 								this.logger.info('end createCustomer. ' + customer_email);
 								this.put_id(response, operator, customer.id, (customer_id: string) => {
 									this.SendSuccess(response, customer_id);
@@ -244,13 +272,88 @@ export class Stripe extends Mail {
 						}
 					});
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: -1, message: "not logged in."});
 				}
 			});
 		} catch (error) {
 			this.SendError(response, error);
 		}
 	}
+
+	/**
+	 *
+	 *
+	 * @param operator
+	 * @param callback
+	 * @returns none
+	 */
+	public payable(operator: any, callback: Callback<boolean>): void {
+		this.operatorToCustomer(operator, (error: IErrorObject, customer: any) => {
+			if (!error) {
+				if (customer) {
+					callback(null, Boolean(customer.default_source)); // no card.
+				} else {
+					callback(null, false); // not payment customer.
+				}
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+	/**
+	 * @param operator
+	 * @param callback
+	 * @returns none
+	 */
+	public operatorToCustomer(operator: any, callback: Callback<IAccountModel>): void {
+		try {
+			LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
+				if (account.content.stripe_id) {
+					this.stripe.customers.retrieve(account.content.stripe_id).then((customer: any) => {
+						callback(null, customer);
+					}).catch((error: any) => {
+						callback(error, null);
+					});
+				} else {
+					callback(null, null);
+				}
+			}).catch((error: IErrorObject) => {
+				callback(error, null);
+			});
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+
+	/**
+	 * create card
+	 * もしoperatorにcustomer_idが存在しないならcustomerを作成してcardを作成。
+	 * tokensは本来clientで作成するべきだが、stripe.tokens.createの仕様が糞っぽい（HTML Element直接渡す、とか臭い)ので、別途暗号化する。
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public isCustomer(request: any, response: IJSONResponse): void {
+		try {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
+
+					const operator: IAccountModel = this.Transform(request.user);
+					this.get_id(response, operator, (customer_id: string) => {
+						this.SendSuccess(response, Boolean(customer_id));
+					});
+
+				} else {
+					this.SendError(response, {code: -1, message: "disabled."});
+				}
+			});
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
+
 
 	/**
 	 * @param request
@@ -283,11 +386,11 @@ export class Stripe extends Mail {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 1, message: "not."});
+							this.SendSuccess(response, null);  // no customer
 						}
 					});
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: -1, message: "not logged in."});
 				}
 			});
 		} catch (error) {
@@ -313,11 +416,11 @@ export class Stripe extends Mail {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 1, message: "not."});
+							this.SendError(response, {code: 1, message: "no customer. 2"});
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "not logged in."});
+					this.SendError(response, {code: -1, message: "not logged in."});
 				}
 			});
 		} catch (error) {
@@ -347,11 +450,11 @@ export class Stripe extends Mail {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 1, message: "not."});
+							this.SendError(response, {code: 1, message: "no customer. 3"});
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "disabled."});
+					this.SendError(response, {code: -1, message: "disabled."});
 				}
 			});
 		} catch (error) {
@@ -376,13 +479,38 @@ export class Stripe extends Mail {
 							const operator: IAccountModel = this.Transform(request.user);
 							const card = value.card;// request.body.card; // todo : 暗号化
 							this.get_id(response, operator, (customer_id: string) => {
-								if (!customer_id) {
-									const customer_email = request.body.email;
-									this.logger.info('begin createCustomer. ' + customer_email);
-									this.stripe.customers.create({
-										email: customer_email,
+								if (customer_id) {
+
+									/*
+									const customer_email = operator.username;
+									const update = {
+										email: 		operator.username,
 										description: operator.user_id,
-									}).then((customer: any) => {
+										address: {  // The customer’s address.
+											city: "XX市", // City, district, suburb, town, or village.
+											country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
+											line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+											line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
+											postal_code: "100-0001", // ZIP or postal code.
+											state: "XX県" // State, county, province, or region.
+										},
+										metadata: {order_id: '6735'}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+										name: "XXXX",  // The customer’s full name or business name.
+										phone: "", // The customer’s phone number.
+										shipping: { // Mailing and shipping address for the customer. Appears on invoices emailed to this customer.
+											address: {
+												city: "XX市", // City, district, suburb, town, or village.
+												country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
+												line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
+												line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
+												postal_code: "100-0001", // ZIP or postal code.
+												state: "XX県" // State, county, province, or region.
+											},
+											name: "山田", // Customer name.
+											phone: "", // Customer phone (including extension).
+										}
+									}
+									this.stripe.customers.create(update).then((customer: any) => {
 										this.stripe.tokens.create({
 											card: card
 										}).then((token: any) => {
@@ -405,11 +533,11 @@ export class Stripe extends Mail {
 									}).catch((error: any) => {
 										this.SendError(response, error);
 									});
+
 								} else {
+									*/
 									const customer_email = operator.username;
-									this.stripe.tokens.create({
-										card: card
-									}).then((token: any) => {
+									this.stripe.tokens.create({card: card}).then((token: any) => {
 										const params = {
 											source: token.id
 										};
@@ -423,12 +551,14 @@ export class Stripe extends Mail {
 									}).catch((error: any) => {
 										this.SendError(response, error);
 									})
+								} else {
+									this.SendError(response, {code: 1, message: "no customer. 4"});
 								}
 							});
 						});
 					});
 				} else {
-					this.SendError(response, {code: 1, message: "disabled."});
+					this.SendError(response, {code: -1, message: "disabled."});
 				}
 			});
 		} catch (error) {
@@ -442,7 +572,6 @@ export class Stripe extends Mail {
 	 * @param response
 	 * @returns none
 	 */
-
 	public retrieveSource(request: any, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
@@ -468,11 +597,11 @@ export class Stripe extends Mail {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 1, message: "not."});
+							this.SendError(response, {code: 1, message: "no customer. 5"});
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "disabled."});
+					this.SendError(response, {code: -1, message: "disabled."});
 				}
 			});
 		} catch (error) {
@@ -512,11 +641,11 @@ export class Stripe extends Mail {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 1, message: "not."});
+							this.SendError(response, {code: 1, message: "no customer. 6"});
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "disabled."});
+					this.SendError(response, {code: -1, message: "disabled."});
 				}
 			});
 		} catch (error) {
@@ -555,11 +684,11 @@ export class Stripe extends Mail {
 								this.SendError(response, error);
 							});
 						} else {
-							this.SendError(response, {code: 1, message: "not."});
+							this.SendError(response, {code: 1, message: "no customer. 7"});
 						}
 					})
 				} else {
-					this.SendError(response, {code: 1, message: "disabled."});
+					this.SendError(response, {code: -1, message: "disabled."});
 				}
 			});
 		} catch (error) {
@@ -567,6 +696,100 @@ export class Stripe extends Mail {
 		}
 	}
 
+	/**
+	 */
+	public sendReceipt(mailto: { address: string, charge: any, customer: any }, callback: Callback<any>): void {
+		const card = mailto.charge.payment_method_details.card;
+		const mail_object = this.module_config.receiptmail;
+		mail_object.html.content.text = mail_object.text.content.text = [
+			`amount: ¥${mailto.charge.amount}`,
+			`status: ${mailto.charge.outcome.seller_message}`,
+			`card: ${card.brand}`,
+			`last4: ${card.last4}`,
+			`expired: ${card.exp_month}/${card.exp_year}`,
+			`description: ${mailto.charge.description}`,
+			`${JSON.stringify(mailto.customer.shipping)}`
+		]
+
+		this.sendMail({
+			address: mailto.address,
+			bcc: this.bcc,
+			title: "Recept",
+			template_url: "views/plugins/stripe/mail/mail_template.pug",
+			source_object: mail_object,
+			link: mailto.charge.receipt_url,
+			result_object: {code: 0, message: ["Prease Wait.", ""]},
+		}, (error: IErrorObject, result: any) => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+	/**
+	 * チャージ
+	 * @param request
+	 * @param charge
+	 * @param callback
+	 * @returns none
+	 */
+	public charge(request: any, charge: { customer: string, amount: number, currency: string, description: string, capture: boolean }, callback: Callback<any>): void {
+		try {
+			if (request.user) {
+				if (this.enable) {
+					const operator: IAccountModel = this.Transform(request.user);
+					this.get_self(operator, (error, account) => {
+						if (!error) {
+							const customer_id = account.content.stripe_id;
+							if (customer_id) {
+								this.stripe.customers.retrieve(customer_id).then((customer: any) => {
+									charge.customer = customer_id;
+									this.stripe.charges.create(charge).then((charge: any) => {
+										if (charge.payment_method_details.card) {
+
+											// 			this.stripe.issuing.authorizations.list({}).then((charges: any) => {
+											// 				console.log(charges);
+											// 			})
+
+											// 			const chargeId: any = charge.id;
+
+											// 			this.stripe.charges.capture(chargeId).then((charges: any) => {
+											// 				console.log(charges);
+											// 			});
+
+											//  		this.stripe.refunds.create({charge: chargeId}).then((charges: any) => {
+											//  			console.log(charges);
+											//  		});
+
+											callback(null, {address: customer.email || operator.username, charge: charge, customer: customer});
+										} else {
+											callback({code: 1000, message: "Stripe error."}, null);
+										}
+									}).catch((error: any) => {
+										callback(error, null);
+									})
+								}).catch((error: any) => {
+									callback(error, null);
+								});
+							} else {
+								callback({code: 1, message: "no customer. 8"}, null);
+							}
+						} else {
+							callback(error, null);
+						}
+					})
+				} else {
+					callback({code: -2, message: "disabled."}, null);
+				}
+			} else {
+				callback({code: -1, message: "not logged in."}, null);
+			}
+		} catch (error) {
+			callback(error, null);
+		}
+	}
 
 	/**
 	 * チャージ
@@ -574,213 +797,20 @@ export class Stripe extends Mail {
 	 * @param response
 	 * @returns none
 	 */
-	public charge(request: any, response: IJSONResponse): void {
-		try {
-			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
-				if (this.enable) {
-					const operator: IAccountModel = this.Transform(request.user);
-					this.get_id(response, operator, (customer_id: string) => {
-						if (customer_id) {
-
-							this.stripe.customers.retrieve(customer_id).then((customer: any) => {
-
-								/*
-								const resept = {
-									"id": "ch_1HLM4PKQOTxsQU5nIdOIiAzL",
-									"object": "charge",
-									"amount": 100,
-									"amount_refunded": 0,
-									"application": null,
-									"application_fee": null,
-									"application_fee_amount": null,
-									"balance_transaction": "txn_1HLM4QKQOTxsQU5ntsATZWce",
-									"billing_details": {
-										"address": {
-											"city": null,
-											"country": null,
-											"line1": null,
-											"line2": null,
-											"postal_code": null,
-											"state": null
-										},
-										"email": null,
-										"name": null,
-										"phone": null
-									},
-									"calculated_statement_descriptor": "Stripe",
-									"captured": true,
-									"created": 1598676821,
-									"currency": "jpy",
-									"customer": "cus_Hu792A3BKGiJ6a",
-									"description": "HOGE",
-									"destination": null,
-									"dispute": null,
-									"disputed": false,
-									"failure_code": null,
-									"failure_message": null,
-									"fraud_details": {},
-									"invoice": null,
-									"livemode": false,
-									"metadata": {},
-									"on_behalf_of": null,
-									"order": null,
-									"outcome": {
-										"network_status": "approved_by_network",
-										"reason": null,
-										"risk_level": "normal",
-										"risk_score": 51,
-										"seller_message": "Payment complete.",
-										"type": "authorized"
-									},
-									"paid": true,
-									"payment_intent": null,
-									"payment_method": "card_1HKJWYKQOTxsQU5niG8FIHFC",
-									"payment_method_details": {
-										"card": {
-											"brand": "visa",
-											"checks": {
-												"address_line1_check": null,
-												"address_postal_code_check": null,
-												"cvc_check": null
-											},
-											"country": "US",
-											"exp_month": 2,
-											"exp_year": 2022,
-											"fingerprint": "1Ed8BAGBi3S4kLkH",
-											"funding": "credit",
-											"installments": null,
-											"last4": "4242",
-											"network": "visa",
-											"three_d_secure": null,
-											"wallet": null
-										},
-										"type": "card"
-									},
-									"receipt_email": null,
-									"receipt_number": null,
-									"receipt_url": "https://pay.stripe.com/receipts/acct_1EXzuTKQOTxsQU5n/ch_1HLM4PKQOTxsQU5nIdOIiAzL/rcpt_HvCT7kuMhFtn6u5QJBnuPVFVmaUFV8H",
-									"refunded": false,
-									"refunds": {
-										"object": "list",
-										"data": [],
-										"has_more": false,
-										"total_count": 0,
-										"url": "/v1/charges/ch_1HLM4PKQOTxsQU5nIdOIiAzL/refunds"
-									},
-									"review": null,
-									"shipping": null,
-									"source": {
-										"id": "card_1HKJWYKQOTxsQU5niG8FIHFC",
-										"object": "card",
-										"address_city": null,
-										"address_country": null,
-										"address_line1": null,
-										"address_line1_check": null,
-										"address_line2": null,
-										"address_state": null,
-										"address_zip": null,
-										"address_zip_check": null,
-										"brand": "Visa",
-										"country": "US",
-										"customer": "cus_Hu792A3BKGiJ6a",
-										"cvc_check": null,
-										"dynamic_last4": null,
-										"exp_month": 2,
-										"exp_year": 2022,
-										"fingerprint": "1Ed8BAGBi3S4kLkH",
-										"funding": "credit",
-										"last4": "4242",
-										"metadata": {},
-										"name": null,
-										"tokenization_method": null
-									},
-									"source_transfer": null,
-									"statement_descriptor": null,
-									"statement_descriptor_suffix": null,
-									"status": "succeeded",
-									"transfer_data": null,
-									"transfer_group": null
-								}
-								*/
-								/*
-								const owner_detail = {
-									address: customer.address,
-									description: customer.description,
-									email: customer.email,
-									metadata: customer.metadata,
-									name: customer.name,
-									phone: customer.phone,
-									shipping: customer.shipping
-								}
-								*/
-
-								const charge = request.body;
-								charge.customer = customer_id;
-								this.stripe.charges.create(request.body).then((charge: any) => {
-									if (charge.payment_method_details.card) {
-										const card = charge.payment_method_details.card;
-										const receipt_mail = {
-											header: {
-												title: "Recept",
-												text: "Recept",
-											},
-											content: {
-												title: "Recept",
-												text: [
-													`amount: ¥${charge.amount}`,
-													`status: ${charge.outcome.seller_message}`,
-													`card: ${card.brand}`,
-													`last4: ${card.last4}`,
-													`expired: ${card.exp_month}/${card.exp_year}`,
-													`description: ${charge.description}`,
-													`${JSON.stringify(customer.shipping)}`
-												],
-											},
-											button: {
-												title: "Recept",
-											},
-											footer: {
-												text: "Copyright © 2020 seventh-code. All rights reserved.",
-											},
-										};
-
-										// 		const mail_object =	this.message.registmail;
-
-										this.sendMail({
-											address: customer.email || operator.username,
-											bcc: this.bcc,
-											title: "Recept",
-											template_url: "views/plugins/stripe/mail/mail_template.pug",
-											source_object: receipt_mail,
-											link: charge.receipt_url,
-											result_object: {code: 0, message: ["Prease Wait.", ""]},
-										}, (error: IErrorObject, result: any) => {
-											if (!error) {
-												this.SendSuccess(response, charge);
-											} else {
-												this.SendError(response, error);
-											}
-										});
-									} else {
-										this.SendError(response, {code: 1000, message: "Stripe error."});
-									}
-								}).catch((error: any) => {
-									this.SendError(response, error);
-								})
-							}).catch((error: any) => {
-								this.SendError(response, error);
-							});
-						} else {
-							this.SendError(response, {code: 1, message: "not."});
-						}
-					})
-				} else {
-					this.SendError(response, {code: 1, message: "disabled."});
-				}
-			});
-		} catch (error) {
-			this.SendError(response, error);
-		}
+	public _charge(request: any, response: IJSONResponse): void {
+		this.charge(request, request.body, (error, mailto: any) => {
+			if (!error) {
+				this.sendReceipt(mailto, (error, mail_result: any) => {
+					if (!error) {
+						this.SendSuccess(response, mail_result);
+					} else {
+						this.SendError(response, error);
+					}
+				})
+			} else {
+				this.SendError(response, error);
+			}
+		});
 	}
 
 }
