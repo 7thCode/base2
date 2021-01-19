@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -236,7 +236,7 @@ export class Auth extends Mail {
 									_.merge(content, user.content);
 								}
 
-								LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+								LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 									if (!account) {
 										const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 										const promise = new Promise((resolve: any, reject: any): void => {
@@ -455,7 +455,7 @@ export class Auth extends Mail {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username; // for multi tenant.;
 							request.body.password = value.password;
-							LocalAccount.default_find_by_name_promise({}, value.username).then((account: any): void => {
+							LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
 								this.ifExist(response, this.errors.username_notfound, account, () => {
 									this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
@@ -507,7 +507,7 @@ export class Auth extends Mail {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username; // for multi tenant.;
 							request.body.password = value.password;
-							LocalAccount.default_find_by_name_promise({}, value.username).then((account: IAccountModel): void => {
+							LocalAccount.default_find_by_name({}, value.username).then((account: IAccountModel): void => {
 								this.ifExist(response, this.errors.username_notfound, account, () => {
 									if (account.enabled) {
 										let verified: boolean = true;
@@ -556,7 +556,7 @@ export class Auth extends Mail {
 				const token = request.params.token;
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
 					this.ifSuccess(response, error, (): void => {
-						LocalAccount.default_find_by_name_promise({}, value.username).then((account: any): void => {
+						LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
 							this.ifExist(response, this.errors.username_notfound, account, () => {
 								if (account.enabled) {
 									QRCode.toDataURL(token, (error: IErrorObject, qrcode: any): void => {
@@ -594,7 +594,7 @@ export class Auth extends Mail {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username; // for multi tenant.;
 							request.body.password = value.password;
-							LocalAccount.default_find_by_name_promise({}, value.username).then((account: any): void => {
+							LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
 								this.ifExist(response, this.errors.username_notfound, account, () => {
 									if (account.enabled) {
 										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
@@ -647,7 +647,7 @@ export class Auth extends Mail {
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						const username: string = value.username;
-						LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+						LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 							if (!account) {
 
 								const tokenValue: IUserToken = {
@@ -712,7 +712,7 @@ export class Auth extends Mail {
 
 					const nowDate: any = Date.now();
 					if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
-						LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+						LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 							if (!account) {
 								const param = this.create_param(username, username, adding_content, auth);
 								this.register(request, response, param, password, (error: { status: number, message: string }, user: any): void => {
@@ -764,7 +764,7 @@ export class Auth extends Mail {
 							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, metadata: object }): void => {
 								this.ifSuccess(response, error, (): void => {
 									const username: string = value.username;
-									LocalAccount.default_find_by_name_promise({}, username).then((account: IAccountModel): void => {
+									LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
 										if (!account) {
 											const username: string = value.username;
 											const password: string = value.password;
@@ -810,7 +810,7 @@ export class Auth extends Mail {
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						const username: string = value.username;
-						LocalAccount.default_find_by_name_promise({}, username).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
 							this.ifExist(response, this.errors.username_notfound, account, () => {
 								this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 									this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
@@ -871,7 +871,7 @@ export class Auth extends Mail {
 					const target: any = token.target;
 					const nowDate: any = Date.now();
 					if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
-						LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+						LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 							if (account) {
 								if (account.enabled) {
 									if (account.provider === "local") {　// OAuthは除外
@@ -929,7 +929,7 @@ export class Auth extends Mail {
 							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 								this.ifSuccess(response, error, (): void => {
 									const username: string = value.username;
-									LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+									LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 										this.ifExist(response, this.errors.username_notfound, account, () => {
 											this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 												this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
@@ -983,11 +983,11 @@ export class Auth extends Mail {
 						this.ifSuccess(response, error, (): void => {
 							const original_username: string = operator.username;
 							const update_username: string = value.update_username;
-							LocalAccount.default_find_by_name_promise({}, original_username).then((account: IAccountModel): void => {
+							LocalAccount.default_find_by_name({}, original_username).then((account: IAccountModel): void => {
 								this.ifExist(response, this.errors.username_notfound, account, () => {
 									this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 										this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
-											LocalAccount.default_find_by_name_promise({}, update_username).then((samename: IAccountModel): void => {
+											LocalAccount.default_find_by_name({}, update_username).then((samename: IAccountModel): void => {
 												this.ifExist(response, this.errors.username_already_regist, !samename, () => {   // no samename then
 													const tokenValue: IUserNameToken = {
 														original_username: original_username,
@@ -1050,10 +1050,10 @@ export class Auth extends Mail {
 					const target: any = token.target;
 					const nowDate: any = Date.now();
 					if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
-						LocalAccount.default_find_by_name_promise({}, original_username).then((account: any): void => {
+						LocalAccount.default_find_by_name({}, original_username).then((account: any): void => {
 							if (account) {
 								if (account.enabled) {
-									LocalAccount.default_find_by_name_promise({}, update_username).then((samename: IAccountModel): void => {
+									LocalAccount.default_find_by_name({}, update_username).then((samename: IAccountModel): void => {
 										if (!samename) {
 											if (account.provider === "local") {　// OAuthは除外
 
@@ -1119,11 +1119,11 @@ export class Auth extends Mail {
 								this.ifSuccess(response, error, (): void => {
 									const original_username: string = value.original_username;
 									const update_username: string = value.update_username;
-									LocalAccount.default_find_by_name_promise({}, original_username).then((account: IAccountModel): void => {
+									LocalAccount.default_find_by_name({}, original_username).then((account: IAccountModel): void => {
 										this.ifExist(response, this.errors.username_notfound, account, () => {
 											this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 												this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
-													LocalAccount.default_find_by_name_promise({}, update_username).then((samename: IAccountModel): void => {
+													LocalAccount.default_find_by_name({}, update_username).then((samename: IAccountModel): void => {
 														this.ifExist(response, this.errors.username_already_regist, !samename, () => {   // no samename then
 															this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
 
@@ -1175,7 +1175,7 @@ export class Auth extends Mail {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				const username: string = operator.username;
-				LocalAccount.default_find_by_name_promise({}, username).then((account: IAccountModel): void => {
+				LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
 					this.ifExist(response, this.errors.username_notfound, account, () => {
 						this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
 							this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
@@ -1231,10 +1231,10 @@ export class Auth extends Mail {
 					const target: any = token.target;
 					const nowDate: any = Date.now();
 					if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
-						LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+						LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 							if (account) {
 								if (account.enabled) {
-									LocalAccount.remove_by_id_promise(null, account.user_id).then(() => {
+									LocalAccount.remove_by_id(null, account.user_id).then(() => {
 										request.logout();
 										response.redirect(target);
 									}).catch((error: IErrorObject): void => {
@@ -1273,10 +1273,10 @@ export class Auth extends Mail {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: any = request.user;
-				LocalAccount.default_find_by_id_promise({}, operator.user_id).then((account: any): void => {
+				LocalAccount.default_find_by_id({}, operator.user_id).then((account: any): void => {
 					this.ifExist(response, this.errors.username_notfound, account, () => {
 						this.ifExist(response, this.errors.account_enabled, !account.enabled, () => {  // not enabled then
-							LocalAccount.remove_by_id_promise(null, operator.user_id).then(() => {
+							LocalAccount.remove_by_id(null, operator.user_id).then(() => {
 								request.logout();
 								this.SendSuccess(response, null);
 							}).catch((error: IErrorObject): void => {
@@ -1303,7 +1303,7 @@ export class Auth extends Mail {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
-				LocalAccount.default_find_by_name_promise({}, operator.username).then((account: any): void => {
+				LocalAccount.default_find_by_name({}, operator.username).then((account: any): void => {
 					if (!account) {
 						const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 
@@ -1343,7 +1343,7 @@ export class Auth extends Mail {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
-				LocalAccount.default_find_by_name_promise({}, operator.username).then((account: any): void => {
+				LocalAccount.default_find_by_name({}, operator.username).then((account: any): void => {
 					if (!account) {
 						const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 
@@ -1380,7 +1380,7 @@ export class Auth extends Mail {
 	 */
 	public auth_twitter_callback(request: IUserRequest, response: IRedirectResponse): void {
 		try {
-			LocalAccount.default_find_by_name_promise({}, request.user.username).then((account: any): void => {
+			LocalAccount.default_find_by_name({}, request.user.username).then((account: any): void => {
 				if (!account) {
 					const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 					const user_id: string = request.user.id;  // twitter
@@ -1418,7 +1418,7 @@ export class Auth extends Mail {
 	 */
 	public auth_instagram_callback(request: IUserRequest, response: IRedirectResponse): void {
 		try {
-			LocalAccount.default_find_by_name_promise({}, request.user.username).then((account: any): void => {
+			LocalAccount.default_find_by_name({}, request.user.username).then((account: any): void => {
 				if (!account) {
 					const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 					const user_id: string = request.user.id;
@@ -1459,7 +1459,7 @@ export class Auth extends Mail {
 	public auth_line_callback(request: IUserRequest, response: IRedirectResponse): void {
 		try {
 			const username: string = request.user.username;
-			LocalAccount.default_find_by_name_promise({}, username).then((account: any): void => {
+			LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 				if (!account) {
 					const keypair: { private: string, public: string } = Cipher.KeyPair(512);
 					const user_id: string = request.user.id;

@@ -1,8 +1,9 @@
-/**!
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+/**
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
- * //opensource.org/licenses/mit-license.php
+ * opensource.org/licenses/mit-license.php
  */
+
 import {Server} from "http";
 import {IErrorObject} from "./types/platform/universe";
 
@@ -161,25 +162,25 @@ const normal: () => void = () => {
 			logger.info("connected");
 		});
 
-		mongoose.connection.on("error", (error: IErrorObject) => {
+		mongoose.connection.once("error", (error: IErrorObject) => {
 			logger.error("Mongoose default connection error: " + error);
 			log4js.shutdown((err: any) => {
 				process.exit(1);
 			})
 		});
 
-		mongoose.connection.on("closed", () => {
+		mongoose.connection.once("closed", () => {
 			logger.info("Mongoose default connection closed");
 		});
 
-		mongoose.connection.on("disconnected", () => {
-			logger.error("Mongoose default connection disconnected");
+		mongoose.connection.once("disconnected", () => {
+			logger.info("Mongoose default connection disconnected");
 			log4js.shutdown((err: any) => {
 				process.exit(1);
 			})
 		});
 
-		mongoose.connection.on("reconnected", () => {
+		mongoose.connection.once("reconnected", () => {
 			logger.info("reconnected");
 		});
 

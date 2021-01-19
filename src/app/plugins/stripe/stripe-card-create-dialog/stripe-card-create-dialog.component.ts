@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -7,7 +7,6 @@
 "use strict";
 
 import {Component, Inject} from "@angular/core";
-import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 /**
@@ -20,6 +19,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 	styleUrls: ["./stripe-card-create-dialog.component.css"],
 	templateUrl: "./stripe-card-create-dialog.component.html",
 })
+
 export class StripeCardCreateDialogComponent {
 
 	public months = [

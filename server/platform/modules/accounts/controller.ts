@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -95,7 +95,7 @@ export class Accounts extends Wrapper {
 										}
 									}
 									const default_query: object = {$and: [query, {auth: {$gte: operator.auth}}]};
-									LocalAccount.default_find_promise(operator, default_query, option).then((accounts: IAccountModel[]): void => {
+									LocalAccount.default_find(operator, default_query, option).then((accounts: IAccountModel[]): void => {
 
 										const result: object[] = [];
 										accounts.forEach((account) => {
@@ -132,7 +132,7 @@ export class Accounts extends Wrapper {
 					this.Decode(params.query, (error: IErrorObject, query: object): void => {
 						this.ifSuccess(response, error, (): void => {
 							const filtered_by_auth: object = {$and: [query, {auth: {$gte: operator.auth}}]};
-							LocalAccount.default_find_promise(operator, filtered_by_auth, {}).then((accounts: IAccountModel[]): void => {
+							LocalAccount.default_find(operator, filtered_by_auth, {}).then((accounts: IAccountModel[]): void => {
 								this.SendSuccess(response, accounts.length);
 							}).catch((error: IErrorObject) => {
 								this.SendError(response, error);
@@ -159,7 +159,7 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 								this.SendSuccess(response, account.public());
 							});
@@ -205,7 +205,7 @@ export class Accounts extends Wrapper {
 
 					this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 						if (Accounts.own_by_id(operator, target.user_id)) {
-							LocalAccount.set_by_id_promise(operator, target.user_id, update).then((account: IAccountModel): void => {
+							LocalAccount.set_by_id(operator, target.user_id, update).then((account: IAccountModel): void => {
 								this.SendSuccess(response, account.public());
 							}).catch((error: any) => {
 								this.SendError(response, error);
@@ -234,9 +234,9 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "not found."}, account, () => {
-								LocalAccount.remove_by_id_promise(operator, target.user_id).then((): void => {
+								LocalAccount.remove_by_id(operator, target.user_id).then((): void => {
 									this.SendSuccess(response, {});
 								}).catch((error: IErrorObject) => {
 									this.SendError(response, error);
@@ -268,7 +268,7 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 								const is_2fa: boolean = (account.secret !== "");
 								this.SendSuccess(response, {is_2fa});
@@ -304,7 +304,7 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_name(operator, target.username)) {
-						LocalAccount.default_find_by_name_promise(operator, target.username).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 								this.ifExist(response, {code: -1, message: "no secret."}, account.secret, () => {
 									const secret: any = SpeakEasy.generateSecret({
@@ -322,7 +322,7 @@ export class Accounts extends Wrapper {
 										issuer: this.systemsConfig.ua,
 									});
 
-									LocalAccount.set_by_name_promise(operator, target.username, update).then((account: object): void => {
+									LocalAccount.set_by_name(operator, target.username, update).then((account: object): void => {
 										QRCode.toDataURL(qr_url, (error: IErrorObject, qrcode: any): void => {
 											this.ifSuccess(response, error, (): void => {
 												this.SendSuccess(response, {qrcode});
@@ -358,13 +358,13 @@ export class Accounts extends Wrapper {
 				const target: IUsernameParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
-					LocalAccount.default_find_by_name_promise(operator, target.username).then((account: IAccountModel): void => {
+					LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
 						this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 							if (Accounts.own_by_name(operator, target.username)) {
 								const update: object = {
 									secret: "",
 								};
-								LocalAccount.set_by_name_promise(operator, target.username, update).then((account: IAccountModel): void => {
+								LocalAccount.set_by_name(operator, target.username, update).then((account: IAccountModel): void => {
 									this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 										this.SendSuccess(response, {});
 									});
@@ -397,7 +397,7 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 								this.SendSuccess(response, account.public());
 							});
@@ -440,7 +440,7 @@ export class Accounts extends Wrapper {
 					}
 					this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 						if (Accounts.own_by_id(operator, target.user_id)) {
-							LocalAccount.set_by_id_promise(operator, target.user_id, update).then((account: IAccountModel): void => {
+							LocalAccount.set_by_id(operator, target.user_id, update).then((account: IAccountModel): void => {
 								this.SendSuccess(response, account.public());
 							}).catch((error: any) => {
 								this.SendError(response, error);
@@ -470,9 +470,9 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
-						LocalAccount.default_find_by_id_promise(operator, target.user_id).then((account: IAccountModel): void => {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
-								LocalAccount.remove_by_id_promise(operator, target.user_id).then((): void => {
+								LocalAccount.remove_by_id(operator, target.user_id).then((): void => {
 									this.SendSuccess(response, {});
 								}).catch((error: any) => {
 									this.SendError(response, error);
@@ -502,7 +502,7 @@ export class Accounts extends Wrapper {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
-					LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
+					LocalAccount.default_find_by_id(operator, operator.user_id).then((account: IAccountModel): void => {
 						this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 							this.SendSuccess(response, account.content);
 						});
@@ -535,7 +535,7 @@ export class Accounts extends Wrapper {
 					"content.mails": content.mails,
 				};
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
-					LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
+					LocalAccount.set_by_id(operator, operator.user_id, update).then((account: IAccountModel): void => {
 						this.ifExist(response, {code: -1, message: "no user."}, account, () => {
 							this.SendSuccess(response, account.content);
 						});

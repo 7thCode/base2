@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -83,7 +83,7 @@ export interface IAccountModel {
 
 	set_by_name(user: IAccountModel, name: string, setter: any): void;
 
-	remove_by_name(user: IAccountModel, name: string): void;
+	remove_by_id(user: IAccountModel, name: string): void;
 
 	publish_find(query: object, option: IQueryOption): void;
 

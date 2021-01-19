@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -9,6 +9,9 @@
 import {IAccountModel} from "../../../types/platform/server";
 import {Callback, IAccountPublic, IQueryOption} from "../../../types/platform/universe";
 
+/*
+*
+* */
 namespace AccountModel {
 
 	const mongoose: any = require("mongoose");
@@ -22,8 +25,7 @@ namespace AccountModel {
 	const Account = new Schema({
 		provider: {type: String, default: "local"},
 		auth: {type: Number, default: 200},
-	// 	user_id: {type: String, required: true, index: {unique: true}},
-		user_id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
+		user_id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}}, 	// main key
 		username: {type: String, required: true, index: {unique: true}},
 		password: {type: String},
 		relations: {type: mongoose.Schema.Types.Mixed},
@@ -46,7 +48,7 @@ namespace AccountModel {
 	};
 
 	// Public data
-	Account.methods.public = function (cb: Callback<any>): IAccountPublic {
+	Account.methods.public = function (): IAccountPublic {
 		const content: IAccountPublic = this.content;
 		content.username = this.username;
 		content.user_id = this.user_id;
@@ -55,11 +57,11 @@ namespace AccountModel {
 		return content;
 	};
 
-	Account.methods._save = function (cb: Callback<any>): void {
-		this.save(cb);
+	Account.methods._save = function (callback: Callback<any>): void {
+		this.save(callback);
 	};
 
-	Account.methods.mail = function (cb: Callback<any>): string {
+	Account.methods.mail = function (): string {
 		let result: string = usernameToMail(this.username);
 		if (this.content.mails) {
 			if (this.content.mails.length > 0) { // メールアドレスが設定されていれば
@@ -69,36 +71,36 @@ namespace AccountModel {
 		return result;
 	};
 
-	Account.methods.get_status = function (cb: Callback<any>): number {
+	Account.methods.get_status = function (): number {
 		return this.status;
 	};
 
-	Account.methods.set_status = function (status: number, cb: Callback<any>): void {
+	Account.methods.set_status = function (status: number): void {
 		this.status = status;
 	};
 
-	Account.statics.default_find_by_name_promise = function (user: IAccountModel, name: string): Promise<any> {
-		return this.model("Account").findOne({username: name}).exec();
+	Account.statics.default_find_by_name = function (user: IAccountModel, name: string): Promise<any> {
+		return this.model("Account").findOne({username: name});
 	};
 
-	Account.statics.default_find_promise = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
-		return this.model("Account").find(query, {}, option).exec();
+	Account.statics.default_find = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
+		return this.model("Account").find(query, {}, option);
 	};
 
-	Account.statics.set_by_name_promise = function (user: IAccountModel, name: string, setter: any): Promise<any> {
-		return this.model("Account").findOneAndUpdate({username: name}, {$set: setter}, {upsert: false}).exec();
+	Account.statics.set_by_name = function (user: IAccountModel, name: string, setter: any): Promise<any> {
+		return this.model("Account").findOneAndUpdate({username: name}, {$set: setter}, {upsert: false});
 	};
 
-	Account.statics.default_find_by_id_promise = function (user: IAccountModel, id: string): Promise<any> {
-		return this.model("Account").findOne({user_id: id}).exec();
+	Account.statics.default_find_by_id = function (user: IAccountModel, id: string): Promise<any> {
+		return this.model("Account").findOne({user_id: id});
 	};
 
-	Account.statics.set_by_id_promise = function (user: IAccountModel, id: string, setter: any): Promise<any> {
-		return this.model("Account").findOneAndUpdate({user_id: id}, {$set: setter}, {upsert: false}).exec();
+	Account.statics.set_by_id = function (user: IAccountModel, id: string, setter: any): Promise<any> {
+		return this.model("Account").findOneAndUpdate({user_id: id}, {$set: setter}, {upsert: false});
 	};
 
-	Account.statics.remove_by_id_promise = function (user: IAccountModel, id: string): Promise<any> {
-		return this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {user_id: id}]}).exec();
+	Account.statics.remove_by_id = function (user: IAccountModel, id: string): Promise<any> {
+		return this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {user_id: id}]});
 	};
 
 	module.exports = mongoose.model("Account", Account);

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -7,11 +7,11 @@
 "use strict";
 
 import {IAccountModel} from "../../../types/platform/server";
-import {Callback, IErrorObject, IQueryOption, IRights} from "../../../types/platform/universe";
+import {Callback, IErrorObject, IQueryOption} from "../../../types/platform/universe";
 
-import {INativeFileModelContent} from "../../../types/plugins/universe";
-import {HeapProfiler} from "inspector";
-
+/*
+*
+* */
 namespace NativeFileModel {
 
 	const mongoose: any = require("mongoose");
@@ -23,61 +23,67 @@ namespace NativeFileModel {
 	const Schema: any = mongoose.Schema;
 
 	const NativeFile = new Schema({
-		user_id: {type: Schema.Types.ObjectId},
-		filepath: {type: String, required: true, index: {unique: true}},
+		user_id: {type: Schema.Types.ObjectId},		// owner
+		filepath: {type: String, required: true, index: {unique: true}}, 	// main key
 	});
 
-	NativeFile.plugin(rights);
-	NativeFile.plugin(timestamp, { offset: 9 });
+	NativeFile.plugin(rights);		// 権限
+	NativeFile.plugin(timestamp, {offset: 9});
 	NativeFile.plugin(grouped);
 
+	/*
+	ユーザが一致するか、書き込み権限があるものを検索するクエリーを返す
+	*/
 	const query_by_user_read: any = (user: any, query: object): any => {
-		let result = query;
+		let result: any = {user_id: null};
 		if (user) {
 			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
 		}
 		return result;
 	};
 
+	/*
+	ユーザが一致するか、書き込み権限があるものを検索するクエリーを返す
+	*/
 	const query_by_user_write: any = (user: any, query: object): any => {
-		let result = query;
+		let result: any = {user_id: null};
 		if (user) {
 			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
 		}
 		return result;
 	};
 
-	NativeFile.methods._create = function(user: IAccountModel, body: any, cb: Callback<any>): void {
+	NativeFile.methods._create = function (user: IAccountModel, body: any, cb: Callback<any>): void {
 		this.user_id = user.user_id;
 		this.filepath = body.filepath;
 		this.model("NativeFile").findOne(query_by_user_write(user, {"filepath": this.filepath})).then((instance: any) => {
-				if (!instance) {
-					this.save(cb);
-				} else {
-					cb(null, null); // already
-				}
+			if (!instance) {
+				this.save(cb);
+			} else {
+				cb(null, null); // already
+			}
 		}).catch((error: IErrorObject) => {
 			cb(error, null);
 		});
 	};
 
-	NativeFile.methods._save_promise = function(): Promise<any> {
+	NativeFile.methods._save = function (): Promise<any> {
 		return this.save().exec();
 	};
 
-	NativeFile.statics.remove_by_id_promise = function(user: IAccountModel, filepath: string): Promise<any> {
-		return this.model("NativeFile").findOneAndRemove(query_by_user_write(user,  {filepath: filepath})).exec();
+	NativeFile.statics.remove_by_id = function (user: IAccountModel, filepath: string): Promise<any> {
+		return this.model("NativeFile").findOneAndRemove(query_by_user_write(user, {filepath: filepath})).exec();
 	};
 
-	NativeFile.statics.default_find_by_id_promise = function(user: IAccountModel, filepath: string): Promise<any> {
-		return this.model("NativeFile").findOne(query_by_user_read(user,  {filepath: filepath})).exec();
+	NativeFile.statics.default_find_by_id = function (user: IAccountModel, filepath: string): Promise<any> {
+		return this.model("NativeFile").findOne(query_by_user_read(user, {filepath: filepath})).exec();
 	};
 
-	NativeFile.statics.default_find_promise = function(user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
+	NativeFile.statics.default_find = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
 		return this.model("NativeFile").find(query_by_user_read(user, query), {}, option).exec();
 	};
 
-	NativeFile.statics.default_count_promise = function(user: IAccountModel, query: object): Promise<any> {
+	NativeFile.statics.default_count = function (user: IAccountModel, query: object): Promise<any> {
 		return this.model("NativeFile").countDocuments(query_by_user_read(user, query)).exec();
 	};
 

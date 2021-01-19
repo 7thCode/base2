@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -9,6 +9,9 @@
 import {IAccountModel} from "../../../types/platform/server";
 import {Callback, IErrorObject, IPageModelContent, IQueryOption, IRights} from "../../../types/platform/universe";
 
+/*
+*
+* */
 namespace PageModel {
 
 	const mongoose: any = require("mongoose");
@@ -24,10 +27,10 @@ namespace PageModel {
 	const Schema = mongoose.Schema;
 
 	const Page = new Schema({
-		user_id: {type: Schema.Types.ObjectId},
-	 	username: {type: String, default: ""},
+		user_id: {type: Schema.Types.ObjectId},	// owner
+		username: {type: String, default: ""},
 		content: {
-			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},
+			id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}},	// main key
 			relations: {type: mongoose.Schema.Types.Mixed},
 			enabled: {type: Boolean, default: true},
 			category: {type: String, default: ""},
@@ -39,7 +42,7 @@ namespace PageModel {
 		},
 	});
 
-	Page.plugin(rights);
+	Page.plugin(rights);		// 権限
 	Page.plugin(timestamp, {offset: 9});
 	Page.plugin(grouped);
 
@@ -47,28 +50,35 @@ namespace PageModel {
 	Page.index({username: 1});
 	Page.index({"user_id": 1, "content.path": 1}, {unique: true});
 
+	/*
+		ユーザが一致するか、読み込み権限があるものを検索するクエリーを返す。
+	*/
 	const query_by_user_read: any = (user: any, query: any): any => {
-		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}]}, query]};
-		let result = query;
+		let result: any = {user_id: null};
 		if (user) {
-			result = {$and: [{$or:[{username:user.username},{user_id:user.user_id}]}, {"rights.read": {$gte: user.auth}}, query]};
+			result = {$and: [{$or: [{username: user.username}, {user_id: user.user_id}]}, {"rights.read": {$gte: user.auth}}, query]};
 		}
 		return result;
 	};
 
+	/*
+		ユーザが一致するか、書き込み権限があるものを検索するクエリーを返す
+	*/
 	const query_by_user_write: any = (user: any, query: object): any => {
-		// return {$and: [{$or: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}]}, query]};
-		let result = query;
+		let result: any = {user_id: null};
 		if (user) {
-			result = {$and: [{$or:[{username:user.username},{user_id:user.user_id}]}, {"rights.write": {$gte: user.auth}}, query]};
+			result = {$and: [{$or: [{username: user.username}, {user_id: user.user_id}]}, {"rights.write": {$gte: user.auth}}, query]};
 		}
 		return result;
 	};
 
-	const init: any = (_id: any, body: any): IPageModelContent => {
+	/*
+	* 初期値
+	* */
+	const init: any = (body: any): IPageModelContent => {
 		const id = new mongoose.Types.ObjectId();
 		const content: IPageModelContent = {
-			id: id, // setId(_id),
+			id: id,
 			parent_id: body.parent_id,
 			enabled: body.enabled,
 			category: body.category,
@@ -87,31 +97,34 @@ namespace PageModel {
 	};
 
 	// Public data
-	Page.methods.public = function (cb: Callback<any>): any {
+	Page.methods.public = function (callback: Callback<any>): any {
 		return this.content;
 	};
 
-	Page.methods._create = function (user: IAccountModel, body: any, cb: Callback<any>): void {
+	/*
+	*
+	*  */
+	Page.methods._create = function (user: IAccountModel, body: any, callback: Callback<any>): void {
 		this.user_id = user.user_id;
 		this.username = user.username;
-		this.content = init(this._id, body.content);
+		this.content = init(body.content);
 
 		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path})).then((instance: any) => {
-			if (!instance) {
-				this.save(cb);
+			if (!instance) {　// 既にないなら
+				this.save(callback);
 			} else {
-				cb(null, null); // already.
+				callback(null, null); // already.
 			}
 		}).catch((error: IErrorObject) => {
-			cb(error, null)
+			callback(error, null)
 		})
 	};
 
-	Page.methods._save = function (cb: Callback<any>): void {
-		this.save(cb);
+	Page.methods._save = function (callback: Callback<any>): void {
+		this.save(callback);
 	};
 
-	Page.statics.get_page = function (username: string, path: string, object: any, cb: (error: IErrorObject, doc: any, mimetype: string) => void): void {
+	Page.statics.get_page = function (username: string, path: string, object: any, callback: (error: IErrorObject, doc: any, mimetype: string) => void): void {
 		this.model("Page").findOne({$and: [{username}, {"content.path": path}]}).then((instance: any): void => {
 			if (instance) {
 				const content: any = instance.content;
@@ -133,21 +146,21 @@ namespace PageModel {
 						default:
 					}
 				}
-				cb(null, doc, type);
+				callback(null, doc, type);
 			} else {
-				cb({code: -1, message: "not found. 633"}, null, "");
+				callback({code: -1, message: "not found. 633"}, null, "");
 			}
 		}).catch((error: IErrorObject) => {
-			cb(error, null, "");
+			callback(error, null, "");
 		})
 	};
 
-	Page.statics.set_rights_promise = function (user: IAccountModel, id: string, rights: IRights): Promise<any> {
+	Page.statics.set_rights = function (user: IAccountModel, id: string, rights: IRights): Promise<any> {
 		const setter = {$set: {rights}};
-		return this.model("Page").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}).exec();
+		return this.model("Page").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false});
 	};
 
-	Page.statics.update_by_id_promise = function (user: IAccountModel, id: string, content: any): Promise<any> {
+	Page.statics.update_by_id = function (user: IAccountModel, id: string, content: any): Promise<any> {
 		const setter = {
 			$set: {
 				"content.enabled": content.enabled,
@@ -159,39 +172,39 @@ namespace PageModel {
 				"content.accessory": content.accessory,
 			},
 		};
-		return this.model("Page").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false}).exec();
+		return this.model("Page").findOneAndUpdate(query_by_user_write(user, {"content.id": id}), setter, {upsert: false});
 	};
 
-	Page.statics.set_by_id_promise = function (user: IAccountModel, id: string, setter: any): Promise<any> {
-		return this.model("Page").findOneAndUpdate(query_by_user_read(user, {"content.id": id}), setter, {upsert: false}).exec();
+	Page.statics.set_by_id = function (user: IAccountModel, id: string, setter: any): Promise<any> {
+		return this.model("Page").findOneAndUpdate(query_by_user_read(user, {"content.id": id}), setter, {upsert: false});
 	};
 
-	Page.statics.remove_by_id_promise = function (user: IAccountModel, id: string): Promise<any> {
-		return this.model("Page").findOneAndRemove(query_by_user_read(user, {"content.id": id})).exec();
+	Page.statics.remove_by_id = function (user: IAccountModel, id: string): Promise<any> {
+		return this.model("Page").findOneAndRemove(query_by_user_read(user, {"content.id": id}));
 	};
 
-	Page.statics.default_find_by_id_promise = function (user: IAccountModel, id: string): Promise<any> {
-		return this.model("Page").findOne(query_by_user_read(user, {"content.id": id})).exec();
+	Page.statics.default_find_by_id = function (user: IAccountModel, id: string): Promise<any> {
+		return this.model("Page").findOne(query_by_user_read(user, {"content.id": id}));
 	};
 
-	Page.statics.default_find_promise = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
-		return this.model("Page").find(query_by_user_read(user, query), {}, option).exec();
+	Page.statics.default_find = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
+		return this.model("Page").find(query_by_user_read(user, query), {}, option);
 	};
 
-	Page.statics.default_count_promise = function (user: IAccountModel, query: object): Promise<any> {
-		return this.model("Page").countDocuments(query_by_user_read(user, query)).exec();
+	Page.statics.default_count = function (user: IAccountModel, query: object): Promise<any> {
+		return this.model("Page").countDocuments(query_by_user_read(user, query));
 	};
 
-	Page.statics.publish_find_promise = function (query: object, option: IQueryOption): Promise<any> {
-		return this.model("Page").find(query, {}, option).exec();
+	Page.statics.publish_find = function (query: object, option: IQueryOption): Promise<any> {
+		return this.model("Page").find(query, {}, option);
 	};
 
-	Page.statics.publish_count_promise = function (query: object): Promise<any> {
-		return this.model("Page").countDocuments(query).exec();
+	Page.statics.publish_count = function (query: object): Promise<any> {
+		return this.model("Page").countDocuments(query);
 	};
 
-	Page.statics.publish_find_by_id_promise = function (id: any): Promise<any> {
-		return this.model("Page").findOne({"content.id": id}).exec();
+	Page.statics.publish_find_by_id = function (id: any): Promise<any> {
+		return this.model("Page").findOne({"content.id": id});
 	};
 
 	module.exports = mongoose.model("Page", Page);

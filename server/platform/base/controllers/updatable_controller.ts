@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -53,7 +53,7 @@ export abstract class Updatable extends Wrapper {
 								}
 							}
 							const operator: IAccountModel = this.Transform(request.user);
-							this.Model.default_find_promise(operator, query, option).then((objects: IUpdatableModel[]): void => {
+							this.Model.default_find(operator, query, option).then((objects: IUpdatableModel[]): void => {
 								this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
 									const filtered: any[] = [];
 									objects.forEach((object) => {
@@ -84,7 +84,7 @@ export abstract class Updatable extends Wrapper {
 			this.Decode(params.query, (error: IErrorObject, query: object): void => {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
-					this.Model.default_find_promise(operator, query, {}).then((objects: IUpdatableModel[]): void => {
+					this.Model.default_find(operator, query, {}).then((objects: IUpdatableModel[]): void => {
 						this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
 							this.SendSuccess(response, objects.length);
 						});
@@ -107,7 +107,7 @@ export abstract class Updatable extends Wrapper {
 		try {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.default_find_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
+			this.Model.default_find_by_id(operator, target.id).then((object: IUpdatableModel): void => {
 				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
@@ -151,7 +151,7 @@ export abstract class Updatable extends Wrapper {
 			const target: IDParam = request.params;
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.update_by_id_promise(operator, target.id, body).then((object: IUpdatableModel): void => {
+			this.Model.update_by_id(operator, target.id, body).then((object: IUpdatableModel): void => {
 				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
@@ -172,7 +172,7 @@ export abstract class Updatable extends Wrapper {
 		try {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.Model.remove_by_id_promise(operator, target.id).then((object: IUpdatableModel): void => {
+			this.Model.remove_by_id(operator, target.id).then((object: IUpdatableModel): void => {
 				this.SendSuccess(response, {});
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
@@ -189,7 +189,7 @@ export abstract class Updatable extends Wrapper {
 	 */
 	public init(objects: object[], callback: Callback<any>): void {
 		if (objects) {
-			this.Model.default_count_promise(null, {}).then((count: number) => {
+			this.Model.default_count(null, {}).then((count: number) => {
 				if (count === 0) {
 					const promises: object[] = [];
 					objects.forEach((object: any): void => {

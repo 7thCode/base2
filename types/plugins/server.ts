@@ -1,10 +1,10 @@
 /**
- * Copyright © 2019 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
 
-import {IQueryOption,} from "../platform/universe";
+import {IQueryOption} from "../platform/universe";
 import {IUpdatableModel} from "../platform/server";
 
 import {INativeFileModelContent} from "./universe";
