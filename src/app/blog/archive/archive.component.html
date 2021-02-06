@@ -1,0 +1,18 @@
+<ng-container>
+	<mat-card style="margin:2rem;">
+		<mat-card-content>
+			<div fxLayout="column">
+				<div matRipple fxLayout="row" *ngFor="let resource of results" (click)="click(resource)" style="height:200px;">
+					<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
+						<img [src]="imagePath(resource)" style="width:100px;">
+					</div>
+					<div style="margin:12px;" fxLayout="column" fxLayoutAlign="start start">
+						<div style="margin:12px;font-size:18px;font-weight:900;">{{resource.value.title}}</div>
+						<div style="margin:12px;font-weight:200;">{{resource.value.description | striphtml | truncate:200 }}</div>
+					</div>
+				</div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+</ng-container>
+

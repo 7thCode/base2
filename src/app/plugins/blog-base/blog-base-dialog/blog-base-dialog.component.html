@@ -1,0 +1,68 @@
+<div class="fix-action-dialog">
+	<h2 mat-dialog-title>Blog Article</h2>
+	<mat-dialog-content>
+		<mat-card>
+			<mat-card-content>
+
+				<div fxLayout="row wrap">
+					<div *ngFor="let image of images; let i = index">
+						<app-image [fileName]="images[i].name" [view]="'editable'" (complete)="onDrop(i, $event)"></app-image>
+					</div>
+				</div>
+
+				<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+					<div fxLayout="row wrap">
+
+						<mat-form-field class="input-text">
+							<mat-label>Category</mat-label>
+							<mat-select name="state_select" [(ngModel)]="content.category" #category="ngModel" required>
+								<mat-option value="news">News</mat-option>
+								<mat-option value="article">Article</mat-option>
+							</mat-select>
+							<mat-error *ngIf="category.errors?.required;">入力してください</mat-error>
+						</mat-form-field>
+
+						<mat-form-field class="input-text">
+							<mat-label>Status</mat-label>
+							<input matInput autocomplete="off" type="number" [(ngModel)]="content.status" #status="ngModel" name="status">
+						</mat-form-field>
+
+						<mat-form-field class="input-text">
+							<mat-label>Type</mat-label>
+							<input matInput autocomplete="off" type="text" [(ngModel)]="content.type" #type="ngModel" name="type" maxlength="16">
+							<mat-hint>16文字まで</mat-hint>
+							<mat-error *ngIf="type.errors?.maxlength">長すぎます</mat-error>
+						</mat-form-field>
+
+						<mat-form-field class="input-text">
+							<mat-label>Name</mat-label>
+							<input matInput autocomplete="off" type="text" [(ngModel)]="content.name" #name="ngModel" name="name" maxlength="256">
+							<mat-hint>256文字まで</mat-hint>
+							<mat-error *ngIf="name.errors?.maxlength">長すぎます</mat-error>
+						</mat-form-field>
+
+					</div>
+					<mat-form-field class="input-text">
+						<mat-label>Title...</mat-label>
+						<input matInput autocomplete="off" type="text" placeholder="xxxxxx..." [(ngModel)]="content.value.title" #title="ngModel" name="title" required minlength="3" maxlength="255">
+						<mat-hint>3文字以上500文字まで</mat-hint>
+						<mat-error *ngIf="title.errors?.required;">入力してください</mat-error>
+						<mat-error *ngIf="title.errors?.maxlength">長すぎます</mat-error>
+						<mat-error *ngIf="title.errors?.minlength">短すぎます</mat-error>
+					</mat-form-field>
+					<angular-editor [(ngModel)]="content.value.description" [config]="config" name="description"></angular-editor>
+				</form>
+
+			</mat-card-content>
+		</mat-card>
+	</mat-dialog-content>
+
+	<div class="spacer"></div>
+
+	<mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around" style="margin: 12px;">
+		<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable">enable</mat-slide-toggle>
+		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
+		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+	</mat-dialog-actions>
+
+</div>

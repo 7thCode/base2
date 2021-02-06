@@ -1,0 +1,7 @@
+<ng-container>
+	<mat-list>
+		<mat-list-item *ngFor="let group of groups; let i = index">
+			<a [routerLink]="link(i)">{{group.name}} ({{group.count}})</a>
+		</mat-list-item>
+	</mat-list>
+</ng-container>
