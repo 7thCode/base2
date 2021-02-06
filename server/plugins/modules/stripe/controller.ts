@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
+ * Copyright (c) 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -168,7 +168,7 @@ export class Stripe extends Mail {
 	 * @returns none
 	 */
 	private get_self(operator: IAccountModel, callback: Callback<any>): void {
-		LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
+		LocalAccount.default_find_by_id(operator, operator.user_id).then((account: IAccountModel): void => {
 			callback(null, account);
 		}).catch((error: IErrorObject) => {
 			callback(error, null);
@@ -183,7 +183,7 @@ export class Stripe extends Mail {
 	 * @returns none
 	 */
 	private put_self(operator: IAccountModel, update: object, callback: Callback<IAccountModel>): void {
-		LocalAccount.set_by_id_promise(operator, operator.user_id, update).then((account: IAccountModel): void => {
+		LocalAccount.set_by_id(operator, operator.user_id, update).then((account: IAccountModel): void => {
 			callback(null, account);
 		}).catch((error: IErrorObject) => {
 			callback(error, null);
@@ -308,7 +308,7 @@ export class Stripe extends Mail {
 	 */
 	public operatorToCustomer(operator: any, callback: Callback<IAccountModel>): void {
 		try {
-			LocalAccount.default_find_by_id_promise(operator, operator.user_id).then((account: IAccountModel): void => {
+			LocalAccount.default_find_by_id(operator, operator.user_id).then((account: IAccountModel): void => {
 				if (account.content.stripe_id) {
 					this.stripe.customers.retrieve(account.content.stripe_id).then((customer: any) => {
 						callback(null, customer);

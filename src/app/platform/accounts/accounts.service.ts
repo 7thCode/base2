@@ -13,14 +13,13 @@ import {retry} from "rxjs/operators";
 import {Callback} from "../../../../types/platform/universe";
 
 import {QueryableService} from "../base/services/queryable.service";
+import {IResult} from "../../../../types/platform/server";
 
 @Injectable({
 	providedIn: "root",
 })
 
 export class AccountsService extends QueryableService {
-
-	// public model: string = "accounts";
 
 	/**
 	 *

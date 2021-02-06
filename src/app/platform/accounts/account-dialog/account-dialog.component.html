@@ -28,7 +28,7 @@
 								<mat-hint>0〜10000</mat-hint>
 							</mat-form-field>
 
-							<div *ngIf="user.auth | authis: 'manager'">
+							<div *ngIf="content.auth | authis: 'manager'">
 								<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
 							</div>
 

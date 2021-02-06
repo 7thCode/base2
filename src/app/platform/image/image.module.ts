@@ -20,6 +20,7 @@ import {BaseModule} from "../base/base.module";
 
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 import {ImageComponent} from "./image.component";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
 	declarations: [
@@ -32,12 +33,13 @@ import {ImageComponent} from "./image.component";
 
 		FlexLayoutModule,
 
-	 	MatCardModule,
-	 	MatDialogModule,
+		MatCardModule,
+		MatDialogModule,
 
 		ImageCropperModule,
 
 		BaseModule,
+		MatButtonModule,
 	],
 	exports: [
 		ImageComponent,

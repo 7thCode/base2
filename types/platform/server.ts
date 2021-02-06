@@ -344,4 +344,8 @@ export interface IFacebookUser {
 	provider: string;
 }
 
-
+export interface IResult {
+	code: number;
+	message: string;
+	value: any;
+}

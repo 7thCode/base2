@@ -6,7 +6,7 @@
 
 import {AuthLevel} from "../../../../types/platform/universe";
 
-module.exports = exports = function RightsPlugin(schema: any, options: any) {
+module.exports = exports = function RightsPlugin(schema: any, options: any = {read: AuthLevel.public, write: AuthLevel.user}) {
 
 	schema.add({rights: {read: Number, write: Number}});
 
@@ -24,7 +24,7 @@ module.exports = exports = function RightsPlugin(schema: any, options: any) {
 
 	schema.pre("save", function(next: any) {
 		// @ts-ignore
-		this.rights = {read: AuthLevel.public, write: AuthLevel.user};
+		this.rights = options;//  {read: AuthLevel.public, write: AuthLevel.user};
 		next();
 	});
 

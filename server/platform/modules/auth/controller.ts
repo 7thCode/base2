@@ -98,13 +98,13 @@ export class Auth extends Mail {
 	public static value_decrypt(use_publickey: boolean, key: string, crypted: any, callback: Callback<any>): void {
 		try {
 			if (use_publickey) {
-			 	Auth.publickey_decrypt(key, crypted, (error, plain): void => {
-			 		if (!error) {
-			 			callback(null, JSON.parse(plain));
-			 		} else {
-			 			callback({code: 2, message: "no cookie? 5977"}, {});
-			 		}
-			 	});
+				Auth.publickey_decrypt(key, crypted, (error, plain): void => {
+					if (!error) {
+						callback(null, JSON.parse(plain));
+					} else {
+						callback({code: 2, message: "no cookie? 5977"}, {});
+					}
+				});
 			} else {
 				callback(null, JSON.parse(crypted));
 			}
@@ -140,9 +140,9 @@ export class Auth extends Mail {
 	 * @returns none
 	 */
 	private create_param(id_seed: string, username: string, adding_content: any, auth: number): any {
-	// 	const shasum: any = crypto.createHash("sha1"); //
-	// 	shasum.update(id_seed);                      // create userid from username.
-	// 	const user_id: string = shasum.digest("hex"); //
+		// 	const shasum: any = crypto.createHash("sha1"); //
+		// 	shasum.update(id_seed);                      // create userid from username.
+		// 	const user_id: string = shasum.digest("hex"); //
 		const user_id = new mongoose.Types.ObjectId();
 
 		const keypair: { private: string, public: string } = Cipher.KeyPair(512);
@@ -208,7 +208,6 @@ export class Auth extends Mail {
 			callback({status: 500, message: "get_register_token " + error.message + " 9774"}, null);
 		});
 	}
-
 
 
 	/**
@@ -505,21 +504,22 @@ export class Auth extends Mail {
 				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, code: string }): void => {
 						this.ifSuccess(response, error, (): void => {
-							request.body.username = value.username; // for multi tenant.;
+							request.body.username = value.username;
 							request.body.password = value.password;
 							LocalAccount.default_find_by_name({}, value.username).then((account: IAccountModel): void => {
 								this.ifExist(response, this.errors.username_notfound, account, () => {
 									if (account.enabled) {
-										let verified: boolean = true;
 										if (account.secret) {
-											verified = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
-										}
-										if (verified) {
-											request.login(account, (error: IErrorObject): void => {
-												this.ifSuccess(response, error, (): void => {
-													this.SendSuccess(response, {});
+											const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
+											if (verified) {
+												request.login(account, (error: IErrorObject): void => {
+													this.ifSuccess(response, error, (): void => {
+														this.SendSuccess(response, {});
+													});
 												});
-											});
+											} else {
+												this.SendError(response, {code: -1, message: "Single-factor authentication."});
+											}
 										} else {
 											this.SendError(response, this.errors.code_mismatch);
 										}
@@ -536,6 +536,43 @@ export class Auth extends Mail {
 			} else {
 				this.SendError(response, this.errors.already_logged_in);
 			}
+		} catch (error) {
+			this.SendFatal(response, error);
+		}
+	}
+
+
+	/**
+	 * verify totp
+	 *
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public post_local_verify_totp(request: ILoginRequest, response: IJSONResponse): void {
+		try {
+			this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, code: string }): void => {
+					this.ifSuccess(response, error, (): void => {
+						LocalAccount.default_find_by_name({}, value.username).then((account: IAccountModel): void => {
+							this.ifExist(response, this.errors.username_notfound, account, () => {
+								if (account.enabled) {
+									if (account.secret) {
+										const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
+										this.SendSuccess(response, verified);
+									} else {
+										this.SendError(response, {code: -1, message: "Single-factor authentication."});
+									}
+								} else {
+									this.SendError(response, this.errors.account_disabled);
+								}
+							});
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, error);
+						})
+					});
+				});
+			});
 		} catch (error) {
 			this.SendFatal(response, error);
 		}
@@ -1063,7 +1100,7 @@ export class Auth extends Mail {
 													},
 												};
 
-												LocalAccount.findOneAndUpdate({username: original_username}, setter, {upsert: false}).exec().then(() => {
+												LocalAccount.findOneAndUpdate({username: original_username}, setter, {upsert: false}).then(() => {
 													response.redirect(target);
 												}).catch((error: IErrorObject): void => {
 													response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
@@ -1133,7 +1170,7 @@ export class Auth extends Mail {
 																	},
 																};
 
-																LocalAccount.findOneAndUpdate({username: original_username}, setter, {upsert: false}).exec().then(() => {
+																LocalAccount.findOneAndUpdate({username: original_username}, setter, {upsert: false}).then(() => {
 																	this.SendSuccess(response, {});
 																}).catch((error: IErrorObject): void => {
 																	this.SendError(response, {message: "db error. 4572", status: 500});

@@ -14,6 +14,7 @@ import {ToFixedPipe} from "./tofixed.pipe";
 import {TruncatePipe} from "./truncate.pipe";
 import {ShortnamePipe} from "./shortname.pipe";
 import {AuthisPipe} from "./authis.pipe";
+import {StripHtmlPipe} from "./strip-html.pipe";
 
 @NgModule({
 	declarations: [
@@ -21,7 +22,8 @@ import {AuthisPipe} from "./authis.pipe";
 		ShortnamePipe,
 		TruncatePipe,
 		ToFixedPipe,
-		AuthisPipe
+		AuthisPipe,
+		StripHtmlPipe
 	],
 	imports: [
 		CommonModule
@@ -31,7 +33,8 @@ import {AuthisPipe} from "./authis.pipe";
 		ShortnamePipe,
 		TruncatePipe,
 		ToFixedPipe,
-		AuthisPipe
+		AuthisPipe,
+		StripHtmlPipe
 	],
 	providers: [],
 	bootstrap: [],

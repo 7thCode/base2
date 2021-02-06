@@ -7,7 +7,6 @@
 "use strict";
 
 import {AuthLevel, Callback, IErrorObject} from "../../../../types/platform/universe";
-
 import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 
 const result: any = require("../../../../server/platform/base/library/result");

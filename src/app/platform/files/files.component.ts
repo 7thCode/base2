@@ -260,7 +260,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		if (files.length > 0) {
 
 			const promises: any[] = [];
-			this.marshallingFiles(files).forEach((file) => {
+			files.forEach((file) => {
 				promises.push(new Promise((resolve, reject) => {
 					 const type = this.mimeToType(file.type);
 					 switch (type) {  // resizeable?

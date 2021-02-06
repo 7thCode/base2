@@ -83,14 +83,14 @@ export class ImageDialogComponent extends BaseDialogComponent implements OnInit 
 	 *
 	 * @param event
 	 */
-	public imageCropped(event: ImageCroppedEvent) {
+	public imageCropped(event: ImageCroppedEvent): any {
 		this.croppedImage = event.base64;
 	}
 
 	/**
 	 *
 	 */
-	public imageBase64() {
+	public imageBase64(): string {
 		let mime: string = "image/png";
 		switch (this.extension(this.data.filename)) {
 			case "jpg":
@@ -114,7 +114,7 @@ export class ImageDialogComponent extends BaseDialogComponent implements OnInit 
 	/**
 	 *
 	 */
-	public format() {
+	public format(): string {
 		let result: string = "png";
 		switch (this.extension(this.data.filename)) {
 			case "jpg":

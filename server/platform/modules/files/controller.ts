@@ -92,8 +92,7 @@ export class Files extends Wrapper {
 	 * @returns nonequery_by_user_read
 	 */
 	private static query_by_user_read(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
-		// return {$and: [{"metadata.username": user.username}, {"metadata.rights.read": {$gte: user.auth}}, query]};
-		let result = query;
+		let result = {$and: [{"metadata.username": default_user.username}, query]};
 		if (user) {
 			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.username": default_user.username}]}, {"metadata.rights.read": {$gte: user.auth}}, query]};
 		}
@@ -110,8 +109,7 @@ export class Files extends Wrapper {
 	 * @returns none
 	 */
 	private static query_by_user_write(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
-		// 	return {$and: [{"metadata.username": user.username}, {"metadata.rights.write": {$gte: user.auth}}, query]};
-		let result = query;
+		let result = {$and: [{"metadata.username": default_user.username}, query]};
 		if (user) {
 			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.username": default_user.username}]}, {"metadata.rights.write": {$gte: user.auth}}, query]};
 		}

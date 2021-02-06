@@ -179,6 +179,41 @@ export class AuthService extends HttpService {
 	}
 
 	/**
+	 * TOTP verify
+	 *
+	 * @param username ユーザ名
+	 * @param code TOTPコード
+	 * @param callback コールバック
+	 */
+	public verify_totp(username: string, code: string, callback: Callback<any>): void {
+		this.PublicKey.fixed((error, key): void => {
+			if (!error) {
+				this.value_encrypt(key, {username, code}, (error: IErrorObject, value: any): void => {
+					if (!error) {
+						this.http.post(this.endPoint + "/auth/local/verify_totp", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+							if (result) {
+								if (result.code === 0) {
+									callback(null, result.value);
+								} else {
+									callback(result, null);
+								}
+							} else {
+								callback(this.networkError, null);
+							}
+						}, (error: HttpErrorResponse): void => {
+							callback({code: -1, message: error.message + " 7241"}, null);
+						});
+					} else {
+						callback(error, null);
+					}
+				});
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+	/**
 	 * トークンログイン
 	 *
 	 * @param token トークン

@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {IAccountModel, IDeleteRequest, IDParam, IGetByIDRequest, IJSONResponse, IPostRequest, IPutRequest, IQueryParam, IQueryRequest, IUpdatableModel,} from "../../../../types/platform/server";
 
@@ -152,7 +152,7 @@ export abstract class Updatable extends Wrapper {
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.update_by_id(operator, target.id, body).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
+				this.ifExist(response, {code: -1, message: "not found.(Unauthorized)"}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {

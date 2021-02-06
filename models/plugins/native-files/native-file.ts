@@ -68,23 +68,23 @@ namespace NativeFileModel {
 	};
 
 	NativeFile.methods._save = function (): Promise<any> {
-		return this.save().exec();
+		return this.save();
 	};
 
 	NativeFile.statics.remove_by_id = function (user: IAccountModel, filepath: string): Promise<any> {
-		return this.model("NativeFile").findOneAndRemove(query_by_user_write(user, {filepath: filepath})).exec();
+		return this.model("NativeFile").findOneAndRemove(query_by_user_write(user, {filepath: filepath}));
 	};
 
 	NativeFile.statics.default_find_by_id = function (user: IAccountModel, filepath: string): Promise<any> {
-		return this.model("NativeFile").findOne(query_by_user_read(user, {filepath: filepath})).exec();
+		return this.model("NativeFile").findOne(query_by_user_read(user, {filepath: filepath}));
 	};
 
 	NativeFile.statics.default_find = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
-		return this.model("NativeFile").find(query_by_user_read(user, query), {}, option).exec();
+		return this.model("NativeFile").find(query_by_user_read(user, query), {}, option);
 	};
 
 	NativeFile.statics.default_count = function (user: IAccountModel, query: object): Promise<any> {
-		return this.model("NativeFile").countDocuments(query_by_user_read(user, query)).exec();
+		return this.model("NativeFile").countDocuments(query_by_user_read(user, query));
 	};
 
 	module.exports = mongoose.model("NativeFile", NativeFile);

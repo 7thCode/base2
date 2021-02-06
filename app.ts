@@ -314,10 +314,15 @@ const normal: () => void = () => {
 			callback(server);
 		});
 
+		let port = "27017";
 
-		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + "/" + config.db.name;
+		if (config.db.port) {
+			port = config.db.port;
+		}
+
+		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + ":" + port + "/" + config.db.name;
 		if (config.db.noauth) {
-			connect_url = config.db.protocol + "://" + config.db.address + "/" + config.db.name;
+			connect_url = config.db.protocol + "://" + config.db.address + ":" + port + "/" + config.db.name;
 		}
 
 		const options: any = {

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2019 2020 2021 7thCode.(http://seventh-code.com/)
+ * Copyright © 2019 7thCode.(http://seventh-code.com/)
  * This software is released under the MIT License.
  * opensource.org/licenses/mit-license.php
  */
@@ -90,7 +90,7 @@ export class NativeFiles extends Updatable {
 			const path: string = request.params[0];
 			const operator: IAccountModel = this.Transform(request.user);
 			const target_path = "image/" + this.mailAddressToFileName(operator.username) + "/" + path;
-			this.Model.remove_by_name_promise(operator, target_path).then((object: IUpdatableModel): void => {
+			this.Model.remove_by_id(operator, target_path).then((object: IUpdatableModel): void => {
 				this.SendSuccess(response, {});
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);

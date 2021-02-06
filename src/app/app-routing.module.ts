@@ -17,6 +17,12 @@ const routes: Routes = [
 			return m.PlatformModule;
 		})
 	},
+	{
+		path: 'blog',
+		loadChildren: () => import('./blog/blog.module').then((m) => {
+			return m.BlogModule;
+		}),
+	},
 	{path: '**', component: ErrorComponent},
 ];
 

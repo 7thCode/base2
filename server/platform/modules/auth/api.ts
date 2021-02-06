@@ -139,6 +139,14 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
+		router.post("/auth/local/verify_totp", [gatekeeper.default,
+			(request: any, response: object): void => {
+				logger.trace(request.url);
+				gatekeeper.catch(response, (): void => {
+					auth.get_local_verify_totp(request, response);
+				});
+			}]);
+
 		router.get("/auth/token/qr/:token", [gatekeeper.default,
 			(request: any, response: object): void => {
 				logger.trace(request.url);

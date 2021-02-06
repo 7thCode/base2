@@ -160,7 +160,7 @@ export class Mail extends Wrapper {
 	 */
 	protected sendMail(mailConfig: any, callback: Callback<any>): void {
 		if (this.sender) {
-			this.parseContent(mailConfig, (error: IErrorObject, text:string, html: string): void => {
+			this.parseContent(mailConfig, (error: IErrorObject, text: string, html: string): void => {
 				if (!error) {
 					this.sender.send(mailConfig.address, mailConfig.bcc, mailConfig.title, text, html, (error: IErrorObject): void => {
 						if (!error) {
@@ -337,6 +337,5 @@ export class Mail extends Wrapper {
 	}
 
 }
-
 
 module.exports = Mail;

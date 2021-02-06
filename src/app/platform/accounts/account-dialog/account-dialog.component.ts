@@ -12,6 +12,7 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 /**
  *
@@ -29,10 +30,6 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 		return this.data.session;
 	}
 
-	get user(): any {
-		return this.data.user;
-	}
-
 	get content(): any {
 		return this.data.content;
 	}
@@ -46,12 +43,26 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 *
 	 * @param data
 	 * @param matDialogRef
+	 * @param snackbar
 	 */
 	constructor(
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
-		public matDialogRef: MatDialogRef<AccountDialogComponent>) {
+		public matDialogRef: MatDialogRef<AccountDialogComponent>,
+		public snackbar: MatSnackBar) {
 		super();
+	}
+
+	/**
+	 *
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 8000,
+			});
+		}
 	}
 
 	/**
@@ -80,11 +91,11 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 * ２要素認証か
 	 */
 	public is2Fa(): void {
-		this.data.service.is_2fa(this.data.user.user_id, (error: IErrorObject, is2fa: any): void => {
+		this.data.service.is_2fa(this.content.user_id, (error: IErrorObject, is2fa: any): void => {
 			if (!error) {
 				this.is2fa = is2fa;
 			} else {
-
+				this.errorBar(error);
 			}
 		});
 	}
@@ -93,12 +104,12 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 * ２要素認証に
 	 */
 	public onSet2Fa(): void {
-		this.data.service.set_2fa(this.data.user.username, (error: IErrorObject, qr: any): void => {
+		this.data.service.set_2fa(this.content.username, (error: IErrorObject, qr: any): void => {
 			if (!error) {
 				this.qr = qr;
 				this.is2Fa();
 			} else {
-
+				this.errorBar(error);
 			}
 		});
 	}
@@ -107,12 +118,12 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 * ２要素認証解除
 	 */
 	public onReset2Fa(): void {
-		this.data.service.reset_2fa(this.data.user.username, (error: IErrorObject, result: any): void => {
+		this.data.service.reset_2fa(this.content.username, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.qr = "";
 				this.is2Fa();
 			} else {
-
+				this.errorBar(error);
 			}
 		});
 	}

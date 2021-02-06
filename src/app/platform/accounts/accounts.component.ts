@@ -377,7 +377,6 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 						height: "fit-content",
 						data: {
 							session: this.currentSession,
-							user: result,
 							content: AccountsComponent.confirmToForm(result),
 							service: this.accountService,
 						},
