@@ -62,4 +62,5 @@ export class BlogComponent extends BlogBaseComponent implements OnInit, OnDestro
 		return (outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation);
 	}
 
+
 }

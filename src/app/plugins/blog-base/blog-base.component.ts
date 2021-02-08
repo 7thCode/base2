@@ -133,7 +133,6 @@ export class BlogBaseComponent extends ResponsiveComponent implements OnInit, On
 		this.angular = VERSION.full;
 		this.device = "desktop";
 
-
 		this.isHandset.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
 				this.device = "handset";

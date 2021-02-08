@@ -8,6 +8,11 @@
 "use strict";
 
 import {Component, HostListener, OnInit} from '@angular/core';
+import {Meta, Title} from '@angular/platform-browser';
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {filter} from 'rxjs/operators';
+
+import {environment} from '../environments/environment';
 
 /**
  * アプリケーション
@@ -23,7 +28,12 @@ export class AppComponent implements OnInit {
 
 	private t = 0;
 
-	constructor() {
+	constructor(
+		public router: Router,
+		private route: ActivatedRoute,
+		private title: Title,
+		private meta: Meta
+	) {
 	}
 
 	/**
@@ -51,6 +61,20 @@ export class AppComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-
+		this.router.events.pipe(
+			filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
+			const top_meta = environment.meta.top;
+			this.setDescription(top_meta);
+		});
+		// 	const top_meta = environment.meta.top;
+		// 	this.setDescription(top_meta);
 	}
+
+	public setDescription(meta: { title: string, description: any[] }): void {
+		this.title.setTitle(meta.title);
+		meta.description.forEach((each_description) => {
+			this.meta.updateTag(each_description);
+		})
+	}
+
 }

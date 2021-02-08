@@ -5,13 +5,13 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {BreakpointObserver} from "@angular/cdk/layout";
 
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SessionService} from "../../platform/base/services/session.service";
 
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, Meta, Title} from '@angular/platform-browser';
 import {BlogsService} from "../../plugins/blog-base/blog-base.service";
 
 import {BlogBaseDescriptionComponent} from "../../plugins/blog-base/blog-base-description/blog-base-description.component";
@@ -31,7 +31,10 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected snackbar: MatSnackBar,
+		protected router: Router,
+		protected title: Title,
+		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar);
+		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar,router, title, meta);
 	}
 }

@@ -82,8 +82,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		this.sort = {};
-		super.ngOnInit();
+
 		this.isHandset = this.breakpointObserver.observe([
 			Breakpoints.HandsetPortrait,
 		]);
@@ -94,6 +93,8 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 			Breakpoints.Web,
 		]);
 
+		this.sort = {};
+		super.ngOnInit();
 
 	// 	this.getSession((error: IErrorObject, session: any | null): void => {
 	// 		if (session) {
@@ -118,6 +119,8 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 			name: "",
 			value: {title: "", description: ""},
 			accessory: {
+				keyword: "",
+				description: "",
 				images: [
 					{name: "", description: {}},
 					{name: "", description: {}},
