@@ -84,7 +84,6 @@
 		"passport-local-mongoose": "^6.1.0",
 		"passport-twitter": "^1.0.4",
 		"pug": "^3.0.0",
-
 		"qrcode": "^1.4.4",
 		"rxjs": "~6.6.3",
 		"saslprep": "^1.0.3",
@@ -124,8 +123,8 @@
 		"karma-jasmine": "~4.0.1",
 		"karma-jasmine-html-reporter": "^1.5.4",
 		"ng-packagr": "^11.1.2",
-		"puppeteer": "^5.5.0",
 		"protractor": "^7.0.0",
+		"puppeteer": "^5.5.0",
 		"request": "^2.88.2",
 		"rimraf": "^3.0.2",
 		"ts-node": "~9.1.1",
