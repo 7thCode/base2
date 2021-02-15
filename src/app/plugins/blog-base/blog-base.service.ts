@@ -10,14 +10,14 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
 import {UpdatableService} from "../../platform/base/services/updatable.service";
-import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
 
 @Injectable({
 	providedIn: "root",
 })
 
-export class BlogsService extends UpdatableService {
+export class BlogBaseService extends UpdatableService {
 
 	/**
 	 *
@@ -31,7 +31,7 @@ export class BlogsService extends UpdatableService {
 
 	// { _id: { yyyy: number, mm: number }, entries: [], count: number }
 	protected decorator(group: any): any {
-		return group;
+		return group.content;
 	}
 
 	/**
@@ -47,7 +47,7 @@ export class BlogsService extends UpdatableService {
 			if (!error) {
 				this.Encode(option, (error: IErrorObject, optionString: string): void => {
 					if (!error) {
-						this.http.get(this.endPoint + "/" + this.model + "/auth/" + type +  "/" + queryString + "/" + optionString, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+						this.http.get(this.endPoint + "/entries/auth/" + type + "/" + queryString + "/" + optionString, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 							if (result) {
 								if (Array.isArray(result.value)) {
 									const filterd: any[] = [];

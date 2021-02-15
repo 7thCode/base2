@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {BlogBaseListComponent} from "../../plugins/blog-base/blog-base-list/blog-base-list.component";
 import {SessionService} from "../../platform/base/services/session.service";
-import {BlogsService} from "../../plugins/blog-base/blog-base.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
+import {BlogService} from "../blog.service";
 
 @Component({
 	selector: 'blog-list',
@@ -13,7 +13,7 @@ export class ListComponent extends BlogBaseListComponent implements OnInit {
 
 	constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogService,
 		protected breakpointObserver: BreakpointObserver,
 	) {
 		super(session, blogsService, breakpointObserver);

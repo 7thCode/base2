@@ -9,7 +9,7 @@ import {SessionService} from "../../../platform/base/services/session.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Callback, IErrorObject} from "../../../../../types/platform/universe";
-import {BlogsService} from "../blog-base.service";
+import {BlogBaseService} from "../blog-base.service";
 import {ResponsiveComponent} from "../../../platform/base/components/responsive.component";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -19,14 +19,14 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 
 	public results: any[] = [];
 
-	private service: BlogsService;
+	private service: BlogBaseService;
 
 	private type: string;
 	private skip: number;
 
 	constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogBaseService,
 		protected breakpointObserver: BreakpointObserver,
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,

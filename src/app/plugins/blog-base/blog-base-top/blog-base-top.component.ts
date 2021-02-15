@@ -15,7 +15,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {IArticleModelContent, IErrorObject} from "../../../../../types/platform/universe";
 import {BlogBaseDialogComponent} from "../blog-base-dialog/blog-base-dialog.component";
 import {YesNoDialogComponent} from "../../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
-import {BlogsService} from "../blog-base.service";
+import {BlogBaseService} from "../blog-base.service";
 
 @Directive()
 export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
@@ -41,7 +41,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 	 */
 	public constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogBaseService,
 		protected breakpointObserver: BreakpointObserver,
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
@@ -82,7 +82,8 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-
+		this.sort = {};
+		super.ngOnInit();
 		this.isHandset = this.breakpointObserver.observe([
 			Breakpoints.HandsetPortrait,
 		]);
@@ -93,8 +94,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 			Breakpoints.Web,
 		]);
 
-		this.sort = {};
-		super.ngOnInit();
 
 	// 	this.getSession((error: IErrorObject, session: any | null): void => {
 	// 		if (session) {
@@ -119,8 +118,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 			name: "",
 			value: {title: "", description: ""},
 			accessory: {
-				keyword: "",
-				description: "",
 				images: [
 					{name: "", description: {}},
 					{name: "", description: {}},
@@ -165,7 +162,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 				const dialog: MatDialogRef<any> = this.matDialog.open(BlogBaseDialogComponent, {
 					minWidth: "320px",
 					height: "fit-content",
-					data: {content: this.toView(result)},
+					data: this.toView(result),
 					disableClose: true,
 				});
 

@@ -50,22 +50,6 @@
 						<mat-error *ngIf="title.errors?.maxlength">長すぎます</mat-error>
 						<mat-error *ngIf="title.errors?.minlength">短すぎます</mat-error>
 					</mat-form-field>
-					<mat-form-field class="input-text">
-						<mat-label>keywords...</mat-label>
-						<input matInput autocomplete="off" type="text" placeholder="xxxxxx..." [(ngModel)]="content.accessory.keyword" #keyword="ngModel" name="keyword" required minlength="1" maxlength="255">
-						<mat-hint>3文字以上500文字まで</mat-hint>
-						<mat-error *ngIf="keyword.errors?.required;">入力してください</mat-error>
-						<mat-error *ngIf="keyword.errors?.maxlength">長すぎます</mat-error>
-						<mat-error *ngIf="keyword.errors?.minlength">短すぎます</mat-error>
-					</mat-form-field>
-					<mat-form-field class="input-text">
-						<mat-label>description...</mat-label>
-						<input matInput autocomplete="off" type="text" placeholder="xxxxxx..." [(ngModel)]="content.accessory.description" #_description="ngModel" name="_description" required minlength="1" maxlength="255">
-						<mat-hint>3文字以上500文字まで</mat-hint>
-						<mat-error *ngIf="_description.errors?.required;">入力してください</mat-error>
-						<mat-error *ngIf="_description.errors?.maxlength">長すぎます</mat-error>
-						<mat-error *ngIf="_description.errors?.minlength">短すぎます</mat-error>
-					</mat-form-field>
 					<angular-editor [(ngModel)]="content.value.description" [config]="config" name="description"></angular-editor>
 				</form>
 

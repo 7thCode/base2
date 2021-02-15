@@ -11,9 +11,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {BlogsService} from "../../plugins/blog-base/blog-base.service";
+import {BlogBaseService} from "../../plugins/blog-base/blog-base.service";
 
 import {BlogBaseTopComponent} from "../../plugins/blog-base/blog-base-top/blog-base-top.component";
+import {BlogService} from "../blog.service";
 
 @Component({
 	selector: "blog-top",
@@ -34,7 +35,7 @@ export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 	 */
 	public constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogService,
 		protected breakpointObserver: BreakpointObserver,
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,

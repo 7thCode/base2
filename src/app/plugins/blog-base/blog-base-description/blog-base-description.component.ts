@@ -16,7 +16,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ResponsiveComponent} from "../../../platform/base/components/responsive.component";
 
 import {SessionService} from "../../../platform/base/services/session.service";
-import {BlogsService} from "../blog-base.service";
+import {BlogBaseService} from "../blog-base.service";
 import {environment} from "../../../../environments/environment";
 import {filter} from "rxjs/operators";
 
@@ -27,11 +27,11 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	public description: SafeHtml;
 	public images: { name: string }[] = [];
 
-	protected service: BlogsService;
+	protected service: BlogBaseService;
 
 	constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogBaseService,
 		protected breakpointObserver: BreakpointObserver,
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
@@ -45,7 +45,7 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	}
 
 	/**/
-	private errorBar(error: IErrorObject): void {
+	protected errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
 				duration: 8000,

@@ -10,11 +10,12 @@ import {SessionService} from "../../platform/base/services/session.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {BlogsService} from "../../plugins/blog-base/blog-base.service";
+import {BlogBaseService} from "../../plugins/blog-base/blog-base.service";
 
 import {BlogBaseArchiveComponent} from "../../plugins/blog-base/blog-base-archive/blog-base-archive.component";
 import {ActivatedRoute} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
+import {BlogService} from "../blog.service";
 
 @Component({
 	selector: "blog-archive",
@@ -36,7 +37,7 @@ export class BlogArchiveComponent extends BlogBaseArchiveComponent implements On
 	 */
 	public constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogService,
 		protected breakpointObserver: BreakpointObserver,
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,

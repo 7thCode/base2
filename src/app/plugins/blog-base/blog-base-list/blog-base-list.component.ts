@@ -6,7 +6,7 @@
 
 import {Directive, Input, OnInit} from '@angular/core';
 import {ResponsiveComponent} from "../../../platform/base/components/responsive.component";
-import {BlogsService} from "../blog-base.service";
+import {BlogBaseService} from "../blog-base.service";
 import {SessionService} from "../../../platform/base/services/session.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {IErrorObject} from "../../../../../types/platform/universe";
@@ -18,11 +18,11 @@ export class BlogBaseListComponent extends ResponsiveComponent implements OnInit
 
 	public groups:{ _id: { yyyy: number, mm: number }, entries: [], count: number }[];
 
-	protected service: BlogsService;
+	protected service: BlogBaseService;
 
 	constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogBaseService,
 		protected breakpointObserver: BreakpointObserver,
 	) {
 		super(session, breakpointObserver);

@@ -5,16 +5,18 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BreakpointObserver} from "@angular/cdk/layout";
 
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SessionService} from "../../platform/base/services/session.service";
 
 import {DomSanitizer, Meta, Title} from '@angular/platform-browser';
-import {BlogsService} from "../../plugins/blog-base/blog-base.service";
 
 import {BlogBaseDescriptionComponent} from "../../plugins/blog-base/blog-base-description/blog-base-description.component";
+import {BlogService} from "../blog.service";
+import {IErrorObject} from "../../../../types/platform/universe";
+import {environment} from "../../../environments/environment";
 
 @Component({
 	selector: "blog-description",
@@ -26,7 +28,7 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 
 	constructor(
 		protected session: SessionService,
-		protected blogsService: BlogsService,
+		protected blogsService: BlogService,
 		protected breakpointObserver: BreakpointObserver,
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
@@ -37,4 +39,30 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 	) {
 		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar,router, title, meta);
 	}
+
+	/**/
+	public ngOnInit(): void {
+		this.getSession((error: IErrorObject, session: object | null): void => {
+			this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+				this.id = params.get('id');
+				this.draw((error, blogpage: any) => {
+					if (!error) {
+
+						const meta = environment.meta.description;
+						this.title.setTitle(blogpage.content.value.title);
+						meta.description.push({name: 'keywords', content: blogpage.content.accessory.keyword});
+						meta.description.push({name: 'description', content: blogpage.content.accessory.description});
+						this.setDescription(meta);
+
+						this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.content.value.description);
+						this.images = blogpage.content.accessory.images;
+					} else {
+						this.errorBar(error);
+					}
+				})
+			});
+		});
+	}
+
+
 }

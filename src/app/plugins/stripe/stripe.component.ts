@@ -418,6 +418,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 */
+	/*
 	public updateCustomer() {
 		const update = {
 			address: {  // The customer’s address.
@@ -458,7 +459,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			}
 		})
 	}
-
+*/
 	/**
 	 */
 	public deleteCustomer(callback: Callback<any>): void {

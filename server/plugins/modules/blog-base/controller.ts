@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IArticleModel, IJSONResponse, IQueryParam, IQueryRequest} from "../../../../types/platform/server";
+import {IAccountModel, IArticleModel, IDParam, IGetByIDRequest, IJSONResponse, IPostRequest, IPutRequest, IQueryParam, IQueryRequest, IUpdatableModel} from "../../../../types/platform/server";
 import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 const Updatable: any = require("../../../platform/base/controllers/updatable_controller");
@@ -43,7 +43,7 @@ export class Entries extends Updatable {
 					mm: {$month: "$create"},
 					// 			dd: {$dayOfMonth: "$create"}
 				},
-				entries: {$push:  "$content"},
+				entries: {$push: {create:"$create", content: "$content"}},
 				count: {$sum: 1}
 			}
 		});
@@ -55,7 +55,7 @@ export class Entries extends Updatable {
 				_id: {
 					type: "$content.type"
 				},
-				entries: {$push: "$content"},
+				entries: {$push: {create:"$create", content: "$content"}},
 				count: {$sum: 1}
 			}
 		});
@@ -141,6 +141,66 @@ export class Entries extends Updatable {
 		})
 	}
 
+
+
+
+
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public get(request: IGetByIDRequest, response: IJSONResponse): void {
+		try {
+			const target: IDParam = request.params;
+			const operator: IAccountModel = this.Transform(request.user);
+			this.Model.default_find_by_id(operator, target.id).then((object: IUpdatableModel): void => {
+				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
+					this.SendSuccess(response, object);
+				});
+			}).catch((error: IErrorObject) => {
+				this.SendError(response, error);
+			})
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
+
+	/**
+	 * 検索
+	 * @param request
+	 * @param response
+	 * @returns none
+	 */
+	public query(request: IQueryRequest, response: IJSONResponse): void {
+		try {
+			const params: IQueryParam = request.params;
+			this.Decode(params.query, (error: IErrorObject, query: object): void => {
+				this.ifSuccess(response, error, (): void => {
+					this.Decode(params.option, (error: IErrorObject, option: IQueryOption): void => {
+						this.ifSuccess(response, error, (): void => {
+							if (option.limit) {
+								if (option.limit === 0) {
+									delete option.limit;
+								}
+							}
+							const operator: IAccountModel = this.Transform(request.user);
+							this.Model.default_find(operator, query, option).then((objects: IUpdatableModel[]): void => {
+								this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
+									this.SendRaw(response, objects);
+								});
+							}).catch((error: IErrorObject) => {
+								this.SendError(response, error);
+							})
+						});
+					});
+				});
+			});
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
 
 }
 

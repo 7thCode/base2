@@ -9,17 +9,18 @@
 			<div fxLayout="row wrap" fxLayoutAlign="center">
 				<div *ngFor="let resource of results" style="margin: 8px;">
 					<div fxLayout="column" fxLayoutAlign="center center" style="height:200px">
-						<a matRipple fxLayoutAlign="center center" [routerLink]="['/blog/description', resource.id]">
-							<img [src]="imagePath(resource)" style="max-height:180px;max-width:180px;">
+						<a matRipple fxLayoutAlign="center center" [routerLink]="['/blog/description', resource.content.id]">
+							<img [src]="imagePath(resource.content)" style="max-height:180px;max-width:180px;">
 						</a>
 					</div>
 					<div fxLayout="column" fxLayoutAlign="start" style="color:#303030;margin-top:4px;">
-						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.value.title}}</div>
+						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.create}}</div>
+						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.content.value.title}}</div>
 						<div fxLayout="row" fxLayoutAlign="space-around" *ngIf="auth | authis: 'manager'">
-							<button mat-icon-button (click)="updateDialog(resource.id)">
+							<button mat-icon-button (click)="updateDialog(resource.content.id)">
 								<mat-icon color="primary">edit</mat-icon>
 							</button>
-							<button mat-icon-button (click)="onDelete($event, resource.id)">
+							<button mat-icon-button (click)="onDelete($event, resource.content.id)">
 								<mat-icon color="warn">delete_sweep</mat-icon>
 							</button>
 						</div>

@@ -75,21 +75,21 @@ export interface IAccountModel {
 
 	Role(user: IAccountModel): IRole;
 
-	default_find_by_id(user: IAccountModel, id: string): void;
+	default_find_by_id(user: IAccountModel, id: string): Promise<any>;
 
-	default_find_by_name(user: IAccountModel, name: string): void;
+	default_find_by_name(user: IAccountModel, name: string): Promise<any>;
 
-	default_find(user: IAccountModel, query: object, option: IQueryOption): void;
+	default_find(user: IAccountModel, query: object, option: IQueryOption): Promise<any>;
 
-	set_by_name(user: IAccountModel, name: string, setter: any): void;
+	set_by_name(user: IAccountModel, name: string, setter: any): Promise<any>;
 
-	remove_by_id(user: IAccountModel, name: string): void;
+	remove_by_id(user: IAccountModel, name: string): Promise<any>;
 
-	publish_find(query: object, option: IQueryOption): void;
+	publish_find(query: object, option: IQueryOption): Promise<any>;
 
-	publish_count(query: object): void;
+	publish_count(query: object): Promise<any>;
 
-	publish_find_by_id(id: any): void;
+	publish_find_by_id(id: any): Promise<any>;
 }
 
 export  interface IAccountContent {
@@ -117,19 +117,19 @@ export interface IUpdatableModel {
 
 	_save(): void;
 
-	set_rights(user: IAccountModel, id: string, rights: IRights): void;
+	set_rights(user: IAccountModel, id: string, rights: IRights): Promise<any>;
 
-	update_by_id(user: IAccountModel, id: string, body: any): void;
+	update_by_id(user: IAccountModel, id: string, body: any): Promise<any>;
 
-	set_by_id(user: IAccountModel, id: string, setter: any): void;
+	set_by_id(user: IAccountModel, id: string, setter: any): Promise<any>;
 
-	remove_by_id(user: IAccountModel, id: string): void;
+	remove_by_id(user: IAccountModel, id: string): Promise<any>;
 
-	default_find_by_id(user: IAccountModel, id: string): void;
+	default_find_by_id(user: IAccountModel, id: string): Promise<any>;
 
-	default_find(user: IAccountModel, query: object, option: IQueryOption): void;
+	default_find(user: IAccountModel, query: object, option: IQueryOption): Promise<any>;
 
-	default_count(user: IAccountModel, query: object): void;
+	default_count(user: IAccountModel, query: object): Promise<any>;
 }
 
 export interface ISecureUpdatableModel {
@@ -140,19 +140,19 @@ export interface ISecureUpdatableModel {
 
 	_save(): void;
 
-	set_rights(user: IAccountModel, id: string, rights: IRights): void;
+	set_rights(user: IAccountModel, id: string, rights: IRights): Promise<any>;
 
-	update_by_id(user: IAccountModel, key: string, id: string, body: any): void;
+	update_by_id(user: IAccountModel, key: string, id: string, body: any): Promise<any>;
 
-	set_by_id(user: IAccountModel, id: string, setter: any): void;
+	set_by_id(user: IAccountModel, id: string, setter: any): Promise<any>;
 
-	remove_by_id(user: IAccountModel, id: string): void;
+	remove_by_id(user: IAccountModel, id: string): Promise<any>;
 
-	default_find_by_id(user: IAccountModel, id: string): void;
+	default_find_by_id(user: IAccountModel, id: string): Promise<any>;
 
-	default_find(user: IAccountModel, query: object, option: IQueryOption): void;
+	default_find(user: IAccountModel, query: object, option: IQueryOption): Promise<any>;
 
-	default_count(user: IAccountModel, query: object): void;
+	default_count(user: IAccountModel, query: object): Promise<any>;
 }
 
 export interface IPublishModel {
@@ -161,15 +161,15 @@ export interface IPublishModel {
 
 	public(): any;
 
-	default_find(user: IAccountModel, query: object, option: IQueryOption): void;
+	default_find(user: IAccountModel, query: object, option: IQueryOption): Promise<any>;
 
-	default_count(user: IAccountModel, query: object): void;
+	default_count(user: IAccountModel, query: object): Promise<any>;
 
-	default_find_by_id(user: IAccountModel, id: string): void;
+	default_find_by_id(user: IAccountModel, id: string): Promise<any>;
 
-	update_by_id(user: IAccountModel, id: string, body: any): void;
+	update_by_id(user: IAccountModel, id: string, body: any): Promise<any>;
 
-	remove_by_id(user: IAccountModel, id: string): void;
+	remove_by_id(user: IAccountModel, id: string): Promise<any>;
 }
 
 export interface IArticleModel extends IUpdatableModel {
@@ -179,11 +179,11 @@ export interface IArticleModel extends IUpdatableModel {
 	enabled: boolean;
 	content: IArticleModelContent;
 
-	publish_find(query: object, option: IQueryOption): void;
+	publish_find(query: object, option: IQueryOption): Promise<any>;
 
-	publish_count(query: object): void;
+	publish_count(query: object): Promise<any>;
 
-	publish_find_by_id(id: string): void;
+	publish_find_by_id(id: string): Promise<any>;
 }
 
 export interface IPageModel extends IUpdatableModel {
@@ -194,11 +194,11 @@ export interface IPageModel extends IUpdatableModel {
 
 	get_page(user_id: string, path: string, object: any, cb: (error: IErrorObject, doc: any, mimetype: string) => void): void;
 
-	publish_find(query: object, option: IQueryOption): void;
+	publish_find(query: object, option: IQueryOption): Promise<any>;
 
-	publish_count(query: object): void;
+	publish_count(query: object): Promise<any>;
 
-	publish_find_by_id(id: any): void;
+	publish_find_by_id(id: any): Promise<any>;
 }
 
 export interface IVaultModel {

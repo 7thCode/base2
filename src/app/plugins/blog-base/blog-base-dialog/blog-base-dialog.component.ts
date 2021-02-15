@@ -99,7 +99,7 @@ export class BlogBaseDialogComponent {
 *
 */
 	public ngOnInit(): void {
-		this.images = this.data.content.accessory.images;
+		this.images = this.content.accessory.images;
 	}
 
 	/**
