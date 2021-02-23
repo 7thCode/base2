@@ -29,7 +29,7 @@
 							</mat-form-field>
 
 							<div *ngIf="content.auth | authis: 'manager'">
-								<mat-slide-toggle [color]="'accent'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
+								<mat-slide-toggle [color]="'primary'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
 							</div>
 
 						</mat-card-content>
@@ -58,8 +58,8 @@
 							</mat-card>
 							<mat-card>
 								<mat-card-content fxLayout="column" fxLayout.xs="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-									<button mat-raised-button color="accent" [disabled]="is2fa" (click)="onSet2Fa()">Set 2FA</button>
-									<button mat-raised-button color="primary" [disabled]="!is2fa" (click)="onReset2Fa()">Clear 2FA</button>
+									<button mat-raised-button color="primary" [disabled]="is2fa" (click)="onSet2Fa()">Set 2FA</button>
+									<button mat-raised-button color="accent" [disabled]="!is2fa" (click)="onReset2Fa()">Clear 2FA</button>
 								</mat-card-content>
 							</mat-card>
 						</mat-card-content>
@@ -72,7 +72,7 @@
 	<div class="spacer"></div>
 
 	<mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
+		<button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
 		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</mat-dialog-actions>
 </div>

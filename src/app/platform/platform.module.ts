@@ -40,6 +40,7 @@ import {StripeModule} from "../plugins/stripe/stripe.module";
 import {PlatformRoutingModule} from "./platform-routing.module";
 
 import {PlatformComponent} from "./platform.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
 	declarations: [
@@ -52,12 +53,12 @@ import {PlatformComponent} from "./platform.component";
 
 		FlexLayoutModule,
 
- 		MatListModule,
- 		MatIconModule,
- 		MatButtonModule,
- 		MatToolbarModule,
- 		MatSidenavModule,
- 		MatMenuModule,
+		MatListModule,
+		MatIconModule,
+		MatButtonModule,
+		MatToolbarModule,
+		MatSidenavModule,
+		MatMenuModule,
 
 		AceEditorModule,
 
@@ -76,6 +77,7 @@ import {PlatformComponent} from "./platform.component";
 		MailerModule,
 		NativeFilesModule,
 		BasePipeModule,
+		MatSlideToggleModule,
 	],
 	providers: [],
 	bootstrap: [PlatformComponent],

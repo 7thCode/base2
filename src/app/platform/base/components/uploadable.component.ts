@@ -64,11 +64,9 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * ファイルアップロード
 	 * @returns none
 	 */
-	protected upload(name: string, url: string, callback: Callback<any>): void {
-		this.filesService.upload(name, "", url, callback);
+	protected upload(name: string, url: string, category: string, params: any, callback: Callback<any>): void {
+		this.filesService.upload(name, category, params, url, callback);
 	}
-
-
 
 	/**
 	 * 単一ファイルアップロード
@@ -78,7 +76,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		if (dropedFile.size < this.bodysize) {
 			const fileReader: FileReader = new FileReader();
 			fileReader.onload = (event: any): void => {
-				this.upload(name, event.target.result, (error: IErrorObject, result: any) => {
+				this.upload(name, event.target.result,"", {upsert:true}, (error: IErrorObject, result: any) => {
 					if (!error) {
 						callback(null, result);
 					} else {

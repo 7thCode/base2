@@ -29,7 +29,7 @@ import {AngularEditorModule} from "@kolkov/angular-editor";
 
 import {ImageModule} from "../../platform/image/image.module";
 import {BasePipeModule} from "../../platform/base/pipes/base-pipe.module";
-import {BlogBaseDialogComponent} from "../../plugins/blog-base/blog-base-dialog/blog-base-dialog.component";
+import {BlogDialogComponent} from "../blog-dialog/blog-dialog.component";
 
 import {BlogRoutingModule} from "../blog-routing.module";
 
@@ -38,7 +38,7 @@ import {BlogTopComponent} from "./top.component";
 @NgModule({
 	declarations: [
 		BlogTopComponent,
-		BlogBaseDialogComponent
+		BlogDialogComponent
 	],
 	imports: [
 		CommonModule,

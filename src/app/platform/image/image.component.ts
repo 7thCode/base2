@@ -235,7 +235,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 					case "cancel":
 						break;
 					case "update":
-						this.upload(this.fileName, result.content, (error: IErrorObject, result: any): void => {
+						this.upload(this.fileName, result.content, "",{upsert: true}, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.draw(this.fileName);
 								this.Complete("update", {name: this.fileName});

@@ -81,6 +81,45 @@ export class Entries extends Updatable {
 		}
 	}
 
+	/**
+	 * カウント。
+	 * レコードのカウント。
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public robots(request: IQueryRequest, response: IJSONResponse): void {
+		response.header('Content-Type', 'text/plain');
+		response.send("User-agent: *Sitemap: /sitemap.xml");
+	}
+
+	/**
+	 * カウント。
+	 * レコードのカウント。
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public sitemap(request: IQueryRequest, response: IJSONResponse): void {
+		try {
+			response.type('application/xml');
+			Article.default_find(null, {}, {}).then((objects: IUpdatableModel[]): void => {
+				let sitemap: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">";
+				objects.forEach((object: any) => {
+					const product_id: string = object.content.id;
+					const modify: string = object.modify.toISOString();
+					sitemap += `<url><loc>${this.protocol}://${this.domain}/mall/product/${product_id}</loc><priority>1.0</priority><lastmod>${modify}</lastmod></url>`;
+				});
+				sitemap += "</urlset>";
+				response.send(sitemap);
+			}).catch((error: IErrorObject) => {
+				response.send(error.message);
+			})
+		} catch(error) {
+			response.send(error.message);
+		}
+	}
+
 	public aggrigate(params: any, aggregater: any[], callback: (error: IErrorObject, result: any) => void): void {
 		this.Decode(params.query, (error: IErrorObject, query: any): void => {
 			if (!error) {

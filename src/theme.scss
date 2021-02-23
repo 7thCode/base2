@@ -2,9 +2,19 @@
 @include mat-core();
 
 // Available color palettes: https://material.io/design/color/
-$base-app-primary: mat-palette($mat-teal);
-$base-app-accent:  mat-palette($mat-pink, A200, A100, A400);
-$base-app-warn:    mat-palette($mat-red);
+$base-app-light-primary: mat-palette($mat-indigo);
+$base-app-light-accent:  mat-palette($mat-pink, A200, A100, A400);
+$base-app-light-warn:    mat-palette($mat-red);
 
-$base-app-theme: mat-light-theme($base-app-primary, $base-app-accent, $base-app-warn);
-@include angular-material-theme($base-app-theme);
+$base-app-dark-primary: mat-palette($mat-teal);
+$base-app-dark-accent:  mat-palette($mat-deep-orange, A200, A100, A400);
+$base-app-dark-warn:    mat-palette($mat-deep-purple);
+
+$base-light-theme: mat-light-theme($base-app-light-primary, $base-app-light-accent, $base-app-light-warn);
+$base-dark-theme: mat-dark-theme($base-app-dark-primary, $base-app-dark-accent, $base-app-dark-warn);
+
+@include angular-material-theme($base-light-theme);
+
+.dark-theme {
+	@include angular-material-theme($base-dark-theme);
+}

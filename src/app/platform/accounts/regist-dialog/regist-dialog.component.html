@@ -56,7 +56,7 @@
 	<div class="spacer"></div>
 
 	<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around">
-		<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
+		<button mat-raised-button color="primary" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
 		<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="" (click)="cancel()">Cancel</button>
 	</mat-dialog-actions>
 </div>

@@ -16,8 +16,8 @@
 						<mat-form-field class="input-text">
 							<mat-label>Category</mat-label>
 							<mat-select name="state_select" [(ngModel)]="content.category" #category="ngModel" required>
+								<mat-option value="blog">Blog</mat-option>
 								<mat-option value="news">News</mat-option>
-								<mat-option value="article">Article</mat-option>
 							</mat-select>
 							<mat-error *ngIf="category.errors?.required;">入力してください</mat-error>
 						</mat-form-field>

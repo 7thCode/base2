@@ -13,7 +13,7 @@ import {Spinner} from "../../../platform/base/library/spinner";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {IArticleModelContent, IErrorObject} from "../../../../../types/platform/universe";
-import {BlogBaseDialogComponent} from "../blog-base-dialog/blog-base-dialog.component";
+// import {BlogBaseDialogComponent} from "../blog-base-dialog/blog-base-dialog.component";
 import {YesNoDialogComponent} from "../../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 import {BlogBaseService} from "../blog-base.service";
 
@@ -106,6 +106,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 	/**
 	 * クリエイトダイアログ
 	 */
+	/*
 	public createDialog(): void {
 
 		const initalData: IArticleModelContent = {
@@ -151,11 +152,12 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		});
 
 	}
-
+*/
 	/**
 	 * アップデートダイアログ
 	 * @param id ターゲット
 	 */
+	/*
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: any): void => {
 			if (!error) {
@@ -186,7 +188,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 			}
 		});
 	}
-
+*/
 	/**
 	 * 削除
 	 * @param event

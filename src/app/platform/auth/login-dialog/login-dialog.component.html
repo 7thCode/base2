@@ -49,7 +49,7 @@
 	<div class="spacer"></div>
 	<mat-dialog-actions fxLayout="column" fxLayoutAlign="space-around" fxLayoutAlign.lt-sm="center">
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around" fxLayoutAlign.lt-sm="center">
-			<button mat-raised-button color="accent" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
+			<button mat-raised-button color="primary" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
 			<a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="color:#fdfdfd;" href="/auth/facebook"><i class="fab fa-facebook-square fa-lg"></i><span style="margin-left:4px">Facebook</span></a>
 			<a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="background-color:#fdfdfd;color:#303030;" href="/auth/apple"><i class="fab fa-apple fa-lg"></i><span style="margin-left:4px">Apple</span></a>
 		</div>

@@ -94,7 +94,7 @@ export class Files extends Wrapper {
 	private static query_by_user_read(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
 		let result = {$and: [{"metadata.username": default_user.username}, query]};
 		if (user) {
-			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.username": default_user.username}]}, {"metadata.rights.read": {$gte: user.auth}}, query]};
+			result = {$and: [{"metadata.username": user.username}, {"metadata.rights.read": {$gte: user.auth}}, query]};
 		}
 		return result;
 	}
@@ -111,7 +111,7 @@ export class Files extends Wrapper {
 	private static query_by_user_write(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
 		let result = {$and: [{"metadata.username": default_user.username}, query]};
 		if (user) {
-			result = {$and: [{$or: [{"metadata.username": user.username}, {"metadata.username": default_user.username}]}, {"metadata.rights.write": {$gte: user.auth}}, query]};
+			result = {$and: [{"metadata.username": user.username}, {"metadata.rights.write": {$gte: user.auth}}, query]};
 		}
 		return result;
 	}
@@ -461,11 +461,11 @@ export class Files extends Wrapper {
 		this.get_record(username, path, (error: IErrorObject, data: any): void => {
 			if (!error) {
 				if (data) {
-					if (data.metadata.rights.read === AuthLevel.public) {
+			// 		if (data.metadata.rights.read === AuthLevel.public) {
 						this.render(response, next, data, range, param);
-					} else {
-						response.status(403).render("error", {message: "Forbidden...", status: 403});
-					}
+			// 		} else {
+			// 			response.status(403).render("error", {message: "Forbidden...", status: 403});
+			// 		}
 				} else {
 					next();
 				}
@@ -490,11 +490,11 @@ export class Files extends Wrapper {
 		this.get_record_by_id(_id, (error: IErrorObject, data: any): void => {
 			if (!error) {
 				if (data) {
-					if (data.metadata.rights.read === AuthLevel.public) {
+		// 			if (data.metadata.rights.read === AuthLevel.public) {
 						this.render(response, next, data, range, param);
-					} else {
-						response.status(403).render("error", {message: "Forbidden...", status: 403});
-					}
+		// 			} else {
+		// 				response.status(403).render("error", {message: "Forbidden...", status: 403});
+		// 			}
 				} else {
 					next();
 				}
@@ -678,12 +678,13 @@ export class Files extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
-	public postFile(request: IPostFile, response: IJSONResponse): void {
+	public postFile(request: any, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
 				this.ifExist(response, {code: 1, message: "no content."}, request.body.url, () => {
 					const path: string = request.params[0];
 					const category: string = request.body.category;
+					const params: {upsert: boolean} = request.body.params;
 					const operator: IAccountModel = this.Transform(request.user);
 					const rights = {read: AuthLevel.public, write: AuthLevel.user};
 					const description: string = "";
@@ -698,15 +699,19 @@ export class Files extends Wrapper {
 									});
 								});
 							} else { // if already this then swap.
-								this.collection.deleteOne(query).then((): void => {
-									this.insert_file(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
-										this.ifSuccess(response, error, (): void => {
-											this.SendSuccess(response, result);
+								if (params.upsert) {
+									this.collection.deleteOne(query).then((): void => {
+										this.insert_file(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
+											this.ifSuccess(response, error, (): void => {
+												this.SendSuccess(response, result);
+											});
 										});
+									}).catch((error: IErrorObject) => {
+										this.SendError(response, error);
 									});
-								}).catch((error: IErrorObject) => {
-									this.SendError(response, error);
-								});
+								} else {
+									this.SendError(response, {code: -1, message:"alrady exist."});
+								}
 							}
 						}).catch((error: IErrorObject) => {
 							this.SendError(response, error);
@@ -755,9 +760,21 @@ export class Files extends Wrapper {
 
 		const _default: any = this.config.systems.default;
 
-		let username: string = param.u || _default.username;
-		if (user) {
-			username = param.u || user.username || _default.username;
+// 		let username: string = param.u || _default.username;
+// 		if (user) {
+// 			username = param.u || user.username || _default.username;
+// 		}
+
+		let username: string = 	_default.username;
+
+		if (!username) {
+			if (user) {
+				username =  user.username;
+			}
+		}
+
+		if (param.u) {
+			username = param.u;
 		}
 
 		this.render_by_file(response, next, username, path, param, range);

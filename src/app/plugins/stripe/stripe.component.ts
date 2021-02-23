@@ -579,6 +579,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 */
+	/*
 	public charge() {
 
 		const charge = {
@@ -613,4 +614,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 		})
 	}
+
+	 */
 }

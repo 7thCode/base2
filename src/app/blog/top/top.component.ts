@@ -7,7 +7,7 @@
 import {Component, OnInit} from "@angular/core";
 import {SessionService} from "../../platform/base/services/session.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -15,6 +15,8 @@ import {BlogBaseService} from "../../plugins/blog-base/blog-base.service";
 
 import {BlogBaseTopComponent} from "../../plugins/blog-base/blog-base-top/blog-base-top.component";
 import {BlogService} from "../blog.service";
+import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
+import {BlogDialogComponent} from "../blog-dialog/blog-dialog.component";
 
 @Component({
 	selector: "blog-top",
@@ -42,5 +44,92 @@ export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 		protected snackbar: MatSnackBar,
 	) {
 		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar);
+	}
+
+	/**
+	 * クリエイトダイアログ
+	 */
+
+	public createDialog(): void {
+
+		const initalData: IArticleModelContent = {
+			id: "",
+			parent_id: "",
+			enabled: true,
+			category: "",
+			status: 0,
+			type: "",
+			name: "",
+			value: {title: "", description: ""},
+			accessory: {
+				keyword: "",
+				description: "",
+				images: [
+					{name: "", description: {}},
+					{name: "", description: {}},
+					{name: "", description: {}},
+					{name: "", description: {}}
+				]
+			},
+		};
+
+		const dialog: MatDialogRef<any> = this.matDialog.open(BlogDialogComponent, {
+			minWidth: "320px",
+			height: "fit-content",
+			data: {content: this.toView(initalData)},
+			disableClose: true,
+		});
+
+		dialog.beforeClosed().subscribe((result: any): void => {
+			if (result) { // if not cancel then
+				this.Progress(true);
+				this.create(this.confirmToModel(result), (error: IErrorObject, result: any): void => {
+					if (error) {
+						this.Complete("error", error);
+					}
+					this.Progress(false);
+				});
+			}
+		});
+
+		dialog.afterClosed().subscribe((result: any): void => {
+			this.Complete("", result);
+		});
+
+	}
+
+	/**
+	 * アップデートダイアログ
+	 * @param id ターゲット
+	 */
+	public updateDialog(id: string): void {
+		this.get(id, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				const dialog: MatDialogRef<any> = this.matDialog.open(BlogDialogComponent, {
+					minWidth: "320px",
+					height: "fit-content",
+					data: this.toView(result),
+					disableClose: true,
+				});
+
+				dialog.beforeClosed().subscribe((result: any): void => {
+					if (result) { // if not cancel then
+						this.Progress(true);
+						this.update(id, this.confirmToModel(result.content), (error: IErrorObject, result: any): void => {
+							if (error) {
+								this.Complete("error", error);
+							}
+							this.Progress(false);
+						});
+					}
+				});
+
+				dialog.afterClosed().subscribe((result: any): void => {
+					this.Complete("", result);
+				});
+			} else {
+				this.Complete("error", error);
+			}
+		});
 	}
 }

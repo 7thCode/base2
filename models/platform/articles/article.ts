@@ -44,11 +44,11 @@ namespace ArticleModel {
 	ユーザが一致するか、読み込み権限があるものを検索するクエリーを返す
 	*/
 	const query_by_user_read: any = (user: any, query: object): any => {
-		let result: any = {user_id: null};
-		if (user) {
-		// 	result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
-			result = {$and: [{"rights.read": {$gte: user.auth}}, query]};
-		}
+		const result: any = query;
+	// 	if (user) {
+	// 	// 	result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
+	// 		result = {$and: [{"rights.read": {$gte: user.auth}}, query]};
+	// 	}
 		return result;
 	};
 
@@ -58,7 +58,7 @@ namespace ArticleModel {
 	const query_by_user_write: any = (user: any, query: object): any => {
 		let result: any = {user_id: null};
 		if (user) {
-			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.write": {$gte: user.auth}}, query]};
+			result = {$and: [{"rights.write": {$gte: user.auth}}, query]};
 		}
 		return result;
 	};

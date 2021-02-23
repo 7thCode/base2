@@ -6,12 +6,14 @@
 
 "use strict";
 
-import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
+import {IAccountModel, IDParam, IJSONResponse} from "../../../../types/platform/server";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 const _: any = require("lodash");
 
 const _Stripe: any = require('stripe')
+
+const ObjectId: any = require("mongodb").ObjectId;
 
 const Cipher: any = require("../../../platform/base/library/cipher");
 const Mail: any = require("../../../platform/base/controllers/mail_controller");
@@ -218,82 +220,31 @@ export class Stripe extends Mail {
 
 	/**
 	 *
-	 */
-	public createCustomer(request: any, response: IJSONResponse): void {
-		try {
-			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
-				if (this.enable) {
-					const operator: IAccountModel = this.Transform(request.user);
-					const customer_email = request.body.email;
-					this.get_id(response, operator, (customer_id: string) => {
-						if (!customer_id) {
-							this.logger.info('begin createCustomer. ' + customer_email);
-
-							const update = {
-								email: customer_email,
-								description: operator.user_id,
-								address: {  // The customer’s address.
-									city: "XX市", // City, district, suburb, town, or village.
-									country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-									line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
-									line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
-									postal_code: "100-0001", // ZIP or postal code.
-									state: "XX県" // State, county, province, or region.
-								},
-								metadata: {order_id: '6735'}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-								name: "XXXX",  // The customer’s full name or business name.
-								phone: "", // The customer’s phone number.
-								shipping: { // Mailing and shipping address for the customer. Appears on invoices emailed to this customer.
-									address: {
-										city: "XX市", // City, district, suburb, town, or village.
-										country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-										line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
-										line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
-										postal_code: "100-0001", // ZIP or postal code.
-										state: "XX県" // State, county, province, or region.
-									},
-									name: "山田", // Customer name.
-									phone: "", // Customer phone (including extension).
-								}
-							}
-
-							this.stripe.customers.create(
-								update
-							).then((customer: any) => {
-								this.logger.info('end createCustomer. ' + customer_email);
-								this.put_id(response, operator, customer.id, (customer_id: string) => {
-									this.SendSuccess(response, customer_id);
-								});
-							}).catch((error: any) => {
-								this.SendError(response, error);
-							});
-						} else {
-							this.SendError(response, {code: 1, message: "already. "});
-						}
-					});
-				} else {
-					this.SendError(response, {code: -1, message: "not logged in."});
-				}
-			});
-		} catch (error) {
-			this.SendError(response, error);
-		}
-	}
-
-	/**
-	 *
 	 *
 	 * @param operator
 	 * @param callback
 	 * @returns none
+	 *
+	 * 送り先あり 1
+	 * カードあり 2
+	 *
+	 * (カード登録はその前に必ず送り先登録が必要なため。)
+	 *
 	 */
-	public payable(operator: any, callback: Callback<boolean>): void {
+	public payable(operator: any, callback: Callback<number>): void {
 		this.operatorToCustomer(operator, (error: IErrorObject, customer: any) => {
 			if (!error) {
 				if (customer) {
-					callback(null, Boolean(customer.default_source)); // no card.
+					let result = 0;
+					if (customer.shipping.address) {
+						result += 1;
+					}
+					if (customer.default_source) {
+						result += 1;
+					}
+					callback(null, result); // card?.
 				} else {
-					callback(null, false); // not payment customer.
+					callback(null, 0); // not payment customer.
 				}
 			} else {
 				callback(error, null);
@@ -326,7 +277,6 @@ export class Stripe extends Mail {
 		}
 	}
 
-
 	/**
 	 * create card
 	 * もしoperatorにcustomer_idが存在しないならcustomerを作成してcardを作成。
@@ -339,12 +289,24 @@ export class Stripe extends Mail {
 		try {
 			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
 				if (this.enable) {
-
 					const operator: IAccountModel = this.Transform(request.user);
 					this.get_id(response, operator, (customer_id: string) => {
-						this.SendSuccess(response, Boolean(customer_id));
+						if (customer_id) {
+							this.stripe.customers.retrieve(customer_id).then((full_customer: any) => {
+								this.SendSuccess(response, Boolean(full_customer));
+							}).catch((error: any) => {
+								switch (error.code) {
+									case "resource_missing":
+										this.SendSuccess(response, false);
+										break;
+									default:
+										this.SendError(response, error);
+								}
+							});
+						} else {
+							this.SendSuccess(response, false)
+						}
 					});
-
 				} else {
 					this.SendError(response, {code: -1, message: "disabled."});
 				}
@@ -354,6 +316,58 @@ export class Stripe extends Mail {
 		}
 	}
 
+	/**
+	 *
+	 */
+	public createCustomer(request: any, response: IJSONResponse): void {
+		try {
+			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+				if (this.enable) {
+					const operator: IAccountModel = this.Transform(request.user);
+					const customer = request.body;
+					// 		const customer_email = request.body.email;
+					if (customer) {
+						this.get_id(response, operator, (customer_id: string) => {
+							// 	if (!customer_id) {
+
+							this.logger.info('begin createCustomer. ' + customer.email);
+
+							const update = {
+								email: customer.email,
+								description: "",
+								address: customer.address,
+								metadata: {order_id: ""}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+								name: customer.name,  // The customer’s full name or business name.
+								phone: customer.phone, // The customer’s phone number.
+								shipping: customer.shipping
+							}
+
+							this.stripe.customers.create(
+								update
+							).then((customer: any) => {
+								this.logger.info('end createCustomer. ' + customer.email);
+								this.put_id(response, operator, customer.id, (customer_id: string) => {
+									this.SendSuccess(response, customer_id);
+								});
+							}).catch((error: any) => {
+								this.SendError(response, error);
+							});
+
+							// 	} else {
+							// 		this.SendError(response, {code: 1, message: "already. "});
+							// 	}
+						});
+					} else {
+						this.SendError(response, {code: -1, message: "no customer data."});
+					}
+				} else {
+					this.SendError(response, {code: -1, message: "not logged in."});
+				}
+			});
+		} catch (error) {
+			this.SendError(response, error);
+		}
+	}
 
 	/**
 	 * @param request
@@ -735,7 +749,7 @@ export class Stripe extends Mail {
 	 * @param callback
 	 * @returns none
 	 */
-	public charge(request: any, charge: { customer: string, amount: number, currency: string, description: string, capture: boolean }, callback: Callback<any>): void {
+	public charge(request: any, charge: { customer: string, amount: number, currency: string, description: string, capture: boolean }, callback: Callback<{ address: string, charge: any, customer: any }>): void {
 		try {
 			if (request.user) {
 				if (this.enable) {
@@ -755,10 +769,12 @@ export class Stripe extends Mail {
 
 											// 			const chargeId: any = charge.id;
 
+											//          チャージをキャプチャする
 											// 			this.stripe.charges.capture(chargeId).then((charges: any) => {
 											// 				console.log(charges);
 											// 			});
 
+											//          払い戻しを作成する
 											//  		this.stripe.refunds.create({charge: chargeId}).then((charges: any) => {
 											//  			console.log(charges);
 											//  		});
@@ -813,6 +829,43 @@ export class Stripe extends Mail {
 		});
 	}
 
+	/**
+	 * charge参照
+	 * @param request
+	 * @param charge_id
+	 * @param callback
+	 * @returns none
+	 */
+	public capture(request: any, charge_id: string, callback: (error: IErrorObject, result: any) => void): void {
+		try {
+			this.stripe.charges.capture(charge_id).then((card: any) => {
+				callback(null, card);
+			}).catch((error: any) => {
+				callback(error, null);
+			})
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+	/**
+	 * charge参照
+	 * @param request
+	 * @param charge_id
+	 * @param callback
+	 * @returns none
+	 */
+	public refunds(request: any, charge_id: string, callback: (error: IErrorObject, result: any) => void): void {
+		try {
+			this.stripe.refunds.create(charge_id, (error: IErrorObject, card: any) => {
+				callback(null, card);
+			}).catch((error: any) => {
+				callback(error, null);
+			})
+		} catch (error) {
+			callback(error, null);
+		}
+	}
 }
 
 module.exports = Stripe;

@@ -100,13 +100,15 @@ export class FilesService extends HttpService {
 	 *
 	 * @param filename
 	 * @param category
+	 * @param params
 	 * @param dataUrl
 	 * @param callback
 	 */
-	public upload(filename: string, category: string, dataUrl: string, callback: Callback<any>): void {
+	public upload(filename: string, category: string, params: any, dataUrl: string, callback: Callback<any>): void {
 		this.http.post(this.endPoint + "/files/auth/" + filename, {
 			url: dataUrl,
 			category,
+			params,
 		}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {

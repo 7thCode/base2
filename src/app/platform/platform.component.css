@@ -1,5 +1,6 @@
 .container {
     height: calc(100% - 60px);
+	background-color: #dadada;
 }
 
 .sidenav {
@@ -7,59 +8,6 @@
     align-items: center;
     justify-content: center;
     width: 200px;
-}
-
-#progress {
-    background-color: #ffffff00;
-    height: 140px;
-    width: 150px;
-    padding-top: 10px;
-    float: left;
-    position: relative;
-}
-#progress #load {
-    color: #f8f03c;
-    font-family: calibri;
-    text-align: center;
-    position: absolute;
-    top: 42px;
-    left: 42px;
-}
-#test {
-    height: 20px;
-    width: 20px;
-    position: absolute;
-    background-color: #000ef4;
-    border-radius: 50%;
-    top: 0px;
-    left: 10px;
-}
-#rond {
-    height: 100px;
-    width: 100px;
-    border: 2px solid #ff9013;
-    border-radius: 50%;
-    position: absolute;
-    top: 20px;
-    left: 15px;
-    animation: rond 2s infinite;
-    -webkit-animation: rond 2s infinite;
-}
-@keyframes rond {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-@-webkit-keyframes rond {
-    0% {
-        -webkit-transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
 }
 
 /*# sourceMappingURL=progress.css.map */

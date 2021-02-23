@@ -41,6 +41,8 @@ import {Spinner} from "./base/library/spinner";
 })
 export class PlatformComponent extends ResponsiveComponent implements OnInit, OnDestroy {
 
+	public dark: boolean;
+
 	public widthValue: number;
 // 	public sock: any;
 	public date: Date;
@@ -188,6 +190,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		super.ngOnInit();
 
 		this.angular = VERSION.full;
+		this.dark =	(localStorage.getItem("darkmode") === "true");
 
 		this.Progress(true);
 
@@ -311,6 +314,11 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 				break;
 			default:
 		}
+	}
+
+	public switch(): void {
+		this.dark = !this.dark;
+		localStorage.setItem("darkmode", this.dark.toString());
 	}
 
 	/**

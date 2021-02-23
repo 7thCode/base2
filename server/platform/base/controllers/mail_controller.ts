@@ -55,23 +55,23 @@ export class Mail extends Wrapper {
 		switch (senderSetting.type) {
 			case "mail":
 				this.sender = new Mailer(senderSetting.setting, senderSetting.account);
-				this.bcc = "";
+				this.bcc = senderSetting.bcc;
 				break;
 			case "gmail":
 				this.sender = new GMail(senderSetting.setting, senderSetting.account);
-				this.bcc = "";
+				this.bcc = senderSetting.bcc;
 				break;
 			case "mailgun":
 				this.sender = new MailGun(senderSetting.setting, senderSetting.account);
-				this.bcc = [];
+				this.bcc = senderSetting.bcc;
 				break;
 			case "sendgrid":
 				this.sender = new SendGrid(senderSetting.setting, senderSetting.account);
-				this.bcc = [];
+				this.bcc = senderSetting.bcc;
 				break;
 			default:
 				this.sender = new GMail(senderSetting.setting, senderSetting.account);
-				this.bcc = "";
+				this.bcc = senderSetting.bcc;
 				break;
 		}
 	}

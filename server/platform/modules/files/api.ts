@@ -11,11 +11,6 @@ import {IErrorObject} from "../../../../types/platform/universe";
 const express: any = require("express");
 export const router = express.Router();
 
-const path: any = require("path");
-const fs: any = require("graceful-fs");
-
-const project_root = path.join(__dirname, "../../../..");
-
 const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
 
@@ -30,7 +25,7 @@ const connection: any = require.main.exports.connection;
 const Files: any = require("./controller");
 const file: any = new Files(event, ConfigModule, logger, connection);
 
-const cache_root: string = "files/cache/";
+// const cache_root: string = "files/cache/";
 
 file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
@@ -62,6 +57,7 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 			}
 		};
 */
+
 		router.get("/files/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
