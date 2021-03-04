@@ -146,7 +146,7 @@ export class BlogBaseComponent extends ResponsiveComponent implements OnInit, On
 			}
 		});
 
-		this.isDesktop.subscribe((layoutDetector: any) => {
+		this.isWeb.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
 				this.device = "desktop";
 			}

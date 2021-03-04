@@ -81,17 +81,17 @@ export class Entries extends Updatable {
 		}
 	}
 
-	/**
-	 * カウント。
-	 * レコードのカウント。
-	 *
-	 * @param request
-	 * @param response
-	 */
-	public robots(request: IQueryRequest, response: IJSONResponse): void {
-		response.header('Content-Type', 'text/plain');
-		response.send("User-agent: *Sitemap: /sitemap.xml");
-	}
+// /**
+//  * カウント。
+//  * レコードのカウント。
+//  *
+//  * @param request
+//  * @param response
+//  */
+// public robots(request: IQueryRequest, response: IJSONResponse): void {
+// 	response.header('Content-Type', 'text/plain');
+// 	response.send("User-agent: *\nSitemap: /sitemap.xml");
+// }
 
 	/**
 	 * カウント。
@@ -108,7 +108,7 @@ export class Entries extends Updatable {
 				objects.forEach((object: any) => {
 					const product_id: string = object.content.id;
 					const modify: string = object.modify.toISOString();
-					sitemap += `<url><loc>${this.protocol}://${this.domain}/mall/product/${product_id}</loc><priority>1.0</priority><lastmod>${modify}</lastmod></url>`;
+					sitemap += `<url><loc>${this.systemsConfig.protocol}://${this.systemsConfig.domain}/mall/product/${product_id}</loc><priority>1.0</priority><lastmod>${modify}</lastmod></url>`;
 				});
 				sitemap += "</urlset>";
 				response.send(sitemap);
@@ -179,11 +179,6 @@ export class Entries extends Updatable {
 			}
 		})
 	}
-
-
-
-
-
 
 	/**
 	 *

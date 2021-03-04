@@ -33,7 +33,7 @@ export class Mail extends Wrapper {
 
 	private sender: IMailSenderModule = null;
 	private receiver: IMailReceiverModule = null;
-	private bcc: string | any[] = "";
+// 	private bcc: string | any[] = "";
 
 	/**
 	 *

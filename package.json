@@ -21,7 +21,6 @@
 	},
 	"private": true,
 	"dependencies": {
-
 		"@angular/animations": "~11.1.0",
 		"@angular/cdk": "^11.1.0",
 		"@angular/common": "~11.1.0",
@@ -40,6 +39,7 @@
 		"@swimlane/ngx-charts": "^17.0.0",
 		"@zxing/library": "^0.18.3",
 		"@zxing/ngx-scanner": "^3.0.1",
+		"angular-google-charts": "^2.0.1",
 		"body-parser": "^1.19.0",
 		"component": "^1.1.0",
 		"config": "^3.3.3",
@@ -84,7 +84,6 @@
 		"passport-local-mongoose": "^6.1.0",
 		"passport-twitter": "^1.0.4",
 		"pug": "^3.0.0",
-
 		"qrcode": "^1.4.4",
 		"rxjs": "~6.6.3",
 		"saslprep": "^1.0.3",

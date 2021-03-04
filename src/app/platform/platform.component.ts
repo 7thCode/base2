@@ -194,19 +194,19 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 
 		this.Progress(true);
 
-		this.isHandset.subscribe((layoutDetector: any) => {
+		this.isHandsetPortrait.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
 				this.device = "handset";
 			}
 		});
 
-		this.isTablet.subscribe((layoutDetector: any) => {
+		this.isTabletPortrait.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
 				this.device = "tablet";
 			}
 		});
 
-		this.isDesktop.subscribe((layoutDetector: any) => {
+		this.isWeb.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
 				this.device = "desktop";
 			}

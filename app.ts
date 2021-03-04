@@ -84,8 +84,20 @@ const normal: () => void = () => {
 		});
 
 		// helmet
-		app.use(helmet());
+		// app.use(helmet());
+
+		// app.use(helmet.contentSecurityPolicy());
+
+		app.use(helmet.dnsPrefetchControl());
+		app.use(helmet.expectCt());
+		app.use(helmet.frameguard());
 		app.use(helmet.hidePoweredBy({setTo: "JSF/1.2"}));  // impersonation
+		app.use(helmet.hsts());
+		app.use(helmet.ieNoOpen());
+		app.use(helmet.noSniff());
+		app.use(helmet.permittedCrossDomainPolicies());
+		app.use(helmet.referrerPolicy());
+		app.use(helmet.xssFilter());
 
 		logger.info("Hundred.");
 

@@ -22,9 +22,20 @@ import {SessionService} from "../services/session.service";
 @Directive()
 export abstract class ResponsiveComponent extends SessionableComponent implements OnInit {
 
+	public isXSmall: any;
+	public isSmall: any;
+	public isMedium: any;
+	public isLarge: any;
+	public isXLarge: any;
 	public isHandset: any;
 	public isTablet: any;
-	public isDesktop: any;
+	public isWeb: any;
+	public isHandsetPortrait: any;
+	public isTabletPortrait: any;
+	public isWebPortrait: any;
+	public isHandsetLandscape: any;
+	public isTabletLandscape: any;
+	public isWebLandscape: any;
 
 	/**
 	 *
@@ -40,15 +51,53 @@ export abstract class ResponsiveComponent extends SessionableComponent implement
 	}
 
 	public ngOnInit(): void {
+
+		this.isXSmall = this.breakpointObserver.observe([
+			Breakpoints.XSmall,
+		]);
+		this.isSmall = this.breakpointObserver.observe([
+			Breakpoints.Small,
+		]);
+		this.isMedium = this.breakpointObserver.observe([
+			Breakpoints.Medium,
+		]);
+		this.isLarge = this.breakpointObserver.observe([
+			Breakpoints.Large,
+		]);
+		this.isXLarge = this.breakpointObserver.observe([
+			Breakpoints.XLarge,
+		]);
+
 		this.isHandset = this.breakpointObserver.observe([
-			Breakpoints.HandsetPortrait,
+			Breakpoints.Handset,
 		]);
 		this.isTablet = this.breakpointObserver.observe([
-			Breakpoints.TabletPortrait,
+			Breakpoints.Tablet,
 		]);
-		this.isDesktop = this.breakpointObserver.observe([
+		this.isWeb = this.breakpointObserver.observe([
 			Breakpoints.Web,
 		]);
+
+		this.isHandsetPortrait = this.breakpointObserver.observe([
+			Breakpoints.HandsetPortrait,
+		]);
+		this.isTabletPortrait = this.breakpointObserver.observe([
+			Breakpoints.TabletPortrait,
+		]);
+		this.isWebPortrait = this.breakpointObserver.observe([
+			Breakpoints.WebPortrait,
+		]);
+
+		this.isHandsetLandscape = this.breakpointObserver.observe([
+			Breakpoints.HandsetLandscape,
+		]);
+		this.isTabletLandscape = this.breakpointObserver.observe([
+			Breakpoints.TabletLandscape,
+		]);
+		this.isWebLandscape = this.breakpointObserver.observe([
+			Breakpoints.WebLandscape,
+		]);
+
 	}
 
 }

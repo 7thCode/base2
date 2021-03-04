@@ -45,8 +45,9 @@ export class MailSenderSendgrid implements IMailSenderModule {
 		const data = {
 			from: this.account,
 			to: mailAddress,
+			bcc: bccAddress,
 			subject: title,
-	 		text: text,
+			text: text,
 			html: html,
 		};
 		this.sendgrid.send(data).then(() => {

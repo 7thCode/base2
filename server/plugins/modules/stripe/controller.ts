@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IAccountModel, IDParam, IJSONResponse} from "../../../../types/platform/server";
+import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 const _: any = require("lodash");
@@ -53,12 +53,12 @@ export class Stripe extends Mail {
 	 */
 	constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
-		this.message = config.systems.message;
-		if (config.systems.modules.stripe) {
-			this.module_config = config.systems.modules.stripe;
-			if (config.systems.modules.stripe.key) {
+		this.message = this.systemsConfig.message;
+		if (this.systemsConfig.modules.stripe) {
+			this.module_config = this.systemsConfig.modules.stripe;
+			if (this.systemsConfig.modules.stripe.key) {
 				// const key = config.plugins.stripe.key;
-				const key = config.systems.modules.stripe.key;
+				const key = this.systemsConfig.modules.stripe.key;
 				this.stripe = new _Stripe(key, {
 					apiVersion: "2020-03-02",
 				});
@@ -712,18 +712,27 @@ export class Stripe extends Mail {
 
 	/**
 	 */
-	public sendReceipt(mailto: { address: string, charge: any, customer: any }, callback: Callback<any>): void {
+	public sendReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 		const card = mailto.charge.payment_method_details.card;
 		const mail_object = this.module_config.receiptmail;
+
 		mail_object.html.content.text = mail_object.text.content.text = [
 			`amount: ¥${mailto.charge.amount}`,
-			`status: ${mailto.charge.outcome.seller_message}`,
+			`-`,
 			`card: ${card.brand}`,
 			`last4: ${card.last4}`,
 			`expired: ${card.exp_month}/${card.exp_year}`,
-			`description: ${mailto.charge.description}`,
-			`${JSON.stringify(mailto.customer.shipping)}`
-		]
+			`-`,
+			`status: ${mailto.charge.outcome.seller_message}`,
+			`-`,
+			// 		`description: ${mailto.charge.description}`,
+		];
+
+		append.forEach((line) => {
+			mail_object.text.content.text.push(line);
+		});
+
+		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
 
 		this.sendMail({
 			address: mailto.address,
@@ -816,7 +825,7 @@ export class Stripe extends Mail {
 	public _charge(request: any, response: IJSONResponse): void {
 		this.charge(request, request.body, (error, mailto: any) => {
 			if (!error) {
-				this.sendReceipt(mailto, (error, mail_result: any) => {
+				this.sendReceipt(mailto, [], (error, mail_result: any) => {
 					if (!error) {
 						this.SendSuccess(response, mail_result);
 					} else {

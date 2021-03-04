@@ -28,6 +28,26 @@ event.on("site-close", () => {
 	opened = false;
 });
 
+router.get("/robots.txt", (request: any, response: any) => {
+	gatekeeper.catch(response, () => {
+		response.header('Content-Type', 'text/plain');
+		response.send("User-agent: *\nSitemap: /sitemap_index.xml");
+	});
+});
+
+router.get("/sitemap_index.xml", (request: any, response: any) => {
+	gatekeeper.catch(response, () => {
+		response.type('application/xml');
+		const sitemap: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n" +
+			"<sitemap>\n" +
+				"<loc>/entries/sitemap.xml</loc>\n" +
+			"</sitemap>\n" +
+		"</sitemapindex>";
+		response.send(sitemap);
+	});
+});
+
 // for Preflight request. (CORS)
 router.options("*", [gatekeeper.default]);
 
@@ -44,6 +64,7 @@ router.get("*", (req: any, res: any) => {
 	}
 
 });
+
 
 // Necessary for Angular.
 // pass all request to Angular app-routing.
