@@ -8,29 +8,29 @@
 				</mat-card-subtitle>
 			</mat-card-header>
 			<mat-card-content>
-				<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+				<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 
-					<mat-form-field  class="input-text">
+					<mat-form-field class="input-text">
 						<mat-label>Mail Address...</mat-label>
-						<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">
+						<input #username="ngModel" [(ngModel)]="content.username" autocomplete="off" email matInput maxlength="255" minlength="3" name="username" placeholder="user@name" required type="email">
 						<mat-error *ngIf="username.errors?.email;">有効なメールアドレスで</mat-error>
 						<mat-error *ngIf="username.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="username.errors?.maxlength">長すぎます</mat-error>
 						<mat-error *ngIf="username.errors?.minlength">短すぎます</mat-error>
 					</mat-form-field>
 
-					<mat-form-field  class="input-text">
+					<mat-form-field class="input-text">
 						<mat-label>Nickname...</mat-label>
-						<input matInput autocomplete="off" type="text" placeholder="Xxxxxx..." [(ngModel)]="content.nickname" #nickname="ngModel" name="nickname" required minlength="3" maxlength="100">
+						<input #nickname="ngModel" [(ngModel)]="content.nickname" autocomplete="off" matInput maxlength="100" minlength="3" name="nickname" placeholder="Xxxxxx..." required type="text">
 						<mat-hint>3文字以上100文字まで</mat-hint>
 						<mat-error *ngIf="nickname.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="nickname.errors?.maxlength">長すぎます</mat-error>
 						<mat-error *ngIf="nickname.errors?.minlength">短すぎます</mat-error>
 					</mat-form-field>
 
-					<mat-form-field  class="input-text">
+					<mat-form-field class="input-text">
 						<mat-label>Password...</mat-label>
-						<input matInput type="password" placeholder="xxxxxx..." [(ngModel)]="content.password" #password="ngModel" name="password" required minlength="6" maxlength="1000">
+						<input #password="ngModel" [(ngModel)]="content.password" matInput maxlength="1000" minlength="6" name="password" placeholder="xxxxxx..." required type="password">
 						<mat-hint>6文字以上1000文字まで</mat-hint>
 						<mat-error *ngIf="password.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="password.errors?.maxlength">長すぎます</mat-error>
@@ -39,13 +39,13 @@
 
 					<mat-form-field class="input-text">
 						<mat-label>Password Again...</mat-label>
-						<input matInput type="password" placeholder="xxxxxx..." [(ngModel)]="content.confirm_password" #confirm_password="ngModel" name="confirm_password" required [validateEquals]="password">
+						<input #confirm_password="ngModel" [(ngModel)]="content.confirm_password" [validateEquals]="password" matInput name="confirm_password" placeholder="xxxxxx..." required type="password">
 						<mat-hint>6文字以上1000文字まで</mat-hint>
 						<mat-error *ngIf="confirm_password.errors?.required;">確認用パスワードを入力してください</mat-error>
 						<mat-error *ngIf="confirm_password.errors?.validateEquals">確認用パスワードが一致しません</mat-error>
 					</mat-form-field>
 
-					<mat-checkbox [(ngModel)]="agree" (change)="changeAgree($event)"><a>利用規約</a>に同意します</mat-checkbox>
+					<mat-checkbox (change)="changeAgree($event)" [(ngModel)]="agree"><a>利用規約</a>に同意します</mat-checkbox>
 
 					<ng-container>
 						{{completeMessage}}
@@ -57,8 +57,8 @@
 
 	<div class="spacer"></div>
 
-	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-		<button mat-raised-button color="primary" [disabled]="!agree || form.invalid || progress" (click)="onAccept()">OK</button>
-		<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">Cancel</button>
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around" style="margin:6px;">
+		<button (click)="onAccept()" [disabled]="!agree || form.invalid || progress" color="primary" mat-raised-button>OK</button>
+		<button [disabled]="progress" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 </div>

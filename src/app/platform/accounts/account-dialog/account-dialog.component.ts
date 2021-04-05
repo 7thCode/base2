@@ -6,11 +6,10 @@
 
 "use strict";
 
-import {AuthLevel, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
+import {IErrorObject, ISession} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 

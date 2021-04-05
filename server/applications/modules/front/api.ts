@@ -39,11 +39,11 @@ router.get("/sitemap_index.xml", (request: any, response: any) => {
 	gatekeeper.catch(response, () => {
 		response.type('application/xml');
 		const sitemap: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n" +
+			"<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n" +
 			"<sitemap>\n" +
-				"<loc>/entries/sitemap.xml</loc>\n" +
+			"<loc>/entries/sitemap.xml</loc>\n" +
 			"</sitemap>\n" +
-		"</sitemapindex>";
+			"</sitemapindex>";
 		response.send(sitemap);
 	});
 });

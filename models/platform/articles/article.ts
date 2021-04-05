@@ -98,9 +98,9 @@ namespace ArticleModel {
 		});
 	};
 
-	Article.methods._save = function(): Promise<any> {
-		return this.save();
-	};
+	// Article.methods._save = function(): Promise<any> {
+	// 	return this.save();
+	// };
 
 	Article.statics.set_rights = function(user: IAccountModel, id: string, rights: IRights): Promise<any> {
 		const setter: {$set: any} = {$set: {rights}};

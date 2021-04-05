@@ -8,7 +8,7 @@
 
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
-import { environment } from '../../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 import {Injectable} from "@angular/core";
 import {Callback} from "../../../../../types/platform/universe";
 
@@ -65,7 +65,7 @@ export abstract class HttpService {
 	 * @param data デシリアライズされるテキスト
 	 * @param callback オブジェクトを返すコールバック
 	 */
-	protected Decode(data: string, callback:  Callback<any>): void {
+	protected Decode(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
 		} catch (error) {

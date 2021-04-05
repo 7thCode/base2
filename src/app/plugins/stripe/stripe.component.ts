@@ -15,7 +15,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {GridViewComponent} from "../../platform/base/components/gridview.component";
 import {StripeCustomerUpdateDialogComponent} from "./stripe-customer-update-dialog/stripe-customer-update-dialog.component";
 import {StripeCardCreateDialogComponent} from "./stripe-card-create-dialog/stripe-card-create-dialog.component";
-import {InfoDialogComponent} from "../../platform/base/components/info-dialog/info-dialog.component";
 
 import {SessionService} from "../../platform/base/services/session.service";
 import {StripeService} from "./stripe.service";
@@ -282,7 +281,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 					} else {
 						switch (error.code) {
 							case 1:
-								this.errorBar({code: 1, message:"住所登録が必要です。"});
+								this.errorBar({code: 1, message: "住所登録が必要です。"});
 								break;
 							default:
 								this.errorBar(error);
@@ -418,6 +417,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 */
+
 	/*
 	public updateCustomer() {
 		const update = {

@@ -23,7 +23,7 @@ export class Spinner {
 	 * @param overlay
 	 */
 	constructor(overlay: Overlay) {
-		this. progress = false;
+		this.progress = false;
 		this.spinnerRef = this.cdkSpinnerCreate(overlay);
 	}
 

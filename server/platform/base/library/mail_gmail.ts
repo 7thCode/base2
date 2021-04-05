@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IMailSenderModule, IMailSender} from "../../../../types/platform/server";
+import {IMailSender, IMailSenderModule} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailGMail implements IMailSenderModule {
@@ -20,7 +20,7 @@ export class MailGMail implements IMailSenderModule {
 		this.smtpUser = mailer.createTransport(mailsetting);
 	}
 
-	public send(mailAddress: string, bccAddress: string, title: string, text: string,html: string, callback: (error: IErrorObject) => void): void {
+	public send(mailAddress: string, bccAddress: string, title: string, text: string, html: string, callback: (error: IErrorObject) => void): void {
 
 		if (this.smtpUser) {
 			const resultMail: IMailSender = {

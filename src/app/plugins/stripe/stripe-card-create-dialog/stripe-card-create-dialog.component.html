@@ -3,10 +3,10 @@
 	<mat-dialog-content>
 		<mat-card>
 			<mat-card-content>
-				<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+				<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 					<mat-form-field class="input-text">
 						<mat-label>Number...</mat-label>
-						<input matInput autocomplete="off" type="text" placeholder="4242424242424242" [(ngModel)]="content.number" #number_field="ngModel" name="number" required minlength="14" maxlength="16">
+						<input #number_field="ngModel" [(ngModel)]="content.number" autocomplete="off" matInput maxlength="16" minlength="14" name="number" placeholder="4242424242424242" required type="text">
 						<mat-hint>16文字</mat-hint>
 						<mat-error *ngIf="number_field.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="number_field.errors?.maxlength">長すぎます</mat-error>
@@ -16,8 +16,8 @@
 					<div fxLayout="row">
 						<mat-form-field class="input-text">
 							<mat-label>Month...</mat-label>
-							<mat-select name="month_select" [(ngModel)]="content.exp_month" #month_select="ngModel" required>
-								<mat-option *ngFor="let month of months" [value]="month" >
+							<mat-select #month_select="ngModel" [(ngModel)]="content.exp_month" name="month_select" required>
+								<mat-option *ngFor="let month of months" [value]="month">
 									{{month}}
 								</mat-option>
 							</mat-select>
@@ -25,7 +25,7 @@
 						</mat-form-field>
 						<mat-form-field class="input-text">
 							<mat-label>Year...</mat-label>
-							<mat-select name="year_select" [(ngModel)]="content.exp_year" #year_select="ngModel" required>
+							<mat-select #year_select="ngModel" [(ngModel)]="content.exp_year" name="year_select" required>
 								<mat-option *ngFor="let year of years" [value]="year">
 									{{year}}
 								</mat-option>
@@ -36,7 +36,7 @@
 
 					<mat-form-field class="input-text">
 						<mat-label>cvc</mat-label>
-						<input matInput autocomplete="off" type="text" placeholder="123" [(ngModel)]="content.cvc" #cvc_field="ngModel" name="cvc" required minlength="3" maxlength="3">
+						<input #cvc_field="ngModel" [(ngModel)]="content.cvc" autocomplete="off" matInput maxlength="3" minlength="3" name="cvc" placeholder="123" required type="text">
 						<mat-hint>3文字</mat-hint>
 						<mat-error *ngIf="cvc_field.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="cvc_field.errors?.maxlength">長すぎます</mat-error>
@@ -51,8 +51,8 @@
 	<div class="spacer"></div>
 
 	<mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onAccept()" >OK</button>
-		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+		<button (click)="onAccept()" [disabled]="form.invalid" color="primary" mat-raised-button>OK</button>
+		<button (click)="cancel()" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 
 </div>

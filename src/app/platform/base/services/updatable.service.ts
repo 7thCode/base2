@@ -6,15 +6,12 @@
 
 "use strict";
 
-import {Callback, IContent} from "../../../../../types/platform/universe";
+import {Callback} from "../../../../../types/platform/universe";
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import { environment } from '../../../../environments/environment';
-
 import {QueryableService} from "./queryable.service";
-import {Injectable} from "@angular/core";
 
 /**
  * 更新サービス

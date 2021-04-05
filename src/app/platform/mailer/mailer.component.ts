@@ -65,7 +65,7 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	 */
 	constructor(
 		protected session: SessionService,
-	 	protected overlay: Overlay,
+		protected overlay: Overlay,
 		private authService: AuthService,
 		private mailerService: MailerService,
 		private matDialog: MatDialog,
@@ -258,7 +258,7 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	 */
 	public messageDate(object: any): string {
 		return object.date.toDateString();
-	// 	return moment(object.date).format("YY-MM-DD hh:mm");
+		// 	return moment(object.date).format("YY-MM-DD hh:mm");
 	}
 
 	/**

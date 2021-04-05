@@ -53,6 +53,7 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	/**
 	 *
 	 */
+
 	/*
 	public editorConfig: AngularEditorConfig = {
 		editable: true,
@@ -384,8 +385,8 @@ export class PageDialogComponent extends BaseDialogComponent implements OnInit {
 	 */
 	public invalid(): boolean {
 		return (this.data.content.value === "");
-	// 	const errors: any = JSON.stringify(event.value.errors);
-	// 	console.error(event.source.name + " errors :" + errors);
+		// 	const errors: any = JSON.stringify(event.value.errors);
+		// 	console.error(event.source.name + " errors :" + errors);
 	}
 
 	/**

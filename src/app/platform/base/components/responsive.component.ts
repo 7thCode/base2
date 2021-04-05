@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {Directive, OnInit} from "@angular/core";
 
 import {SessionableComponent} from "./sessionable.component";

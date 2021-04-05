@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IMailSenderModule, IMailSender} from "../../../../types/platform/server";
+import {IMailSenderModule} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailSenderSendgrid implements IMailSenderModule {

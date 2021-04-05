@@ -1,4 +1,4 @@
-import { PlatformComponent } from "./platform.component";
+import {PlatformComponent} from "./platform.component";
 
 describe("PlatformComponent", () => {
 

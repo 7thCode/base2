@@ -1,7 +1,7 @@
-<mat-toolbar style="background-color:#651fff;" fxLayout="row" fxLayoutAlign="space-between center">
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" style="background-color:#651fff;">
 
 	<div fxLayout="row" fxLayoutAlign="start">
-		<button mat-icon-button *ngIf="(device === 'handset')" (click)="sidenav.toggle()">
+		<button (click)="sidenav.toggle()" *ngIf="(device === 'handset')" mat-icon-button>
 			<mat-icon style="color:#fdfdfd;">menu</mat-icon>
 		</button>
 		<span style="color:#ff9800;font-weight:900;">Blog</span>
@@ -11,7 +11,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="container">
-	<mat-sidenav #sidenav fxLayout="column" fxLayoutAlign="center" [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset')" style="width:200px;background-color:#a255ff;">
+	<mat-sidenav #sidenav [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset')" fxLayout="column" fxLayoutAlign="center" style="width:200px;background-color:#a255ff;">
 		<blog-list type="month"></blog-list>
 		<blog-list type="type"></blog-list>
 	</mat-sidenav>

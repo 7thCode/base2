@@ -44,14 +44,14 @@ import {ArticlesService} from "./articles.service";
 
 		FlexLayoutModule,
 
- 		MatDialogModule,
- 		MatCardModule,
- 		MatIconModule,
- 		MatButtonModule,
- 		MatInputModule,
- 		MatPaginatorModule,
- 		MatSlideToggleModule,
- 		MatGridListModule,
+		MatDialogModule,
+		MatCardModule,
+		MatIconModule,
+		MatButtonModule,
+		MatInputModule,
+		MatPaginatorModule,
+		MatSlideToggleModule,
+		MatGridListModule,
 
 		BaseModule,
 	],

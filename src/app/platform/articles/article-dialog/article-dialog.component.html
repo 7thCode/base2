@@ -4,10 +4,10 @@
 	<mat-dialog-content>
 		<mat-card>
 			<mat-card-content>
-				<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+				<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 					<mat-form-field class="input-text">
 						<mat-label>Title...</mat-label>
-						<input matInput autocomplete="off" type="text" placeholder="xxxxxx..." [(ngModel)]="content.value.title" #title="ngModel" name="title" required minlength="3" maxlength="255">
+						<input #title="ngModel" [(ngModel)]="content.value.title" autocomplete="off" matInput maxlength="255" minlength="3" name="title" placeholder="xxxxxx..." required type="text">
 						<mat-hint>3文字以上500文字まで</mat-hint>
 						<mat-error *ngIf="title.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="title.errors?.maxlength">長すぎます</mat-error>
@@ -16,17 +16,17 @@
 
 					<mat-form-field class="input-text">
 						<textarea
-							matInput
-							type="text"
-							placeholder="Description"
-							[(ngModel)]="content.value.description"
-							#description="ngModel"
-							name="description"
-							maxlength="1000"
-							cdkTextareaAutosize
 							#autosize="cdkTextareaAutosize"
-							cdkAutosizeMinRows="1"
+							#description="ngModel"
+							[(ngModel)]="content.value.description"
 							cdkAutosizeMaxRows="5"
+							cdkAutosizeMinRows="1"
+							cdkTextareaAutosize
+							matInput
+							maxlength="1000"
+							name="description"
+							placeholder="Description"
+							type="text"
 						></textarea>
 						<mat-hint>1000文字まで</mat-hint>
 						<mat-error *ngIf="description.errors?.maxlength">長すぎます</mat-error>
@@ -39,9 +39,9 @@
 	<div class="spacer"></div>
 
 	<mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<mat-slide-toggle [color]="'primary'" [(ngModel)]="content.enabled" name="enable">enable</mat-slide-toggle>
-		<button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onAccept()" cdkFocusInitial>OK</button>
-		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+		<mat-slide-toggle [(ngModel)]="content.enabled" [color]="'primary'" name="enable">enable</mat-slide-toggle>
+		<button (click)="onAccept()" [disabled]="form.invalid" cdkFocusInitial color="primary" mat-raised-button>OK</button>
+		<button (click)="cancel()" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 
 </div>

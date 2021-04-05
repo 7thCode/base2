@@ -40,7 +40,7 @@ body {
 	animation: animateTextBackground 10s ease-in-out infinite;
 }
 
-.error-page h1+p {
+.error-page h1 + p {
 	color: #d6d6d6;
 	font-size: 8vh;
 	font-weight: bold;
@@ -49,7 +49,7 @@ body {
 	position: relative;
 }
 
-.error-page h1+p:after {
+.error-page h1 + p:after {
 	content: attr(data-p);
 	position: absolute;
 	top: 0;
@@ -92,7 +92,8 @@ body {
 	.error-page h1 {
 		font-size: 32vw;
 	}
-	.error-page h1+p {
+
+	.error-page h1 + p {
 		font-size: 8vw;
 		line-height: 10vw;
 		max-width: 70vw;

@@ -7,13 +7,9 @@
 "use strict";
 
 import {Callback, IErrorObject} from "../../../../../types/platform/universe";
-
-import {HttpClient} from "@angular/common/http";
 import {Directive, OnInit} from "@angular/core";
 
 import {SessionableComponent} from "./sessionable.component";
-
-import {FilesService} from "../../files/files.service";
 import {SessionService} from "../services/session.service";
 import {environment} from "../../../../environments/environment";
 
@@ -35,11 +31,11 @@ export abstract class UploadableComponent extends SessionableComponent implement
 
 	protected constructor(
 		protected session: SessionService,
-	// 	protected http: HttpClient,
+		// 	protected http: HttpClient,
 	) {
 		super(session);
-	// 	this.filesService = new FilesService(http);
-	// 	this.endPoint = this.filesService.endPoint;
+		// 	this.filesService = new FilesService(http);
+		// 	this.endPoint = this.filesService.endPoint;
 		this.endPoint = environment.endPoint;
 		this.bodysize = 200 * 1000 * 1000;  // default.
 	}
@@ -76,7 +72,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 		if (dropedFile.size < this.bodysize) {
 			const fileReader: FileReader = new FileReader();
 			fileReader.onload = (event: any): void => {
-				this.upload(name, event.target.result,"", {upsert:true}, (error: IErrorObject, result: any) => {
+				this.upload(name, event.target.result, "", {upsert: true}, (error: IErrorObject, result: any) => {
 					if (!error) {
 						callback(null, result);
 					} else {
@@ -95,7 +91,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * @returns none
 	 */
 	protected uploadFiles(path: string, dropedFiles: File[], callback: Callback<any>): void {
-	// 	const promises: Array<Promise<any>> = [];
+		// 	const promises: Array<Promise<any>> = [];
 		const promises: Promise<any>[] = [];
 		const files: File[] = this.marshallingFiles(dropedFiles);
 		files.forEach((file: File) => {

@@ -11,8 +11,6 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {BlogBaseService} from "../../plugins/blog-base/blog-base.service";
-
 import {BlogBaseTopComponent} from "../../plugins/blog-base/blog-base-top/blog-base-top.component";
 import {BlogService} from "../blog.service";
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";

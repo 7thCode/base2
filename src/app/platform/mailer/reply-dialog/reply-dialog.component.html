@@ -14,11 +14,11 @@
 
 				<mat-tab-group>
 					<mat-tab label="TEXT">
-						<div style="height:240px;margin:16px;overflow: visible scroll;" [innerHTML]="content.text">
+						<div [innerHTML]="content.text" style="height:240px;margin:16px;overflow: visible scroll;">
 						</div>
 					</mat-tab>
 					<mat-tab label="HTML">
-						<div style="height:240px;margin:16px;overflow: visible scroll;" [innerHTML]="content.html">
+						<div [innerHTML]="content.html" style="height:240px;margin:16px;overflow: visible scroll;">
 						</div>
 					</mat-tab>
 				</mat-tab-group>
@@ -26,10 +26,10 @@
 			</mat-expansion-panel>
 		</mat-accordion>
 
-		<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+		<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 			<mat-form-field class="input-text">
 				<mat-label>Title...</mat-label>
-				<input matInput autocomplete="off" type="text" placeholder="xxxxxx..." [(ngModel)]="content.title" #title_field="ngModel" name="title_field" required minlength="3" maxlength="255">
+				<input #title_field="ngModel" [(ngModel)]="content.title" autocomplete="off" matInput maxlength="255" minlength="3" name="title_field" placeholder="xxxxxx..." required type="text">
 				<mat-hint>3文字以上500文字まで</mat-hint>
 				<mat-error *ngIf="title_field.errors?.required;">入力してください</mat-error>
 				<mat-error *ngIf="title_field.errors?.maxlength">長すぎます</mat-error>
@@ -38,17 +38,17 @@
 
 			<mat-form-field class="input-text">
 				<textarea
-						matInput
-						type="text"
-						placeholder="Description"
-						[(ngModel)]="content.description"
-						#description_field="ngModel"
-						name="description_field"
-						maxlength="1000"
-						cdkTextareaAutosize
-						#autosize="cdkTextareaAutosize"
-						cdkAutosizeMinRows="1"
-						cdkAutosizeMaxRows="5"
+					#autosize="cdkTextareaAutosize"
+					#description_field="ngModel"
+					[(ngModel)]="content.description"
+					cdkAutosizeMaxRows="5"
+					cdkAutosizeMinRows="1"
+					cdkTextareaAutosize
+					matInput
+					maxlength="1000"
+					name="description_field"
+					placeholder="Description"
+					type="text"
 				></textarea>
 				<mat-hint>1000文字まで</mat-hint>
 				<mat-error *ngIf="description_field.errors?.maxlength">長すぎます</mat-error>
@@ -59,8 +59,8 @@
 	<div class="spacer"></div>
 
 	<mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-		<button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onAccept()" >OK</button>
-		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+		<button (click)="onAccept()" [disabled]="form.invalid" color="primary" mat-raised-button>OK</button>
+		<button (click)="cancel()" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 
 </div>

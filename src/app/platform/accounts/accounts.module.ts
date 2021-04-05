@@ -49,14 +49,14 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 
 		FlexLayoutModule,
 
-	 	MatDialogModule,
-	 	MatCardModule,
-	 	MatIconModule,
-	 	MatButtonModule,
-	 	MatInputModule,
-	 	MatGridListModule,
-	 	MatPaginatorModule,
-	 	MatSlideToggleModule,
+		MatDialogModule,
+		MatCardModule,
+		MatIconModule,
+		MatButtonModule,
+		MatInputModule,
+		MatGridListModule,
+		MatPaginatorModule,
+		MatSlideToggleModule,
 
 		ImageModule,
 		BasePipeModule,

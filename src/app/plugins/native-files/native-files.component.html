@@ -5,42 +5,42 @@
 		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
-				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size">
 				</mat-paginator>
-				<input type="file" multiple style="display: none" #fileInput (change)="onChangeFileInput()"/>
-				<button mat-fab color="primary" [disabled]="isProgress" (click)="onClickFileInputButton()" class="fab-center">+</button>
+				<input #fileInput (change)="onChangeFileInput()" multiple style="display: none" type="file"/>
+				<button (click)="onClickFileInputButton()" [disabled]="isProgress" class="fab-center" color="primary" mat-fab>+</button>
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
-					<input matInput autocomplete="off" type="text" placeholder="Find by..." [(ngModel)]="filename" (change)="findByFilename();">
-					<button mat-button matSuffix mat-icon-button aria-label="Clear" [disabled]="isProgress" (click)="filename='';findByFilename();">
+					<input (change)="findByFilename();" [(ngModel)]="filename" autocomplete="off" matInput placeholder="Find by..." type="text">
+					<button (click)="filename='';findByFilename();" [disabled]="isProgress" aria-label="Clear" mat-button mat-icon-button matSuffix>
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 			</div>
-			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
-				<mat-grid-tile class="box-body" [ngSwitch]="file.type" *ngFor="let file of results" [colspan]="file.cols" [rowspan]="file.rows">
-					<app-image *ngSwitchCase="1" [username]="file.metadata.username" [fileName]="file.filename" [view]="'editable'"></app-image>
-					<img *ngSwitchCase="2" style="height: 60%;" src="{{endPoint}}/nfiles/get/{{file.filename}}" alt=""/>
-					<video *ngSwitchCase="3" style="height: 60%;" muted playsinline controls>
+			<mat-grid-list (window:resize)="onResize($event)" [cols]="breakpoint" rowHeight="1:1">
+				<mat-grid-tile *ngFor="let file of results" [colspan]="file.cols" [ngSwitch]="file.type" [rowspan]="file.rows" class="box-body">
+					<app-image *ngSwitchCase="1" [fileName]="file.filename" [username]="file.metadata.username" [view]="'editable'"></app-image>
+					<img *ngSwitchCase="2" alt="" src="{{endPoint}}/nfiles/get/{{file.filename}}" style="height: 60%;"/>
+					<video *ngSwitchCase="3" controls muted playsinline style="height: 60%;">
 						<source src="{{endPoint}}/nfiles/get/{{file.filename}}">
 					</video>
 					<div *ngSwitchDefault [ngSwitch]="file.extension">
 						<i *ngSwitchCase="'zip'" class="material-icons" style="color:#ff1744;font-size: 6rem;">insert_drive_file</i>
-						<i *ngSwitchDefault      class="material-icons" style="color:#90caf9;font-size: 6rem;">insert_drive_file</i>
+						<i *ngSwitchDefault class="material-icons" style="color:#90caf9;font-size: 6rem;">insert_drive_file</i>
 					</div>
 
 					<mat-grid-tile-header>
 						<div class="box-header">{{file.filename}}</div>
 					</mat-grid-tile-header>
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
-						<a mat-icon-button href="{{endPoint}}/nfiles/get/{{file.filename}}" target=”_blank”>
+						<a href="{{endPoint}}/nfiles/get/{{file.filename}}" mat-icon-button target=”_blank”>
 							<mat-icon color="primary">collections</mat-icon>
 						</a>
-						<a mat-icon-button href="{{endPoint}}/nfiles/get/{{file.filename}}" download>
+						<a download href="{{endPoint}}/nfiles/get/{{file.filename}}" mat-icon-button>
 							<mat-icon color="primary">cloud_download</mat-icon>
 						</a>
-						<button mat-icon-button (click)="onDelete($event, file.filename)">
+						<button (click)="onDelete($event, file.filename)" mat-icon-button>
 							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
 

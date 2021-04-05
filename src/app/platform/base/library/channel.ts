@@ -4,7 +4,7 @@
  * opensource.org/licenses/mit-license.php
  */
 
-import { Subject } from "rxjs";
+import {Subject} from "rxjs";
 
 /**
  *

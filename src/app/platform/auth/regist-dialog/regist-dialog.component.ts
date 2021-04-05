@@ -95,6 +95,7 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 	public changeAgree(event: any): void {
 		this.agree = event.checked;
 	}
+
 	/**
 	 *
 	 */

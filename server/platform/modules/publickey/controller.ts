@@ -23,9 +23,9 @@ export class PublicKey extends Wrapper {
 	 * @param logger
 	 * @constructor
 	 */
-	 constructor(event: object, config: any, logger: object) {
-	 	super(event, config, logger);
-	 }
+	constructor(event: object, config: any, logger: object) {
+		super(event, config, logger);
+	}
 
 	/**
 	 *
@@ -49,11 +49,11 @@ export class PublicKey extends Wrapper {
 	 */
 	public get_public_key(request: { user: { publickey: string } }, response: IJSONResponse): void {
 		if (this.systemsConfig.use_publickey) {
-		 	if (request.user) {
-		 		this.SendSuccess(response, request.user.publickey);
-		 	} else {
-		 		this.SendSuccess(response, null);
-		 	}
+			if (request.user) {
+				this.SendSuccess(response, request.user.publickey);
+			} else {
+				this.SendSuccess(response, null);
+			}
 		} else {
 			this.SendSuccess(response, null);
 		}
@@ -67,11 +67,11 @@ export class PublicKey extends Wrapper {
 	 */
 	public get_access_token(request: { user: { publickey: string }, session: { id: string } }, response: IJSONResponse): void {
 		if (this.systemsConfig.use_publickey) {
-		 	if (request.user) {
-		 		this.SendSuccess(response, Cipher.FixedCrypt(request.session.id, request.user.publickey));
-		 	} else {
-		 		this.SendSuccess(response, null);
-		 	}
+			if (request.user) {
+				this.SendSuccess(response, Cipher.FixedCrypt(request.session.id, request.user.publickey));
+			} else {
+				this.SendSuccess(response, null);
+			}
 		} else {
 			this.SendSuccess(response, null);
 		}

@@ -53,8 +53,7 @@ import {SessionService} from "../../platform/base/services/session.service";
 	exports: [
 		NativeFilesComponent,
 	],
-	bootstrap: [
-	],
+	bootstrap: [],
 })
 
 export class NativeFilesModule {

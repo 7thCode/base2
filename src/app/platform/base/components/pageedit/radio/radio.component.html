@@ -1,12 +1,11 @@
-
-	<label>{{description.label}}</label>
-	<mat-radio-group [(ngModel)]="value" [formControl]="validators">
-		<mat-radio-button *ngFor="let option of description.options" [value]="option">
-			{{option}}
-		</mat-radio-button>
-		<mat-hint>{{description.hint}}</mat-hint>
-		<mat-error *ngFor="let validator of description.validators">
-			<span *ngIf="validators.hasError(validator.name)">{{validator.message}}</span>
-		</mat-error>
-	</mat-radio-group>
+<label>{{description.label}}</label>
+<mat-radio-group [(ngModel)]="value" [formControl]="validators">
+	<mat-radio-button *ngFor="let option of description.options" [value]="option">
+		{{option}}
+	</mat-radio-button>
+	<mat-hint>{{description.hint}}</mat-hint>
+	<mat-error *ngFor="let validator of description.validators">
+		<span *ngIf="validators.hasError(validator.name)">{{validator.message}}</span>
+	</mat-error>
+</mat-radio-group>
 

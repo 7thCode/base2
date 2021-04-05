@@ -495,61 +495,6 @@ export class Stripe extends Mail {
 							this.get_id(response, operator, (customer_id: string) => {
 								if (customer_id) {
 
-									/*
-									const customer_email = operator.username;
-									const update = {
-										email: 		operator.username,
-										description: operator.user_id,
-										address: {  // The customer’s address.
-											city: "XX市", // City, district, suburb, town, or village.
-											country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-											line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
-											line2: "1-1", // Address line 2 (e.g., apartment, suite, unit, or building).
-											postal_code: "100-0001", // ZIP or postal code.
-											state: "XX県" // State, county, province, or region.
-										},
-										metadata: {order_id: '6735'}, // Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-										name: "XXXX",  // The customer’s full name or business name.
-										phone: "", // The customer’s phone number.
-										shipping: { // Mailing and shipping address for the customer. Appears on invoices emailed to this customer.
-											address: {
-												city: "XX市", // City, district, suburb, town, or village.
-												country: "JP", // Two-letter country code (ISO 3166-1 alpha-2).
-												line1: "XX町", // Address line 1 (e.g., street, PO Box, or company name).
-												line2: "5-4", // Address line 2 (e.g., apartment, suite, unit, or building).
-												postal_code: "100-0001", // ZIP or postal code.
-												state: "XX県" // State, county, province, or region.
-											},
-											name: "山田", // Customer name.
-											phone: "", // Customer phone (including extension).
-										}
-									}
-									this.stripe.customers.create(update).then((customer: any) => {
-										this.stripe.tokens.create({
-											card: card
-										}).then((token: any) => {
-											const params = {
-												source: token.id
-											};
-											this.logger.info('begin createSource. ' + customer_email);
-											this.stripe.customers.createSource(customer.id, params).then((card: any) => {
-												this.logger.info('end createSource. ' + customer_email);
-												this.put_id(response, operator, customer.id, (customer_id: string) => {
-													this.logger.info('end createSource. ' + customer_email);
-													this.SendSuccess(response, customer_id);
-												});
-											}).catch((error: any) => {
-												this.SendError(response, error);
-											})
-										}).catch((error: any) => {
-											this.SendError(response, error);
-										});
-									}).catch((error: any) => {
-										this.SendError(response, error);
-									});
-
-								} else {
-									*/
 									const customer_email = operator.username;
 									this.stripe.tokens.create({card: card}).then((token: any) => {
 										const params = {
@@ -711,21 +656,103 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * @returns none
 	 */
-	public sendReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
+	public customer(customer_id: string, callback: (error: IErrorObject, customer: any) => void): void {
+		this.stripe.customers.retrieve(customer_id).then((customer: any) => {
+			callback(null, customer);
+		}).catch((error: any) => {
+			callback(error, null);
+		});
+	}
+
+	/**
+	 */
+	public sendBankReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
+
+		const mail_object = this.module_config.receiptmail;
+
+		const formatter = new Intl.NumberFormat('ja-JP');
+
+		mail_object.html.content.text = mail_object.text.content.text = [
+			`amount: ¥${formatter.format(mailto.charge.amount)}`,
+		];
+
+		append.forEach((line) => {
+			mail_object.text.content.text.push(line);
+		});
+
+		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
+
+		this.sendMail({
+			address: mailto.address,
+			bcc: this.bcc,
+			title: "Recept",
+			template_url: "views/plugins/stripe/mail/mail_template.pug",
+			source_object: mail_object,
+			link: mailto.charge.receipt_url,
+			result_object: {code: 0, message: ["Prease Wait.", ""]},
+		}, (error: IErrorObject, result: any) => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+	/**
+	 */
+	public sendDeliveryReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
+
+		const mail_object = this.module_config.receiptmail;
+
+		const formatter = new Intl.NumberFormat('ja-JP');
+
+		mail_object.html.content.text = mail_object.text.content.text = [
+			`amount: ¥${formatter.format(mailto.charge.amount)}`,
+
+		];
+
+		append.forEach((line) => {
+			mail_object.text.content.text.push(line);
+		});
+
+		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
+
+		this.sendMail({
+			address: mailto.address,
+			bcc: this.bcc,
+			title: "Recept",
+			template_url: "views/plugins/stripe/mail/mail_template.pug",
+			source_object: mail_object,
+			link: mailto.charge.receipt_url,
+			result_object: {code: 0, message: ["Prease Wait.", ""]},
+		}, (error: IErrorObject, result: any) => {
+			if (!error) {
+				callback(null, result);
+			} else {
+				callback(error, null);
+			}
+		});
+	}
+
+	/**
+	 */
+	public sendCardReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 		const card = mailto.charge.payment_method_details.card;
 		const mail_object = this.module_config.receiptmail;
 
+		const formatter = new Intl.NumberFormat('ja-JP');
+
 		mail_object.html.content.text = mail_object.text.content.text = [
-			`amount: ¥${mailto.charge.amount}`,
+			`amount: ¥${formatter.format(mailto.charge.amount)}`,
 			`-`,
 			`card: ${card.brand}`,
 			`last4: ${card.last4}`,
 			`expired: ${card.exp_month}/${card.exp_year}`,
 			`-`,
 			`status: ${mailto.charge.outcome.seller_message}`,
-			`-`,
-			// 		`description: ${mailto.charge.description}`,
 		];
 
 		append.forEach((line) => {
@@ -769,6 +796,7 @@ export class Stripe extends Mail {
 							if (customer_id) {
 								this.stripe.customers.retrieve(customer_id).then((customer: any) => {
 									charge.customer = customer_id;
+									charge.amount = Math.round(charge.amount); // 四捨五入
 									this.stripe.charges.create(charge).then((charge: any) => {
 										if (charge.payment_method_details.card) {
 
@@ -817,6 +845,46 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * レシート
+	 * @param request
+	 * @param charge
+	 * @param callback
+	 * @returns none
+	 */
+	public receipt(request: any, charge: { customer: string, amount: number, currency: string, description: string, capture: boolean }, callback: Callback<{ address: string, charge: any, customer: any }>): void {
+		try {
+			if (request.user) {
+				if (this.enable) {
+					const operator: IAccountModel = this.Transform(request.user);
+					this.get_self(operator, (error: IErrorObject, account: any) => {
+						if (!error) {
+							const customer_id = account.content.stripe_id;
+							if (customer_id) {
+								this.stripe.customers.retrieve(customer_id).then((customer: any) => {
+									charge.customer = customer_id;
+									callback(null, {address: customer.email || operator.username, charge: charge, customer: customer});
+								}).catch((error: any) => {
+									callback(error, null);
+								});
+							} else {
+								callback({code: 1, message: "no customer. 8"}, null);
+							}
+						} else {
+							callback(error, null);
+						}
+					})
+				} else {
+					callback({code: -2, message: "disabled."}, null);
+				}
+			} else {
+				callback({code: -1, message: "not logged in."}, null);
+			}
+		} catch (error) {
+			callback(error, null);
+		}
+	}
+
+	/**
 	 * チャージ
 	 * @param request
 	 * @param response
@@ -825,7 +893,7 @@ export class Stripe extends Mail {
 	public _charge(request: any, response: IJSONResponse): void {
 		this.charge(request, request.body, (error, mailto: any) => {
 			if (!error) {
-				this.sendReceipt(mailto, [], (error, mail_result: any) => {
+				this.sendCardReceipt(mailto, [], (error, mail_result: any) => {
 					if (!error) {
 						this.SendSuccess(response, mail_result);
 					} else {

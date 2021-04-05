@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IRole, ISession} from "../../../../../types/platform/universe";
+import {AuthLevel, Callback, IErrorObject, ISession} from "../../../../../types/platform/universe";
 
 import {Directive, EventEmitter, Output} from "@angular/core";
 
@@ -39,13 +39,13 @@ export abstract class SessionableComponent {
 	 * authLevel
 	 * @returns level
 	 */
-	 public get auth(): number {
-	 	let result: number = AuthLevel.public;
-	 	if (this.privateCurrentSession) {
-	 		result = this.privateCurrentSession.auth;
-	 	}
-	 	return result;
-	 }
+	public get auth(): number {
+		let result: number = AuthLevel.public;
+		if (this.privateCurrentSession) {
+			result = this.privateCurrentSession.auth;
+		}
+		return result;
+	}
 
 	/**
 	 * login
@@ -163,7 +163,7 @@ export abstract class SessionableComponent {
 					this.privateCurrentSession = results;
 					callback(null, results);
 				} else {
-					callback({code: -1, message:"error."}, null);
+					callback({code: -1, message: "error."}, null);
 				}
 			} else {
 				callback(error, null);

@@ -67,7 +67,7 @@ export class Paypal extends Wrapper {
 
 	}
 
-	public charge(request: { session: any, body: any}, response: IJSONResponse): void {
+	public charge(request: { session: any, body: any }, response: IJSONResponse): void {
 
 	}
 

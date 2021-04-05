@@ -1,9 +1,9 @@
 
 .box-header {
-    word-wrap: break-word;
-    width: 100%;
-    line-height: 1rem;
-    font-size: 0.8rem;
+	word-wrap: break-word;
+	width: 100%;
+	line-height: 1rem;
+	font-size: 0.8rem;
 }
 
 .default-box-body {
@@ -43,10 +43,9 @@
 }
 
 
-
 .box-body {
-    filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
-    background-color: #e0e0e0;
+	filter: drop-shadow(0px 0px 2px rgba(71, 108, 154, 0.4));
+	background-color: #e0e0e0;
 	color: #6e6e6e;
 }
 
@@ -108,13 +107,13 @@
 
 
 .fab-center {
-	position:relative;
-	top:-20px;
-	right:-20px;
-	font-size:20px;
-	font-weight:900;
+	position: relative;
+	top: -20px;
+	right: -20px;
+	font-size: 20px;
+	font-weight: 900;
 }
 
 mat-paginator {
-	background-color: rgba(255,255,255,0);
+	background-color: rgba(255, 255, 255, 0);
 }

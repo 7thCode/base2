@@ -38,8 +38,7 @@ import {TextareaComponent} from "./textarea/textarea.component";
 		ButtonComponent,
 		TextareaComponent,
 	],
-	providers: [
-	],
+	providers: [],
 	imports: [
 		FlexLayoutModule,
 		CommonModule,
@@ -54,8 +53,7 @@ import {TextareaComponent} from "./textarea/textarea.component";
 	exports: [
 		PageEditComponent,
 	],
-	bootstrap: [
-	],
+	bootstrap: [],
 })
 
 export class PageEditModule {

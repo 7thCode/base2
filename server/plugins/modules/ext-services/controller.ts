@@ -26,34 +26,76 @@ export class ExtServices extends Wrapper {
 		super(event, config, logger);
 	}
 
+
+	private wide_to_single(strVal: string): string {
+
+		const halfVal = strVal.replace(/[！-～]/g,
+			(tmpStr) => {
+				return String.fromCharCode(tmpStr.charCodeAt(0) - 0xFEE0);
+			}
+		);
+
+		return halfVal.replace(/”/g, "\"")
+			.replace(/’/g, "'")
+			.replace(/‘/g, "`")
+			.replace(/￥/g, "\\")
+			.replace(/　/g, " ")
+			.replace(/〜/g, "~");
+	}
+
+	private normalize_postal(code: string): string {
+		let result: string = "";
+		for (let index = 0; index < code.length; index++) {
+			const char = code.charAt(index);
+			if (["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].indexOf(char) >= 0) {
+				result += char;
+			}
+		}
+		return result;
+	}
+
 	/**
 	 *
 	 *
 	 */
 	public zip_to_address(req: any, response: IJSONResponse): void {
+		try {
+			const zip: string = req.params.zip;
+			const clean_zip: string = this.normalize_postal(this.wide_to_single(zip));
 
-		const zip: string = req.params.zip;
-		const get_options: any = {
-			url: "https://zipcloud.ibsnet.co.jp/api/search?zipcode=" + zip,
-			method: "GET",
-			json: true,
-		};
+			const get_options: any = {
+				url: "https://zipcloud.ibsnet.co.jp/api/search?zipcode=" + clean_zip,
+				method: "GET",
+				json: true,
+			};
 
-		request(get_options, (error: IErrorObject, from_receiver: any, body: any): void => {
-			if (!error) {
-				if (body.status === 200) {
-					if (body.results.length > 0) {
-						this.SendSuccess(response, body.results[0]);
+			request(get_options, (error: IErrorObject, from_receiver: any, body: any): void => {
+				if (!error) {
+					if (body) {
+						if (body.status === 200) {
+							if (body.results) {
+								if (body.results.length > 0) {
+									this.SendSuccess(response, body.results[0]);
+								} else {
+									this.SendError(response, {code: -1, message: "住所が見つかりません。"});
+								}
+							} else {
+								this.SendError(response, {code: -1, message: "住所が見つかりません。"});
+							}
+						} else {
+							this.SendError(response, {code: -1, message: body.message});
+						}
 					} else {
-						this.SendError(response, {code: -1, message: ""});
+						this.SendError(response, {code: -1, message: "不明なエラー。"});
 					}
 				} else {
-					this.SendError(response, error);
+					this.SendError(response, {code: -1, message: "不明なエラー。"});
 				}
-			} else {
-				this.SendError(response, error);
-			}
-		});
+			});
+		} catch (e) {
+			this.SendError(response, {code: -1, message: e.message});
+		}
+
 	}
 
 }

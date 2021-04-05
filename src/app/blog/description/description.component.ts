@@ -37,7 +37,7 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar,router, title, meta);
+		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar, router, title, meta);
 	}
 
 	/**/

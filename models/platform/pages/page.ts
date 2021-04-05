@@ -120,9 +120,9 @@ namespace PageModel {
 		})
 	};
 
-	Page.methods._save = function (callback: Callback<any>): void {
-		this.save(callback);
-	};
+	// Page.methods._save = function (callback: Callback<any>): void {
+	// 	this.save(callback);
+	// };
 
 	Page.statics.get_page = function (username: string, path: string, object: any, callback: (error: IErrorObject, doc: any, mimetype: string) => void): void {
 		this.model("Page").findOne({$and: [{username}, {"content.path": path}]}).then((instance: any): void => {

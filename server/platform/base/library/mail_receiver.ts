@@ -33,7 +33,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public addFlags(imap: any,UID: string, flags: string[], callback: Callback<any>) {
+	public addFlags(imap: any, UID: string, flags: string[], callback: Callback<any>) {
 		try {
 			if (imap) {
 				imap.addFlags(UID, flags, (error: any, flags: any) => {
@@ -50,7 +50,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public removeFlags(imap: any,UID: string, flags: string[], callback: Callback<any>) {
+	public removeFlags(imap: any, UID: string, flags: string[], callback: Callback<any>) {
 		try {
 			if (imap) {
 				imap.removeFlags(UID, flags, (error: any, flags: any) => {
@@ -88,7 +88,7 @@ export class MailReceiver implements IMailReceiverModule {
 		try {
 			if (imap) {
 				const stream = imap.createMessageStream(UID);
-				simpleParser(stream, (error:IErrorObject, mail: any) => {
+				simpleParser(stream, (error: IErrorObject, mail: any) => {
 					if (!error) {
 						callback(null, mail);
 					} else {
@@ -96,13 +96,13 @@ export class MailReceiver implements IMailReceiverModule {
 					}
 				});
 
-			// 	simpleParser(stream)
-			// 		.then((mail: any) => {
-			// 			callback(null, mail);
-			// 		})
-			// 		.catch((error: IErrorObject) => {
-			// 			callback(error, null);
-			// 		});
+				// 	simpleParser(stream)
+				// 		.then((mail: any) => {
+				// 			callback(null, mail);
+				// 		})
+				// 		.catch((error: IErrorObject) => {
+				// 			callback(error, null);
+				// 		});
 			} else {
 				callback({code: 1, message: "not imap"}, null);
 			}
@@ -114,7 +114,7 @@ export class MailReceiver implements IMailReceiverModule {
 	/**
 	 *
 	 */
-	public deleteMessage(imap: any, uid: string, callback:(error: IErrorObject) => void): void {
+	public deleteMessage(imap: any, uid: string, callback: (error: IErrorObject) => void): void {
 		try {
 			if (imap) {
 				imap.deleteMessage(uid, callback)
@@ -142,7 +142,7 @@ export class MailReceiver implements IMailReceiverModule {
 				})
 
 				imap.on("connect", () => {
-					handler(null, imap,"connect", null);
+					handler(null, imap, "connect", null);
 				})
 
 				imap.on("new", (message: any) => {
@@ -150,16 +150,16 @@ export class MailReceiver implements IMailReceiverModule {
 				});
 
 				imap.on('close', () => {
-					handler(null, imap,"close", null);
+					handler(null, imap, "close", null);
 				})
 
 				imap.connect()
 
 			} else {
-				handler({code: 1, message: "not imap"}, null,"", null);
+				handler({code: 1, message: "not imap"}, null, "", null);
 			}
 		} catch (error) {
-			handler(error, null,"", null);
+			handler(error, null, "", null);
 		}
 
 	}

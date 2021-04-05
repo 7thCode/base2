@@ -67,9 +67,9 @@ namespace NativeFileModel {
 		});
 	};
 
-	NativeFile.methods._save = function (): Promise<any> {
-		return this.save();
-	};
+	// NativeFile.methods._save = function (): Promise<any> {
+	// 	return this.save();
+	// };
 
 	NativeFile.statics.remove_by_id = function (user: IAccountModel, filepath: string): Promise<any> {
 		return this.model("NativeFile").findOneAndRemove(query_by_user_write(user, {filepath: filepath}));

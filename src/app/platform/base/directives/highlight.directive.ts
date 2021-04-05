@@ -25,11 +25,13 @@ export class HighlightDirective {
 	 */
 	@Input("highlight")
 	public highlightColor: string = "";
+
 	/**
 	 *
 	 * @param el
 	 */
-	constructor(private el: ElementRef) { }
+	constructor(private el: ElementRef) {
+	}
 
 	/**
 	 *

@@ -186,7 +186,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 					disableClose: true,
 				});
 
-				dialog.beforeClosed().subscribe((result: {content: object}): void => {
+				dialog.beforeClosed().subscribe((result: { content: object }): void => {
 					if (result) { // if not cancel then
 						this.Progress(true);
 						this.update(id, this.confirmToModel(result.content), (error: IErrorObject, result: any): void => {

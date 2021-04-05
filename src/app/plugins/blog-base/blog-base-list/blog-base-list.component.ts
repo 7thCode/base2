@@ -16,7 +16,7 @@ export class BlogBaseListComponent extends ResponsiveComponent implements OnInit
 
 	@Input() public type: string;
 
-	public groups:{ _id: { yyyy: number, mm: number }, entries: [], count: number }[];
+	public groups: { _id: { yyyy: number, mm: number }, entries: [], count: number }[];
 
 	protected service: BlogBaseService;
 

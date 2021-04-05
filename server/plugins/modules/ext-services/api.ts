@@ -8,12 +8,10 @@
 
 // https://stripe.com/docs/api/idempotent_requests
 
-import {IErrorObject} from "../../../../types/platform/universe";
-
 const express: any = require("express");
 export const router = express.Router();
 
-const event : any = require.main.exports.event;
+const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
 const config: any = require.main.exports.config;
 

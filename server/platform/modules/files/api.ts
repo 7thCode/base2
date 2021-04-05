@@ -29,34 +29,34 @@ const file: any = new Files(event, ConfigModule, logger, connection);
 
 file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 	if (!error) {
-/*
-		const cache_write = (user_id: string, _path: string, input: any, callback: (error: IErrorObject) => void): void => {
-			try {
-				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
-				const cache_dir: string = path.dirname(cache_file);
-				fs.mkdir(cache_dir, {recursive: true}, (error: IErrorObject) => {
-					if (!error) {
-						const dest = fs.createWriteStream(cache_file);
-						input.pipe(dest);
+		/*
+				const cache_write = (user_id: string, _path: string, input: any, callback: (error: IErrorObject) => void): void => {
+					try {
+						const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
+						const cache_dir: string = path.dirname(cache_file);
+						fs.mkdir(cache_dir, {recursive: true}, (error: IErrorObject) => {
+							if (!error) {
+								const dest = fs.createWriteStream(cache_file);
+								input.pipe(dest);
+							}
+							callback(error);
+						});
+					} catch (error) {
+						callback(error);
 					}
-					callback(error);
-				});
-			} catch (error) {
-				callback(error);
-			}
-		};
+				};
 
-		const cache_delete = (user_id: string, _path: string, callback: (error: IErrorObject) => void): void => {
-			try {
-				const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
-				fs.unlink(cache_file, (error: IErrorObject) => {
-					callback(error);
-				});
-			} catch (error) {
-				callback(error);
-			}
-		};
-*/
+				const cache_delete = (user_id: string, _path: string, callback: (error: IErrorObject) => void): void => {
+					try {
+						const cache_file: string = path.join(project_root, "public", cache_root, user_id, _path);
+						fs.unlink(cache_file, (error: IErrorObject) => {
+							callback(error);
+						});
+					} catch (error) {
+						callback(error);
+					}
+				};
+		*/
 
 		router.get("/files/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
@@ -127,13 +127,13 @@ file.init(systemsConfig.initfiles, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-	// 	router.get("/" + cache_root + ":user_id/*", [gatekeeper.default,
-	// 		(request: any, response: any, next: () => void): void => {
-	// 			logger.trace(request.url);
-	// 			gatekeeper.catch(response, (): void => {
-	// 				file.renderFile(request, response, next);
-	// 			});
-	// 		}]);
+		// 	router.get("/" + cache_root + ":user_id/*", [gatekeeper.default,
+		// 		(request: any, response: any, next: () => void): void => {
+		// 			logger.trace(request.url);
+		// 			gatekeeper.catch(response, (): void => {
+		// 				file.renderFile(request, response, next);
+		// 			});
+		// 		}]);
 
 	} else {
 		logger.fatal("init error. (files) ", error.message);

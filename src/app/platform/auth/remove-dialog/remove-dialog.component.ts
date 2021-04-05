@@ -87,7 +87,7 @@ export class RemoveDialogComponent extends BaseDialogComponent implements OnInit
 	 */
 	public onAccept(): void {
 		this.Progress(true);
-		this.auth.remove( (error: IErrorObject, result: any) => {
+		this.auth.remove((error: IErrorObject, result: any) => {
 			if (!error) {
 				this.matDialogRef.close(this.data);
 			} else {

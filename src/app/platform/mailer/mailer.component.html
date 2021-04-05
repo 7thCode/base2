@@ -1,24 +1,26 @@
 <ng-container>
-    <mat-card style="margin:2rem;">
+	<mat-card style="margin:2rem;">
 		<mat-card-header>
 			<div style="font-size: 32px;font-weight: 900;">Mailer</div>
 		</mat-card-header>
-        <mat-card-content>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-				<mat-paginator [length]="count" [pageSize]="size" (page)="onPage($event)">
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<mat-paginator (page)="onPage($event)" [length]="count" [pageSize]="size">
 				</mat-paginator>
-                <button mat-fab color="primary" [disabled]="isProgress" (click)="onSend()" class="fab-center">+</button>
+				<button (click)="onSend()" [disabled]="isProgress" class="fab-center" color="primary" mat-fab>+</button>
 			</div>
 			<mat-list>
-				<mat-list-item *ngFor="let message of results" [ngStyle]="isSeenStyle(message)"  fxLayout="row" fxLayoutAlign="space-between">
+				<mat-list-item *ngFor="let message of results" [ngStyle]="isSeenStyle(message)" fxLayout="row" fxLayoutAlign="space-between">
 					<div fxFlex="40px">
-						<button mat-icon-button color="warn" [disabled]="isProgress" (click)="onDelete(message)"><mat-icon>delete</mat-icon></button>
+						<button (click)="onDelete(message)" [disabled]="isProgress" color="warn" mat-icon-button>
+							<mat-icon>delete</mat-icon>
+						</button>
 					</div>
 					<div fxFlex="140px">{{messageDate(message)}}</div>
 					<div fxFlex="240px">{{message.from.name}}</div>
-					<div fxFlex class="pointer_cursor" (click)="onReply(message)">{{message.title}}</div>
+					<div (click)="onReply(message)" class="pointer_cursor" fxFlex>{{message.title}}</div>
 				</mat-list-item>
 			</mat-list>
-        </mat-card-content>
-    </mat-card>
+		</mat-card-content>
+	</mat-card>
 </ng-container>

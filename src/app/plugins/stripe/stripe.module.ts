@@ -47,15 +47,15 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 
 		FlexLayoutModule,
 
- 		MatDialogModule,
- 		MatCardModule,
- 		MatIconModule,
- 		MatButtonModule,
- 		MatInputModule,
- 		MatSelectModule,
- 		MatPaginatorModule,
- 		MatGridListModule,
- 		MatTooltipModule,
+		MatDialogModule,
+		MatCardModule,
+		MatIconModule,
+		MatButtonModule,
+		MatInputModule,
+		MatSelectModule,
+		MatPaginatorModule,
+		MatGridListModule,
+		MatTooltipModule,
 
 		BaseModule,
 

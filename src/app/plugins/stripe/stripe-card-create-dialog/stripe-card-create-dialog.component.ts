@@ -7,7 +7,6 @@
 "use strict";
 
 import {Component, Inject} from "@angular/core";
-import {FormControl, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 /**
@@ -23,11 +22,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 export class StripeCardCreateDialogComponent {
 
 	public months = [
-		 "1","2","3","4","5","6","7","8","9","10","11","12"
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
 	]
 
 	public years = [
-		 "2020","2021","2022","2023","2024","2025"
+		"2020", "2021", "2022", "2023", "2024", "2025"
 	]
 
 	/**

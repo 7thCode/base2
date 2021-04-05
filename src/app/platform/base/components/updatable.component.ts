@@ -191,7 +191,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message:"error."}, null);
+							callback({code: -1, message: "error."}, null);
 						}
 					} else {
 						callback(error, null);

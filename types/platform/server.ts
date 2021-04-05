@@ -65,7 +65,7 @@ export interface IAccountModel {
 
 	public(): IAccountPublic;
 
-	_save(): void;
+	save(): void;
 
 	mail(): string;
 
@@ -115,7 +115,7 @@ export interface IUpdatableModel {
 
 	_create(user: IAccountModel, body: any, cb: Callback<any>): void;
 
-	_save(): void;
+	save(): void;
 
 	set_rights(user: IAccountModel, id: string, rights: IRights): Promise<any>;
 
@@ -138,7 +138,7 @@ export interface ISecureUpdatableModel {
 
 	_create(user: IAccountModel, key: string, body: any, cb: Callback<any>): void;
 
-	_save(): void;
+	save(): void;
 
 	set_rights(user: IAccountModel, id: string, rights: IRights): Promise<any>;
 
@@ -157,7 +157,7 @@ export interface ISecureUpdatableModel {
 
 export interface IPublishModel {
 
-	_save(): void;
+	save(): void;
 
 	public(): any;
 

@@ -13,7 +13,6 @@ import {retry} from "rxjs/operators";
 import {Callback} from "../../../../types/platform/universe";
 
 import {QueryableService} from "../base/services/queryable.service";
-import {IResult} from "../../../../types/platform/server";
 
 @Injectable({
 	providedIn: "root",
@@ -62,7 +61,7 @@ export class AccountsService extends QueryableService {
 		this.http.get(this.endPoint + "/accounts/auth", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
-					callback(null,result.value);
+					callback(null, result.value);
 				} else {
 					callback(result, null);
 				}

@@ -125,8 +125,8 @@ export class MailerService extends HttpService {
 	 * @param flags フラグ
 	 * @param callback オブジェクトを返すコールバック
 	 */
-	public addFlags(mailbox: string, UID: string,flags: string[], callback: Callback<object>): void {
-		this.http.put(this.endPoint + "/" + this.model + "/auth/addflags/" + encodeURIComponent(mailbox)+ "/" + encodeURIComponent(UID), {flags:flags}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public addFlags(mailbox: string, UID: string, flags: string[], callback: Callback<object>): void {
+		this.http.put(this.endPoint + "/" + this.model + "/auth/addflags/" + encodeURIComponent(mailbox) + "/" + encodeURIComponent(UID), {flags: flags}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
@@ -147,8 +147,8 @@ export class MailerService extends HttpService {
 	 * @param flags フラグ
 	 * @param callback オブジェクトを返すコールバック
 	 */
-	public removeflags(mailbox: string, UID: string,flags: string[], callback: Callback<object>): void {
-		this.http.put(this.endPoint + "/" + this.model + "/auth/removeflags/" + encodeURIComponent(mailbox)+ "/" + encodeURIComponent(UID),{flags:flags}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public removeflags(mailbox: string, UID: string, flags: string[], callback: Callback<object>): void {
+		this.http.put(this.endPoint + "/" + this.model + "/auth/removeflags/" + encodeURIComponent(mailbox) + "/" + encodeURIComponent(UID), {flags: flags}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);

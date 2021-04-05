@@ -170,6 +170,28 @@ const normal: () => void = () => {
 
 		// database
 
+		let port = "27017";
+
+		if (config.db.port) {
+			port = config.db.port;
+		}
+
+		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + ":" + port + "/" + config.db.name;
+		if (config.db.noauth) {
+			connect_url = config.db.protocol + "://" + config.db.address + ":" + port + "/" + config.db.name;
+		}
+
+		const options: any = {
+			keepAlive: 1,
+			connectTimeoutMS: 1000000,
+			// 	reconnectTries: 30,
+			// 	reconnectInterval: 2000,
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			// 	useUnifiedTopology: true,
+		};
+
+
 		mongoose.connection.on("connected", () => {
 			logger.info("connected");
 		});
@@ -325,27 +347,6 @@ const normal: () => void = () => {
 
 			callback(server);
 		});
-
-		let port = "27017";
-
-		if (config.db.port) {
-			port = config.db.port;
-		}
-
-		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + ":" + port + "/" + config.db.name;
-		if (config.db.noauth) {
-			connect_url = config.db.protocol + "://" + config.db.address + ":" + port + "/" + config.db.name;
-		}
-
-		const options: any = {
-			keepAlive: 1,
-			connectTimeoutMS: 1000000,
-			// 	reconnectTries: 30,
-			// 	reconnectInterval: 2000,
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			// 	useUnifiedTopology: true,
-		};
 
 		// database
 		mongoose.connect(connect_url, options)

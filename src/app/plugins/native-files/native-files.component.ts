@@ -21,9 +21,7 @@ import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog
 
 import {Spinner} from "../../platform/base/library/spinner";
 import {ResizeDialogComponent} from "../../platform/image/resize-dialog/resize-dialog.component";
-import {FilesService} from "../../platform/files/files.service";
 import {NativeFilesService} from "./native-files.service";
-import {IAccountModel} from "../../../../types/platform/server";
 
 /**
  * ファイル
@@ -208,7 +206,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	/*
 	*
 	*/
-	public resizeDialog(file: any, image:any, callback: Callback<any>): void {
+	public resizeDialog(file: any, image: any, callback: Callback<any>): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
 			width: "30%",
@@ -256,7 +254,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	 * @param path パス
 	 * @param files ファイルオブジェクト
 	 */
-	public onFileDrop(path: string, files: any[], escapeResize:boolean): void {
+	public onFileDrop(path: string, files: any[], escapeResize: boolean): void {
 		if (files.length > 0) {
 
 			const promises: any[] = [];

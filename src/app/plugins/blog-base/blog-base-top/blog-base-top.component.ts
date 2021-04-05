@@ -12,7 +12,7 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Spinner} from "../../../platform/base/library/spinner";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {IArticleModelContent, IErrorObject} from "../../../../../types/platform/universe";
+import {IErrorObject} from "../../../../../types/platform/universe";
 // import {BlogBaseDialogComponent} from "../blog-base-dialog/blog-base-dialog.component";
 import {YesNoDialogComponent} from "../../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 import {BlogBaseService} from "../blog-base.service";
@@ -95,11 +95,11 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		]);
 
 
-	// 	this.getSession((error: IErrorObject, session: any | null): void => {
-	// 		if (session) {
-	// 			this.auth = session.auth;
-	// 		}
-	// 	});
+		// 	this.getSession((error: IErrorObject, session: any | null): void => {
+		// 		if (session) {
+		// 			this.auth = session.auth;
+		// 		}
+		// 	});
 
 	}
 
@@ -157,6 +157,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 	 * アップデートダイアログ
 	 * @param id ターゲット
 	 */
+
 	/*
 	public updateDialog(id: string): void {
 		this.get(id, (error: IErrorObject, result: any): void => {

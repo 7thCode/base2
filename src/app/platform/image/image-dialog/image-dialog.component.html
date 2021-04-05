@@ -5,15 +5,15 @@
 			<div fxLayout="row">
 				<mat-card fxFlex="80%" fxLayoutAlign="center center" style="padding:1rem;">
 					<image-cropper
-						[imageChangedEvent]="imageChangedEvent"
-						[imageBase64]="imageBase64()"
-						[maintainAspectRatio]="false"
-						[format]="format()"
+						(cropperReady)="cropperReady()"
 						(imageCropped)="imageCropped($event)"
 						(imageLoaded)="imageLoaded()"
-						(cropperReady)="cropperReady()"
 						(loadImageFailed)="loadImageFailed()"
-						(rotate)="onRotate($event)">
+						(rotate)="onRotate($event)"
+						[format]="format()"
+						[imageBase64]="imageBase64()"
+						[imageChangedEvent]="imageChangedEvent"
+						[maintainAspectRatio]="false">
 					</image-cropper>
 				</mat-card>
 				<!-- <mat-card fxFlex="20%" fxLayout="column" fxLayoutAlign="center start">
@@ -36,9 +36,9 @@
 
 	<div class="spacer"></div>
 
-	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-		<button mat-raised-button color="primary" (click)="onAccept()">OK</button>
-		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around" style="margin:6px;">
+		<button (click)="onAccept()" color="primary" mat-raised-button>OK</button>
+		<button (click)="cancel()" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 
 </div>

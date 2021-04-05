@@ -10,7 +10,6 @@ import {Injectable} from "@angular/core";
 import {InteractionChannel} from "../library/channel";
 
 
-
 /**
  * 汎用ネームドイベントチャネル
  * 名前付きのチャネルを管理する。

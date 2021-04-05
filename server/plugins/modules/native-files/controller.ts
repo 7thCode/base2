@@ -9,7 +9,7 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {INativeFileModel} from "../../../../types/plugins/server";
-import {IAccountModel, IDeleteFile, IDeleteRequest, IDParam, IJSONResponse, IPostFile, IPostRequest, IUpdatableModel} from "../../../../types/platform/server";
+import {IAccountModel, IDeleteFile, IJSONResponse, IPostFile, IUpdatableModel} from "../../../../types/platform/server";
 
 const Updatable: any = require("../../../platform/base/controllers/updatable_controller");
 
@@ -40,10 +40,10 @@ export class NativeFiles extends Updatable {
 	private static mailAddressToFileName(s: string): string {
 		let result: string = "";
 		const table: any = {
-			"#":"!00", "%":"!01", "&":"!02", "'":"!03",
-			"*":"!04", "/":"!05", "?":"!06", "^":"!07",
-			"_":"!08", "`":"!09", "{":"!0A", "|":"!0B",
-			"}":"!0C", "~":"!0D"
+			"#": "!00", "%": "!01", "&": "!02", "'": "!03",
+			"*": "!04", "/": "!05", "?": "!06", "^": "!07",
+			"_": "!08", "`": "!09", "{": "!0A", "|": "!0B",
+			"}": "!0C", "~": "!0D"
 		}
 		for (const t of s) {
 			const c = table[t];

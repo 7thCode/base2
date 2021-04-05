@@ -8,7 +8,7 @@
 
 import {IErrorObject} from "../../../../../types/platform/universe";
 
-import {Component, Inject, Input, OnInit} from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -79,6 +79,7 @@ export class WithdrawDialogComponent extends BaseDialogComponent implements OnIn
 			});
 		}
 	}
+
 	/**
 	 *
 	 */

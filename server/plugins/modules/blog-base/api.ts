@@ -25,11 +25,11 @@ const entries: any = new Entries(event, ConfigModule, logger);
 entries.init(usersConfig.initentries, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-	// router.get("/robots.txt", (request: any, response: any) => {
-	// 	gatekeeper.catch(response, () => {
-	// 		entries.robots(request, response);
-	// 	});
-	// });
+		// router.get("/robots.txt", (request: any, response: any) => {
+		// 	gatekeeper.catch(response, () => {
+		// 		entries.robots(request, response);
+		// 	});
+		// });
 
 		router.get("/entries/sitemap.xml", (request: any, response: any) => {
 			gatekeeper.catch(response, () => {

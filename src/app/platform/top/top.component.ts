@@ -6,20 +6,21 @@
 
 "use strict";
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 /*
 * */
 @Component({
-  selector: 'app-top',
-  templateUrl: './top.component.html',
-  styleUrls: ['./top.component.css']
+	selector: 'app-top',
+	templateUrl: './top.component.html',
+	styleUrls: ['./top.component.css']
 })
 export class TopComponent implements OnInit {
 
-  constructor() { }
+	constructor() {
+	}
 
-  public ngOnInit(): void {
-  }
+	public ngOnInit(): void {
+	}
 
 }

@@ -8,20 +8,20 @@
 
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Callback, IErrorObject} from "../../../../types/platform/universe";
+import {Callback} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "../../platform/base/services/http.service";
 
 export interface IZipAddress {
-	address1:string;
-	address2:string;
-	address3:string;
-	kana1:string;
-	kana2:string;
-	kana3:string;
-	prefcode:string;
-	zipcode:string;
+	address1: string;
+	address2: string;
+	address3: string;
+	kana1: string;
+	kana2: string;
+	kana3: string;
+	prefcode: string;
+	zipcode: string;
 }
 
 @Injectable({
@@ -43,23 +43,59 @@ export class ExtService extends HttpService {
 
 	/**
 	 */
+	private wide_to_single(strVal: string): string {
+
+		const halfVal = strVal.replace(/[！-～]/g,
+			(tmpStr) => {
+				return String.fromCharCode(tmpStr.charCodeAt(0) - 0xFEE0);
+			}
+		);
+
+		return halfVal.replace(/”/g, "\"")
+			.replace(/’/g, "'")
+			.replace(/‘/g, "`")
+			.replace(/￥/g, "\\")
+			.replace(/　/g, " ")
+			.replace(/〜/g, "~");
+	}
+
+	/**
+	 */
+	private normalize_postal(code: string): string {
+		let result: string = "";
+		for (let index = 0; index < code.length; index++) {
+			const char = code.charAt(index);
+			if (["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].indexOf(char) >= 0) {
+				result += char;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 */
 	public zipToAddress(zip: string, callback: Callback<IZipAddress>): void {
 		if (zip.length > 3) {
-			this.http.get(this.endPoint + "/ext/zip/address/" + zip, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
-				if (result) {
-					if (result.code === 0) {
-						callback(null, result.value);
+			const clean_zip: string = this.normalize_postal(this.wide_to_single(zip));
+			if (clean_zip) {
+				this.http.get(this.endPoint + "/ext/zip/address/" + clean_zip, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+					if (result) {
+						if (result.code === 0) {
+							callback(null, result.value);
+						} else {
+							callback(result, null);
+						}
 					} else {
-						callback(result, null);
+						callback(this.networkError, null);
 					}
-				} else {
-					callback(this.networkError, null);
-				}
-			}, (error: HttpErrorResponse): void => {
-				callback({code: -1, message: error.message + " 8419"}, null);
-			});
+				}, (error: HttpErrorResponse): void => {
+					callback({code: -1, message: error.message + " 8419"}, null);
+				});
+			} else {
+				callback(null, null);
+			}
 		} else {
-			callback({code: -1, message:"zip too short. 2539"}, null);
+			callback(null, null);
 		}
 	}
 

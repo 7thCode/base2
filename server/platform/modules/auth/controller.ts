@@ -18,7 +18,7 @@ const QRCode: any = require("qrcode");
 const mongoose: any = require("mongoose");
 
 const path: any = require("path");
-const project_root = path.join(__dirname, "../../../..");
+const project_root: string = path.join(__dirname, "../../../..");
 
 const _config: string = path.join(project_root, "config");
 
@@ -858,8 +858,12 @@ export class Auth extends Mail {
 											timestamp: Date.now(),
 										};
 
-										const mail_object = this.message.passwordmail;
-										mail_object.html.content.nickname = account.content.nickname;
+										const mail_object: any = this.message.passwordmail;
+										if (mail_object.html) {
+											if (mail_object.html.content) {
+												mail_object.html.content.nickname = account.content.nickname;
+											}
+										}
 
 										const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 										const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
@@ -914,7 +918,7 @@ export class Auth extends Mail {
 									if (account.provider === "local") {　// OAuthは除外
 										account.setPassword(password, (error: IErrorObject): void => {
 											if (!error) {
-												account._save((error: IErrorObject, obj: any): void => {
+												account.save((error: IErrorObject, obj: any): void => {
 													if (!error) {
 														response.redirect(target);
 													} else {
@@ -974,7 +978,7 @@ export class Auth extends Mail {
 														const password: string = value.password;
 														account.setPassword(password, (error: IErrorObject): void => {
 															this.ifSuccess(response, error, (): void => {
-																account._save((error: IErrorObject, obj: any): void => {
+																account.save((error: IErrorObject, obj: any): void => {
 																	this.ifSuccess(response, error, (): void => {
 																		this.SendSuccess(response, {});
 																	});
@@ -1032,7 +1036,7 @@ export class Auth extends Mail {
 														target: "/",
 														timestamp: Date.now(),
 													};
-													const mail_object = this.message.usernamemail;
+													const mail_object: any = this.message.usernamemail;
 													mail_object.html.content.nickname = account.content.nickname;
 													const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 													const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
@@ -1094,7 +1098,7 @@ export class Auth extends Mail {
 										if (!samename) {
 											if (account.provider === "local") {　// OAuthは除外
 
-												const setter = {
+												const setter: any = {
 													$set: {
 														username: update_username,
 													},
@@ -1164,7 +1168,7 @@ export class Auth extends Mail {
 														this.ifExist(response, this.errors.username_already_regist, !samename, () => {   // no samename then
 															this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
 
-																const setter = {
+																const setter: any = {
 																	$set: {
 																		username: update_username,
 																	},
@@ -1353,7 +1357,7 @@ export class Auth extends Mail {
 						newAccount.publickey = keypair.public;
 						newAccount.content = operator.content;
 
-						newAccount._save((error: IErrorObject, obj: any): void => {
+						newAccount.save((error: IErrorObject, obj: any): void => {
 							if (!error) {
 								response.redirect("/");
 							}
@@ -1392,7 +1396,7 @@ export class Auth extends Mail {
 						newAccount.privatekey = keypair.private;
 						newAccount.publickey = keypair.public;
 						newAccount.content = operator.content;
-						newAccount._save((error: IErrorObject, obj: object): void => {
+						newAccount.save((error: IErrorObject, obj: object): void => {
 							if (!error) {
 								response.redirect("/");
 							}
@@ -1430,7 +1434,7 @@ export class Auth extends Mail {
 					newAccount.privatekey = keypair.private;
 					newAccount.publickey = keypair.public;
 					newAccount.content = this.content;
-					newAccount._save((error: IErrorObject, obj: object): void => {
+					newAccount.save((error: IErrorObject, obj: object): void => {
 						if (!error) {
 							response.redirect("/");
 						}
@@ -1468,7 +1472,7 @@ export class Auth extends Mail {
 					newAccount.privatekey = keypair.private;
 					newAccount.publickey = keypair.public;
 					newAccount.content = this.content;
-					newAccount._save((error: IErrorObject, obj: object): void => {
+					newAccount.save((error: IErrorObject, obj: object): void => {
 						if (!error) {
 							// Auth.auth_event("auth:instagram", newAccount);
 							response.redirect("/");
@@ -1509,7 +1513,7 @@ export class Auth extends Mail {
 					newAccount.publickey = keypair.public;
 					newAccount.content = {mails: [], nickname: request.user.displayName, id: "", description: ""};
 					// newAccount.registerDate = Date.now();              // Legacy of v1
-					newAccount._save((error: IErrorObject, obj: object): void => {
+					newAccount.save((error: IErrorObject, obj: object): void => {
 						if (!error) {
 							// Auth.auth_event("auth:line", newAccount);
 							response.redirect("/");

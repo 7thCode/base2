@@ -5,10 +5,10 @@
 		<mat-card>
 			<mat-card-content>
 				<div fxLayout="column">
-					<form #form="ngForm" novalidate fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between">
+					<form #form="ngForm" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between" novalidate>
 						<mat-form-field class="input-text">
 							<mat-label>Path...</mat-label>
-							<input matInput type="text" placeholder="path/..." [(ngModel)]="content.path" #path="ngModel" name="path" required minlength="3" maxlength="255">
+							<input #path="ngModel" [(ngModel)]="content.path" matInput maxlength="255" minlength="3" name="path" placeholder="path/..." required type="text">
 							<mat-hint>3文字以上255文字まで</mat-hint>
 							<mat-error *ngIf="path.errors?.required;">入力してください</mat-error>
 							<mat-error *ngIf="path.errors?.maxlength">長すぎます</mat-error>
@@ -39,7 +39,7 @@
 					</form>
 				</div>
 				<div fxLayout="column">
-					<ace-editor [(text)]="content.value" [theme]="'chrome'" [mode]="content.category" #editor style="height: calc(100vh - 340px);border-style: solid; border-color: #d0d0d0;"></ace-editor>
+					<ace-editor #editor [(text)]="content.value" [mode]="content.category" [theme]="'chrome'" style="height: calc(100vh - 340px);border-style: solid; border-color: #d0d0d0;"></ace-editor>
 				</div>
 			</mat-card-content>
 		</mat-card>
@@ -47,10 +47,10 @@
 
 	<div class="spacer"></div>
 
-	<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-		<mat-slide-toggle [color]="'primary'" [(ngModel)]="content.enabled" name="enable" [disabled]="false">enable</mat-slide-toggle>
-		<button mat-raised-button color="primary" [disabled]="form.invalid || invalid()" (click)="onAccept()" cdkFocusInitial>OK</button>
-		<button mat-stroked-button color="warn" mat-dialog-close="" (click)="cancel()">Cancel</button>
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around" style="margin:6px;">
+		<mat-slide-toggle [(ngModel)]="content.enabled" [color]="'primary'" [disabled]="false" name="enable">enable</mat-slide-toggle>
+		<button (click)="onAccept()" [disabled]="form.invalid || invalid()" cdkFocusInitial color="primary" mat-raised-button>OK</button>
+		<button (click)="cancel()" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 
 </div>

@@ -96,7 +96,7 @@ export class LoginTotpDialogComponent extends BaseDialogComponent implements OnI
 		});
 	}
 
-	public verify(callback: (error:IErrorObject, result: boolean) => void): void {
+	public verify(callback: (error: IErrorObject, result: boolean) => void): void {
 		this.auth.verify_totp(this.content.username, this.content.code, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				callback(null, result);

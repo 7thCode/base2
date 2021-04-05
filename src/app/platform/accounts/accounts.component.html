@@ -5,34 +5,34 @@
 		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
-				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size">
 				</mat-paginator>
-				<button mat-fab color="primary" [disabled]="isProgress" (click)="createDialog()" class="fab-center">+</button>
+				<button (click)="createDialog()" [disabled]="isProgress" class="fab-center" color="primary" mat-fab>+</button>
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" style="width:100%;">
 					<mat-label>Nickname...</mat-label>
-					<input matInput autocomplete="off" type="text" placeholder="Find..." [(ngModel)]="nickname" (change)="findByNickname();">
-					<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="nickname='';findByNickname();">
+					<input (change)="findByNickname();" [(ngModel)]="nickname" autocomplete="off" matInput placeholder="Find..." type="text">
+					<button (click)="nickname='';findByNickname();" aria-label="Clear" mat-button mat-icon-button matSuffix>
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 			</div>
-			<mat-grid-list [cols]="breakpoint" rowHeight="1:1" (window:resize)="onResize($event)">
+			<mat-grid-list (window:resize)="onResize($event)" [cols]="breakpoint" rowHeight="1:1">
 				<mat-grid-tile *ngFor="let account of results" [colspan]="account.cols" [rowspan]="account.rows" [style.background]="account.auth | authcolor">
 
 					<mat-grid-tile-header fxLayout="row" fxLayoutAlign="space-between center" style="padding-left:4px;padding-right:4px;line-height:32px;">
-						<app-image [fileName]="'avatar.jpg'" [view]="'visible'" [width]="32" [height]="32" [username]="account.username"></app-image>
-						<button mat-icon-button color="primary" (click)="updateDialog(account.user_id)">
+						<app-image [fileName]="'avatar.jpg'" [height]="32" [username]="account.username" [view]="'visible'" [width]="32"></app-image>
+						<button (click)="updateDialog(account.user_id)" color="primary" mat-icon-button>
 							<mat-icon>folder_shared</mat-icon>
 						</button>
-						<button mat-icon-button color="primary" auth-username-immediate-button [username]="account.username">
+						<button [username]="account.username" auth-username-immediate-button color="primary" mat-icon-button>
 							<mat-icon>account_box</mat-icon>
 						</button>
-						<button mat-icon-button color="warn" auth-password-immediate-button [username]="account.username">
+						<button [username]="account.username" auth-password-immediate-button color="warn" mat-icon-button>
 							<mat-icon>vpn_key</mat-icon>
 						</button>
-						<button mat-icon-button color="warn" *ngIf="account.auth > 1" (click)="deleteDialog(account.user_id)">
+						<button (click)="deleteDialog(account.user_id)" *ngIf="account.auth > 1" color="warn" mat-icon-button>
 							<mat-icon>clear</mat-icon>
 						</button>
 					</mat-grid-tile-header>

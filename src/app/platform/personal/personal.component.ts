@@ -125,7 +125,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 			if (!error) {
 				this.create = session.create;
 				this.username = session.username;
-		// 		this._auth = session.auth;
+				// 		this._auth = session.auth;
 				this.get((error: IErrorObject, content: any): void => {
 					if (!error) {
 						this.nickname = content.nickname;

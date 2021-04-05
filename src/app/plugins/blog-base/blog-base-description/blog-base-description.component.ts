@@ -7,7 +7,7 @@
 import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 
 import {Directive, OnInit} from "@angular/core";
-import {ActivatedRoute, NavigationEnd, ParamMap, Router} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {DomSanitizer, Meta, SafeHtml, Title} from '@angular/platform-browser';
 
@@ -18,7 +18,6 @@ import {ResponsiveComponent} from "../../../platform/base/components/responsive.
 import {SessionService} from "../../../platform/base/services/session.service";
 import {BlogBaseService} from "../blog-base.service";
 import {environment} from "../../../../environments/environment";
-import {filter} from "rxjs/operators";
 
 @Directive()
 export class BlogBaseDescriptionComponent extends ResponsiveComponent implements OnInit {

@@ -13,8 +13,7 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 // import * as NodeRSA from "node-rsa";
-
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 import {HttpService} from "../base/services/http.service";
 import {PublicKeyService} from "../base/services/publickey.service";
@@ -51,8 +50,8 @@ export class AuthService extends HttpService {
 	 */
 	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
-		// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
-		// 	callback(null, rsa.encrypt(plain, "base64"));
+			// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
+			// 	callback(null, rsa.encrypt(plain, "base64"));
 			callback(null, plain);
 		} catch (e) {
 			callback(e, "");
@@ -70,13 +69,13 @@ export class AuthService extends HttpService {
 		try {
 			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
-			 	AuthService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
-			 		if (!error) {
-			 			callback(null, encryptedText);
-			 		} else {
-			 			callback(error, "");
-			 		}
-			 	});
+				AuthService.publickey_encrypt(key, JSON.stringify(plain), (error, encryptedText): void => {
+					if (!error) {
+						callback(null, encryptedText);
+					} else {
+						callback(error, "");
+					}
+				});
 			} else {
 				callback(null, JSON.stringify(plain));
 			}
@@ -478,7 +477,6 @@ export class AuthService extends HttpService {
 	}
 
 
-
 	/**
 	 * パスワード更新
 	 * メール存在確認あり
@@ -549,8 +547,6 @@ export class AuthService extends HttpService {
 			}
 		});
 	}
-
-
 
 
 	/**

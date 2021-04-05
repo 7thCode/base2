@@ -4,16 +4,13 @@
  * opensource.org/licenses/mit-license.php
  */
 
-import { Router } from '@angular/router';  // 変更
+import {ActivatedRoute, Router} from '@angular/router'; // 変更
 import {Component, OnInit} from "@angular/core";
 import {SessionService} from "../../platform/base/services/session.service";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-import {BlogBaseService} from "../../plugins/blog-base/blog-base.service";
-
 import {BlogBaseArchiveComponent} from "../../plugins/blog-base/blog-base-archive/blog-base-archive.component";
-import {ActivatedRoute} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
 import {BlogService} from "../blog.service";
 
@@ -44,7 +41,7 @@ export class BlogArchiveComponent extends BlogBaseArchiveComponent implements On
 		protected snackbar: MatSnackBar,
 		private router: Router
 	) {
-		super(session, blogsService, breakpointObserver,domSanitizer, activatedRoute, snackbar);
+		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar);
 	}
 
 	public click(resource: any): void {

@@ -10,7 +10,7 @@ import {Callback, IErrorObject} from "../../../types/platform/universe";
 
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, VERSION} from "@angular/core";
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, VERSION, ViewChild} from "@angular/core";
 
 import {RouterOutlet} from '@angular/router';
 
@@ -21,7 +21,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ResponsiveComponent} from "./base/components/responsive.component";
 
 // import {environment} from '../../environments/environment';
-
 import {AccountsService} from "./accounts/accounts.service";
 import {SessionService} from "./base/services/session.service";
 
@@ -77,10 +76,10 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	) {
 		super(session, breakpointObserver);
 		this.widthValue = 0;
-	// 	this.sock = null;
+		// 	this.sock = null;
 		this.date = new Date();
 		this.device = "";
-	// 	this.sock = new WebSocket(environment.webSocket);
+		// 	this.sock = new WebSocket(environment.webSocket);
 		this.spinner = new Spinner(overlay);
 	}
 
@@ -165,7 +164,8 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		if (opened) {
 			this.sidenav.close().then((): void => {
 
-			}).catch((error): void => {});
+			}).catch((error): void => {
+			});
 		}
 	}
 
@@ -190,7 +190,7 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		super.ngOnInit();
 
 		this.angular = VERSION.full;
-		this.dark =	(localStorage.getItem("darkmode") === "true");
+		this.dark = (localStorage.getItem("darkmode") === "true");
 
 		this.Progress(true);
 
@@ -213,17 +213,17 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		});
 
 		// for ws
-	// 	this.sock.addEventListener("open", (e: any) => {
-	// 	});
+		// 	this.sock.addEventListener("open", (e: any) => {
+		// 	});
 //
-	// 	this.sock.addEventListener("message", (e: any) => {
-	// 	});
+		// 	this.sock.addEventListener("message", (e: any) => {
+		// 	});
 //
-	// 	this.sock.addEventListener("close", (e: any) => {
-	// 	});
+		// 	this.sock.addEventListener("close", (e: any) => {
+		// 	});
 //
-	// 	this.sock.addEventListener("error", (e: any) => {
-	// 	});
+		// 	this.sock.addEventListener("error", (e: any) => {
+		// 	});
 //
 		this.getSession((error: IErrorObject, session: object | null): void => {
 			this.widthValue = 200;

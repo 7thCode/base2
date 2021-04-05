@@ -13,8 +13,6 @@ import {Injectable} from "@angular/core";
 
 import {retry} from "rxjs/operators";
 
-import { environment } from '../../../environments/environment';
-
 import {HttpService} from "../base/services/http.service";
 
 @Injectable({
@@ -28,8 +26,8 @@ export class FragmentService extends HttpService {
 		super(http);
 	}
 
-	public get( user_id: string, path: string, callback: Callback<any>): void {
-		this.http.get(this.endPoint + "/pages/get/"  + encodeURIComponent(path) + "?u=" + encodeURIComponent(user_id) + "&t=e", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public get(user_id: string, path: string, callback: Callback<any>): void {
+		this.http.get(this.endPoint + "/pages/get/" + encodeURIComponent(path) + "?u=" + encodeURIComponent(user_id) + "&t=e", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				callback(null, result.value);
 			} else {

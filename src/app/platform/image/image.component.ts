@@ -15,12 +15,9 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {UploadableComponent} from "../base/components/uploadable.component";
 import {ImageDialogComponent} from "./image-dialog/image-dialog.component";
 
-import {environment} from '../../../environments/environment';
-
 import {SessionService} from "../base/services/session.service";
 import {ResizeDialogComponent} from "./resize-dialog/resize-dialog.component";
 import {FilesService} from "../files/files.service";
-import {IAccountModel} from "../../../../types/platform/server";
 
 /**
  * イメージ
@@ -61,7 +58,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		super(session);
 		this.description = "";
 		this.filesService = new FilesService(http);
-	// 	this.endPoint = environment.endPoint;
+		// 	this.endPoint = environment.endPoint;
 		this.imagePath = this.endPoint + "/files/get/blank.png";
 		this.resizeThreshold = {width: 1000, height: 1000};
 	}
@@ -235,7 +232,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 					case "cancel":
 						break;
 					case "update":
-						this.upload(this.fileName, result.content, "",{upsert: true}, (error: IErrorObject, result: any): void => {
+						this.upload(this.fileName, result.content, "", {upsert: true}, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.draw(this.fileName);
 								this.Complete("update", {name: this.fileName});
@@ -313,7 +310,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 							if (!error) {
 								if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
 									this.resizeDialog(file, image, (error: IErrorObject, result: any) => {
-										this.Upload(path, file);
+										this.Upload(path, result);
 									});
 								} else {
 									this.Upload(path, file);
@@ -329,7 +326,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 			}
 		}
 	}
-
 
 
 }

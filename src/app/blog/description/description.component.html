@@ -7,9 +7,9 @@
 			</mat-card-header>
 			<mat-card-content>
 				<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
-					<img style="margin:24px;max-width:300px;max-height: 300px;" [src]="imagePath()">
+					<img [src]="imagePath()" style="margin:24px;max-width:300px;max-height: 300px;">
 				</div>
-				<div style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;" [innerHTML]='description'></div>
+				<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
 			</mat-card-content>
 		</mat-card>
 	</div>

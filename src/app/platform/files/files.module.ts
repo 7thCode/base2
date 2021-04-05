@@ -40,12 +40,12 @@ import {SessionService} from "../base/services/session.service";
 
 		FlexLayoutModule,
 
- 		MatCardModule,
- 		MatIconModule,
- 		MatButtonModule,
- 		MatInputModule,
- 		MatGridListModule,
- 		MatPaginatorModule,
+		MatCardModule,
+		MatIconModule,
+		MatButtonModule,
+		MatInputModule,
+		MatGridListModule,
+		MatPaginatorModule,
 
 		BaseModule,
 		ImageModule,
@@ -53,8 +53,7 @@ import {SessionService} from "../base/services/session.service";
 	exports: [
 		FilesComponent,
 	],
-	bootstrap: [
-	],
+	bootstrap: [],
 })
 
 export class FilesModule {

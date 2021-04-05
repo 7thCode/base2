@@ -5,11 +5,11 @@
 			<mat-card-subtitle>{{create | date:"yy/MM/dd HH:mm"}}</mat-card-subtitle>
 		</mat-card-header>
 		<mat-card-content>
-			<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+			<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 
 				<mat-form-field style="margin:20px">
 					<mat-label>Nickname...</mat-label>
-					<input matInput autocomplete="off" type="text" placeholder="Xxxxxx..." [(ngModel)]="nickname" #nickname_input="ngModel" name="nickname" required minlength="2" maxlength="255">
+					<input #nickname_input="ngModel" [(ngModel)]="nickname" autocomplete="off" matInput maxlength="255" minlength="2" name="nickname" placeholder="Xxxxxx..." required type="text">
 					<mat-hint>3文字以上500文字まで</mat-hint>
 					<mat-error *ngIf="nickname_input.errors?.required;">入力してください</mat-error>
 					<mat-error *ngIf="nickname_input.errors?.maxlength">長すぎます</mat-error>
@@ -18,7 +18,7 @@
 
 				<mat-form-field style="margin:20px">
 					<mat-label>Description...</mat-label>
-					<textarea matInput autocomplete="off" type="text" placeholder="Xxxxxx..." [(ngModel)]="description" #description_input="ngModel" name="description" minlength="2" maxlength="255"></textarea>
+					<textarea #description_input="ngModel" [(ngModel)]="description" autocomplete="off" matInput maxlength="255" minlength="2" name="description" placeholder="Xxxxxx..." type="text"></textarea>
 					<mat-hint>3文字以上500文字まで</mat-hint>
 					<mat-error *ngIf="description_input.errors?.maxlength">長すぎます</mat-error>
 					<mat-error *ngIf="description_input.errors?.minlength">短すぎます</mat-error>
@@ -26,14 +26,14 @@
 
 				<mat-form-field style="margin:20px">
 					<mat-label>Id...</mat-label>
-					<input matInput autocomplete="off" type="text" placeholder="Xxxxxx..." [(ngModel)]="id" #id_input="ngModel" name="id" minlength="2" maxlength="255">
+					<input #id_input="ngModel" [(ngModel)]="id" autocomplete="off" matInput maxlength="255" minlength="2" name="id" placeholder="Xxxxxx..." type="text">
 					<mat-hint>3文字以上500文字まで</mat-hint>
 					<mat-error *ngIf="id_input.errors?.maxlength">長すぎます</mat-error>
 					<mat-error *ngIf="id_input.errors?.minlength">短すぎます</mat-error>
 				</mat-form-field>
 
 				<div fxLayout="row" fxLayoutAlign="center" style="margin:20px">
-					<button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onAccept()">OK</button>
+					<button (click)="onAccept()" [disabled]="form.invalid" color="primary" mat-raised-button>OK</button>
 				</div>
 			</form>
 

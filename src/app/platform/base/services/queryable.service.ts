@@ -11,10 +11,7 @@ import {Callback, IErrorObject, IQueryOption} from "../../../../../types/platfor
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
-import { environment } from '../../../../environments/environment';
-
 import {HttpService} from "./http.service";
-import {Injectable} from "@angular/core";
 
 /**
  * 参照サービスのベースクラス

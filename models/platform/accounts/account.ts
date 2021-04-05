@@ -57,9 +57,9 @@ namespace AccountModel {
 		return content;
 	};
 
-	Account.methods._save = function (callback: Callback<any>): void {
-		this.save(callback);
-	};
+	// Account.methods._save = function (callback: Callback<any>): void {
+	// 	this.save(callback);
+	// };
 
 	Account.methods.mail = function (): string {
 		let result: string = usernameToMail(this.username);

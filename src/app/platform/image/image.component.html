@@ -1,8 +1,8 @@
 <div [ngSwitch]="view">
-	<div *ngSwitchCase="'editable'" class="drop-area" [ngStyle]="style">
+	<div *ngSwitchCase="'editable'" [ngStyle]="style" class="drop-area">
 		<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
 	</div>
-	<div *ngSwitchCase="'rename'" class="drop-area" [ngStyle]="style">
+	<div *ngSwitchCase="'rename'" [ngStyle]="style" class="drop-area">
 		<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
 	</div>
 	<div *ngSwitchCase="'visible'" [ngStyle]="style">

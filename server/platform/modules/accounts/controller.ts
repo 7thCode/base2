@@ -306,7 +306,7 @@ export class Accounts extends Wrapper {
 					if (Accounts.own_by_name(operator, target.username)) {
 						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
 							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
-				 				this.ifExist(response, {code: -1, message: "Already Multi-factor authentication."}, !Boolean(account.secret), () => {
+								this.ifExist(response, {code: -1, message: "Already Multi-factor authentication."}, !Boolean(account.secret), () => {
 									const secret: any = SpeakEasy.generateSecret({
 										length: 20,
 										name: target.username,
@@ -331,7 +331,7 @@ export class Accounts extends Wrapper {
 									}).catch((error: any) => {
 										this.SendError(response, error);
 									})
-						 		});
+								});
 							});
 						}).catch((error: any) => {
 							this.SendError(response, error);
@@ -462,6 +462,7 @@ export class Accounts extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
+
 	/*
 	public delete_by_id(request: IAccountRequest<any>, response: IJSONResponse): void {
 		try {

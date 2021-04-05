@@ -1,14 +1,14 @@
 .fix-action-dialog {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .spacer {
-    flex-grow: 1;
+	flex-grow: 1;
 }
 
 
 .background {
-	background-color:#808080;
+	background-color: #808080;
 }

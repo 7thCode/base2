@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Component, Inject, NgZone, ViewChild} from "@angular/core";
+import {Component, Inject, NgZone} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
 
@@ -75,6 +75,7 @@ export class BlogBaseDialogComponent {
 	};
 
 	public images: any[];
+
 	/**
 	 * @constructor
 	 * @param data

@@ -1,13 +1,13 @@
 .container {
-    height: calc(100% - 60px);
+	height: calc(100% - 60px);
 	background-color: #dadada;
 }
 
 .sidenav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 200px;
 }
 
 /*# sourceMappingURL=progress.css.map */

@@ -80,6 +80,7 @@ export class LogoutDialogComponent extends BaseDialogComponent implements OnInit
 			});
 		}
 	}
+
 	/**
 	 *
 	 */

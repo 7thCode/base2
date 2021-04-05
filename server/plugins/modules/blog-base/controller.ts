@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IAccountModel, IArticleModel, IDParam, IGetByIDRequest, IJSONResponse, IPostRequest, IPutRequest, IQueryParam, IQueryRequest, IUpdatableModel} from "../../../../types/platform/server";
+import {IAccountModel, IArticleModel, IDParam, IGetByIDRequest, IJSONResponse, IQueryParam, IQueryRequest, IUpdatableModel} from "../../../../types/platform/server";
 import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 const Updatable: any = require("../../../platform/base/controllers/updatable_controller");
@@ -43,7 +43,7 @@ export class Entries extends Updatable {
 					mm: {$month: "$create"},
 					// 			dd: {$dayOfMonth: "$create"}
 				},
-				entries: {$push: {create:"$create", content: "$content"}},
+				entries: {$push: {create: "$create", content: "$content"}},
 				count: {$sum: 1}
 			}
 		});
@@ -55,7 +55,7 @@ export class Entries extends Updatable {
 				_id: {
 					type: "$content.type"
 				},
-				entries: {$push: {create:"$create", content: "$content"}},
+				entries: {$push: {create: "$create", content: "$content"}},
 				count: {$sum: 1}
 			}
 		});
@@ -115,7 +115,7 @@ export class Entries extends Updatable {
 			}).catch((error: IErrorObject) => {
 				response.send(error.message);
 			})
-		} catch(error) {
+		} catch (error) {
 			response.send(error.message);
 		}
 	}

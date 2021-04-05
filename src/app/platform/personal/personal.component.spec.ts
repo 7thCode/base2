@@ -1,4 +1,4 @@
-import { PersonalComponent } from './personal.component';
+import {PersonalComponent} from './personal.component';
 
 describe('PersonalComponent', () => {
 

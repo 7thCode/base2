@@ -8,11 +8,11 @@
 				</mat-card-subtitle>
 			</mat-card-header>
 			<mat-card-content>
-				<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+				<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 
 					<mat-form-field class="input-text">
 						<mat-label>Mail Address...</mat-label>
-						<input matInput autocomplete="off" type="email" email placeholder="user@name" [(ngModel)]="content.username" #username="ngModel" name="username" required minlength="3" maxlength="255">
+						<input #username="ngModel" [(ngModel)]="content.username" autocomplete="off" email matInput maxlength="255" minlength="3" name="username" placeholder="user@name" required type="email">
 						<mat-error *ngIf="username.errors?.email;">有効なメールアドレスで</mat-error>
 						<mat-error *ngIf="username.errors?.required;">入力してください</mat-error>
 						<mat-error *ngIf="username.errors?.maxlength">長すぎます</mat-error>
@@ -21,18 +21,18 @@
 
 					<div fxLayout="row">
 
-						<mat-form-field  class="input-text" fxFlex="90%">
+						<mat-form-field class="input-text" fxFlex="90%">
 							<mat-label>Password...</mat-label>
 							<div *ngIf="password_visible; then visible_input; else invisible_input"></div>
 							<ng-template #visible_input>
-								<input matInput type="text" placeholder="Password" [(ngModel)]="content.password" #password="ngModel" name="password" required maxlength="1000">
+								<input #password="ngModel" [(ngModel)]="content.password" matInput maxlength="1000" name="password" placeholder="Password" required type="text">
 							</ng-template>
 							<ng-template #invisible_input>
-								<input matInput type="password" placeholder="Password" [(ngModel)]="content.password" #password="ngModel" name="password" required maxlength="1000">
+								<input #password="ngModel" [(ngModel)]="content.password" matInput maxlength="1000" name="password" placeholder="Password" required type="password">
 							</ng-template>
 						</mat-form-field>
 
-						<button mat-button fxFlex="10%" matSuffix mat-icon-button (click)="password_visible = !password_visible;">
+						<button (click)="password_visible = !password_visible;" fxFlex="10%" mat-button mat-icon-button matSuffix>
 							<div *ngIf="password_visible; then visible_icon; else invisible_icon"></div>
 							<ng-template #visible_icon>
 								<mat-icon>visibility</mat-icon>
@@ -45,17 +45,17 @@
 				</form>
 			</mat-card-content>
 		</mat-card>
-	</mat-dialog-content >
+	</mat-dialog-content>
 	<div class="spacer"></div>
 	<mat-dialog-actions fxLayout="column" fxLayoutAlign="space-around" fxLayoutAlign.lt-sm="center">
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around" fxLayoutAlign.lt-sm="center">
-			<button mat-raised-button color="primary" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
-			<a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="color:#fdfdfd;" href="/auth/facebook"><i class="fab fa-facebook-square fa-lg"></i><span style="margin-left:4px">Facebook</span></a>
-			<a mat-raised-button color="primary" [disabled]="!form.invalid || progress" style="background-color:#fdfdfd;color:#303030;" href="/auth/apple"><i class="fab fa-apple fa-lg"></i><span style="margin-left:4px">Apple</span></a>
+			<button (click)="onAccept()" [disabled]="form.invalid || progress" cdkFocusInitial color="primary" mat-raised-button>OK</button>
+			<a [disabled]="!form.invalid || progress" color="primary" href="/auth/facebook" mat-raised-button style="color:#fdfdfd;"><i class="fab fa-facebook-square fa-lg"></i><span style="margin-left:4px">Facebook</span></a>
+			<a [disabled]="!form.invalid || progress" color="primary" href="/auth/apple" mat-raised-button style="background-color:#fdfdfd;color:#303030;"><i class="fab fa-apple fa-lg"></i><span style="margin-left:4px">Apple</span></a>
 		</div>
 		<mat-divider style="margin:8px;"></mat-divider>
 		<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
-			<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">Cancel</button>
+			<button [disabled]="progress" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 		</div>
 	</mat-dialog-actions>
 </div>

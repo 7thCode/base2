@@ -26,7 +26,7 @@ export class AuthisPipe implements PipeTransform {
 	 * @param level
 	 */
 	public transform(auth: number, level: string): boolean {
-		let result:boolean = false;     // public
+		let result: boolean = false;     // public
 		switch (level) {
 			case "system":
 				result = (auth <= AuthLevel.system);

@@ -6,11 +6,11 @@
 			<div class="description-text">{{content.description}}</div>
 		</mat-card-header>
 		<mat-card-content>
-			<form #form="ngForm" novalidate fxLayout="column" fxLayoutAlign="space-between">
+			<form #form="ngForm" fxLayout="column" fxLayoutAlign="space-between" novalidate>
 				{{content.username}}
 				<mat-form-field class="input-text">
 					<mat-label>Code...</mat-label>
-					<input matInput autocomplete="off" type="text" placeholder="000000" [(ngModel)]="content.code" #code="ngModel" name="code" required minlength="6" maxlength="6">
+					<input #code="ngModel" [(ngModel)]="content.code" autocomplete="off" matInput maxlength="6" minlength="6" name="code" placeholder="000000" required type="text">
 					<mat-error *ngIf="code.errors?.required;">入力してください</mat-error>
 					<mat-error *ngIf="code.errors?.maxlength">長すぎます</mat-error>
 					<mat-error *ngIf="code.errors?.minlength">短すぎます</mat-error>
@@ -20,8 +20,8 @@
 	</mat-card>
 </mat-dialog-content>
 
-<mat-dialog-actions style="margin:6px;" fxLayout="row" fxLayoutAlign="space-around">
-	<button mat-raised-button color="primary" [disabled]="form.invalid || progress" (click)="onAccept()" cdkFocusInitial>OK</button>
-	<button mat-stroked-button color="warn" [disabled]="progress" mat-dialog-close="">Cancel</button>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around" style="margin:6px;">
+	<button (click)="onAccept()" [disabled]="form.invalid || progress" cdkFocusInitial color="primary" mat-raised-button>OK</button>
+	<button [disabled]="progress" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 </mat-dialog-actions>
 

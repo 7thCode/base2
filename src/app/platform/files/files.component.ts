@@ -208,7 +208,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	/*
 	*
 	*/
-	public resizeDialog(file: any, image:any, callback:  Callback<any>): void {
+	public resizeDialog(file: any, image: any, callback: Callback<any>): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
 			width: "30%",
@@ -239,7 +239,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	/*
 	*
 	*/
-	public getImage(target_file: any, callback:  Callback<any>): void {
+	public getImage(target_file: any, callback: Callback<any>): void {
 		const reader = new FileReader();
 		const image = new Image();
 		reader.onload = (event) => {
@@ -256,38 +256,38 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * @param path パス
 	 * @param files ファイルオブジェクト
 	 */
-	public onFileDrop(path: string, files: any[], escapeResize:boolean): void {
+	public onFileDrop(path: string, files: any[], escapeResize: boolean): void {
 		if (files.length > 0) {
 
 			const promises: any[] = [];
 			files.forEach((file) => {
 				promises.push(new Promise((resolve, reject) => {
-					 const type = this.mimeToType(file.type);
-					 switch (type) {  // resizeable?
-						 case "jpeg":
-						 case "png":
-								 this.getImage(file, (error, image) => {
-									 if (!error) {
-										 if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
-											 this.resizeDialog(file, image, (error: IErrorObject, resized: any) => {
-												 if (!error) {
-													 resolve(resized);
-												 } else {
-													 reject(error);
-												 }
-											 });
-										 } else {
-											 resolve(file);
-										 }
-									 } else {
-										 reject(error);
-									 }
-								 })
-							 break;
-						 default:
-							 resolve(file);
-					 }
-				 }));
+					const type = this.mimeToType(file.type);
+					switch (type) {  // resizeable?
+						case "jpeg":
+						case "png":
+							this.getImage(file, (error, image) => {
+								if (!error) {
+									if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
+										this.resizeDialog(file, image, (error: IErrorObject, resized: any) => {
+											if (!error) {
+												resolve(resized);
+											} else {
+												reject(error);
+											}
+										});
+									} else {
+										resolve(file);
+									}
+								} else {
+									reject(error);
+								}
+							})
+							break;
+						default:
+							resolve(file);
+					}
+				}));
 			});
 
 			promises.forEach((promise) => {

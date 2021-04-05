@@ -5,31 +5,31 @@
 		</mat-card-header>
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
-				<mat-paginator [length]="count" [pageSize]="size" (page)="Page($event)">
+				<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size">
 				</mat-paginator>
-				<button mat-fab color="primary" [disabled]="isProgress" (click)="createDialog()" class="fab-center">+</button>
+				<button (click)="createDialog()" [disabled]="isProgress" class="fab-center" color="primary" mat-fab>+</button>
 			</div>
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<mat-form-field fxFlex="60%" fxFlex.lt-sm="100%" fxLayout.sm="column" style="width:100%;">
 					<mat-label>Path...</mat-label>
-					<input matInput autocomplete="off" type="text" placeholder="Find by..." [(ngModel)]="path" (change)="findByPath();">
-					<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="path='';findByPath();">
+					<input (change)="findByPath();" [(ngModel)]="path" autocomplete="off" matInput placeholder="Find by..." type="text">
+					<button (click)="path='';findByPath();" aria-label="Clear" mat-button mat-icon-button matSuffix>
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 			</div>
-			<mat-grid-list [cols]="breakpoint"  rowHeight="1:1" (window:resize)="onResize($event)">
-				<mat-grid-tile class="box-body" *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows">
+			<mat-grid-list (window:resize)="onResize($event)" [cols]="breakpoint" rowHeight="1:1">
+				<mat-grid-tile *ngFor="let resource of results" [colspan]="resource.cols" [rowspan]="resource.rows" class="box-body">
 					<mat-grid-tile-header>
 						<div class="box-header">{{resource.path}}</div>
 					</mat-grid-tile-header>
 					<a href="/pages/get/{{resource.path}}" target="_blank">{{resource.path}}</a>
 					<mat-grid-tile-footer fxLayout="row" fxLayoutAlign="space-around center">
 
-						<button mat-icon-button (click)="updateDialog(resource.id)">
+						<button (click)="updateDialog(resource.id)" mat-icon-button>
 							<mat-icon color="primary">edit</mat-icon>
 						</button>
-						<button mat-icon-button (click)="onDelete($event, resource.id)">
+						<button (click)="onDelete($event, resource.id)" mat-icon-button>
 							<mat-icon color="warn">delete_sweep</mat-icon>
 						</button>
 

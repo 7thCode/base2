@@ -10,9 +10,7 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
-import {ChangeDetectorRef, ElementRef, OnDestroy, OnInit, ViewChild, VERSION, Directive} from "@angular/core";
-
-import {RouterOutlet} from '@angular/router';
+import {ChangeDetectorRef, Directive, ElementRef, OnDestroy, OnInit, VERSION, ViewChild} from "@angular/core";
 
 import {MatDialog} from "@angular/material/dialog";
 import {MatSidenav} from "@angular/material/sidenav";
@@ -106,7 +104,8 @@ export class BlogBaseComponent extends ResponsiveComponent implements OnInit, On
 		if (opened) {
 			this.sidenav.close().then((): void => {
 
-			}).catch((error): void => {});
+			}).catch((error): void => {
+			});
 		}
 	}
 

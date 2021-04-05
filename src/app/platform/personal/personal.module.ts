@@ -36,9 +36,9 @@ import {PersonalComponent} from "./personal.component";
 
 		FlexLayoutModule,
 
- 		MatCardModule,
- 		MatButtonModule,
- 		MatInputModule,
+		MatCardModule,
+		MatButtonModule,
+		MatInputModule,
 
 		PageEditModule,
 

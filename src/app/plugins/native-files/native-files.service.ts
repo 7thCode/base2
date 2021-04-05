@@ -8,10 +8,8 @@
 
 import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
-
-import { environment } from '../../../environments/environment';
 
 import {HttpService} from "../../platform/base/services/http.service";
 import {Injectable} from "@angular/core";
