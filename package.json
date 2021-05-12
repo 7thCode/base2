@@ -116,7 +116,7 @@
 		"@types/node": "^12.12.28",
 		"@types/node-rsa": "^1.0.0",
 		"codelyzer": "^5.2.2",
-		"cypress": "^4.9.0",
+		"cypress": "^7.3.0",
 		"gulp": "^4.0.2",
 		"gulp-sourcemaps": "^2.6.5",
 		"gulp-typescript": "^5.0.1",
