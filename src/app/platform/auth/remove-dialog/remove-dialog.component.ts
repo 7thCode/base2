@@ -57,7 +57,7 @@ export class RemoveDialogComponent extends BaseDialogComponent implements OnInit
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 			});
 		}
 	}
@@ -66,14 +66,14 @@ export class RemoveDialogComponent extends BaseDialogComponent implements OnInit
 	 * メッセージ表示
 	 * @param message
 	 */
-	private messageBar(message: string): void {
-		if (message) {
-			this.snackbar.open(message, "Close", {
-				duration: 8000,
-				panelClass: ["message-snackbar"]
-			});
-		}
-	}
+	// private messageBar(message: string): void {
+	// 	if (message) {
+	// 		this.snackbar.open(message, "Close", {
+	// 			duration: 8000,
+	// 			panelClass: ["message-snackbar"]
+	// 		});
+	// 	}
+	// }
 
 	/**
 	 *

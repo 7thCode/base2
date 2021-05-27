@@ -36,6 +36,9 @@ export class Entries extends Updatable {
 	}
 
 	private static build_group_by_month_aggrigater(aggregater: any[]): void {
+
+		aggregater.push({$sort: {create : -1}});
+
 		aggregater.push({
 			$group: {
 				_id: {
@@ -50,6 +53,9 @@ export class Entries extends Updatable {
 	}
 
 	private static build_group_by_type_aggrigater(aggregater: any[]): void {
+
+		aggregater.push({$sort: {create : -1}});
+
 		aggregater.push({
 			$group: {
 				_id: {

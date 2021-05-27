@@ -18,7 +18,7 @@ const gatekeeper: any = require("../../base/library/gatekeeper");
 const Session: any = require("./controller");
 const session: any = new Session(event, config, logger);
 
-router.get("/session/auth", [gatekeeper.default,
+router.get("/session/auth", [gatekeeper.default, gatekeeper.enabled,
 	(request: any, response: object): void => {
 		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
@@ -26,7 +26,7 @@ router.get("/session/auth", [gatekeeper.default,
 		});
 	}]);
 
-router.put("/session/auth", [gatekeeper.default, gatekeeper.authenticate,
+router.put("/session/auth", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: any, response: object): void => {
 		logger.trace(request.url);
 		gatekeeper.catch(response, () => {

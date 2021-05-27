@@ -101,38 +101,70 @@ const normal: () => void = () => {
 
 		logger.info("Hundred.");
 
-		if (config.socket_port) {
-			const socket_port: number = 1 * config.socket_port;
-			const websocket: any = require("ws");
-			const server: any = websocket.Server;
-			const socket: any = new server({port: socket_port});
+		let socket: any = null;
 
-			socket.on("connection", (client: any): void => {
+		if (config.has_socket) {
 
-				const onData = (data: any): void => {
-					// socket.clients.forEach((client: any): void => {
-					if (client) {
-						if (client.readyState === websocket.OPEN) {
-							// 	const r: any = IPV6.ToIPV6(client._socket.remoteAddress);
-							client.send(JSON.stringify(data));
+			const onResponse = (client: any, data: any): any => {
+				return data;
+			}
+
+			const onResponseOthers = (client: any, data: any): any => {
+				return data;
+			}
+
+			const onBroadcast = (client: any, data: any): any => {
+				return data;
+			}
+
+		 	const broadcast = (data: any): void =>  {
+				localEvent.emit('broadcast', data);
+			}
+
+			const websocket = require('ws');
+			socket = new websocket.Server({ noServer: true });
+
+			socket.on("connection", (connected_client: any): void => {
+
+				connected_client.on("open", (): void => {
+					// 			console.log("open");
+				});
+
+				connected_client.on("message", (data: any, flags: any): void => {
+					const packet = JSON.parse(data);
+					socket.clients.forEach((each_client: any): void => {
+						if (each_client.readyState === websocket.OPEN) {
+							let response = null;
+							if (connected_client === each_client) {
+								response = onResponse(each_client, packet);
+							} else {
+								response = onResponseOthers(each_client, packet);
+							}
+							if (response) {
+								each_client.send(JSON.stringify(response));
+							}
 						}
-					}
-				};
-
-				client.on("open", (): void => {
-					// 	console.log("open");
+					});
 				});
 
-				client.on("message", (data: any, flags: any): void => {
-					// 		console.log(data);
-				});
-
-				client.on("close", (): void => {
-					localEvent.removeListener("data", onData);
+				connected_client.on("close", (): void => {
+					// 				localEvent.removeListener("data", onData);
 				});
 
 				// server -> client
-				localEvent.on("data", onData);
+				localEvent.on('broadcast', (data: any): void => {
+			 		socket.clients.forEach((each_client: any): void => {
+			 			if (each_client.readyState === websocket.OPEN) {
+			 				const response = onBroadcast(each_client, data);
+			 				if (response) {
+			 					each_client.send(JSON.stringify(response));
+			 				}
+			 			}
+			 		});
+			 	});
+
+				// server -> client
+				// 		localEvent.on("data", onData);
 			});
 		}
 
@@ -145,10 +177,6 @@ const normal: () => void = () => {
 		app.use(bodyParser.json({limit: config.bodysize}));
 		app.use(bodyParser.urlencoded({limit: config.bodysize, extended: true}));
 		app.use(cookieParser());
-
-		// logs
-		// log4js.configure("./config/platform/logs.json");
-		// const logger: any = log4js.getLogger("request");
 
 		module.exports.event = localEvent;
 		module.exports.config = _ConfigModule;
@@ -190,7 +218,6 @@ const normal: () => void = () => {
 			useUnifiedTopology: true,
 			// 	useUnifiedTopology: true,
 		};
-
 
 		mongoose.connection.on("connected", () => {
 			logger.info("connected");
@@ -311,7 +338,7 @@ const normal: () => void = () => {
 
 			logger.info("VR");
 
-			const server: Server = Serve(config, app);
+			const server: Server = Serve(config, socket, app);
 
 			// io.wait(config, event);
 
@@ -356,6 +383,10 @@ const normal: () => void = () => {
 					process.exit(1);
 				})
 			});
+
+		process.on('uncaughtException', (error) => {
+			console.error(error);
+		});
 
 		// Housekeeping GC
 		// kill -s SIGUSR1 id...
@@ -426,33 +457,33 @@ const normal: () => void = () => {
 	const servers: Server[] = [];
 
 	// todo: debug.
-/*
-	const now = new Date();
+	/*
+		const now = new Date();
 
-	const testcron1 = {
-		hour: 0,
-		minute: 0
-	};
+		const testcron1 = {
+			hour: 0,
+			minute: 0
+		};
 
-	testcron1.hour = now.getHours();
-	testcron1.minute = now.getMinutes() + 1;
-	if (testcron1.minute === 59) {
-		testcron1.minute = 0;
-		testcron1.hour++;
-	}
+		testcron1.hour = now.getHours();
+		testcron1.minute = now.getMinutes() + 1;
+		if (testcron1.minute === 59) {
+			testcron1.minute = 0;
+			testcron1.hour++;
+		}
 
-	const testcron2 = {
-		hour: 0,
-		minute: 0
-	};
+		const testcron2 = {
+			hour: 0,
+			minute: 0
+		};
 
-	testcron2.hour = now.getHours();
-	testcron2.minute = now.getMinutes() + 2;
-	if (testcron2.minute === 59) {
-		testcron2.minute = 0;
-		testcron2.hour++;
-	}
-*/
+		testcron2.hour = now.getHours();
+		testcron2.minute = now.getMinutes() + 2;
+		if (testcron2.minute === 59) {
+			testcron2.minute = 0;
+			testcron2.hour++;
+		}
+	*/
 	//
 
 	// cron
@@ -530,9 +561,11 @@ const normal: () => void = () => {
 // 	localEvent.emit('testtest');
 };
 
-const Serve = (config: any, app: any): any => {
+const Serve = (config: any, primary_socket: any, app: any): any => {
 
-	function onError(error: any): void {
+	const Connection = true;
+
+	const onError = (error: any): void => {
 		if (error.syscall === "listen") {
 			const bind: string = typeof port === "string"
 				? "Pipe " + port
@@ -558,7 +591,7 @@ const Serve = (config: any, app: any): any => {
 		}
 	}
 
-	function onListening(): void {
+	const onListening = (): void => {
 		process.send = process.send || function (message: string): boolean {
 			return true;
 		};  // for pm2 cluster.
@@ -571,6 +604,19 @@ const Serve = (config: any, app: any): any => {
 			console.info(" > kill -s SIGUSR1 " + process.pid);
 			console.info("for Backup & Compaction");
 			console.info(" > kill -s SIGUSR2 " + process.pid);
+		}
+	}
+
+	const onUpgrade = (request: any, secondary_socket: any, head: any): void => {
+		if (primary_socket) {
+			const origin = request.headers.origin;
+			if (Connection) {
+				primary_socket.handleUpgrade(request, secondary_socket, head, (ws: any) => {
+					primary_socket.emit('connection', ws, request);
+				});
+			} else {
+				secondary_socket.destroy();
+			}
 		}
 	}
 
@@ -593,6 +639,8 @@ const Serve = (config: any, app: any): any => {
 
 	server.on("error", onError);
 	server.on("listening", onListening);
+	server.on('upgrade', onUpgrade);
+
 	server.listen(port, "::0");
 
 	logger.info("V2");

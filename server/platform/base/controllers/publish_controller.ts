@@ -24,7 +24,7 @@ export abstract class Publishable extends Updatable {
 	 * @param logger
 	 * @constructor
 	 */
-	constructor(event: object, config: any, logger: object) {
+	protected constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
 	}
 

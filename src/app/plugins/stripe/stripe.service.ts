@@ -10,10 +10,9 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
-// import * as NodeRSA from "node-rsa";
+
 import {PublicKeyService} from "../../platform/base/services/publickey.service";
 import {HttpService} from "../../platform/base/services/http.service";
-
 
 @Injectable({
 	providedIn: "root",
@@ -32,12 +31,7 @@ export class StripeService extends HttpService {
 		private PublicKey: PublicKeyService,
 	) {
 		super(http);
-		// this.stripe = this.loadStripe();
 	}
-
-	// private async loadStripe() {
-	// 	return await loadStripe('pk_test_Ht8bLgBXv2BeLuDy7nXWpoJV00pQHaaDCK');
-	// }
 
 	/*
 	* @param key 公開鍵
@@ -202,13 +196,6 @@ export class StripeService extends HttpService {
 	 * @param callback
 	 */
 	public createSource(content: any, callback: Callback<any>): void {
-		/*
-				this.stripe.createToken(content).then((token: any) => {
-					console.log(token);
-				}).catch((error: any) => {
-					console.log(error);
-				});
-		*/
 		this.PublicKey.fixed((error, key): void => {
 			if (!error) {
 				this.value_encrypt(key, content, (error: IErrorObject, value: any): void => {
@@ -279,7 +266,7 @@ export class StripeService extends HttpService {
 		});
 	}
 
-	/*
+/*
  * @param id
  * @param content
  * @param callback
@@ -300,7 +287,6 @@ export class StripeService extends HttpService {
 		});
 	}
 
-
 	/**
 	 * チャージ
 	 *
@@ -320,6 +306,104 @@ export class StripeService extends HttpService {
 			}
 		}, (error: HttpErrorResponse): void => {
 			callback({code: -1, message: error.message + " 9021"}, null);
+		});
+	}
+
+	/**
+	 * 定期
+	 *
+	 * https://dashboard.stripe.com/test/products/create
+	 *
+	 * @param content　クリエイトデータ
+	 * @param callback コールバック
+	 */
+	public subscribe(content: any, callback: Callback<any>): void {
+		this.http.post(this.endPoint + "/stripe/subscribe", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9161"}, null);
+		});
+	}
+
+
+	/**
+	 * 定期
+	 *
+	 * https://dashboard.stripe.com/test/products/create
+	 *
+	 * @param content　クリエイトデータ
+	 * @param callback コールバック
+	 */
+	public is_subscribe(callback: Callback<any>): void {
+		this.http.get(this.endPoint + "/stripe/subscribe", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9761"}, null);
+		});
+	}
+
+
+	/**
+	 * 定期
+	 *
+	 * https://dashboard.stripe.com/test/products/create
+	 *
+	 * @param content　クリエイトデータ
+	 * @param callback コールバック
+	 */
+	public update_subscribe(content: any, callback: Callback<any>): void {
+		this.http.put(this.endPoint + "/stripe/subscribe", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9111"}, null);
+		});
+	}
+
+	/**
+	 * 定期
+	 *
+	 * https://dashboard.stripe.com/test/products/create
+	 *
+	 * @param content　クリエイトデータ
+	 * @param callback コールバック
+	 */
+	public cancel_subscribe(callback: Callback<any>): void {
+		this.http.delete(this.endPoint + "/stripe/subscribe", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+			if (result) {
+				if (result.code === 0) {
+					callback(null, result.value);
+				} else {
+					callback(result, null);
+				}
+			} else {
+				callback(this.networkError, null);
+			}
+		}, (error: HttpErrorResponse): void => {
+			callback({code: -1, message: error.message + " 9761"}, null);
 		});
 	}
 

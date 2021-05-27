@@ -43,7 +43,7 @@ export class Mailer extends Mail {
 		if (request.user) {
 			const params: any = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {code: -1, message: "not loged in."}, operator.login, (): void => {
+			this.ifExist(response, {code: -1, message: "not loged in. 3749"}, operator.login, (): void => {
 				this.connect((error: any, imap: any, type: string, message: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						switch (type) {

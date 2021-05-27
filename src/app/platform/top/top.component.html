@@ -1,5 +1,6 @@
 <ng-container>
-	<div class="container" fxLayout="row" fxLayoutAlign="center center">
-		<div class="title">Platform</div>
+	<div class="container" fxLayout="column" fxLayoutAlign="center center">
+		<div class="title">{{message}}</div>
+		<button mat-raised-button color="warn" style="width:fit-content" (click)="send()">ping!</button>
 	</div>
 </ng-container>

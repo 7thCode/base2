@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var typescript = require('gulp-typescript');
 var sourcemaps = require('gulp-sourcemaps');
+var replace     = require('gulp-replace');
 
 const configured_typescript = typescript.createProject("server_tsconfig.json");
 
@@ -67,6 +68,7 @@ gulp.task('build', () => {
 		'types/**/*.js',
 		'app.js',
 		'patch.js',
+		'server_tsconfig.json',
 		'package.json',
 		'package-lock.json',
 		'htdigest',
@@ -75,6 +77,12 @@ gulp.task('build', () => {
 	], {base: './', allowEmpty: true})
 		.pipe(gulp.dest('product'));
 
+});
+
+gulp.task('sign', () => {
+	return gulp.src('src/app/platform/platform.component.html')
+		.pipe(replace(/git_commit_hash\s[A-Za-z0-9]+/, 'git_commit_hash ' + process.env.GIT_COMMIT_HASH))
+		.pipe(gulp.dest('src/app/platform/'));
 });
 
 gulp.task('default', gulp.series('clean', 'compile', 'prebuild', 'build'), () => {
@@ -110,6 +118,9 @@ gulp.task('base_core', () => {
 		'package.json',
 		'package-lock.json',
 		'tsconfig*.json',
+		'server-tsconfig.json',
+		'tslint.json',
+		'.editorconfig',
 	], {base: './', allowEmpty: true})
 		.pipe(gulp.dest('base_core'));
 });

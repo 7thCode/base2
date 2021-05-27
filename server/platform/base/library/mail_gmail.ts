@@ -11,8 +11,8 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailGMail implements IMailSenderModule {
 
-	private smtpUser: any;
-	private account: any;
+	private readonly smtpUser: any;
+	private readonly account: any;
 
 	constructor(mailsetting: any, mailaccount: string) {
 		const mailer: any = require("nodemailer");

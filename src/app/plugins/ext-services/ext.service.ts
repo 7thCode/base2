@@ -89,7 +89,7 @@ export class ExtService extends HttpService {
 						callback(this.networkError, null);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " 8419"}, null);
+					callback({code: -1, message: error.message + " A8419"}, null);
 				});
 			} else {
 				callback(null, null);

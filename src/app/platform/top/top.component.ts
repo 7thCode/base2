@@ -7,6 +7,7 @@
 "use strict";
 
 import {Component, OnInit} from '@angular/core';
+import {SocketService} from "../base/services/socket.service";
 
 /*
 * */
@@ -17,10 +18,23 @@ import {Component, OnInit} from '@angular/core';
 })
 export class TopComponent implements OnInit {
 
-	constructor() {
+	message: string = '';
+	packet: any = {message: 'Platform'};
+
+	constructor(  private socket: SocketService) {
 	}
 
 	public ngOnInit(): void {
+		this.socket.addMessageListener((name, event) => {
+			if (name === 'message') {
+				this.packet = JSON.parse(event.data);
+				this.message = this.packet.message;
+			}
+		});
+	}
+
+	public send() {
+		this.socket.request(JSON.stringify(this.packet));
 	}
 
 }

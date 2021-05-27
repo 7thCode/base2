@@ -155,7 +155,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 8000
+				// 		duration: 8000,
 			});
 		}
 	}
@@ -164,14 +164,14 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * メッセージ表示
 	 * @param message
 	 */
-	private messageBar(message: string): void {
-		if (message) {
-			this.snackbar.open(message, "Close", {
-				duration: 8000,
-				panelClass: ["message-snackbar"]
-			});
-		}
-	}
+	// private messageBar(message: string): void {
+	// 	if (message) {
+	// 		this.snackbar.open(message, "Close", {
+	// 			duration: 8000,
+	// 			panelClass: ["message-snackbar"]
+	// 		});
+	// 	}
+	// }
 
 	/**
 	 * リストビューデコレータ
@@ -189,7 +189,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	* @returns columns
  	*/
 	protected widthToColumns(width: number): number {
-		let result: number = 4;
+		let result: number;
 		if (width < 600) {
 			result = 1;  // xs,
 		} else if (width < 960) {
@@ -221,7 +221,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 					if (accounts) {
 						this.results = accounts;
 					} else {
-						this.errorBar({code: -1, message: "error."});
+						this.errorBar({code: -1, message: "error. A1123"});
 					}
 				} else {
 					this.errorBar(error);
@@ -251,7 +251,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				if (accounts) {
 					this.results = accounts;
 				} else {
-					this.errorBar({code: -1, message: "error."});
+					this.errorBar({code: -1, message: "error. A 2344"});
 				}
 			} else {
 				this.errorBar(error);
@@ -301,7 +301,7 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				if (accounts) {
 					this.results = accounts;
 				} else {
-					this.errorBar({code: -1, message: "error."});
+					this.errorBar({code: -1, message: "error. A3392"});
 				}
 			} else {
 				this.errorBar(error);
@@ -395,8 +395,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 													this.results = accounts;
 													this.Complete("", result);
 												} else {
-													this.Complete("error", {code: -1, message: "error."});
-													this.errorBar({code: -1, message: "error."});
+													this.Complete("error", {code: -1, message: "error. A1898"});
+													this.errorBar({code: -1, message: "error. A0975"});
 												}
 											} else {
 												this.Complete("error", error);
@@ -404,8 +404,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 											}
 										});
 									} else {
-										this.Complete("error", {code: -1, message: "error."});
-										this.errorBar({code: -1, message: "error."});
+										this.Complete("error", {code: -1, message: "error. A8873"});
+										this.errorBar({code: -1, message: "error. A2739"});
 									}
 								} else {
 									this.Complete("error", error);
@@ -420,8 +420,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 
 					});
 				} else {
-					this.Complete("error", {code: -1, message: "error."});
-					this.errorBar({code: -1, message: "error."});
+					this.Complete("error", {code: -1, message: "error. A2248"});
+					this.errorBar({code: -1, message: "error. A2029"});
 				}
 			} else {
 				this.Complete("error", error);
@@ -460,8 +460,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 									this.results = accounts;
 									this.Complete("", result);
 								} else {
-									this.Complete("error", {code: -1, message: "error."});
-									this.errorBar({code: -1, message: "error."});
+									this.Complete("error", {code: -1, message: "error. A5629"});
+									this.errorBar({code: -1, message: "error. A8756"});
 								}
 							} else {
 								this.Complete("error", error);

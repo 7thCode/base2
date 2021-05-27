@@ -354,11 +354,9 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				logger.trace(request.url);
 			}]);
 
-		const TCipher: any = Cipher;
-		const cipher = new TCipher();
+		const cipher = new Cipher();
 
-		const TIPV6: any = IPV6;
-		const ipv6: any = TIPV6;
+		const ipv6: any = IPV6;
 
 		router.get("/auth/token/make", [gatekeeper.default,
 			(request: any, response: any): void => {

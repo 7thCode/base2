@@ -57,7 +57,7 @@ export class PublicKeyService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 5005"}, null);
+			callback({code: -1, message: 'server not respond.' + " A5005"}, null);
 		});
 	}
 
@@ -83,7 +83,7 @@ export class PublicKeyService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 92"}, null);
+			callback({code: -1, message: error.message + " A9992"}, null);
 		});
 	}
 
@@ -109,7 +109,7 @@ export class PublicKeyService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 2505"}, null);
+			callback({code: -1, message: error.message + " A2505"}, null);
 		});
 	}
 

@@ -29,7 +29,7 @@ const pages: any = new Pages(event, ConfigModule, logger);
 pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.get("/pages/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/pages/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -37,7 +37,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.get("/pages/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/pages/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -45,7 +45,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.get("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -53,7 +53,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.post("/pages/auth", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/pages/auth", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -61,7 +61,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.put("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.put("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -69,7 +69,7 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.delete("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.delete("/pages/auth/:id", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {

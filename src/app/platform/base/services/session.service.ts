@@ -59,7 +59,7 @@ export class SessionService extends HttpService {
 					callback(this.networkError, null);
 				}
 			}, (error: HttpErrorResponse) => {
-				callback({code: -1, message: error.message + " 4553"}, null);
+				callback({code: -1, message: error.message + " A4553"}, null);
 			});
 		}
 	}
@@ -83,7 +83,7 @@ export class SessionService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 3439"}, null);
+			callback({code: -1, message: error.message + " A3439"}, null);
 		});
 	}
 

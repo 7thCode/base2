@@ -102,7 +102,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 			});
 		}
 	}
@@ -114,7 +114,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}
@@ -162,7 +162,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error."});
+					this.Complete("error", {code: -1, message: "error. A1224"});
 				}
 			} else {
 				this.Complete("error", error);
@@ -190,7 +190,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 							this.results = results;
 							this.Complete("", results);
 						} else {
-							this.Complete("error", {code: -1, message: "error."});
+							this.Complete("error", {code: -1, message: "error. A2293"});
 						}
 					} else {
 						this.Complete("error", error);
@@ -333,7 +333,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 					this.results = results;
 					this.Complete("", results);
 				} else {
-					this.Complete("error", {code: -1, message: "error."});
+					this.Complete("error", {code: -1, message: "error. A2382"});
 				}
 			} else {
 				this.Complete("error", error);
@@ -357,7 +357,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 								this.results = results;
 								this.Complete("", results);
 							} else {
-								this.Complete("error", {code: -1, message: "error."});
+								this.Complete("error", {code: -1, message: "error. A2832"});
 							}
 						} else {
 							this.Complete("error", error);
@@ -471,7 +471,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error"});
+					this.Complete("error", {code: -1, message: "error. A5562"});
 				}
 			} else {
 				this.Complete("error", error);

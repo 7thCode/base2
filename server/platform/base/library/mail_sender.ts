@@ -12,9 +12,9 @@ import {IErrorObject} from "../../../../types/platform/universe";
 export class MailSender implements IMailSenderModule {
 
 	private mailer: any;
-	private mailsetting: any;
+	private readonly mailsetting: any;
 	private smtpUser: any;
-	private account: any;
+	private readonly account: any;
 
 	/**
 	 *

@@ -11,12 +11,14 @@ import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from "@angular/flex-layout";
 
 import {TopComponent} from "./top.component";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
 	declarations: [TopComponent],
 	imports: [
 		CommonModule,
-		FlexLayoutModule
+		FlexLayoutModule,
+		MatButtonModule
 	]
 })
 

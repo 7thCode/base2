@@ -70,7 +70,7 @@ export class NativeFiles extends Updatable {
 			const object: IUpdatableModel = new this.Model();
 			object._create(operator, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.ifExist(response, {code: -1, message: "not found."}, object, () => {
+					this.ifExist(response, {code: -1, message: "not found. 3382"}, object, () => {
 						this.SendSuccess(response, object.public());
 					});
 				});

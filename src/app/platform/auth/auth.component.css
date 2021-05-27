@@ -12,3 +12,7 @@
 	flex-grow: 1;
 }
 
+::ng-deep.mat-dialog-container {
+	background-color:#1af7f726;
+	backdrop-filter: blur(4px);
+}

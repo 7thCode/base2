@@ -31,8 +31,8 @@ const SendGrid: any = require("../../../../server/platform/base/library/mail_sen
  */
 export class Mail extends Wrapper {
 
-	private sender: IMailSenderModule = null;
-	private receiver: IMailReceiverModule = null;
+	private readonly sender: IMailSenderModule = null;
+	private readonly receiver: IMailReceiverModule = null;
 
 // 	private bcc: string | any[] = "";
 
@@ -101,28 +101,32 @@ export class Mail extends Wrapper {
 					if (mailConfig.template_url) {
 						if (mailConfig.source_object.html) {
 							const nickname = mailConfig.source_object.html.content.nickname;
-							mailConfig.source_object.html.content.subtitle = this.parseTemplate(mailConfig.source_object.html.content.subtitle, {nickname: nickname});
+							// mailConfig.source_object.html.content.subtitle = this.parseTemplate(mailConfig.source_object.html.content.subtitle, {nickname: nickname});
 							fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 								if (!error) {
-									const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
-
-									let text: string = "";
-									const text_lines = mailConfig.source_object.text.content.text;
-									const value = {link: mailConfig.link};
-									if (text_lines) {
-										text_lines.forEach((line: string) => {
-											text += this.parseTemplate(line, value) + "\n";
-										})
-										callback(null, text, html);
-									} else {
-										callback({code: 1, message: "error"}, "", "");
+									try {
+								// 		const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
+										const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link, nickname: nickname});
+										let text: string = "";
+										const text_lines = mailConfig.source_object.text.content.text;
+										const value = {link: mailConfig.link};
+										if (text_lines) {
+											text_lines.forEach((line: string) => {
+												text += this.parseTemplate(line, value) + "\n";
+											})
+											callback(null, text, html);
+										} else {
+											callback({code: 1, message: "error 3392"}, "", "");
+										}
+									} catch (error) {
+										callback(error, "", "");
 									}
 								} else {
 									callback(error, "", "");
 								}
 							});
 						} else {
-							callback({code: 1, message: "no html object."}, "", "");
+							callback({code: 1, message: "no html object. 3932"}, "", "");
 						}
 					} else {
 						if (mailConfig.source_object.text) {
@@ -134,17 +138,17 @@ export class Mail extends Wrapper {
 								})
 								callback(null, text, text);
 							} else {
-								callback({code: 1, message: "error"}, "", "");
+								callback({code: 1, message: "error. 3302"}, "", "");
 							}
 						} else {
-							callback({code: 1, message: "no text object."}, "", "");
+							callback({code: 1, message: "no text object. 7733"}, "", "");
 						}
 					}
 				} else {
-					callback({code: 1, message: "no source_object"}, "", "");
+					callback({code: 1, message: "no source_object. 3372"}, "", "");
 				}
 			} else {
-				callback({code: 1, message: "no content"}, "", "");
+				callback({code: 1, message: "no content. 3392"}, "", "");
 			}
 		} catch (error) {
 			callback(error, "", "");
@@ -175,7 +179,7 @@ export class Mail extends Wrapper {
 				}
 			});
 		} else {
-			callback({code: 1, message: "no sender"}, null);
+			callback({code: 1, message: "no sender. 3722"}, null);
 		}
 	}
 
@@ -191,7 +195,7 @@ export class Mail extends Wrapper {
 		if (this.receiver) {
 			this.receiver.connect(handler);
 		} else {
-			handler({code: 1, message: "no receiver"}, "", null);
+			handler({code: 1, message: "no receiver. 2283"}, "", null);
 		}
 	}
 
@@ -208,10 +212,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.open(imap, name, callback);
 			} else {
-				callback({code: 1, message: "no receiver"}, null);
+				callback({code: 1, message: "no receiver. 2282"}, null);
 			}
 		} else {
-			callback({code: 1, message: "not opened."}, null);
+			callback({code: 1, message: "not opened. 3923"}, null);
 		}
 	}
 
@@ -244,10 +248,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.listMessages(imap, start, limit, callback);
 			} else {
-				callback({code: 1, message: "no receiver"}, null);
+				callback({code: 1, message: "no receiver. 3832"}, null);
 			}
 		} else {
-			callback({code: 1, message: "not opened."}, null);
+			callback({code: 1, message: "not opened. 3392"}, null);
 		}
 	}
 
@@ -265,10 +269,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.getMessage(imap, UID, callback);
 			} else {
-				callback({code: 1, message: "no receiver"}, null);
+				callback({code: 1, message: "no receiver. 3392"}, null);
 			}
 		} else {
-			callback({code: 1, message: "not opened."}, null);
+			callback({code: 1, message: "not opened. 3024"}, null);
 		}
 	}
 
@@ -286,10 +290,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.deleteMessage(imap, UID, callback);
 			} else {
-				callback({code: 1, message: "no receiver"});
+				callback({code: 1, message: "no receiver. 3382"});
 			}
 		} else {
-			callback({code: 1, message: "not opened."});
+			callback({code: 1, message: "not opened. 0012"});
 		}
 	}
 
@@ -308,10 +312,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.addFlags(imap, UID, flags, callback);
 			} else {
-				callback({code: 1, message: "no receiver"});
+				callback({code: 1, message: "no receiver. 2611"});
 			}
 		} else {
-			callback({code: 1, message: "not opened."});
+			callback({code: 1, message: "not opened. 0487"});
 		}
 	}
 
@@ -330,10 +334,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.removeFlags(imap, UID, flags, callback);
 			} else {
-				callback({code: 1, message: "no receiver"});
+				callback({code: 1, message: "no receiver. 5668"});
 			}
 		} else {
-			callback({code: 1, message: "not opened."});
+			callback({code: 1, message: "not opened. 0932"});
 		}
 	}
 

@@ -16,7 +16,7 @@ export class BlogBaseListComponent extends ResponsiveComponent implements OnInit
 
 	@Input() public type: string;
 
-	public groups: { _id: { yyyy: number, mm: number }, entries: [], count: number }[];
+	public groups: { _id: { yyyy: number, mm: number }, entries: [], count: number, name: string }[];
 
 	protected service: BlogBaseService;
 
@@ -34,7 +34,7 @@ export class BlogBaseListComponent extends ResponsiveComponent implements OnInit
 	}
 
 	public group_by(type: string) {
-		this.service.group_by(type, {}, {sort: {_id: 1}, limit: 20, skip: 0}, (error: IErrorObject, result: any) => {
+		this.service.group_by(type, {}, {sort: {_id: -1}, limit: 20, skip: 0}, (error: IErrorObject, result: any) => {
 			this.groups = result;
 		});
 	}

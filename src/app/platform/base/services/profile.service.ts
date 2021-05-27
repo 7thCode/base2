@@ -58,7 +58,7 @@ export class ProfileService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 5222"}, null);
+			callback({code: -1, message: error.message + " A5222"}, null);
 		});
 	}
 
@@ -80,7 +80,7 @@ export class ProfileService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " 1521"}, null);
+			callback({code: -1, message: error.message + " A1521"}, null);
 		});
 	}
 

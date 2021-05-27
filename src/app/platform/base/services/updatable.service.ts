@@ -50,7 +50,7 @@ export abstract class UpdatableService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 998"}, null);
+			callback({code: -1, message: error.message + " A1998"}, null);
 		});
 	}
 
@@ -73,7 +73,7 @@ export abstract class UpdatableService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9449"}, null);
+			callback({code: -1, message: error.message + " A9449"}, null);
 		});
 	}
 
@@ -111,7 +111,7 @@ export abstract class UpdatableService extends QueryableService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8042"}, null);
+			callback({code: -1, message: error.message + " A8042"}, null);
 		});
 	}
 

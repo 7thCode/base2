@@ -17,7 +17,7 @@ export class Unix {
 	/**
 	 *
 	 */
-	private backupdir: string;
+	private readonly backupdir: string;
 
 	/**
 	 *

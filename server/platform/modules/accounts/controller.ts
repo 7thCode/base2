@@ -160,7 +160,7 @@ export class Accounts extends Wrapper {
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
 						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
-							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
+							this.ifExist(response, {code: -1, message: "no user. 3382"}, account, () => {
 								this.SendSuccess(response, account.public());
 							});
 						}).catch((error: IErrorObject) => {
@@ -235,7 +235,7 @@ export class Accounts extends Wrapper {
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
 						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
-							this.ifExist(response, {code: -1, message: "not found."}, account, () => {
+							this.ifExist(response, {code: -1, message: "not found. 4395"}, account, () => {
 								LocalAccount.remove_by_id(operator, target.user_id).then((): void => {
 									this.SendSuccess(response, {});
 								}).catch((error: IErrorObject) => {
@@ -269,7 +269,7 @@ export class Accounts extends Wrapper {
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_id(operator, target.user_id)) {
 						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
-							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
+							this.ifExist(response, {code: -1, message: "no user. 2023"}, account, () => {
 								const is_2fa: boolean = (account.secret !== "");
 								this.SendSuccess(response, {is_2fa});
 							})
@@ -305,8 +305,8 @@ export class Accounts extends Wrapper {
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					if (Accounts.own_by_name(operator, target.username)) {
 						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
-							this.ifExist(response, {code: -1, message: "no user."}, account, () => {
-								this.ifExist(response, {code: -1, message: "Already Multi-factor authentication."}, !Boolean(account.secret), () => {
+							this.ifExist(response, {code: -1, message: "no user. 2934"}, account, () => {
+								this.ifExist(response, {code: -1, message: "Already Multi-factor authentication. 3340"}, !Boolean(account.secret), () => {
 									const secret: any = SpeakEasy.generateSecret({
 										length: 20,
 										name: target.username,
@@ -359,13 +359,13 @@ export class Accounts extends Wrapper {
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
 					LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
-						this.ifExist(response, {code: -1, message: "no user."}, account, () => {
+						this.ifExist(response, {code: -1, message: "no user. 3382"}, account, () => {
 							if (Accounts.own_by_name(operator, target.username)) {
 								const update: object = {
 									secret: "",
 								};
 								LocalAccount.set_by_name(operator, target.username, update).then((account: IAccountModel): void => {
-									this.ifExist(response, {code: -1, message: "no user."}, account, () => {
+									this.ifExist(response, {code: -1, message: "no user. 4045"}, account, () => {
 										this.SendSuccess(response, {});
 									});
 								}).catch((error: any) => {

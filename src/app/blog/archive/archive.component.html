@@ -4,7 +4,7 @@
 			<div fxLayout="column">
 				<div (click)="click(resource.content)" *ngFor="let resource of results" fxLayout="row" matRipple style="height:200px;">
 					<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
-						<img [src]="imagePath(resource.content)" style="width:100px;">
+						<img alt="" [src]="imagePath(resource.content)" style="width:100px;">
 					</div>
 					<div fxLayout="column" fxLayoutAlign="start start" style="margin:12px;">
 						<div style="margin:12px;font-size:16px;font-weight:500">{{resource.create}}</div>

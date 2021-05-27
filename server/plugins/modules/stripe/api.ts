@@ -90,6 +90,34 @@ router.post('/stripe/charge', [gatekeeper.default, gatekeeper.authenticate,
 		});
 	}])
 
+router.post('/stripe/subscribe', [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe._subscribe(request, response);
+		});
+	}])
+
+router.get('/stripe/subscribe', [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe._has_subscribe(request, response);
+		});
+	}])
+
+router.put('/stripe/subscribe', [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe._update_subscribe(request, response);
+		});
+	}])
+
+router.delete('/stripe/subscribe', [gatekeeper.default, gatekeeper.authenticate,
+	(request: object, response: object): void => {
+		gatekeeper.catch(response, () => {
+			stripe._cancel_subscribe(request, response);
+		});
+	}])
+
 /*
 router.post('/stripe-create-card', [gatekeeper.default,
 	(request: object, response: object): void => {

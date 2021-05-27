@@ -49,7 +49,7 @@ export abstract class HttpService {
 		protected http: HttpClient,
 	) {
 		this.endPoint = environment.endPoint;
-		this.networkError = {code: 10000, message: "network error. 7461"};
+		this.networkError = {code: 10000, message: "network error. A7461"};
 		this.httpOptions = {
 			headers: new HttpHeaders({
 				"Accept": "application/json; charset=utf-8",

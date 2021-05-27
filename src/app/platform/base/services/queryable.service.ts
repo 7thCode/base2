@@ -65,20 +65,20 @@ export abstract class QueryableService extends HttpService {
 									});
 									callback(null, filterd);
 								} else {
-									callback({code: results.code, message: results.message + " 9674"}, []);
+									callback({code: results.code, message: results.message + " A9674"}, []);
 								}
 							} else {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " 918"}, []);
+							callback({code: -1, message: error.message + " A5918"}, []);
 						});
 					} else {
-						callback({code: -1, message: "option parse error" + " 3319"}, []);
+						callback({code: -1, message: "option parse error" + " A3319"}, []);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " 7533"}, []);
+				callback({code: -1, message: "query parse error" + " A7533"}, []);
 			}
 		});
 	}
@@ -99,10 +99,10 @@ export abstract class QueryableService extends HttpService {
 						callback(this.networkError, 0);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " 4557"}, null);
+					callback({code: -1, message: error.message + " A4557"}, null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " 5201"}, null);
+				callback({code: -1, message: "query parse error" + " A5201"}, null);
 			}
 		});
 	}
@@ -125,7 +125,7 @@ export abstract class QueryableService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8499"}, null);
+			callback({code: -1, message: error.message + " A8499"}, null);
 		});
 	}
 

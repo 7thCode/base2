@@ -5,7 +5,7 @@
 export const environment: any = {
 	production: false,
 	endPoint: "",
-	webSocket: "ws://127.0.0.1:3001",
+	webSocket: "ws://127.0.0.1:3000",
 	headers: {
 		"Accept": "application/json; charset=utf-8",
 		"Content-Type": "application/json; charset=utf-8",

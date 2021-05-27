@@ -102,7 +102,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 			});
 		}
 	}
@@ -114,7 +114,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}

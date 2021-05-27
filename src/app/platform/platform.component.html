@@ -6,6 +6,7 @@
 		</button>
 		<span style="font-weight:400;">Platform</span>
 		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;">Release 0.5.0 / Angular {{angular}}</span>
+		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;">git_commit_hash 44a94a3</span>
 	</div>
 
 	<div *ngIf="login">
@@ -34,6 +35,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container [class.dark-theme]="dark" class="container">
+
 	<mat-sidenav #sidenav [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset') && login" fxLayout="column" fxLayoutAlign="center" style="background-color: #757de8;">
 
 		<div fxLayout="column" fxLayoutAlign="center center">
@@ -93,7 +95,6 @@
 				</button>
 			</mat-list-item>
 
-
 			<mat-list-item>
 				<button (complete)="onLogout($event);" auth-logout-button mat-button style="color:#fdfdfd;font-size:12px;">
 					<mat-icon mat-list-icon style="font-size:20px;">exit_to_app</mat-icon>
@@ -126,9 +127,11 @@
 					test nativefile</a>
 			</mat-list-item>
 
-		</mat-list>
+			<mat-list-item style="height: 34px;">
+				<mat-slide-toggle (change)="switch()" [checked]="dark" style="font-size:12px;">dark</mat-slide-toggle>
+			</mat-list-item>
 
-		<mat-slide-toggle (change)="switch()" [checked]="dark" style="font-size:12px;">dark</mat-slide-toggle>
+		</mat-list>
 
 	</mat-sidenav>
 

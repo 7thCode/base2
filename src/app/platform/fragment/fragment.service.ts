@@ -34,7 +34,7 @@ export class FragmentService extends HttpService {
 				callback(this.networkError, null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 2059"}, null);
+			callback({code: -1, message: error.message + " A2059"}, null);
 		});
 	}
 

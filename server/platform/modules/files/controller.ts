@@ -279,7 +279,7 @@ export class Files extends Wrapper {
 					writestream.write(chunk);
 					writestream.end();
 				} else {
-					callback({code: 42, message: "stream not open." + " 471"}, null);
+					callback({code: 42, message: "stream not open." + " 4701"}, null);
 				}
 			} else {
 				callback({code: 41, message: "no chunk." + " 6500"}, null);
@@ -375,7 +375,6 @@ export class Files extends Wrapper {
 			if (!error) {
 				Files.set_header(response, 200, "image/png", 0, length - 1, length);
 				stream.pipe(response);
-				// 			callback(stream);
 			} else {
 				next();
 			}
@@ -461,11 +460,7 @@ export class Files extends Wrapper {
 		this.get_record(username, path, (error: IErrorObject, data: any): void => {
 			if (!error) {
 				if (data) {
-					// 		if (data.metadata.rights.read === AuthLevel.public) {
 					this.render(response, next, data, range, param);
-					// 		} else {
-					// 			response.status(403).render("error", {message: "Forbidden...", status: 403});
-					// 		}
 				} else {
 					next();
 				}
@@ -490,11 +485,7 @@ export class Files extends Wrapper {
 		this.get_record_by_id(_id, (error: IErrorObject, data: any): void => {
 			if (!error) {
 				if (data) {
-					// 			if (data.metadata.rights.read === AuthLevel.public) {
 					this.render(response, next, data, range, param);
-					// 			} else {
-					// 				response.status(403).render("error", {message: "Forbidden...", status: 403});
-					// 			}
 				} else {
 					next();
 				}

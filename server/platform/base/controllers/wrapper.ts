@@ -34,7 +34,7 @@ export abstract class Wrapper {
 	 * @param logger
 	 * @constructor
 	 */
-	constructor(event: any, config: any, logger: any) {
+	protected constructor(event: any, config: any, logger: any) {
 		this.event = event;
 		this.config = config;
 		this.systemsConfig = config.systems;

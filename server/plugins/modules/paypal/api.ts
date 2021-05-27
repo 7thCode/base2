@@ -15,7 +15,7 @@ const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
 const config: any = require.main.exports.config;
 
-const gatekeeper: any = require("../../../platform/base/library/gatekeeper");
+// const gatekeeper: any = require("../../../platform/base/library/gatekeeper");
 
 const Paypal: any = require("./controller");
 const paypal: any = new Paypal(event, config, logger);

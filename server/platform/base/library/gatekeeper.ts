@@ -7,16 +7,31 @@
 "use strict";
 
 import {IErrorObject} from "../../../../types/platform/universe";
+import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
 
 const result: any = require("./result");
 
 const ConfigModule: any = require("config");
 const systemsConfig: any = ConfigModule.systems;
 
+const LocalAccount: any = require("../../../../models/platform/accounts/account");
+
 /**
  * Gatekeeper for request.
  */
 export class Gatekeeper {
+
+	/**
+	 * Error
+	 * @param response
+	 * @param error sending error
+	 * @returns none
+	 */
+	public static SendSuccess(response: any): void {
+		if (response) {
+			response.jsonp(new result(0, "", null));
+		}
+	}
 
 	/**
 	 * Error
@@ -124,19 +139,52 @@ export class Gatekeeper {
 	 */
 	public static authenticate(request: any, response: any, next: () => void): void {
 		if (request.user) {
-			switch (request.user.provider) {
-				case "local":
-					if (request.isAuthenticated()) {
+			if (request.user.enabled) {
+				switch (request.user.provider) {
+					case "local":
+						if (request.isAuthenticated()) {
+							next();
+						} else {
+							Gatekeeper.SendError(response, {code: -2, message: "no auth. 3827"});
+						}
+						break;
+					case "facebook":
+					case "apple":
+						next();
+						break;
+				}
+			} else {
+				Gatekeeper.SendError(response, {code: -3, message: "disabled. 9374"});
+			}
+		} else { // normal case.
+			next();
+		}
+	}
+
+	/**
+	 * アカウントゲット
+	 * @param request
+	 * @param response
+	 * @param next
+	 * @returns none
+	 */
+	public static enabled(request: any, response: IJSONResponse, next: () => void): void {
+		if (request.user) {
+			const user_id = request.user.user_id;
+			LocalAccount.default_find_by_id(null, user_id).then((account: IAccountModel): void => {
+				if (account) {
+					if (account.enabled) {
 						next();
 					} else {
-						Gatekeeper.SendError(response, {code: -2, message: "no auth. 3827"});
+						request.logout();
+						Gatekeeper.SendError(response, {code: 1, message: "disabled. 3827"});
 					}
-					break;
-				case "facebook":
-				case "apple":
-					next();
-					break;
-			}
+				} else {
+					Gatekeeper.SendError(response, {code: -3, message: "no user. 5644"});
+				}
+			}).catch((error: any) => {
+				Gatekeeper.SendError(response, {code: -3, message: error.message + " 2733"});
+			})
 		} else { // normal case.
 			next();
 		}

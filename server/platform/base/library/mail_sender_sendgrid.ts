@@ -11,8 +11,8 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailSenderSendgrid implements IMailSenderModule {
 
-	private account: any;
-	private apiKey: string;
+	private readonly account: any;
+	private readonly apiKey: string;
 	private domain: any;
 	private sendgrid: any;
 

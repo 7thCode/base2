@@ -15,10 +15,10 @@ const simpleParser = require('mailparser').simpleParser;
 
 export class MailReceiver implements IMailReceiverModule {
 
-	private type: string;
-	private server: string;
-	private user: string;
-	private password: string;
+	private readonly type: string;
+	private readonly server: string;
+	private readonly user: string;
+	private readonly password: string;
 
 	/**
 	 *
@@ -40,7 +40,7 @@ export class MailReceiver implements IMailReceiverModule {
 					callback(error, flags);
 				});
 			} else {
-				callback({code: 1, message: "not imap"}, null);
+				callback({code: 1, message: "not imap. 3832"}, null);
 			}
 		} catch (error) {
 			callback(error, null);
@@ -57,7 +57,7 @@ export class MailReceiver implements IMailReceiverModule {
 					callback(error, flags);
 				});
 			} else {
-				callback({code: 1, message: "not imap"}, null);
+				callback({code: 1, message: "not imap. 7439"}, null);
 			}
 		} catch (error) {
 			callback(error, null);
@@ -74,7 +74,7 @@ export class MailReceiver implements IMailReceiverModule {
 					callback(error, messages);
 				});
 			} else {
-				callback({code: 1, message: "not imap"}, null);
+				callback({code: 1, message: "not imap. 3833"}, null);
 			}
 		} catch (error) {
 			callback(error, null);
@@ -104,7 +104,7 @@ export class MailReceiver implements IMailReceiverModule {
 				// 			callback(error, null);
 				// 		});
 			} else {
-				callback({code: 1, message: "not imap"}, null);
+				callback({code: 1, message: "not imap. 3820"}, null);
 			}
 		} catch (error) {
 			callback(error, null);
@@ -119,7 +119,7 @@ export class MailReceiver implements IMailReceiverModule {
 			if (imap) {
 				imap.deleteMessage(uid, callback)
 			} else {
-				callback({code: 1, message: "not imap"});
+				callback({code: 1, message: "not imap. 2113"});
 			}
 		} catch (error) {
 			callback(error);
@@ -156,7 +156,7 @@ export class MailReceiver implements IMailReceiverModule {
 				imap.connect()
 
 			} else {
-				handler({code: 1, message: "not imap"}, null, "", null);
+				handler({code: 1, message: "not imap. 3822"}, null, "", null);
 			}
 		} catch (error) {
 			handler(error, null, "", null);
@@ -180,7 +180,7 @@ export class MailReceiver implements IMailReceiverModule {
 					}
 				})
 			} else {
-				callback({code: 1, message: "not imap"}, null);
+				callback({code: 1, message: "not imap. 3382"}, null);
 			}
 		} catch (error) {
 			callback(error, null);

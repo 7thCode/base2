@@ -56,16 +56,16 @@ export class BlogBaseService extends UpdatableService {
 									});
 									callback(null, filterd);
 								} else {
-									callback({code: result.code, message: result.message + " 9674"}, []);
+									callback({code: result.code, message: result.message + " A9674"}, []);
 								}
 							} else {
 								callback(this.networkError, null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " 9182"}, []);
+							callback({code: -1, message: error.message + " A9182"}, []);
 						});
 					} else {
-						callback({code: -1, message: "option parse error" + " 3619"}, []);
+						callback({code: -1, message: "option parse error" + " A3619"}, []);
 					}
 				});
 			} else {

@@ -8,7 +8,7 @@
 
 import {IJSONResponse} from "../../../../types/platform/server";
 
-const _: any = require("lodash");
+// const _: any = require("lodash");
 
 const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
 

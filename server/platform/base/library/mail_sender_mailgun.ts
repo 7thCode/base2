@@ -11,9 +11,9 @@ import {IErrorObject} from "../../../../types/platform/universe";
 
 export class MailSenderMailgun implements IMailSenderModule {
 
-	private account: any;
-	private apiKey: string;
-	private domain: any;
+	private readonly account: any;
+	private readonly apiKey: string;
+	private readonly domain: any;
 	private mailgun: any;
 
 	/**

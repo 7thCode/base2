@@ -63,13 +63,13 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 * エラー表示
 	 * @param error
 	 */
-	private errorBar(error: IErrorObject): void {
-		if (error) {
-			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
-			});
-		}
-	}
+	// private errorBar(error: IErrorObject): void {
+	// 	if (error) {
+	// 		this.snackbar.open(error.message, "Close", {
+	// 			duration: 8000,
+	// 		});
+	// 	}
+	// }
 
 	/**
 	 * メッセージ表示
@@ -78,7 +78,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-				duration: 8000,
+		// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}

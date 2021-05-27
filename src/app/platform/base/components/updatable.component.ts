@@ -134,7 +134,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error."}, null);
+							callback({code: -1, message: "error. A8467"}, null);
 						}
 					} else {
 						callback(error, null);
@@ -162,7 +162,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error."}, null);
+							callback({code: -1, message: "error. A8755"}, null);
 						}
 					} else {
 						callback(error, null);
@@ -191,7 +191,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error."}, null);
+							callback({code: -1, message: "error. A7239"}, null);
 						}
 					} else {
 						callback(error, null);
@@ -218,7 +218,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error."}, null);
+							callback({code: -1, message: "error. A5290"}, null);
 						}
 					} else {
 						callback(error, null);
@@ -248,7 +248,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 						this.results = results;
 						this.Complete("", results);
 					} else {
-						this.Complete("error", {code: -1, message: "error."});
+						this.Complete("error", {code: -1, message: "error. A6921"});
 					}
 				} else {
 					this.Complete("error", error);
@@ -295,7 +295,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error."});
+					this.Complete("error", {code: -1, message: "error. A8836"});
 				}
 			} else {
 				this.Complete("error", error);

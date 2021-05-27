@@ -308,7 +308,7 @@ export class Auth extends Mail {
 					}
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 927"});
+				this.SendError(response, {code: 403, message: "Forbidden. 9277"});
 			}
 		} else {
 			this.SendError(response, this.errors.not_logged_in);
@@ -338,7 +338,7 @@ export class Auth extends Mail {
 					}
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 927"});
+				this.SendError(response, {code: 403, message: "Forbidden. 9927"});
 			}
 		} else {
 			this.SendError(response, this.errors.not_logged_in);
@@ -449,7 +449,7 @@ export class Auth extends Mail {
 	public post_local_login(request: ILoginRequest, response: IJSONResponse): void {
 		try {
 			if (!request.user) {
-				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+				this.ifExist(response, {code: 1, message: "no content. 3394"}, request.body.content, () => {
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username; // for multi tenant.;
@@ -501,7 +501,7 @@ export class Auth extends Mail {
 	public post_local_login_totp(request: ILoginRequest, response: IJSONResponse): void {
 		try {
 			if (!request.user) {
-				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+				this.ifExist(response, {code: 1, message: "no content. 0039"}, request.body.content, () => {
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, code: string }): void => {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username;
@@ -696,7 +696,9 @@ export class Auth extends Mail {
 									timestamp: Date.now(),
 								};
 
-								const mail_object = this.message.registmail;
+								// const mail_object = this.message.registmail;
+								const mail_object = JSON.parse(JSON.stringify(this.message.registmail));
+
 								mail_object.html.content.nickname = value.metadata.nickname;
 
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
@@ -858,7 +860,9 @@ export class Auth extends Mail {
 											timestamp: Date.now(),
 										};
 
-										const mail_object: any = this.message.passwordmail;
+										// const mail_object: any = this.message.passwordmail;
+										const mail_object = JSON.parse(JSON.stringify(this.message.passwordmail));
+
 										if (mail_object.html) {
 											if (mail_object.html.content) {
 												mail_object.html.content.nickname = account.content.nickname;
@@ -1036,7 +1040,8 @@ export class Auth extends Mail {
 														target: "/",
 														timestamp: Date.now(),
 													};
-													const mail_object: any = this.message.usernamemail;
+													// const mail_object: any = this.message.usernamemail;
+													const mail_object = JSON.parse(JSON.stringify(this.message.usernamemail));
 													mail_object.html.content.nickname = account.content.nickname;
 													const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 													const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
@@ -1225,7 +1230,8 @@ export class Auth extends Mail {
 									target: "/",
 									timestamp: Date.now(),
 								};
-								const mail_object = this.message.removemail;
+								// const mail_object = this.message.removemail;
+								const mail_object = JSON.parse(JSON.stringify(this.message.removemail));
 								mail_object.html.content.nickname = account.content.nickname;
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/remove/" + token;
@@ -1340,7 +1346,7 @@ export class Auth extends Mail {
 	 * @param response
 	 * @returns none
 	 */
-	public auth_facebook_callback(request: IUserRequest, response: IRedirectResponse): void {
+	public auth_facebook_callback(request: IUserRequest, response: any): void {
 		try {
 			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
@@ -1351,15 +1357,22 @@ export class Auth extends Mail {
 						const newAccount: any = new LocalAccount();
 						newAccount.provider = operator.provider;
 						newAccount.auth = AuthLevel.public;
-						newAccount.user_id = operator.user_id;
+					// 	newAccount.user_id = operator.user_id;
+						newAccount.user_id = new mongoose.Types.ObjectId();
 						newAccount.username = operator.username;
 						newAccount.privatekey = keypair.private;
 						newAccount.publickey = keypair.public;
 						newAccount.content = operator.content;
+						newAccount.content.facebook_id = operator.user_id;
 
 						newAccount.save((error: IErrorObject, obj: any): void => {
 							if (!error) {
 								response.redirect("/");
+							} else {
+								response.render("error", {
+									message: error.message,
+									status: 1000,
+								});
 							}
 						});
 					} else {

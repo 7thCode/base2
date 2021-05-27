@@ -82,7 +82,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			};
 			fileReader.readAsDataURL(dropedFile);
 		} else {
-			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte) 8427"}, null);
+			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte). A8427"}, null);
 		}
 	}
 

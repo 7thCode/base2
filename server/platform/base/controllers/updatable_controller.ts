@@ -30,7 +30,7 @@ export abstract class Updatable extends Wrapper {
 	 * @param config
 	 * @param logger
 	 */
-	constructor(event: object, config: any, logger: object) {
+	protected constructor(event: object, config: any, logger: object) {
 		super(event, config, logger);
 	}
 
@@ -54,7 +54,7 @@ export abstract class Updatable extends Wrapper {
 							}
 							const operator: IAccountModel = this.Transform(request.user);
 							this.Model.default_find(operator, query, option).then((objects: IUpdatableModel[]): void => {
-								this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
+								this.ifExist(response, {code: -1, message: "not found. 3733"}, objects, () => {
 									const filtered: any[] = [];
 									objects.forEach((object) => {
 										filtered.push(object.public());
@@ -85,7 +85,7 @@ export abstract class Updatable extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.Model.default_find(operator, query, {}).then((objects: IUpdatableModel[]): void => {
-						this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
+						this.ifExist(response, {code: -1, message: "not found. 3208"}, objects, () => {
 							this.SendSuccess(response, objects.length);
 						});
 					}).catch((error: IErrorObject) => {
@@ -108,7 +108,7 @@ export abstract class Updatable extends Wrapper {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.default_find_by_id(operator, target.id).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
+				this.ifExist(response, {code: -1, message: "not found. 5666"}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {
@@ -131,7 +131,7 @@ export abstract class Updatable extends Wrapper {
 			const object: IUpdatableModel = new this.Model();
 			object._create(operator, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.ifExist(response, {code: -1, message: "not found."}, object, () => {
+					this.ifExist(response, {code: -1, message: "not found. 5943"}, object, () => {
 						this.SendSuccess(response, object.public());
 					});
 				});
@@ -152,7 +152,7 @@ export abstract class Updatable extends Wrapper {
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.update_by_id(operator, target.id, body).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1, message: "not found.(Unauthorized)"}, object, () => {
+				this.ifExist(response, {code: -1, message: "not found.(Unauthorized). 2283"}, object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {

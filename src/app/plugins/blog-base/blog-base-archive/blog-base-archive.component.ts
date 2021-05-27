@@ -44,7 +44,7 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 			});
 		}
 	}
@@ -56,7 +56,7 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}
@@ -83,7 +83,7 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 	 * @param callback コールバック
 	 */
 	public draw(callback: Callback<object[]>): void {
-		const option = {sort: {_id: 1}, limit: 1, skip: this.skip};
+		const option = {sort: {_id: -1}, limit: 1, skip: this.skip};
 		this.service.group_by(this.type, {}, option, (error: IErrorObject, results: any[]): void => {
 			if (!error) {
 				callback(null, results);

@@ -163,7 +163,7 @@ export abstract class SessionableComponent {
 					this.privateCurrentSession = results;
 					callback(null, results);
 				} else {
-					callback({code: -1, message: "error."}, null);
+					callback({code: -1, message: "error. A7783"}, null);
 				}
 			} else {
 				callback(error, null);

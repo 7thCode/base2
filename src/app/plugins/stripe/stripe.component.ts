@@ -24,7 +24,6 @@ import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../../platform/base/library/spinner";
 
-
 /*
 
 		Test Numbers
@@ -83,6 +82,7 @@ import {Spinner} from "../../platform/base/library/spinner";
 })
 export class StripeComponent extends GridViewComponent implements OnInit {
 
+	public isSubscribe: boolean;
 	private spinner: Spinner;
 
 	/**
@@ -113,7 +113,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 			});
 		}
 	}
@@ -125,7 +125,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-				duration: 8000,
+// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}
@@ -173,7 +173,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	public ngOnInit(): void {
 		this.sort = {};
 		super.ngOnInit();
-
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
 			this.draw((error: IErrorObject, cards: object[] | null): void => {
@@ -186,7 +185,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	 * @param callback
 	 */
 	public draw(callback: Callback<object[]>): void {
-
 		const attach_card_design = (card: any): any => {
 			card.view_title = "title";
 			card.view_class = "box-body";
@@ -223,32 +221,45 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			card.display_no = padding + card.last4;
 			return card;
 		}
-
 		this.Progress(true);
-		this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
+		this.stripeService.is_subscribe((error: IErrorObject, results: any[]) => {
 			if (!error) {
-				if (result) {
-					const cards = result.sources.data;
-					const default_source = result.sources.default;
+				this.isSubscribe = (results.length > 0);
+				this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
+					if (!error) {
+						if (result) {
+							const cards = result.sources.data;
+							const default_source = result.sources.default;
 
-					const results = cards.map((card: any) => {
-						card = this.toListView(card);
-						card.is_default = (card.id === default_source);
-						return attach_card_design(card);
-					});
+							const results = cards.map((card: any) => {
+								card = this.toListView(card);
+								card.is_default = (card.id === default_source);
+								return attach_card_design(card);
+							});
 
-					this.results = _.sortBy(results, [(o) => {
-						return o.id;
-					}]);
+							this.results = _.sortBy(results, [(o) => {
+								return o.id;
+							}]);
 
-				} else {
-					this.results = [];
-				}
-				callback(null, this.results);
+						} else {
+							this.results = [];
+						}
+						callback(null, this.results);
+					} else {
+						callback(error, null);
+					}
+					this.Progress(false);
+				})
 			} else {
+				switch (error.code) {
+					case 1:
+						break;
+					default:
+						this.errorBar(error);
+				}
 				callback(error, null);
+				this.Progress(false);
 			}
-			this.Progress(false);
 		})
 	}
 
@@ -571,6 +582,53 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 						this.errorBar(error);
 					}
 				});
+			} else {
+				this.errorBar(error);
+			}
+		})
+	}
+
+	/**
+	 */
+	public subscribe() {
+
+		const charge = {
+		}
+
+		this.Progress(true);
+		this.stripeService.subscribe(charge, (error: IErrorObject, result: any) => {
+			this.Progress(false);
+			if (!error) {
+				this.messageBar("OK");
+			} else {
+				this.errorBar(error);
+			}
+		})
+	}
+
+	/**
+	 */
+	public update_subscription() {
+		const metadata = {order_id: '1234'};
+		this.Progress(true);
+		this.stripeService.update_subscribe(metadata, (error: IErrorObject, result: any) => {
+			this.Progress(false);
+			if (!error) {
+				this.messageBar("OK");
+			} else {
+				this.errorBar(error);
+			}
+		})
+	}
+
+	/**
+	 */
+	public cancel_subscription() {
+		this.Progress(true);
+		this.stripeService.cancel_subscribe( (error: IErrorObject, result: any) => {
+			this.Progress(false);
+			if (!error) {
+				this.messageBar("OK");
 			} else {
 				this.errorBar(error);
 			}
