@@ -39,7 +39,7 @@ router.get("/accounts/auth/query/:query/:option", [gatekeeper.default, gatekeepe
 * Account Count
 * only manager use.
 */
-router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
+router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
@@ -54,7 +54,7 @@ router.get("/accounts/auth/count/:query", [gatekeeper.default, gatekeeper.authen
 * Account Get
 * use own or manager only.
 */
-router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+router.get("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
@@ -69,7 +69,7 @@ router.get("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 * Account Put
 * use own or manager only.
 */
-router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+router.put("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
@@ -84,7 +84,7 @@ router.put("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authentica
 * Account get own
 * own use only.
 */
-router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
+router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: any, response: object): void => {
 		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
@@ -96,7 +96,7 @@ router.get("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 * Account put own
 * own use only.
 */
-router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
+router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: any, response: object): void => {
 		logger.trace(request.url);
 		gatekeeper.catch(response, () => {
@@ -108,7 +108,7 @@ router.put("/accounts/auth", [gatekeeper.default, gatekeeper.authenticate,
 * Account Delete
 * use own or manager only.
 */
-router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+router.delete("/accounts/auth/:username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_manager(request, response, next);
 	},
@@ -123,7 +123,7 @@ router.delete("/accounts/auth/:user_id", [gatekeeper.default, gatekeeper.authent
 * Account is 2 phase auth?
 * use own or manager only.
 */
-router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.authenticate,
+router.get("/accounts/auth/is2fa/:username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_id(request, response, next);
 	},
@@ -138,7 +138,7 @@ router.get("/accounts/auth/is2fa/:user_id", [gatekeeper.default, gatekeeper.auth
 * set Account 2 phase auth.
 * use own or manager only.
 */
-router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
+router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_name(request, response, next);
 	},
@@ -153,7 +153,7 @@ router.post("/accounts/auth/set2fa/:username", [gatekeeper.default, gatekeeper.a
 * reset Account 2 phase auth.
 * use own or manager only.
 */
-router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper.authenticate,
+router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 	(request: object, response: object, next: any): void => {
 		auth.is_own_by_name(request, response, next);
 	},
@@ -164,6 +164,101 @@ router.post("/accounts/auth/reset2fa/:username", [gatekeeper.default, gatekeeper
 		});
 	}]);
 
+/*
+* reset Account 2 phase auth.
+* use own or manager only.
+*/
+router.post("/accounts/relation", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.make_relation(request, response);
+		});
+	}]);
+
+/*
+* reset Account 2 phase auth.
+* use own or manager only.
+*/
+router.post("/accounts/relation/to", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.make_relation_to(request, response);
+		});
+	}]);
+
+/*
+* reset Account 2 phase auth.
+* use own or manager only.
+*/
+router.get("/accounts/relation/from/:type/:option", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.relation_from(request, response);
+		});
+	}]);
+
+/*
+* reset Account 2 phase auth.
+* use own or manager only.
+*/
+router.get("/accounts/relation/to/:type/:option", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.relation_to(request, response);
+		});
+	}]);
+
+/*
+* reset Account 2 phase auth.
+* use own or manager only.
+*/
+router.get("/accounts/relation/fromuser/:username/:type/:option", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.relation_from_user(request, response);
+		});
+	}]);
+
+/*
+* reset Account 2 phase auth.
+* use own or manager only.
+*/
+router.get("/accounts/relation/touser/:username/:type/:option", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.relation_to_user(request, response);
+		});
+	}]);
+
+router.delete("/accounts/relation/reject/:username/:type", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.reject_relation(request, response);
+		});
+	}]);
+
+router.delete("/accounts/relation/cancel/:username/:type", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.cancel_relation(request, response);
+		});
+	}]);
+
+router.delete("/accounts/relation/remove/:username/:type", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
+	(request: any, response: object): void => {
+		logger.trace(request.url);
+		gatekeeper.catch(response, () => {
+			accounts.break_relation(request, response);
+		});
+	}]);
 /*
 */
 /*

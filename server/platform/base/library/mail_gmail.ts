@@ -8,6 +8,7 @@
 
 import {IMailSender, IMailSenderModule} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
+import {Errors} from "./errors";
 
 export class MailGMail implements IMailSenderModule {
 
@@ -41,7 +42,7 @@ export class MailGMail implements IMailSenderModule {
 				callback(e);
 			}
 		} else {
-			callback({code: -1, message: "send error. 2513"});
+			callback(Errors.configError(1, "config error.", "S00166"));
 		}
 	}
 }

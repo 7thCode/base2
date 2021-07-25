@@ -11,11 +11,11 @@
 			</button> -->
 
 			<div *ngIf="!isSubscribe">
-				<button mat-button (click)="subscribe()">subscribe</button>
+				<button (click)="subscribe()" mat-button>subscribe</button>
 			</div>
 			<div *ngIf="isSubscribe">
-				<button mat-button (click)="update_subscription()">Update subscribe</button>
-				<button mat-button (click)="cancel_subscription()">cancel subscribe</button>
+				<button (click)="update_subscription()" mat-button>Update subscribe</button>
+				<button (click)="cancel_subscription()" mat-button>cancel subscribe</button>
 			</div>
 
 		</mat-card-header>

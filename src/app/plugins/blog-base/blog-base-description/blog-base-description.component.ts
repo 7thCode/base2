@@ -61,32 +61,27 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 
 	/**/
 	public ngOnInit(): void {
-
-		// this.router.events.pipe(
-		// 	filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
-		// 	const meta = environment.meta.description;
-		// 	this.setDescription(meta);
-		// });
-
 		this.getSession((error: IErrorObject, session: object | null): void => {
-			this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
-				this.id = params.get('id');
-				this.draw((error, blogpage: any) => {
-					if (!error) {
+			if (!error) {
+				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+					this.id = params.get('id');
+					this.draw((error, blogpage: any) => {
+						if (!error) {
 
-						const meta = environment.meta.description;
-						this.title.setTitle(blogpage.value.title);
-						meta.description.push({name: 'keywords', content: blogpage.accessory.keyword});
-						meta.description.push({name: 'description', content: blogpage.accessory.description});
-						this.setDescription(meta);
+							const meta = environment.meta.description;
+							this.title.setTitle(blogpage.value.title);
+							meta.description.push({name: 'keywords', content: blogpage.accessory.keyword});
+							meta.description.push({name: 'description', content: blogpage.accessory.description});
+							this.setDescription(meta);
 
-						this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.value.description);
-						this.images = blogpage.accessory.images;
-					} else {
-						this.errorBar(error);
-					}
-				})
-			});
+							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.value.description);
+							this.images = blogpage.accessory.images;
+						} else {
+							this.errorBar(error);
+						}
+					})
+				});
+			}
 		});
 	}
 

@@ -11,6 +11,8 @@ import {BlogService} from "../blog.service";
 })
 export class ListComponent extends BlogBaseListComponent implements OnInit {
 
+	public params: any = {};
+
 	constructor(
 		protected session: SessionService,
 		protected blogsService: BlogService,

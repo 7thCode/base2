@@ -13,6 +13,7 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "./http.service";
+import {Errors} from "../library/errors";
 
 /**
  * セッションサービス
@@ -53,13 +54,13 @@ export class SessionService extends HttpService {
 						this.cache = result.value;
 						callback(null, result.value);
 					} else {
-						callback(result, null);
+						callback(Errors.serverError(result, "A00037"), null);
 					}
 				} else {
-					callback(this.networkError, null);
+					callback(Errors.networkError("A00037"), null);
 				}
 			}, (error: HttpErrorResponse) => {
-				callback({code: -1, message: error.message + " A4553"}, null);
+				callback(Errors.networkException(error, "A00038"), null);
 			});
 		}
 	}
@@ -77,13 +78,13 @@ export class SessionService extends HttpService {
 					this.cache = result.value;
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00039"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00040"), null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " A3439"}, null);
+			callback(Errors.networkException(error, "A00041"), null);
 		});
 	}
 

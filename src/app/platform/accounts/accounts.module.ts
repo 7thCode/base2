@@ -32,6 +32,11 @@ import {AccountsService} from "./accounts.service";
 import {AccountDialogComponent} from "./account-dialog/account-dialog.component";
 import {AccountsComponent} from "./accounts.component";
 import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 @NgModule({
 	declarations: [
@@ -57,12 +62,16 @@ import {RegistDialogComponent} from "./regist-dialog/regist-dialog.component";
 		MatGridListModule,
 		MatPaginatorModule,
 		MatSlideToggleModule,
+		MatOptionModule,
+		MatSelectModule,
+		MatFormFieldModule,
+		MatCheckboxModule,
+		MatDatepickerModule,
 
 		ImageModule,
 		BasePipeModule,
 		BaseModule,
 		AuthModule,
-
 	],
 	exports: [
 		AccountsComponent,

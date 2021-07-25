@@ -12,6 +12,7 @@ import {Injectable} from "@angular/core";
 import {UpdatableService} from "../../platform/base/services/updatable.service";
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
+import {Errors} from "../../platform/base/library/errors";
 
 @Injectable({
 	providedIn: "root",
@@ -56,20 +57,20 @@ export class BlogBaseService extends UpdatableService {
 									});
 									callback(null, filterd);
 								} else {
-									callback({code: result.code, message: result.message + " A9674"}, []);
+									callback(Errors.generalError( result.code, result.message,  "A00302"), []);
 								}
 							} else {
-								callback(this.networkError, null);
+								callback(Errors.networkError("A00303"), null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " A9182"}, []);
+							callback(Errors.networkException(error, "A00304"), []);
 						});
 					} else {
-						callback({code: -1, message: "option parse error" + " A3619"}, []);
+						callback(Errors.responseError("A00305"), []);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " 7133"}, []);
+				callback(Errors.responseError("A00306"), []);
 			}
 		});
 	}

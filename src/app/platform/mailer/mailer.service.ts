@@ -12,6 +12,7 @@ import {retry} from "rxjs/operators";
 
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {HttpService} from "../base/services/http.service";
+import {Errors} from "../base/library/errors";
 
 @Injectable({
 	providedIn: "root",
@@ -44,13 +45,13 @@ export class MailerService extends HttpService {
 					if (result) {
 						callback(null, result);
 					} else {
-						callback(this.networkError, null);
+						callback(Errors.networkError("A00234"), null);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " 918"}, []);
+					callback(Errors.networkException(error, "A00235"), []);
 				});
 			} else {
-				callback({code: -1, message: "option parse error" + " 3319"}, []);
+				callback(Errors.networkError("A00236"), []);
 			}
 		});
 	}
@@ -67,13 +68,13 @@ export class MailerService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00237"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00238"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8499"}, null);
+			callback(Errors.networkException(error, "A00239"), null);
 		});
 	}
 
@@ -88,13 +89,13 @@ export class MailerService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00240"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00241"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8499"}, null);
+			callback(Errors.networkException(error, "A00242"), null);
 		});
 	}
 
@@ -109,13 +110,13 @@ export class MailerService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00243"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00244"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 7230"}, null);
+			callback(Errors.networkException(error, "A00245"), null);
 		});
 	}
 
@@ -131,13 +132,13 @@ export class MailerService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00246"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00247"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8499"}, null);
+			callback(Errors.networkException(error, "A00248"), null);
 		});
 	}
 
@@ -153,13 +154,13 @@ export class MailerService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00249"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00250"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8499"}, null);
+			callback(Errors.networkException(error, "A00251"), null);
 		});
 	}
 

@@ -7,6 +7,7 @@
 "use strict";
 
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
+import {Errors} from "./errors";
 
 const cipherCrypto: any = require("crypto");
 // const NodeRSA: any = require("node-rsa");
@@ -32,7 +33,7 @@ export class Cipher {
 
 	/**
 	 * MD5ダイジェスト
-	 * @param data　
+	 * @param data
 	 * @returns ダイジェスト
 	 */
 	public static Md5(data: string): string {
@@ -43,8 +44,8 @@ export class Cipher {
 
 	/**
 	 * 暗号化
-	 * @param plain　Plain
-	 * @param password　
+	 * @param plain Plain
+	 * @param password
 	 * @returns Crypted
 	 */
 	public static FixedCrypt(plain: string, password: string): string {
@@ -63,8 +64,8 @@ export class Cipher {
 
 	/**
 	 * 復号
-	 * @param crypted　Crypted
-	 * @param password　
+	 * @param crypted Crypted
+	 * @param password
 	 * @returns plain
 	 */
 	public static FixedDecrypt(crypted: string, password: string): string {
@@ -83,7 +84,7 @@ export class Cipher {
 
 	/**
 	 * KeyPair
-	 * @param bits　number
+	 * @param bits number
 	 * @returns PublicKey
 	 */
 	public static KeyPair(bits: number): { private: string, public: string } {
@@ -94,8 +95,8 @@ export class Cipher {
 
 	/**
 	 * 暗号化
-	 * @param publickey　key
-	 * @param plain　Plain string
+	 * @param publickey key
+	 * @param plain Plain string
 	 * @returns crypted text
 	 */
 	public static Encrypt(publickey: string, plain: string): string {
@@ -106,8 +107,8 @@ export class Cipher {
 
 	/**
 	 * 復号
-	 * @param privatekey　key
-	 * @param crypted　Plain string
+	 * @param privatekey key
+	 * @param crypted Plain string
 	 * @returns plain text
 	 */
 	public static Decrypt(privatekey: string, crypted: string): string {
@@ -130,7 +131,7 @@ export class Cipher {
 				const encodedToken: any = Cipher.FixedCrypt(JSON.stringify(tokenObject), config.tokensecret);
 				callback(null, encodedToken);
 			} else {
-				callback({code: 1, message: "account not found. 2419"}, null);
+				callback(Errors.userError(1, "account not found.", "S00361"), null);
 			}
 		}).catch((error: IErrorObject): void => {
 			callback(error, null);
@@ -153,13 +154,13 @@ export class Cipher {
 					if (account) {
 						callback(null, account);
 					} else {
-						callback({code: 1, message: "account not found. 8119"}, null);
+						callback(Errors.userError(1, "account not found.", "S00362"), null);
 					}
 				}).catch((error: IErrorObject): void => {
 					callback(error, "");
 				});
 			} else {
-				callback({code: 1, message: "auth fail. 2691"}, null);
+				callback(Errors.userError(1, "auth fail.", "S00363"), null);
 			}
 		} catch (exept) {
 			callback(exept, null);

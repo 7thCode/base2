@@ -11,6 +11,7 @@ import {AuthLevel, Callback, IErrorObject, ISession} from "../../../../../types/
 import {Directive, EventEmitter, Output} from "@angular/core";
 
 import {SessionService} from "../services/session.service";
+import {Errors} from "../library/errors";
 
 /**
  * セッショナブルクラス
@@ -163,7 +164,7 @@ export abstract class SessionableComponent {
 					this.privateCurrentSession = results;
 					callback(null, results);
 				} else {
-					callback({code: -1, message: "error. A7783"}, null);
+					callback(Errors.responseError("A00194"), null);
 				}
 			} else {
 				callback(error, null);

@@ -9,6 +9,7 @@
 import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {IDParam, IGetByIDRequest, IJSONResponse, IPublishModel, IQueryParam, IQueryRequest} from "../../../../types/platform/server";
+import {Errors} from "../library/errors";
 
 const Updatable = require("./updatable_controller");
 
@@ -53,14 +54,14 @@ export abstract class Publishable extends Updatable {
 								});
 								this.SendRaw(response, filtered);
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00144"));
 							});
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00145"));
 		}
 	}
 
@@ -78,12 +79,12 @@ export abstract class Publishable extends Updatable {
 					this.Model.publish_find(query, {}).then((objects: IPublishModel[]): void => {
 						this.SendSuccess(response, objects.length);
 					}).catch((error: IErrorObject) => {
-						this.SendError(response, error);
+						this.SendError(response, Errors.Exception(error, "S00146"));
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00147"));
 		}
 	}
 
@@ -100,13 +101,13 @@ export abstract class Publishable extends Updatable {
 				if (object) {
 					this.SendSuccess(response, object);
 				} else {
-					this.SendWarn(response, {code: 2, message: "not found. 7606"});
+					this.SendError(response, Errors.generalError(2, "not found.", "S00357"));
 				}
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S00358"));
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00359"));
 		}
 	}
 
@@ -125,7 +126,7 @@ export abstract class Publishable extends Updatable {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00360"));
 		}
 	}
 

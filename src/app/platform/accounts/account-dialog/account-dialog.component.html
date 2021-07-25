@@ -14,19 +14,40 @@
 						<mat-card-content fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between">
 
 							<mat-form-field class="input-text">
-								<mat-label >Nickname...</mat-label>
-								<input matInput #nickname_field="ngModel" [(ngModel)]="content.nickname" autocomplete="off" maxlength="255" minlength="2" name="nickname" placeholder="Xxxxxx" required type="text">
+								<mat-label>Nickname...</mat-label>
+								<input #nickname_field="ngModel" [(ngModel)]="content.nickname" autocomplete="off" matInput maxlength="255" minlength="2" name="nickname" placeholder="Xxxxxx" required type="text">
 								<mat-hint>3文字以上500文字まで</mat-hint>
 								<mat-error *ngIf="nickname_field.errors?.required;">入力してください</mat-error>
 								<mat-error *ngIf="nickname_field.errors?.maxlength">長すぎます</mat-error>
 								<mat-error *ngIf="nickname_field.errors?.minlength">短すぎます</mat-error>
 							</mat-form-field>
 
-							<mat-form-field class="input-text" style="margin-top: 0;">
+
+							<mat-form-field class="input-text">
 								<mat-label>Auth...</mat-label>
-								<input matInput [(ngModel)]="content.auth" name="auth" placeholder="999" required type="number">
-								<mat-hint>0〜10000</mat-hint>
+								<mat-select #auth_select="ngModel" [(ngModel)]="content.auth" name="auth_select" required>
+									<mat-option *ngFor="let auth of auths" [value]="auth.value">
+										{{auth.name}}
+									</mat-option>
+								</mat-select>
+								<mat-error *ngIf="auth_select.errors?.required;">入力してください</mat-error>
 							</mat-form-field>
+
+							<mat-form-field class="input-text">
+								<mat-label>Type...</mat-label>
+								<mat-select #type_select="ngModel" [(ngModel)]="type" name="type_select">
+									<mat-option *ngFor="let type of types" [value]="type.value">
+										{{type.name}}
+									</mat-option>
+								</mat-select>
+								<mat-error *ngIf="type_select.errors?.required;">入力してください</mat-error>
+							</mat-form-field>
+
+							<!-- <mat-form-field class="input-text" style="margin-top: 0;">
+								<mat-label>Auth...</mat-label>
+								<input [(ngModel)]="content.auth" matInput name="auth" placeholder="999" required type="number">
+								<mat-hint>0〜10000</mat-hint>
+							</mat-form-field> -->
 
 							<!--	<div *ngIf="content.auth | authis: 'manager'"> -->
 							<div>
@@ -40,7 +61,7 @@
 						<mat-card-content>
 							<mat-form-field class="input-text" style="width: 100%;">
 								<mat-label>description...</mat-label>
-								<textarea matInput #description="ngModel" [(ngModel)]="content.description" maxlength="255" name="description" placeholder="description..." type="text"></textarea>
+								<textarea #description="ngModel" [(ngModel)]="content.description" matInput maxlength="255" name="description" placeholder="description..." type="text"></textarea>
 								<mat-hint>3文字以上500文字まで</mat-hint>
 								<mat-error *ngIf="description.errors?.maxlength">長すぎます</mat-error>
 							</mat-form-field>

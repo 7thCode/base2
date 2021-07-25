@@ -8,6 +8,7 @@
 
 import {IMailSender, IMailSenderModule} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
+import {Errors} from "./errors";
 
 export class MailSender implements IMailSenderModule {
 
@@ -61,7 +62,7 @@ export class MailSender implements IMailSenderModule {
 				callback(e);
 			}
 		} else {
-			callback({code: -1, message: "send error. 4002"});
+			callback(Errors.generalError(1, "send error.", "S00177"));
 		}
 	}
 }

@@ -23,6 +23,7 @@ import * as _ from 'lodash';
 import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../../platform/base/library/spinner";
+import {Errors} from "../../platform/base/library/errors";
 
 /*
 
@@ -113,7 +114,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
 			});
 		}
 	}
@@ -125,7 +125,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}
@@ -175,8 +174,10 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		super.ngOnInit();
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
-			this.draw((error: IErrorObject, cards: object[] | null): void => {
-			});
+			if (!error) {
+				this.draw((error: IErrorObject, cards: object[] | null): void => {
+				});
+			}
 		});
 	}
 
@@ -222,9 +223,9 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 			return card;
 		}
 		this.Progress(true);
-		this.stripeService.is_subscribe((error: IErrorObject, results: any[]) => {
+		this.stripeService.is_subscribe((error: IErrorObject, result: boolean) => {
 			if (!error) {
-				this.isSubscribe = (results.length > 0);
+				this.isSubscribe = result;
 				this.stripeService.retrieveCustomer((error: IErrorObject, result: any) => {
 					if (!error) {
 						if (result) {
@@ -269,7 +270,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	public createDialog(): void {
 
 		const initalData = {
-			number: "4242424242424242",
+			number: "",
 			exp_month: "",
 			exp_year: "",
 			cvc: ""
@@ -292,7 +293,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 					} else {
 						switch (error.code) {
 							case 1:
-								this.errorBar({code: 1, message: "住所登録が必要です。"});
+								this.errorBar(Errors.generalError(1, "住所登録が必要です。", "A00001"));
 								break;
 							default:
 								this.errorBar(error);
@@ -541,7 +542,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 
 	/**
 	 */
-	public deleteSource(index: number): void {
+	public deleteSource(card_id: string): void {
 		const resultDialogContent: any = {title: "Card", message: "Delete this?"};
 		const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
 			width: "30%",
@@ -555,7 +556,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 		});
 		dialog.afterClosed().subscribe((result: object) => {
 			if (result) { // if not cancel then
-				this.stripeService.deleteSource(index, (error: IErrorObject, result: any) => {
+				this.stripeService.deleteSource(card_id, (error: IErrorObject, result: any) => {
 					if (!error) {
 						this.draw((error: IErrorObject, cards: object[] | null): void => {
 							if (error) {
@@ -592,8 +593,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	 */
 	public subscribe() {
 
-		const charge = {
-		}
+		const charge = {}
 
 		this.Progress(true);
 		this.stripeService.subscribe(charge, (error: IErrorObject, result: any) => {
@@ -625,7 +625,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	 */
 	public cancel_subscription() {
 		this.Progress(true);
-		this.stripeService.cancel_subscribe( (error: IErrorObject, result: any) => {
+		this.stripeService.cancel_subscribe((error: IErrorObject, result: any) => {
 			this.Progress(false);
 			if (!error) {
 				this.messageBar("OK");
@@ -674,4 +674,6 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	}
 
 	 */
+
+
 }

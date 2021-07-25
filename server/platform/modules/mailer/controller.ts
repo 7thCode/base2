@@ -9,6 +9,7 @@
 import {IErrorObject} from "../../../../types/platform/universe";
 
 import {IAccountModel} from "../../../../types/platform/server";
+import {Errors} from "../../base/library/errors";
 
 const Mail: any = require("../../../../server/platform/base/controllers/mail_controller");
 
@@ -43,7 +44,7 @@ export class Mailer extends Mail {
 		if (request.user) {
 			const params: any = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
-			this.ifExist(response, {code: -1, message: "not loged in. 3749"}, operator.login, (): void => {
+			this.ifExist(response, Errors.userError(1, "not loged in.", "S00365"), operator.login, (): void => {
 				this.connect((error: any, imap: any, type: string, message: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						switch (type) {
@@ -61,7 +62,7 @@ export class Mailer extends Mail {
 				});
 			});
 		} else {
-			this.SendError(response, {code: 1, message: "not logged in. 3865"});
+			this.SendError(response, Errors.userError(1, "not logged in.", "S00366"));
 		}
 	}
 
@@ -87,7 +88,7 @@ export class Mailer extends Mail {
 				})
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00367"));
 		}
 	}
 
@@ -111,7 +112,7 @@ export class Mailer extends Mail {
 				});
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00368"));
 		}
 	}
 
@@ -147,7 +148,7 @@ export class Mailer extends Mail {
 				});
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00369"));
 		}
 	}
 
@@ -172,7 +173,7 @@ export class Mailer extends Mail {
 				});
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00370"));
 		}
 	}
 
@@ -197,7 +198,7 @@ export class Mailer extends Mail {
 				});
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00371"));
 		}
 	}
 
@@ -223,7 +224,7 @@ export class Mailer extends Mail {
 				});
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00372"));
 		}
 	}
 

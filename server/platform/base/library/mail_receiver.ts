@@ -8,6 +8,7 @@
 
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 import {IMailReceiverModule} from "../../../../types/platform/server";
+import {Errors} from "./errors";
 
 const inbox = require("inbox");
 
@@ -40,10 +41,10 @@ export class MailReceiver implements IMailReceiverModule {
 					callback(error, flags);
 				});
 			} else {
-				callback({code: 1, message: "not imap. 3832"}, null);
+				callback(Errors.generalError(1, "not imap.", "S00167"), null);
 			}
 		} catch (error) {
-			callback(error, null);
+			callback(Errors.Exception(error, "S00168"), null);
 		}
 	}
 
@@ -57,10 +58,10 @@ export class MailReceiver implements IMailReceiverModule {
 					callback(error, flags);
 				});
 			} else {
-				callback({code: 1, message: "not imap. 7439"}, null);
+				callback(Errors.generalError(1, "not imap.", "S00169"), null);
 			}
 		} catch (error) {
-			callback(error, null);
+			callback(Errors.Exception(error, "S00170"), null);
 		}
 	}
 
@@ -74,10 +75,10 @@ export class MailReceiver implements IMailReceiverModule {
 					callback(error, messages);
 				});
 			} else {
-				callback({code: 1, message: "not imap. 3833"}, null);
+				callback(Errors.generalError(1, "not imap.", "S00171"), null);
 			}
 		} catch (error) {
-			callback(error, null);
+			callback(Errors.Exception(error, "S00172"), null);
 		}
 	}
 
@@ -104,7 +105,7 @@ export class MailReceiver implements IMailReceiverModule {
 				// 			callback(error, null);
 				// 		});
 			} else {
-				callback({code: 1, message: "not imap. 3820"}, null);
+				callback(Errors.generalError(1, "not imap.", "S00173"), null);
 			}
 		} catch (error) {
 			callback(error, null);
@@ -119,7 +120,7 @@ export class MailReceiver implements IMailReceiverModule {
 			if (imap) {
 				imap.deleteMessage(uid, callback)
 			} else {
-				callback({code: 1, message: "not imap. 2113"});
+				callback(Errors.generalError(1, "not imap.", "S00174"));
 			}
 		} catch (error) {
 			callback(error);
@@ -156,7 +157,7 @@ export class MailReceiver implements IMailReceiverModule {
 				imap.connect()
 
 			} else {
-				handler({code: 1, message: "not imap. 3822"}, null, "", null);
+				handler(Errors.generalError(1, "not imap.", "S00175"), null, "", null);
 			}
 		} catch (error) {
 			handler(error, null, "", null);
@@ -180,7 +181,7 @@ export class MailReceiver implements IMailReceiverModule {
 					}
 				})
 			} else {
-				callback({code: 1, message: "not imap. 3382"}, null);
+				callback(Errors.generalError(1, "not imap.", "S00176"), null);
 			}
 		} catch (error) {
 			callback(error, null);

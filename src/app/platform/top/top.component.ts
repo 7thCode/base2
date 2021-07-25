@@ -8,6 +8,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {SocketService} from "../base/services/socket.service";
+import {ActivatedRoute} from "@angular/router";
 
 /*
 * */
@@ -16,12 +17,17 @@ import {SocketService} from "../base/services/socket.service";
 	templateUrl: './top.component.html',
 	styleUrls: ['./top.component.css']
 })
+
 export class TopComponent implements OnInit {
 
 	message: string = '';
 	packet: any = {message: 'Platform'};
+	public params: any = {};
 
-	constructor(  private socket: SocketService) {
+	constructor(
+		private socket: SocketService,
+		protected route: ActivatedRoute,
+		) {
 	}
 
 	public ngOnInit(): void {
@@ -29,6 +35,9 @@ export class TopComponent implements OnInit {
 			if (name === 'message') {
 				this.packet = JSON.parse(event.data);
 				this.message = this.packet.message;
+				this.route.queryParams.subscribe(params => {
+					this.params = params;
+				});
 			}
 		});
 	}

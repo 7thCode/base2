@@ -12,6 +12,7 @@ import {Callback} from "../../../../types/platform/universe";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "../../platform/base/services/http.service";
+import {Errors} from "../../platform/base/library/errors";
 
 export interface IZipAddress {
 	address1: string;
@@ -83,13 +84,13 @@ export class ExtService extends HttpService {
 						if (result.code === 0) {
 							callback(null, result.value);
 						} else {
-							callback(result, null);
+							callback(Errors.serverError(result, "A00037"), null);
 						}
 					} else {
-						callback(this.networkError, null);
+						callback(Errors.networkError("A00300"), null);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " A8419"}, null);
+					callback(Errors.networkException(error, "A00301"), null);
 				});
 			} else {
 				callback(null, null);

@@ -8,6 +8,7 @@
 
 import {IAccountModel} from "../../../types/platform/server";
 import {Callback, IErrorObject, IPageModelContent, IQueryOption, IRights} from "../../../types/platform/universe";
+import {Errors} from "../../../server/platform/base/library/errors";
 
 /*
 *
@@ -110,7 +111,7 @@ namespace PageModel {
 		this.content = init(body.content);
 
 		this.model("Page").findOne(query_by_user_write(user, {"content.path": this.content.path})).then((instance: any) => {
-			if (!instance) {　// 既にないなら
+			if (!instance) { // 既にないなら
 				this.save(callback);
 			} else {
 				callback(null, null); // already.
@@ -148,7 +149,7 @@ namespace PageModel {
 				}
 				callback(null, doc, type);
 			} else {
-				callback({code: -1, message: "not found. 633"}, null, "");
+				callback(Errors.generalError(-1, "not found.", "S00457"), null, "");
 			}
 		}).catch((error: IErrorObject) => {
 			callback(error, null, "");

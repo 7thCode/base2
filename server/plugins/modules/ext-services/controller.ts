@@ -8,6 +8,7 @@
 
 import {IJSONResponse} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
+import {Errors} from "../../../platform/base/library/errors";
 
 const Wrapper: any = require("../../../platform/base/controllers/wrapper");
 
@@ -77,23 +78,23 @@ export class ExtServices extends Wrapper {
 								if (body.results.length > 0) {
 									this.SendSuccess(response, body.results[0]);
 								} else {
-									this.SendError(response, {code: -1, message: "住所が見つかりません。"});
+									this.SendError(response, Errors.generalError(-1, "住所が見つかりません。", "S00450"));
 								}
 							} else {
-								this.SendError(response, {code: -1, message: "住所が見つかりません。"});
+								this.SendError(response, Errors.generalError(-1, "住所が見つかりません。", "S00451"));
 							}
 						} else {
-							this.SendError(response, {code: -1, message: body.message});
+							this.SendError(response, Errors.generalError(-1, body.message, "S00452"));
 						}
 					} else {
-						this.SendError(response, {code: -1, message: "不明なエラー。"});
+						this.SendError(response, Errors.generalError(-1, "不明なエラー。", "S00453"));
 					}
 				} else {
-					this.SendError(response, {code: -1, message: "不明なエラー。"});
+					this.SendError(response, Errors.generalError(-1, "不明なエラー。", "S00454"));
 				}
 			});
 		} catch (e) {
-			this.SendError(response, {code: -1, message: e.message});
+			this.SendError(response, Errors.Exception(e, "S00385"));
 		}
 
 	}

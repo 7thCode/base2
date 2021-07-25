@@ -9,6 +9,7 @@
 import {AuthLevel, Callback, IErrorObject, IPasswordToken, IUserNameToken, IUserToken, StatusCallback} from "../../../../types/platform/universe";
 
 import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserIDParam, IUsernameParam, IUserRequest} from "../../../../types/platform/server";
+import {Errors} from "../../base/library/errors";
 
 const _: any = require("lodash");
 const fs: any = require("graceful-fs");
@@ -102,14 +103,14 @@ export class Auth extends Mail {
 					if (!error) {
 						callback(null, JSON.parse(plain));
 					} else {
-						callback({code: 2, message: "no cookie? 5977"}, {});
+						callback(Errors.generalError(2, "no cookie?", "S00027"), {});
 					}
 				});
 			} else {
 				callback(null, JSON.parse(crypted));
 			}
 		} catch (error) {
-			callback(this.error[6], {});
+			callback(Errors.generalError(7, "unknown error.", "S00028"), {});
 		}
 	}
 
@@ -139,9 +140,9 @@ export class Auth extends Mail {
 	 * @param auth
 	 * @returns none
 	 */
-	private create_param(id_seed: string, username: string, adding_content: any, auth: number): any {
+	private create_param(id_seed: string, username: string, adding_content: any, auth: number, category: string, type: string): any {
 		// 	const shasum: any = crypto.createHash("sha1"); //
-		// 	shasum.update(id_seed);                      // create userid from username.
+		// 	shasum.update(id_seed);   // create userid from username.
 		// 	const user_id: string = shasum.digest("hex"); //
 		const user_id = new mongoose.Types.ObjectId();
 
@@ -174,6 +175,8 @@ export class Auth extends Mail {
 			privatekey: keypair.private,
 			publickey: keypair.public,
 			auth,
+			category,
+			type,
 			content,
 		};
 	}
@@ -198,7 +201,7 @@ export class Auth extends Mail {
 						// this.event.emitter.emit("auth:register", {user, user_id: param.user_id, username: user.username});
 						callback(null, user);
 					} else {
-						callback({status: 500, message: "authenticate. 3701"}, null);
+						callback({status: 500, message: "authenticate."}, null);
 					}
 				} else {
 					callback({status: 500, message: "get_register_token " + error.message + " 913"}, null);
@@ -225,6 +228,7 @@ export class Auth extends Mail {
 						promises.push(new Promise((resolve: any, reject: any): void => {
 							if (user) {
 								const auth: number = user.auth;
+								const type: number = user.type;
 								const user_id = new mongoose.Types.ObjectId();
 								const username: string = user.username;
 								const rootpassword: string = user.password;
@@ -243,6 +247,7 @@ export class Auth extends Mail {
 												user_id: user_id,
 												username: username,
 												auth: auth,
+												type: type,
 												privatekey: keypair.private,
 												publickey: keypair.public,
 												content: content,
@@ -266,7 +271,7 @@ export class Auth extends Mail {
 									reject(error);
 								})
 							} else {
-								reject({code: -1, message: "no user. 4902"});
+								reject(Errors.generalError(1, "no user.", "S00029"));
 							}
 						}));
 					});
@@ -280,7 +285,7 @@ export class Auth extends Mail {
 					callback(error, null);
 				}
 			} else {
-				callback({code: -1, message: "init error. 6988"}, null);
+				callback(Errors.generalError(1, "init error.", "S00030"), null);
 			}
 		});
 	}
@@ -304,14 +309,14 @@ export class Auth extends Mail {
 					if (operator.username === target.username) {
 						next();
 					} else {
-						this.SendError(response, {code: 403, message: "Forbidden. 7795"});
+						this.SendError(response, Errors.userError(2, "no prev.", "S00031"));
 					}
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 9277"});
+				this.SendError(response, Errors.userError(2, "no prev.", "S00032"));
 			}
 		} else {
-			this.SendError(response, this.errors.not_logged_in);
+			this.SendError(response, Errors.userError(1, "not logged in.", "S00033"));
 		}
 	}
 
@@ -334,14 +339,14 @@ export class Auth extends Mail {
 					if (operator.user_id === target.user_id) {
 						next();
 					} else {
-						this.SendError(response, {code: 403, message: "Forbidden. 7795"});
+						this.SendError(response, Errors.userError(2, "no prev.", "S00034"));
 					}
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 9927"});
+				this.SendError(response, Errors.userError(2, "no prev.", "S00035"));
 			}
 		} else {
-			this.SendError(response, this.errors.not_logged_in);
+			this.SendError(response, Errors.userError(1, "not logged in.", "S00036"));
 		}
 	}
 
@@ -360,13 +365,13 @@ export class Auth extends Mail {
 				if (operator.auth <= AuthLevel.system) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden. 9578"});
+					this.SendError(response, Errors.userError(2, "no prev.", "S00037"));
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 9742"});
+				this.SendError(response, Errors.userError(2, "no prev.", "S00038"));
 			}
 		} else {
-			this.SendError(response, this.errors.not_logged_in);
+			this.SendError(response, Errors.userError(1, "not logged in.", "S00039"));
 		}
 	}
 
@@ -385,13 +390,13 @@ export class Auth extends Mail {
 				if (operator.auth < AuthLevel.user) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden. 7896"});
+					this.SendError(response, Errors.userError(2, "no prev.", "S00040"));
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 2656"});
+				this.SendError(response, Errors.userError(2, "no prev.", "S00041"));
 			}
 		} else {
-			this.SendError(response, this.errors.not_logged_in);
+			this.SendError(response, Errors.userError(1, "not logged in.", "S00042"));
 		}
 	}
 
@@ -410,13 +415,13 @@ export class Auth extends Mail {
 				if (operator.auth <= AuthLevel.user) {
 					next();
 				} else {
-					this.SendError(response, {code: 403, message: "Forbidden. 5081"});
+					this.SendError(response, Errors.userError(2, "no prev.", "S00043"));
 				}
 			} else {
-				this.SendError(response, {code: 403, message: "Forbidden. 4026"});
+				this.SendError(response, Errors.userError(2, "no prev.", "S00044"));
 			}
 		} else {
-			this.SendError(response, this.errors.not_logged_in);
+			this.SendError(response, Errors.userError(1, "not logged in.", "S00045"));
 		}
 	}
 
@@ -430,12 +435,12 @@ export class Auth extends Mail {
 	public is_logged_in(request: IUserRequest, response: IJSONResponse): void {
 		try {
 			if (request.user) {
-				this.SendRaw(response, {code: 1, message: "logged in. 3804"});
+				this.SendRaw(response, {code: 1, message: "logged in.", tag: "S00046"});
 			} else {
-				this.SendRaw(response, {code: 0, message: "not logged in. 1463"});
+				this.SendRaw(response, {code: 0, message: "not logged in.", tag: "S00047"});
 			}
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00048"));
 		}
 	}
 
@@ -449,17 +454,17 @@ export class Auth extends Mail {
 	public post_local_login(request: ILoginRequest, response: IJSONResponse): void {
 		try {
 			if (!request.user) {
-				this.ifExist(response, {code: 1, message: "no content. 3394"}, request.body.content, () => {
+				this.ifExist(response, Errors.generalError(1, "no content.", "S00049"), request.body.content, () => {
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username; // for multi tenant.;
 							request.body.password = value.password;
 							LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
-								this.ifExist(response, this.errors.username_notfound, account, () => {
-									this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
+								this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00050"), account, () => {
+									this.ifExist(response, Errors.userError(4, "account disabled.", "S00051"), account.enabled, () => {
 										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
 											this.ifSuccess(response, error, (): void => {
-												this.ifExist(response, this.errors.username_notfound, account, () => {
+												this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00052"), account, () => {
 													const is_2fa = (account.secret !== "");
 													if (is_2fa) {
 														this.SendSuccess(response, {is_2fa});
@@ -478,16 +483,16 @@ export class Auth extends Mail {
 									});
 								});
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00053"));
 							});
 						});
 					});
 				})
 			} else {
-				this.SendError(response, this.errors.already_logged_in);
+				this.SendError(response, Errors.userError(5, "already logged in.", "S00054"));
 			}
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00055"));
 		}
 	}
 
@@ -501,13 +506,13 @@ export class Auth extends Mail {
 	public post_local_login_totp(request: ILoginRequest, response: IJSONResponse): void {
 		try {
 			if (!request.user) {
-				this.ifExist(response, {code: 1, message: "no content. 0039"}, request.body.content, () => {
+				this.ifExist(response, Errors.generalError(1, "no content.", "S00056"), request.body.content, () => {
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, code: string }): void => {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username;
 							request.body.password = value.password;
 							LocalAccount.default_find_by_name({}, value.username).then((account: IAccountModel): void => {
-								this.ifExist(response, this.errors.username_notfound, account, () => {
+								this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00057"), account, () => {
 									if (account.enabled) {
 										if (account.secret) {
 											const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
@@ -518,13 +523,13 @@ export class Auth extends Mail {
 													});
 												});
 											} else {
-												this.SendError(response, {code: -1, message: "Single-factor authentication."});
+												this.SendError(response, Errors.generalError(1, "Single-factor authentication.", "S00058"));
 											}
 										} else {
-											this.SendError(response, this.errors.code_mismatch);
+											this.SendError(response, Errors.userError(6, "code missmatch.", "S00059"));
 										}
 									} else {
-										this.SendError(response, this.errors.account_disabled);
+										this.SendError(response, Errors.userError(4, "account disabled.", "S00060"));
 									}
 								});
 							}).catch((error: IErrorObject) => {
@@ -534,10 +539,10 @@ export class Auth extends Mail {
 					});
 				});
 			} else {
-				this.SendError(response, this.errors.already_logged_in);
+				this.SendError(response, Errors.userError(5, "already logged in.", "S00061"));
 			}
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00062"));
 		}
 	}
 
@@ -551,30 +556,30 @@ export class Auth extends Mail {
 	 */
 	public post_local_verify_totp(request: ILoginRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+			this.ifExist(response, Errors.generalError(1, "no content.", "S00063"), request.body.content, () => {
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, code: string }): void => {
 					this.ifSuccess(response, error, (): void => {
 						LocalAccount.default_find_by_name({}, value.username).then((account: IAccountModel): void => {
-							this.ifExist(response, this.errors.username_notfound, account, () => {
+							this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00064"), account, () => {
 								if (account.enabled) {
 									if (account.secret) {
 										const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
 										this.SendSuccess(response, verified);
 									} else {
-										this.SendError(response, {code: -1, message: "Single-factor authentication."});
+										this.SendError(response, Errors.generalError(1, "Single-factor authentication.", "S00065"));
 									}
 								} else {
-									this.SendError(response, this.errors.account_disabled);
+									this.SendError(response, Errors.userError(4, "account disabled.", "S00066"));
 								}
 							});
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S00067"));
 						})
 					});
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00068"));
 		}
 	}
 
@@ -589,12 +594,12 @@ export class Auth extends Mail {
 	 */
 	public get_login_token(request: ILoginRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00069"), request.user, () => {
 				const token = request.params.token;
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
 					this.ifSuccess(response, error, (): void => {
 						LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
-							this.ifExist(response, this.errors.username_notfound, account, () => {
+							this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00070"), account, () => {
 								if (account.enabled) {
 									QRCode.toDataURL(token, (error: IErrorObject, qrcode: any): void => {
 										this.ifSuccess(response, error, (): void => {
@@ -602,17 +607,17 @@ export class Auth extends Mail {
 										});
 									});
 								} else {
-									this.SendError(response, this.errors.account_disabled);
+									this.SendError(response, Errors.userError(4, "account disabled.", "S00071"));
 								}
 							});
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S00072"));
 						})
 					});
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00073"));
 		}
 	}
 
@@ -626,17 +631,17 @@ export class Auth extends Mail {
 	public post_token_login(request: ILoginRequest, response: IJSONResponse): void {
 		try {
 			if (!request.user) {
-				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+				this.ifExist(response, Errors.generalError(1, "no content.", "S00074"), request.body.content, () => {
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
 						this.ifSuccess(response, error, (): void => {
 							request.body.username = value.username; // for multi tenant.;
 							request.body.password = value.password;
 							LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
-								this.ifExist(response, this.errors.username_notfound, account, () => {
+								this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00075"), account, () => {
 									if (account.enabled) {
 										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
 											this.ifSuccess(response, error, (): void => {
-												this.ifExist(response, this.errors.username_notfound, account, () => {
+												this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00076"), account, () => {
 													const is_2fa = (account.secret !== "");
 													if (is_2fa) {
 														this.SendSuccess(response, {is_2fa});
@@ -653,20 +658,20 @@ export class Auth extends Mail {
 											});
 										})(request, response);
 									} else {
-										this.SendError(response, this.errors.account_disabled);
+										this.SendError(response, Errors.userError(4, "account disabled.", "S00077"));
 									}
 								});
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00078"));
 							});
 						});
 					});
 				});
 			} else {
-				this.SendError(response, this.errors.already_logged_in);
+				this.SendError(response, Errors.userError(5, "already logged in.", "S00079"));
 			}
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00080"));
 		}
 	}
 
@@ -680,7 +685,7 @@ export class Auth extends Mail {
 	 */
 	public post_local_register(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+			this.ifExist(response, Errors.generalError(1, "no content.", "000081"), request.body.content, () => {
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						const username: string = value.username;
@@ -688,16 +693,18 @@ export class Auth extends Mail {
 							if (!account) {
 
 								const tokenValue: IUserToken = {
-									auth: 10000,
+									auth: AuthLevel.user,
 									username: value.username,
 									password: value.password,
+									category: value.category,
+									type: value.type,
 									content: value.metadata,
 									target: "/",
 									timestamp: Date.now(),
 								};
 
 								// const mail_object = this.message.registmail;
-								const mail_object = JSON.parse(JSON.stringify(this.message.registmail));
+								const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.registmail));
 
 								mail_object.html.content.nickname = value.metadata.nickname;
 
@@ -706,7 +713,7 @@ export class Auth extends Mail {
 								this.sendMail({
 									address: value.username,
 									bcc: this.bcc,
-									title: this.message.registconfirmtext,
+									title: this.systemsConfig.message.registconfirmtext,
 									template_url: "views/platform/auth/mail/mail_template.pug",
 									source_object: mail_object,
 									link,
@@ -717,16 +724,16 @@ export class Auth extends Mail {
 									});
 								});
 							} else {
-								this.SendWarn(response, this.errors.username_already_regist);
+								this.SendError(response, Errors.userError(7, "user already found.", "S00082"));
 							}
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S00083"));
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00084"));
 		}
 	}
 
@@ -747,41 +754,43 @@ export class Auth extends Mail {
 					const password: string = token.password;
 					const target: any = token.target;
 					const auth: number = token.auth;
+					const category: string = token.category;
+					const type: string = token.type;
 					const adding_content: any = token.content;
 
 					const nowDate: any = Date.now();
 					if ((tokenDateTime - nowDate) < (this.systemsConfig.regist.expire * 60 * 1000)) {
 						LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 							if (!account) {
-								const param = this.create_param(username, username, adding_content, auth);
+								const param = this.create_param(username, username, adding_content, auth, category, type);
 								this.register(request, response, param, password, (error: { status: number, message: string }, user: any): void => {
 									if (!error) {
 										request.login(user, (error: IErrorObject): void => {
 											if (!error) {
 												response.redirect(target);
 											} else {
-												response.status(error.code).render("error", error);
+												response.status(error.code).render("error", {message: error.message, status: error.code});
 											}
 										});
 									} else {
-										response.status(error.status).render("error", error);
+										response.status(error.status).render("error", {message: error.message, status: error.status});
 									}
 								});
 							} else {
 								response.redirect(target);
 							}
 						}).catch((error: IErrorObject) => {
-							response.status(500).render("error", error);
+							response.status(500).render("error", {message: error.message, status: error.code});
 						});
 					} else {
 						response.status(200).render("error", {status: 200, message: "timeout"});
 					}
 				} else {
-					response.status(500).render("error", error);
+					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
 		} catch (error) {
-			response.status(500).render("error", error);
+			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
 
@@ -795,12 +804,12 @@ export class Auth extends Mail {
 	 */
 	public post_immediate_register(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00085"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
+				this.ifExist(response, Errors.userError(1, "not logged in.", "S00086"), operator.login, () => {
 					if (operator.auth < AuthLevel.user) {
-						this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
-							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string, metadata: object }): void => {
+						this.ifExist(response, Errors.generalError(1, "no content.", "S00087"), request.body.content, () => {
+							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string,category:string, type: string, metadata: object }): void => {
 								this.ifSuccess(response, error, (): void => {
 									const username: string = value.username;
 									LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
@@ -808,30 +817,32 @@ export class Auth extends Mail {
 											const username: string = value.username;
 											const password: string = value.password;
 											const auth: number = AuthLevel.public;
+											const category: string = value.category;
+											const type: string = value.type;
 											const adding_content: object = value.metadata;
 
-											const param: { username: string } = this.create_param(username, username, adding_content, auth);
+											const param: { username: string } = this.create_param(username, username, adding_content, auth, category, type);
 											this.register(request, response, param, password, (error: { status: number, message: string }, user: any): void => {
 												this.ifSuccess(response, error, (): void => {
 													this.SendSuccess(response, {});
 												});
 											});
 										} else {
-											this.SendWarn(response, this.errors.username_already_regist);
+											this.SendError(response, Errors.userError(7, "user already found.", "S00088"));
 										}
 									}).catch((error: IErrorObject) => {
-										this.SendError(response, error);
+										this.SendError(response, Errors.Exception(error, "S00089"));
 									});
 								});
 							});
 						});
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable. 8692"});
+						this.SendError(response, Errors.generalError(2, "unreadable.", "S00090"));
 					}
 				});
 			})
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00091"));
 		}
 	}
 
@@ -845,14 +856,14 @@ export class Auth extends Mail {
 	 */
 	public post_local_password(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+			this.ifExist(response, Errors.generalError(1, "no content.", "S00092"), request.body.content, () => {
 				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 					this.ifSuccess(response, error, (): void => {
 						const username: string = value.username;
 						LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
-							this.ifExist(response, this.errors.username_notfound, account, () => {
-								this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
-									this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+							this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00093"), account, () => {
+								this.ifExist(response, Errors.userError(4, "account disabled.", "S00094"), account.enabled, () => {
+									this.ifExist(response, Errors.userError(8, "only local account.", "S00095"), (account.provider === "local"), () => {
 										const tokenValue: IPasswordToken = {
 											username: value.username,
 											password: value.password,
@@ -861,7 +872,7 @@ export class Auth extends Mail {
 										};
 
 										// const mail_object: any = this.message.passwordmail;
-										const mail_object = JSON.parse(JSON.stringify(this.message.passwordmail));
+										const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.passwordmail));
 
 										if (mail_object.html) {
 											if (mail_object.html.content) {
@@ -874,11 +885,11 @@ export class Auth extends Mail {
 										this.sendMail({
 											address: value.username,
 											bcc: this.bcc,
-											title: this.message.passwordconfirmtext,
+											title: this.systemsConfig.message.passwordconfirmtext,
 											template_url: "views/platform/auth/mail/mail_template.pug",
 											source_object: mail_object,
 											link,
-											result_object: {code: 0, message: ""},
+											result_object: {code: 0, message: "", tag: ""},
 										}, (error: IErrorObject, result: any) => {
 											this.ifSuccess(response, error, (): void => {
 												this.SendSuccess(response, result);
@@ -888,13 +899,13 @@ export class Auth extends Mail {
 								});
 							});
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S00096"));
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00097"));
 		}
 	}
 
@@ -919,7 +930,7 @@ export class Auth extends Mail {
 						LocalAccount.default_find_by_name({}, username).then((account: any): void => {
 							if (account) {
 								if (account.enabled) {
-									if (account.provider === "local") {　// OAuthは除外
+									if (account.provider === "local") {// OAuthは除外
 										account.setPassword(password, (error: IErrorObject): void => {
 											if (!error) {
 												account.save((error: IErrorObject, obj: any): void => {
@@ -934,26 +945,26 @@ export class Auth extends Mail {
 											}
 										});
 									} else {
-										response.status(200).render("error", this.errors.only_local_account); // already
+										response.status(200).render("error", {message: "ローカルアカウントのみ可能です", status: 200}); // already
 									}
 								} else {
-									response.status(200).render("error", this.errors.account_disabled); // already
+									response.status(200).render("error", {message: "アカウントが無効です", status: 200}); // already
 								}
 							} else {
 								response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
 							}
 						}).catch((error: IErrorObject) => {
-							response.status(500).render("error", error);
+							response.status(500).render("error", {message: error.message, status: error.code});
 						});
 					} else {
 						response.status(200).render("error", {message: "Timeout", status: 200}); // timeout
 					}
 				} else {
-					response.status(500).render("error", error);
+					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
 		} catch (error) {
-			response.status(500).render("error", error);
+			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
 
@@ -966,18 +977,18 @@ export class Auth extends Mail {
 	 */
 	public post_immediate_password(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00098"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
+				this.ifExist(response, Errors.userError(1, "not logged in.", "S00099"), operator.login, () => {
 					if (operator.auth < AuthLevel.user) {
-						this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+						this.ifExist(response, Errors.generalError(1, "no content.", "S00100"), request.body.content, () => {
 							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 								this.ifSuccess(response, error, (): void => {
 									const username: string = value.username;
 									LocalAccount.default_find_by_name({}, username).then((account: any): void => {
-										this.ifExist(response, this.errors.username_notfound, account, () => {
-											this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
-												this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+										this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00101"), account, () => {
+											this.ifExist(response, Errors.userError(4, "account disabled.", "S00102"), account.enabled, () => {
+												this.ifExist(response, Errors.userError(8, "only local account.", "S00103"), (account.provider === "local"), () => {
 													if (Auth.permit_for_change_account(request.user, account)) {
 														const password: string = value.password;
 														account.setPassword(password, (error: IErrorObject): void => {
@@ -990,24 +1001,24 @@ export class Auth extends Mail {
 															});
 														});
 													} else {
-														this.SendWarn(response, this.errors.no_permission);
+														this.SendError(response, Errors.userError(2, "no prev.", "S00104"));
 													}
 												});
 											});
 										});
 									}).catch((error: IErrorObject) => {
-										this.SendError(response, error);
+										this.SendError(response, Errors.Exception(error, "S00105"));
 									});
 								});
 							});
 						});
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable. 8692"});
+						this.SendError(response, Errors.generalError(2, "unreadable.", "S00106"));
 					}
 				})
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00107"));
 		}
 	}
 
@@ -1021,19 +1032,19 @@ export class Auth extends Mail {
 	 */
 	public post_local_username(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
-				this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00108"), request.user, () => {
+				this.ifExist(response, Errors.generalError(1, "no content.", "S00109"), request.body.content, () => {
 					const operator: IAccountModel = this.Transform(request.user);
 					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 						this.ifSuccess(response, error, (): void => {
 							const original_username: string = operator.username;
 							const update_username: string = value.update_username;
 							LocalAccount.default_find_by_name({}, original_username).then((account: IAccountModel): void => {
-								this.ifExist(response, this.errors.username_notfound, account, () => {
-									this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
-										this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+								this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00110"), account, () => {
+									this.ifExist(response, Errors.userError(4, "account disabled.", "S00111"), account.enabled, () => {
+										this.ifExist(response, Errors.userError(8, "only local account.", "S00112"), (account.provider === "local"), () => {
 											LocalAccount.default_find_by_name({}, update_username).then((samename: IAccountModel): void => {
-												this.ifExist(response, this.errors.username_already_regist, !samename, () => {   // no samename then
+												this.ifExist(response, Errors.userError(7, "user already found.", "S00113"), !samename, () => {   // no samename then
 													const tokenValue: IUserNameToken = {
 														original_username: original_username,
 														update_username: update_username,
@@ -1041,18 +1052,18 @@ export class Auth extends Mail {
 														timestamp: Date.now(),
 													};
 													// const mail_object: any = this.message.usernamemail;
-													const mail_object = JSON.parse(JSON.stringify(this.message.usernamemail));
+													const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.usernamemail));
 													mail_object.html.content.nickname = account.content.nickname;
 													const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 													const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
 													this.sendMail({
 														address: update_username,
 														bcc: this.bcc,
-														title: this.message.usernameconfirmtext,
+														title: this.systemsConfig.message.usernameconfirmtext,
 														template_url: "views/platform/auth/mail/mail_template.pug",
 														source_object: mail_object,
 														link,
-														result_object: {code: 0, message: ""},
+														result_object: {code: 0, message: "", tag: ""},
 													}, (error: IErrorObject, result: any) => {
 														this.ifSuccess(response, error, (): void => {
 															request.logout();
@@ -1061,20 +1072,20 @@ export class Auth extends Mail {
 													});
 												});
 											}).catch((error: IErrorObject) => {
-												this.SendError(response, error);
+												this.SendError(response, Errors.Exception(error, "S00114"));
 											});
 										});
 									});
 								});
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00115"));
 							});
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00116"));
 		}
 	}
 
@@ -1101,7 +1112,7 @@ export class Auth extends Mail {
 								if (account.enabled) {
 									LocalAccount.default_find_by_name({}, update_username).then((samename: IAccountModel): void => {
 										if (!samename) {
-											if (account.provider === "local") {　// OAuthは除外
+											if (account.provider === "local") {// OAuthは除外
 
 												const setter: any = {
 													$set: {
@@ -1115,33 +1126,33 @@ export class Auth extends Mail {
 													response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
 												});
 											} else {
-												response.status(200).render("error", this.errors.only_local_account); // already
+												response.status(200).render("error", {message: "ローカルアカウントのみ可能です", status: 200}); // already
 											}
 										} else {
-											response.status(200).render("error", {message: this.message.username_already_regist, status: 200}); // already
+											response.status(200).render("error", {message: "ユーザは既に存在します", status: 200}); // already
 										}
 									}).catch((error: IErrorObject) => {
-										response.status(500).render("error", error);
+										response.status(500).render("error", {message: error.message, status: error.code});
 									});
 								} else {
 									response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
 								}
 							} else {
-								response.status(200).render("error", {message: this.message.already_logged_in, status: 200}); // already
+								response.status(200).render("error", {message: "既にログインしています。", status: 200}); // already
 							}
 
 						}).catch((error: IErrorObject) => {
-							response.status(500).render("error", error);
+							response.status(500).render("error", {message: error.message, status: error.code});
 						});
 					} else {
 						response.status(200).render("error", {message: "Timeout", status: 200}); // timeout
 					}
 				} else {
-					response.status(500).render("error", error);
+					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
 		} catch (error) {
-			response.status(500).render("error", error);
+			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
 
@@ -1155,23 +1166,23 @@ export class Auth extends Mail {
 	 */
 	public post_immediate_username(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00117"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
-				this.ifExist(response, this.errors.not_logged_in, operator.login, () => {
+				this.ifExist(response, Errors.userError(1, "not logged in.", "S00118"), operator.login, () => {
 					if (operator.auth < AuthLevel.user) {
-						this.ifExist(response, {code: 1, message: "no content."}, request.body.content, () => {
+						this.ifExist(response, Errors.generalError(1, "no content.", "S00119"), request.body.content, () => {
 							const operator: IAccountModel = this.Transform(request.user);
 							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: any): void => {
 								this.ifSuccess(response, error, (): void => {
 									const original_username: string = value.original_username;
 									const update_username: string = value.update_username;
 									LocalAccount.default_find_by_name({}, original_username).then((account: IAccountModel): void => {
-										this.ifExist(response, this.errors.username_notfound, account, () => {
-											this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
-												this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+										this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00120"), account, () => {
+											this.ifExist(response, Errors.userError(4, "account disabled.", "S00121"), account.enabled, () => {
+												this.ifExist(response, Errors.userError(8, "only local account.", "S00122"), (account.provider === "local"), () => {
 													LocalAccount.default_find_by_name({}, update_username).then((samename: IAccountModel): void => {
-														this.ifExist(response, this.errors.username_already_regist, !samename, () => {   // no samename then
-															this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+														this.ifExist(response, Errors.userError(7, "user already found.", "S00123"), !samename, () => {   // no samename then
+															this.ifExist(response, Errors.userError(8, "only local account.", "S00124"), (account.provider === "local"), () => {
 
 																const setter: any = {
 																	$set: {
@@ -1182,29 +1193,29 @@ export class Auth extends Mail {
 																LocalAccount.findOneAndUpdate({username: original_username}, setter, {upsert: false}).then(() => {
 																	this.SendSuccess(response, {});
 																}).catch((error: IErrorObject): void => {
-																	this.SendError(response, {message: "db error. 4572", status: 500});
+																	this.SendError(response, Errors.generalError(1, "db error.", "S00125"));
 																});
 															});
 														});
 													}).catch((error: IErrorObject) => {
-														this.SendError(response, error);
+														this.SendError(response, Errors.Exception(error, "S00126"));
 													});
 												});
 											});
 										});
 									}).catch((error: IErrorObject) => {
-										this.SendError(response, error);
+										this.SendError(response, Errors.Exception(error, "S00127"));
 									});
 								});
 							});
 						});
 					} else {
-						this.SendError(response, {code: 2, message: "unreadable. 8692"});
+						this.SendError(response, Errors.generalError(2, "unreadable.", "S00128"));
 					}
 				})
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00129"));
 		}
 	}
 
@@ -1218,31 +1229,31 @@ export class Auth extends Mail {
 	 */
 	public post_local_remove(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00130"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				const username: string = operator.username;
 				LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
-					this.ifExist(response, this.errors.username_notfound, account, () => {
-						this.ifExist(response, this.errors.account_disabled, account.enabled, () => {
-							this.ifExist(response, this.errors.only_local_account, (account.provider === "local"), () => {
+					this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00131"), account, () => {
+						this.ifExist(response, Errors.userError(4, "account disabled.", "S00132"), account.enabled, () => {
+							this.ifExist(response, Errors.userError(8, "only local account.", "S00133"), (account.provider === "local"), () => {
 								const tokenValue: any = {
 									username: username,
 									target: "/",
 									timestamp: Date.now(),
 								};
 								// const mail_object = this.message.removemail;
-								const mail_object = JSON.parse(JSON.stringify(this.message.removemail));
+								const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.removemail));
 								mail_object.html.content.nickname = account.content.nickname;
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/remove/" + token;
 								this.sendMail({
 									address: username,
 									bcc: this.bcc,
-									title: this.message.removeconfirmtext,
+									title: this.systemsConfig.message.removeconfirmtext,
 									template_url: "views/platform/auth/mail/mail_template.pug",
 									source_object: mail_object,
 									link,
-									result_object: {code: 0, message: ""},
+									result_object: {code: 0, message: "", tag: ""},
 								}, (error: IErrorObject, result: any) => {
 									this.ifSuccess(response, error, (): void => {
 										request.logout();
@@ -1253,11 +1264,11 @@ export class Auth extends Mail {
 						});
 					});
 				}).catch((error: IErrorObject) => {
-					this.SendError(response, error);
+					this.SendError(response, Errors.Exception(error, "S00134"));
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00135"));
 		}
 	}
 
@@ -1285,26 +1296,26 @@ export class Auth extends Mail {
 										request.logout();
 										response.redirect(target);
 									}).catch((error: IErrorObject): void => {
-										response.status(500).render("error", error);
+										response.status(500).render("error", {message: error.message, status: error.code});
 									});
 								} else {
 									response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
 								}
 							} else {
-								response.status(200).render("error", {message: this.message.already_logged_in, status: 200}); // already
+								response.status(200).render("error", {message: "既にログインしています。", status: 200}); // already
 							}
 						}).catch((error: IErrorObject) => {
-							response.status(500).render("error", error);
+							response.status(500).render("error", {message: error.message, status: error.code});
 						});
 					} else {
 						response.status(200).render("error", {message: "Timeout", status: 200}); // timeout
 					}
 				} else {
-					response.status(500).render("error", error);
+					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
 		} catch (error) {
-			response.status(500).render("error", error);
+			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
 
@@ -1318,25 +1329,25 @@ export class Auth extends Mail {
 	 */
 	public post_immediate_remove(request: IContentRequest, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00136"), request.user, () => {
 				const operator: any = request.user;
 				LocalAccount.default_find_by_id({}, operator.user_id).then((account: any): void => {
-					this.ifExist(response, this.errors.username_notfound, account, () => {
-						this.ifExist(response, this.errors.account_enabled, !account.enabled, () => {  // not enabled then
+					this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00137"), account, () => {
+						this.ifExist(response, Errors.userError(4, "account disabled", "S00138"), !account.enabled, () => {  // not enabled then
 							LocalAccount.remove_by_id(null, operator.user_id).then(() => {
 								request.logout();
 								this.SendSuccess(response, null);
 							}).catch((error: IErrorObject): void => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00139"));
 							});
 						});
 					});
 				}).catch((error: IErrorObject) => {
-					this.SendError(response, error);
+					this.SendError(response, Errors.Exception(error, "S00140"));
 				})
 			})
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00141"));
 		}
 	}
 
@@ -1348,7 +1359,7 @@ export class Auth extends Mail {
 	 */
 	public auth_facebook_callback(request: IUserRequest, response: any): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00142"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				LocalAccount.default_find_by_name({}, operator.username).then((account: any): void => {
 					if (!account) {
@@ -1357,7 +1368,7 @@ export class Auth extends Mail {
 						const newAccount: any = new LocalAccount();
 						newAccount.provider = operator.provider;
 						newAccount.auth = AuthLevel.public;
-					// 	newAccount.user_id = operator.user_id;
+						// 	newAccount.user_id = operator.user_id;
 						newAccount.user_id = new mongoose.Types.ObjectId();
 						newAccount.username = operator.username;
 						newAccount.privatekey = keypair.private;
@@ -1383,7 +1394,7 @@ export class Auth extends Mail {
 				})
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00379"));
 		}
 	}
 
@@ -1395,7 +1406,7 @@ export class Auth extends Mail {
 	 */
 	public auth_apple_callback(request: IUserRequest, response: IRedirectResponse): void {
 		try {
-			this.ifExist(response, this.errors.not_logged_in, request.user, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00143"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				LocalAccount.default_find_by_name({}, operator.username).then((account: any): void => {
 					if (!account) {
@@ -1422,7 +1433,7 @@ export class Auth extends Mail {
 				})
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00380"));
 		}
 	}
 
@@ -1460,7 +1471,7 @@ export class Auth extends Mail {
 				this.SendError(response, error);
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00381"));
 		}
 	}
 
@@ -1500,7 +1511,7 @@ export class Auth extends Mail {
 				this.SendError(response, error);
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00382"));
 		}
 	}
 
@@ -1540,7 +1551,7 @@ export class Auth extends Mail {
 				this.SendError(response, error);
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00383"));
 		}
 	}
 
@@ -1553,9 +1564,9 @@ export class Auth extends Mail {
 	public logout(request: { logout: () => void }, response: IJSONResponse): void {
 		try {
 			request.logout();
-			this.SendSuccess(response, {code: 0, message: ""});
+			this.SendSuccess(response, {code: 0, message: "", tag: ""});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00384"));
 		}
 	}
 

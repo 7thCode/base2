@@ -14,6 +14,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {AuthService} from "../auth.service";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
+import {Router} from "@angular/router";
 
 /**
  *
@@ -51,7 +52,8 @@ export class LoginQrDialogComponent extends BaseDialogComponent implements OnIni
 		public data: any,
 		public matDialogRef: MatDialogRef<any>,
 		public snackbar: MatSnackBar,
-		public auth: AuthService) {
+		public auth: AuthService,
+		private router: Router) {
 		super();
 	}
 
@@ -61,9 +63,13 @@ export class LoginQrDialogComponent extends BaseDialogComponent implements OnIni
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 

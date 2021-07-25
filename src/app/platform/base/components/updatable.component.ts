@@ -15,6 +15,7 @@ import {InfoDialogComponent} from "./info-dialog/info-dialog.component";
 import {SessionableComponent} from "./sessionable.component";
 
 import {SessionService} from "../services/session.service";
+import {Errors} from "../library/errors";
 
 /**
  * アップデータブルクラス
@@ -26,7 +27,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 
 	public size: number = 20;
 	public count: number = 0;
-	public results: any[] = [];
+	public results: any = [];
 
 	protected service: any = null;
 	protected query: object = {};
@@ -134,7 +135,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error. A8467"}, null);
+							callback(Errors.responseError("A00022"), null);
 						}
 					} else {
 						callback(error, null);
@@ -162,7 +163,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error. A8755"}, null);
+							callback(Errors.networkError("A00023"), null);
 						}
 					} else {
 						callback(error, null);
@@ -178,7 +179,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 	 * セット
 	 *
 	 * @param id 対象レコードID
-	 * @param command　コマンド
+	 * @param command コマンド
 	 * @param data 更新内容
 	 * @param callback
 	 */
@@ -191,7 +192,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error. A7239"}, null);
+							callback(Errors.networkError("A00024"), null);
 						}
 					} else {
 						callback(error, null);
@@ -218,7 +219,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 							this.results = result;
 							callback(null, result);
 						} else {
-							callback({code: -1, message: "error. A5290"}, null);
+							callback(Errors.networkError("A00025"), null);
 						}
 					} else {
 						callback(error, null);
@@ -242,18 +243,22 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 		this.query = {};
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object | null): void => {
-			this.draw((error: IErrorObject, results: object[] | null): void => {
-				if (!error) {
-					if (results) {
-						this.results = results;
-						this.Complete("", results);
+			if (!error) {
+				this.draw((error: IErrorObject, results: object[] | null): void => {
+					if (!error) {
+						if (results) {
+							this.results = results;
+							this.Complete("", results);
+						} else {
+							this.Complete("error", Errors.generalError(-1, "error.", "A00026"));
+						}
 					} else {
-						this.Complete("error", {code: -1, message: "error. A6921"});
+						this.Complete("error", error);
 					}
-				} else {
-					this.Complete("error", error);
-				}
-			});
+				});
+			} else {
+				this.Complete("error", error);
+			}
 		});
 	}
 
@@ -295,7 +300,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error. A8836"});
+					this.Complete("error", Errors.generalError(-1, "error.", "A00027"));
 				}
 			} else {
 				this.Complete("error", error);

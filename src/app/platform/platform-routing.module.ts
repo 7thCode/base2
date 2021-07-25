@@ -36,7 +36,6 @@ const routes: Routes = [
 			{path: '**', component: ErrorComponent},
 		],
 	},
-
 ];
 
 @NgModule({

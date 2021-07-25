@@ -44,7 +44,7 @@ export class InteractionService {
 	 * チャネル参照・作成
 	 * 当該チャネルがあれば返す。なければ生成。
 	 *
-	 * @param name　チャネル名
+	 * @param name チャネル名
 	 * @return InteractionChannel 該当のチャネル
 	 */
 	public getChannel(name: string): InteractionChannel {

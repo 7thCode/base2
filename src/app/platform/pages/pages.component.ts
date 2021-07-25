@@ -20,6 +20,8 @@ import {PagesService} from "./pages.service";
 import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../base/library/spinner";
+import {Errors} from "../base/library/errors";
+import {ActivatedRoute, Router} from "@angular/router";
 
 /**
  * ページ
@@ -38,6 +40,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	}
 
 	public path = "";
+	public params: any = {};
 
 	protected spinner: Spinner;
 
@@ -55,6 +58,8 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 		protected matDialog: MatDialog,
 		protected pageSerrvice: PagesService,
 		protected snackbar: MatSnackBar,
+		private router: Router,
+		protected route: ActivatedRoute,
 	) {
 		super(session, matDialog);
 		this.service = pageSerrvice;
@@ -67,9 +72,13 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 
@@ -103,6 +112,9 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 	public ngOnInit(): void {
 		this.sort = {};
 		super.ngOnInit();
+		this.route.queryParams.subscribe(params => {
+			this.params = params;
+		});
 	}
 
 	/**
@@ -164,7 +176,7 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 					this.results = results;
 					this.Complete("", results);
 				} else {
-					this.Complete("error", {code: -1, message: "error. A4382"});
+					this.Complete("error", Errors.generalError(-1, "error.", "A00042"));
 				}
 			} else {
 				this.Complete("error", error);

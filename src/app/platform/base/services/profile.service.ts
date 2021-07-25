@@ -13,6 +13,7 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "./http.service";
+import {Errors} from "../library/errors";
 
 
 /**
@@ -52,13 +53,13 @@ export class ProfileService extends HttpService {
 						callback(null, null);
 						break;
 					default:
-						callback(result, null);
+						callback(Errors.serverError(result, "A00111"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00112"), null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " A5222"}, null);
+			callback(Errors.networkException(error, "A00113"), null);
 		});
 	}
 
@@ -74,13 +75,13 @@ export class ProfileService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00114"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00115"), null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " A1521"}, null);
+			callback(Errors.networkException(error, "A00116"), null);
 		});
 	}
 

@@ -13,6 +13,7 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "./http.service";
+import {Errors} from "../library/errors";
 
 /**
  * 公開鍵
@@ -51,13 +52,13 @@ export class PublicKeyService extends HttpService {
 						callback(null, null);
 						break;
 					default:
-						callback(result, null);
+						callback(Errors.serverError(result, "A00028"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00029"), null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: 'server not respond.' + " A5005"}, null);
+			callback(Errors.networkException(error, "A00030"), null);
 		});
 	}
 
@@ -77,13 +78,13 @@ export class PublicKeyService extends HttpService {
 						callback(null, null);
 						break;
 					default:
-						callback(result, null);
+						callback(Errors.serverError(result, "A00031"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00032"), null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " A9992"}, null);
+			callback(Errors.networkException(error, "A00033"), null);
 		});
 	}
 
@@ -103,13 +104,13 @@ export class PublicKeyService extends HttpService {
 						callback(null, null);
 						break;
 					default:
-						callback(result, null);
+						callback(Errors.serverError(result, "A00034"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00035"), null);
 			}
 		}, (error: HttpErrorResponse) => {
-			callback({code: -1, message: error.message + " A2505"}, null);
+			callback(Errors.networkException(error, "A00036"), null);
 		});
 	}
 

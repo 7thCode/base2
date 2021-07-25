@@ -1,11 +1,13 @@
 {
-  "name": "base1",
-  "short_name": "PWA",
-  "icons": [{
-	"src": "./favicon/apple-touch-icon-180x180.png",
-	"sizes": "180x180",
-	"type": "image/png"
-  }],
-  "start_url": "index.html",
-  "display": "standalone"
+	"name": "base1",
+	"short_name": "PWA",
+	"icons": [
+		{
+			"src": "./favicon/apple-touch-icon-180x180.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		}
+	],
+	"start_url": "index.html",
+	"display": "standalone"
 }

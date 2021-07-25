@@ -9,6 +9,7 @@
 import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
+import {Errors} from "../../base/library/errors";
 
 const fs: any = require("graceful-fs");
 const sharp: any = require("sharp");
@@ -220,7 +221,7 @@ export class Files extends Wrapper {
 					const readstream: any = this.gfs.openDownloadStream(item._id);
 					callback(null, readstream, item.length);
 				} else {
-					callback({code: -1, message: "not found." + " 2010"}, null, null);
+					callback(Errors.generalError(1, "not found.", "S00178"), null, null);
 				}
 			} else {
 				callback(error, null, null);
@@ -279,13 +280,13 @@ export class Files extends Wrapper {
 					writestream.write(chunk);
 					writestream.end();
 				} else {
-					callback({code: 42, message: "stream not open." + " 4701"}, null);
+					callback(Errors.generalError(42, "stream not open.", "S00179"), null);
 				}
 			} else {
-				callback({code: 41, message: "no chunk." + " 6500"}, null);
+				callback(Errors.generalError(41, "no chunk.", "S00180"), null);
 			}
 		} else {
-			callback({code: 40, message: "no data." + " 7643"}, null);
+			callback(Errors.generalError(40, "no data.", "S00181"), null);
 		}
 	}
 
@@ -305,7 +306,7 @@ export class Files extends Wrapper {
 				if (item) {
 					callback(null, item);
 				} else {
-					callback({code: -1, message: "no item" + " 148"}, null);
+					callback(Errors.generalError(1, "no item", "S00182"), null);
 				}
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
@@ -330,7 +331,7 @@ export class Files extends Wrapper {
 				if (item) {
 					callback(null, item);
 				} else {
-					callback({code: -1, message: "no item" + " 5629"}, null);
+					callback(Errors.generalError(1, "no item", "S00183"), null);
 				}
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
@@ -356,7 +357,7 @@ export class Files extends Wrapper {
 			if (readstream) {
 				callback(null, readstream);
 			} else {
-				callback({code: -1, message: "stream not found." + " 6058"}, null);
+				callback(Errors.generalError(1, "stream not found.", "S00184"), null);
 			}
 		} catch (e) {
 			callback(e, null);
@@ -408,7 +409,7 @@ export class Files extends Wrapper {
 		* RFC 7233, Range Requests
 		* https://triple-underscore.github.io/RFC7233-ja.html
 		 */
-		if (range) {　    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
+		if (range) {    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
 			command = ""; // Because, in partial transfer, the effect cannot be used.
 			const target_range: { start: number, end: number } = Files.parse_range(range, total);
 			status = 206;
@@ -584,14 +585,14 @@ export class Files extends Wrapper {
 							this.collection.find(Files.query_by_user_read(operator, this.default_user, query), option).limit(option.limit).skip(option.skip).toArray().then((docs: any): void => {
 								this.SendRaw(response, docs);
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00185"));
 							});
 						});
 					});
 				});
 			});
-		} catch (e) {
-			this.SendFatal(response, e);
+		} catch (error) {
+			this.SendFatal(response, Errors.Exception(error, "S00186"));
 		}
 	}
 
@@ -610,12 +611,12 @@ export class Files extends Wrapper {
 					this.collection.find(Files.query_by_user_read(operator, this.default_user, query)).count().then((count: number): void => {
 						this.SendSuccess(response, count);
 					}).catch((error: IErrorObject) => {
-						this.SendError(response, error);
+						this.SendError(response, Errors.Exception(error, "S00187"));
 					});
 				});
 			});
-		} catch (e) {
-			this.SendFatal(response, e);
+		} catch (error) {
+			this.SendFatal(response, Errors.Exception(error, "S00188"));
 		}
 	}
 
@@ -647,19 +648,19 @@ export class Files extends Wrapper {
 							this.SendSuccess(response, dataurl);
 						});
 						readstream.on("error", (error: IErrorObject): void => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S00189"));
 						});
 					} else {
-						this.SendError(response, {code: 2, message: "no stream.(file 1)" + " 7191"});
+						this.SendError(response, Errors.generalError(2, "no stream.(file 1)", "S00190"));
 					}
 				} else {
-					this.SendError(response, {code: 1, message: "no item.(file 1)" + " 6086"});
+					this.SendError(response, Errors.generalError(1, "no item.(file 1)", "S00191"));
 				}
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S00192"));
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00193"));
 		}
 	}
 
@@ -671,8 +672,8 @@ export class Files extends Wrapper {
 	 */
 	public postFile(request: any, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
-				this.ifExist(response, {code: 1, message: "no content."}, request.body.url, () => {
+			this.ifExist(response, Errors.userError(1, "not logged in.", "S00194"), request.user, () => {
+				this.ifExist(response, Errors.generalError(1, "no content.", "S00195"), request.body.url, () => {
 					const path: string = request.params[0];
 					const category: string = request.body.category;
 					const params: { upsert: boolean } = request.body.params;
@@ -698,22 +699,22 @@ export class Files extends Wrapper {
 											});
 										});
 									}).catch((error: IErrorObject) => {
-										this.SendError(response, error);
+										this.SendError(response, Errors.Exception(error, "S00196"));
 									});
 								} else {
-									this.SendError(response, {code: -1, message: "alrady exist."});
+									this.SendError(response, Errors.generalError(1, "alrady exist.", "S00197"));
 								}
 							}
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S00198"));
 						});
 					} else {
-						this.SendWarn(response, {code: 1, message: "no name" + " 3964"});
+						this.SendError(response, Errors.generalError(1, "no name.", "S00199"));
 					}
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00200"));
 		}
 	}
 
@@ -725,7 +726,7 @@ export class Files extends Wrapper {
 	 */
 	public deleteFile(request: IDeleteFile, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, {code: -1, message: "not logged in."}, request.user, () => {
+			this.ifExist(response, Errors.userError(-1, "not logged in.", "000201"), request.user, () => {
 				const path: string = request.params[0];
 				const operator: IAccountModel = this.Transform(request.user);
 
@@ -733,11 +734,11 @@ export class Files extends Wrapper {
 				this.collection.findOneAndDelete(query).then((): void => {
 					this.SendSuccess(response, {});
 				}).catch((error: IErrorObject) => {
-					this.SendError(response, error);
+					this.SendError(response, Errors.Exception(error, "S00202"));
 				});
 			});
 		} catch (error) {
-			this.SendFatal(response, error);
+			this.SendFatal(response, Errors.Exception(error, "S00203"));
 		}
 	}
 
@@ -887,7 +888,7 @@ export class Files extends Wrapper {
 								}
 							});
 						} else {
-							callback({code: -1, message: "invalid command." + " 5962"}, stream);
+							callback(Errors.generalError(1, "invalid command.", "S00364"), stream);
 						}
 					} finally {
 						callback(null, stream);

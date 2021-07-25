@@ -22,6 +22,7 @@ import {YesNoDialogComponent} from "../../platform/base/components/yes-no-dialog
 import {Spinner} from "../../platform/base/library/spinner";
 import {ResizeDialogComponent} from "../../platform/image/resize-dialog/resize-dialog.component";
 import {NativeFilesService} from "./native-files.service";
+import {Errors} from "../../platform/base/library/errors";
 
 /**
  * ファイル
@@ -156,13 +157,12 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 		this.query = {};
 		this.results = [];
 		this.breakpoint = this.widthToColumns(window.innerWidth);
-
 		this.draw((error: IErrorObject, results: object[] | null): void => {
 			if (!error) {
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error. A1224"});
+					this.Complete("error", Errors.generalError( -1, "error.", "A00312"));
 				}
 			} else {
 				this.Complete("error", error);
@@ -190,7 +190,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 							this.results = results;
 							this.Complete("", results);
 						} else {
-							this.Complete("error", {code: -1, message: "error. A2293"});
+							this.Complete("error", Errors.generalError( -1, "error.", "A00310"));
 						}
 					} else {
 						this.Complete("error", error);
@@ -333,7 +333,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 					this.results = results;
 					this.Complete("", results);
 				} else {
-					this.Complete("error", {code: -1, message: "error. A2382"});
+					this.Complete("error", Errors.generalError( -1,  "error.", "A00310"));
 				}
 			} else {
 				this.Complete("error", error);
@@ -357,7 +357,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 								this.results = results;
 								this.Complete("", results);
 							} else {
-								this.Complete("error", {code: -1, message: "error. A2832"});
+								this.Complete("error", Errors.generalError( -1,  "error." , "A00311"));
 							}
 						} else {
 							this.Complete("error", error);
@@ -471,7 +471,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error. A5562"});
+					this.Complete("error", Errors.generalError( -1,  "error." , "A00312"));
 				}
 			} else {
 				this.Complete("error", error);

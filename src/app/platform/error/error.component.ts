@@ -30,7 +30,6 @@ export class ErrorComponent implements OnInit {
 	 *
 	 */
 	public ngOnInit(): void {
-
 	}
 
 }

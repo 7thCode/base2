@@ -10,6 +10,7 @@ import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {INativeFileModel} from "../../../../types/plugins/server";
 import {IAccountModel, IDeleteFile, IJSONResponse, IPostFile, IUpdatableModel} from "../../../../types/platform/server";
+import {Errors} from "../../../platform/base/library/errors";
 
 const Updatable: any = require("../../../platform/base/controllers/updatable_controller");
 
@@ -70,7 +71,7 @@ export class NativeFiles extends Updatable {
 			const object: IUpdatableModel = new this.Model();
 			object._create(operator, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.ifExist(response, {code: -1, message: "not found. 3382"}, object, () => {
+					this.ifExist(response, Errors.generalError(-1, "not found.", "S00455"), object, () => {
 						this.SendSuccess(response, object.public());
 					});
 				});
@@ -213,7 +214,7 @@ export class NativeFiles extends Updatable {
 								}
 							});
 						} else {
-							callback({code: -1, message: "invalid command." + " 5962"}, stream);
+							callback(Errors.generalError(-1, "invalid command.", "S00456"), stream);
 						}
 					} finally {
 						callback(null, stream);

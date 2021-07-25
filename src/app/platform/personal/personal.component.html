@@ -1,7 +1,7 @@
 <ng-container>
 	<mat-card style="margin:2rem;">
 		<mat-card-header>
-			<mat-card-title>{{username}}</mat-card-title>
+			<mat-card-title>{{username}} - {{type}}</mat-card-title>
 			<mat-card-subtitle>{{create | date:"yy/MM/dd HH:mm"}}</mat-card-subtitle>
 		</mat-card-header>
 		<mat-card-content>
@@ -24,15 +24,72 @@
 					<mat-error *ngIf="description_input.errors?.minlength">短すぎます</mat-error>
 				</mat-form-field>
 
-				<mat-form-field style="margin:20px">
-					<mat-label>Id...</mat-label>
-					<input #id_input="ngModel" [(ngModel)]="id" autocomplete="off" matInput maxlength="255" minlength="2" name="id" placeholder="Xxxxxx..." type="text">
-					<mat-hint>3文字以上500文字まで</mat-hint>
-					<mat-error *ngIf="id_input.errors?.maxlength">長すぎます</mat-error>
-					<mat-error *ngIf="id_input.errors?.minlength">短すぎます</mat-error>
-				</mat-form-field>
+				<!--		<mat-form-field style="margin:20px">
+							<mat-label>Id...</mat-label>
+							<input #id_input="ngModel" [(ngModel)]="id" autocomplete="off" matInput maxlength="255" minlength="2" name="id" placeholder="Xxxxxx..." type="text">
+							<mat-hint>3文字以上500文字まで</mat-hint>
+							<mat-error *ngIf="id_input.errors?.maxlength">長すぎます</mat-error>
+							<mat-error *ngIf="id_input.errors?.minlength">短すぎます</mat-error>
+						</mat-form-field> -->
 
-				<div fxLayout="row" fxLayoutAlign="center" style="margin:20px">
+				<div fxlayout="row" fxLayoutAlign="space-around" style="margin:20px">
+
+					<mat-card>
+						<mat-card-header>
+							<mat-card-title>to</mat-card-title>
+						</mat-card-header>
+						<mat-card-content>
+							<mat-list>
+								<mat-list-item *ngFor="let account of to">{{account.account.username}}</mat-list-item>
+							</mat-list>
+						</mat-card-content>
+					</mat-card>
+
+					<mat-card>
+						<mat-card-header>
+							<mat-card-title>from</mat-card-title>
+						</mat-card-header>
+						<mat-card-content>
+							<mat-list>
+								<mat-list-item *ngFor="let account of from">{{account.account.username}}</mat-list-item>
+							</mat-list>
+						</mat-card-content>
+					</mat-card>
+
+				</div>
+
+				<div fxlayout="row" fxLayoutAlign="space-around" style="margin:20px">
+
+					<mat-card>
+						<mat-card-header>
+							<mat-card-title>to user</mat-card-title>
+						</mat-card-header>
+						<mat-card-content>
+							<mat-list>
+								<mat-list-item *ngFor="let account of to_user">{{account.account.username}}</mat-list-item>
+							</mat-list>
+						</mat-card-content>
+					</mat-card>
+
+					<mat-card>
+						<mat-card-header>
+							<mat-card-title>from user</mat-card-title>
+						</mat-card-header>
+						<mat-card-content>
+							<mat-list>
+								<mat-list-item *ngFor="let account of from_user">{{account.account.username}}</mat-list-item>
+							</mat-list>
+						</mat-card-content>
+					</mat-card>
+
+				</div>
+
+				<div fxlayout="row" fxLayoutAlign="space-around" style="margin:20px">
+					<button (click)="onMakeRelation('oda.mikio+manager@gmail.com')" color="primary" mat-raised-button>MakeRelation(to)</button>
+					<button (click)="onBreakRelation('oda.mikio+manager@gmail.com')" color="warn" mat-raised-button>BreakRelation</button>
+				</div>
+
+				<div fxLayout="row" fxLayoutAlign="space-around" style="margin:20px">
 					<button (click)="onAccept()" [disabled]="form.invalid" color="primary" mat-raised-button>OK</button>
 				</div>
 			</form>

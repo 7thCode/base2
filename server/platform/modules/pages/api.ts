@@ -8,6 +8,7 @@
 
 import {IAccountModel} from "../../../../types/platform/server";
 import {IErrorObject} from "../../../../types/platform/universe";
+import {Errors} from "../../base/library/errors";
 
 const express: any = require("express");
 export const router: any = express.Router();
@@ -96,10 +97,11 @@ pages.init(usersConfig.initpages, (error: IErrorObject, result: any): void => {
 							if (result) {
 								pages.SendSuccess(response, result);
 							} else {
-								pages.SendError(response, {code: -1, message: "(page 1) 3766"});
+								pages.SendError(response, Errors.userError(1, "(page 1)", "S00204"));
 							}
 						} else {
-							pages.SendError(response, error);
+							next();
+							// 					pages.SendError(response, Errors.serverError(error,"3345"));
 						}
 					};
 

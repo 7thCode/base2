@@ -7,6 +7,7 @@
 "use strict";
 
 import {IJSONResponse} from "../../../../types/platform/server";
+import {Errors} from "../../base/library/errors";
 
 const _: any = require("lodash");
 
@@ -39,10 +40,10 @@ export class Session extends Wrapper {
 			if (request.user) {
 				this.SendSuccess(response, this.Transform(request.user));
 			} else {
-				this.SendInfo(response, {code: 1, message: "not logged in."});
+				this.SendWarn(response, Errors.userError(1, "not logged in.", "S00373"));
 			}
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00374"));
 		}
 	}
 
@@ -65,10 +66,10 @@ export class Session extends Wrapper {
 				request.session.save();
 				this.SendSuccess(response, user);
 			} else {
-				this.SendError(response, {code: -1, message: "not logged in. 7352"});
+				this.SendError(response, Errors.userError(1, "not logged in.", "S00375"));
 			}
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00376"));
 		}
 	}
 }

@@ -179,7 +179,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.post("/auth/immediate/register", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/auth/immediate/register", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: object, response: object, next: any): void => {
 				auth.is_manager(request, response, next);
 			},
@@ -206,7 +206,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.post("/auth/immediate/password", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/auth/immediate/password", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: object, response: object, next: any): void => {
 				auth.is_manager(request, response, next);
 			},
@@ -233,7 +233,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.post("/auth/immediate/username", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/auth/immediate/username", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: object, response: object, next: any): void => {
 				auth.is_manager(request, response, next);
 			},
@@ -260,7 +260,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-		router.post("/auth/immediate/remove", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/auth/immediate/remove", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: object, response: object, next: any): void => {
 				auth.is_manager(request, response, next);
 			},

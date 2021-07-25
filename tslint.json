@@ -14,7 +14,7 @@
 			}
 		],
 		"member-ordering": [
-			true,
+			false,
 			{
 				"order": [
 					"public-static-field",

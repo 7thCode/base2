@@ -23,6 +23,8 @@ import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dial
 import {Spinner} from "../base/library/spinner";
 import {ResizeDialogComponent} from "../image/resize-dialog/resize-dialog.component";
 import {FilesService} from "./files.service";
+import {Errors} from "../base/library/errors";
+import {ActivatedRoute, Router} from "@angular/router";
 
 /**
  * ファイル
@@ -51,6 +53,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public breakpoint: number = 4;
 	public resizeThreshold: any;
 
+	public params: any = {};
+
 	protected query: object = {};
 	protected page: number = 0;
 
@@ -63,6 +67,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * @param overlay
 	 * @param matDialog
 	 * @param snackbar
+	 * @param router
+	 * @param route
 	 */
 	constructor(
 		protected session: SessionService,
@@ -70,6 +76,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		private overlay: Overlay,
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
+		private router: Router,
+		protected route: ActivatedRoute,
 	) {
 		super(session);
 		this.filesService = new FilesService(http);
@@ -103,9 +111,13 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 
@@ -158,17 +170,19 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 		this.query = {};
 		this.results = [];
 		this.breakpoint = this.widthToColumns(window.innerWidth);
-
-		this.draw((error: IErrorObject, results: object[] | null): void => {
-			if (!error) {
-				if (results) {
-					this.results = results;
+		this.route.queryParams.subscribe(params => {
+			this.params = params;
+			this.draw((error: IErrorObject, results: object[] | null): void => {
+				if (!error) {
+					if (results) {
+						this.results = results;
+					} else {
+						this.Complete("error", Errors.generalError(-1, "error.", "A00205"));
+					}
 				} else {
-					this.Complete("error", {code: -1, message: "error. A2833"});
+					this.Complete("error", error);
 				}
-			} else {
-				this.Complete("error", error);
-			}
+			});
 		});
 	}
 
@@ -192,7 +206,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 							this.results = results;
 							this.Complete("", results);
 						} else {
-							this.Complete("error", {code: -1, message: "error. A2356"});
+							this.Complete("error", Errors.generalError(-1, "error.", "A00206"));
 						}
 					} else {
 						this.Complete("error", error);
@@ -335,7 +349,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 					this.results = results;
 					this.Complete("", results);
 				} else {
-					this.Complete("error", {code: -1, message: "error. A2283"});
+					this.Complete("error", Errors.generalError(-1, "error.", "A00207"));
 				}
 			} else {
 				this.Complete("error", error);
@@ -359,7 +373,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 								this.results = results;
 								this.Complete("", results);
 							} else {
-								this.Complete("error", {code: -1, message: "error. A3345"});
+								this.Complete("error", Errors.generalError(-1, "error.", "A00208"));
 							}
 						} else {
 							this.Complete("error", error);
@@ -473,7 +487,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", {code: -1, message: "error. A9982"});
+					this.Complete("error", Errors.generalError(-1, "error.", "A00209"));
 				}
 			} else {
 				this.Complete("error", error);

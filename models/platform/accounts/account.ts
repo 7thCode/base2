@@ -54,6 +54,9 @@ namespace AccountModel {
 		content.user_id = this.user_id;
 		content.auth = this.auth;
 		content.enabled = this.enabled;
+		content.category = this.category;
+		content.status = this.status;
+		content.type = this.type;
 		return content;
 	};
 
@@ -79,28 +82,32 @@ namespace AccountModel {
 		this.status = status;
 	};
 
-	Account.statics.default_find_by_name = function (user: IAccountModel, name: string): Promise<any> {
-		return this.model("Account").findOne({username: name});
-	};
-
 	Account.statics.default_find = function (user: IAccountModel, query: object, option: IQueryOption): Promise<any> {
 		return this.model("Account").find(query, {}, option);
-	};
-
-	Account.statics.set_by_name = function (user: IAccountModel, name: string, setter: any): Promise<any> {
-		return this.model("Account").findOneAndUpdate({username: name}, {$set: setter}, {upsert: false});
 	};
 
 	Account.statics.default_find_by_id = function (user: IAccountModel, id: string): Promise<any> {
 		return this.model("Account").findOne({user_id: id});
 	};
 
+	Account.statics.default_find_by_name = function (user: IAccountModel, name: string): Promise<any> {
+		return this.model("Account").findOne({username: name});
+	};
+
 	Account.statics.set_by_id = function (user: IAccountModel, id: string, setter: any): Promise<any> {
 		return this.model("Account").findOneAndUpdate({user_id: id}, {$set: setter}, {upsert: false});
 	};
 
+	Account.statics.set_by_name = function (user: IAccountModel, name: string, setter: any): Promise<any> {
+		return this.model("Account").findOneAndUpdate({username: name}, {$set: setter}, {upsert: false});
+	};
+
 	Account.statics.remove_by_id = function (user: IAccountModel, id: string): Promise<any> {
 		return this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {user_id: id}]});
+	};
+
+	Account.statics.remove_by_name = function (user: IAccountModel, name: string): Promise<any> {
+		return this.model("Account").findOneAndRemove({$and: [{auth: {$gt: 1}}, {username: name}]});
 	};
 
 	module.exports = mongoose.model("Account", Account);

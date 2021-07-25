@@ -6,12 +6,13 @@
 
 "use strict";
 
-import {IErrorObject, ISession} from "../../../../../types/platform/universe";
+import {AuthLevel, IErrorObject, ISession} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 /**
  *
@@ -33,6 +34,27 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 		return this.data.content;
 	}
 
+	get type(): string {
+		return this.data.type;
+	}
+
+	set type(value: string) {
+		this.data.type = value;
+	}
+
+	public auths: any[] = [
+		{name: "System", value: AuthLevel.system},
+		{name: "Manager", value: AuthLevel.manager},
+		{name: "Common", value: AuthLevel.user},
+		{name: "other", value: AuthLevel.public},
+	];
+
+	public types: any[] = [
+		{name: "Manage", value: "manage"},
+		{name: "General", value: "general"},
+		{name: "other", value: "other"},
+	];
+
 	public qr: string = "";
 	public is2fa: boolean = false;
 	public enable: boolean = false;
@@ -48,7 +70,8 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<AccountDialogComponent>,
-		public snackbar: MatSnackBar) {
+		public snackbar: MatSnackBar,
+		private router: Router) {
 		super();
 	}
 
@@ -58,9 +81,13 @@ export class AccountDialogComponent extends BaseDialogComponent implements OnIni
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-				// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 

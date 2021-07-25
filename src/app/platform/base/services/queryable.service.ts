@@ -12,6 +12,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "./http.service";
+import {Errors} from "../library/errors";
 
 /**
  * 参照サービスのベースクラス
@@ -65,20 +66,21 @@ export abstract class QueryableService extends HttpService {
 									});
 									callback(null, filterd);
 								} else {
-									callback({code: results.code, message: results.message + " A9674"}, []);
+									callback(Errors.serverError(results, "A00183"), []);
 								}
 							} else {
-								callback(this.networkError, null);
+								callback(Errors.networkError("A00184"), null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " A5918"}, []);
+							callback(Errors.networkException(error, "A00185"), []);
 						});
 					} else {
-						callback({code: -1, message: "option parse error" + " A3319"}, []);
+
+						callback(Errors.responseError("A00186"), []);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " A7533"}, []);
+				callback(Errors.responseError("A00187"), []);
 			}
 		});
 	}
@@ -96,13 +98,13 @@ export abstract class QueryableService extends HttpService {
 					if (result) {
 						callback(null, result);
 					} else {
-						callback(this.networkError, 0);
+						callback(Errors.networkError("A00188"), 0);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " A4557"}, null);
+					callback(Errors.networkException(error, "A00189"), null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error" + " A5201"}, null);
+				callback(Errors.responseError("A00190"), null);
 			}
 		});
 	}
@@ -119,13 +121,13 @@ export abstract class QueryableService extends HttpService {
 				if (result.code === 0) {
 					callback(null, this.decorator(result.value));
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00191"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00192"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A8499"}, null);
+			callback(Errors.networkException(error, "A00193"), null);
 		});
 	}
 

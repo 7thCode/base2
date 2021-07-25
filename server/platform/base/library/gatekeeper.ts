@@ -8,6 +8,7 @@
 
 import {IErrorObject} from "../../../../types/platform/universe";
 import {IAccountModel, IJSONResponse} from "../../../../types/platform/server";
+import {Errors} from "./errors";
 
 const result: any = require("./result");
 
@@ -125,7 +126,7 @@ export class Gatekeeper {
 				response = Gatekeeper.BasicHeader(request, response, "");
 				next();
 			} else {
-				Gatekeeper.SendError(response, {code: -1, message: "CSRF? 28466"});
+				Gatekeeper.SendError(response, Errors.generalError(1, "CSRF?", "S00001"));
 			}
 		}
 	}
@@ -145,7 +146,7 @@ export class Gatekeeper {
 						if (request.isAuthenticated()) {
 							next();
 						} else {
-							Gatekeeper.SendError(response, {code: -2, message: "no auth. 3827"});
+							Gatekeeper.SendError(response, Errors.generalError(2, "no auth.", "S00002"));
 						}
 						break;
 					case "facebook":
@@ -154,12 +155,13 @@ export class Gatekeeper {
 						break;
 				}
 			} else {
-				Gatekeeper.SendError(response, {code: -3, message: "disabled. 9374"});
+				Gatekeeper.SendError(response, Errors.generalError(3, "disabled.", "S00003"));
 			}
 		} else { // normal case.
 			next();
 		}
 	}
+
 
 	/**
 	 * アカウントゲット
@@ -177,13 +179,13 @@ export class Gatekeeper {
 						next();
 					} else {
 						request.logout();
-						Gatekeeper.SendError(response, {code: 1, message: "disabled. 3827"});
+						Gatekeeper.SendError(response, Errors.generalError(1, "disabled.", "S00004"));
 					}
 				} else {
-					Gatekeeper.SendError(response, {code: -3, message: "no user. 5644"});
+					Gatekeeper.SendError(response, Errors.generalError(3, "no user.", "S00005"));
 				}
 			}).catch((error: any) => {
-				Gatekeeper.SendError(response, {code: -3, message: error.message + " 2733"});
+				Gatekeeper.SendFatal(response, Errors.Exception(error, "S00006"));
 			})
 		} else { // normal case.
 			next();

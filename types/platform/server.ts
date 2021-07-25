@@ -236,7 +236,7 @@ export interface IGetByIDRequest {
 export interface IAccountRequest<CONTENT> {
 	params: IUsernameParam & IUserIDParam;
 	user: object;
-	body?: {content: CONTENT};
+	body?: {content: CONTENT, type: string};
 }
 
 export interface IPutRequest<CONTENT> {

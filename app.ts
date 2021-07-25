@@ -511,9 +511,7 @@ const normal: () => void = () => {
 						},
 					});
 				}
-			}
 
-			if (config.cron) {
 				if (config.cron.open) {
 					scheduler.Add({
 						timing: config.cron.open, name: "site-open", job: () => { // config.cron.open

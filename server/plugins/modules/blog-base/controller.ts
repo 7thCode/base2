@@ -8,6 +8,7 @@
 
 import {IAccountModel, IArticleModel, IDParam, IGetByIDRequest, IJSONResponse, IQueryParam, IQueryRequest, IUpdatableModel} from "../../../../types/platform/server";
 import {IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {Errors} from "../../../platform/base/library/errors";
 
 const Updatable: any = require("../../../platform/base/controllers/updatable_controller");
 
@@ -37,7 +38,7 @@ export class Entries extends Updatable {
 
 	private static build_group_by_month_aggrigater(aggregater: any[]): void {
 
-		aggregater.push({$sort: {create : -1}});
+		aggregater.push({$sort: {create: -1}});
 
 		aggregater.push({
 			$group: {
@@ -54,7 +55,7 @@ export class Entries extends Updatable {
 
 	private static build_group_by_type_aggrigater(aggregater: any[]): void {
 
-		aggregater.push({$sort: {create : -1}});
+		aggregater.push({$sort: {create: -1}});
 
 		aggregater.push({
 			$group: {
@@ -196,7 +197,7 @@ export class Entries extends Updatable {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.default_find_by_id(operator, target.id).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1, message: "not found."}, object, () => {
+				this.ifExist(response, Errors.generalError(-1, "not found.", "S00000"), object, () => {
 					this.SendSuccess(response, object);
 				});
 			}).catch((error: IErrorObject) => {
@@ -227,7 +228,7 @@ export class Entries extends Updatable {
 							}
 							const operator: IAccountModel = this.Transform(request.user);
 							this.Model.default_find(operator, query, option).then((objects: IUpdatableModel[]): void => {
-								this.ifExist(response, {code: -1, message: "not found."}, objects, () => {
+								this.ifExist(response, Errors.generalError(-1, "not found.", "S00000"), objects, () => {
 									this.SendRaw(response, objects);
 								});
 							}).catch((error: IErrorObject) => {

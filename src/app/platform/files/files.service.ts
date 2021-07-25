@@ -14,6 +14,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "../base/services/http.service";
+import {Errors} from "../base/library/errors";
 
 
 /**
@@ -50,16 +51,15 @@ export class FilesService extends HttpService {
 					if (result) {
 						callback(null, result);
 					} else {
-						callback(this.networkError, 0);
+						callback(Errors.networkError("A00210"), 0);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " A1581"}, null);
+					callback(Errors.networkException(error, "A00211"), null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error. A7611"}, null);
+				callback(Errors.responseError("A00212"), null);
 			}
 		});
-
 	}
 
 	/**
@@ -78,20 +78,20 @@ export class FilesService extends HttpService {
 								if (Array.isArray(results)) {
 									callback(null, results);
 								} else {
-									callback({code: -1, message: "error. A7611"}, null);
+									callback(Errors.networkError("A00213"), null);
 								}
 							} else {
-								callback(this.networkError, null);
+								callback(Errors.networkError("A00214"), null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " A5814"}, null);
+							callback(Errors.networkException(error, "A00215"), null);
 						});
 					} else {
-						callback({code: -1, message: "option parse error. A9204"}, null);
+						callback(Errors.responseError("A00216"), null);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error. A7211"}, null);
+				callback(Errors.responseError("A00217"), null);
 			}
 		});
 	}
@@ -105,22 +105,18 @@ export class FilesService extends HttpService {
 	 * @param callback
 	 */
 	public upload(filename: string, category: string, params: any, dataUrl: string, callback: Callback<any>): void {
-		this.http.post(this.endPoint + "/files/auth/" + filename, {
-			url: dataUrl,
-			category,
-			params,
-		}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+		this.http.post(this.endPoint + "/files/auth/" + filename, {url: dataUrl, category, params}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback({message: "error. A8346", code: -1}, null);
+					callback(Errors.serverError(result, "A00218"), null);
 				}
 			} else {
-				callback({message: "error. A8176", code: -1}, null);
+				callback(Errors.networkError("A00219"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A6677"}, null);
+			callback(Errors.networkException(error, "A00220"), null);
 		});
 	}
 
@@ -135,13 +131,13 @@ export class FilesService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback({message: "error. A3293", code: -1}, null);
+					callback(Errors.serverError(result, "A00221"), null);
 				}
 			} else {
-				callback({message: "error. A6565", code: -1}, null);
+				callback(Errors.networkError("A00222"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A8199"}, null);
+			callback(Errors.networkException(error, "A00223"), null);
 		});
 	}
 
@@ -155,12 +151,14 @@ export class FilesService extends HttpService {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
+				} else {
+					callback(Errors.serverError(result, "A00224"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00225"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 4155"}, null);
+			callback(Errors.networkException(error, "A00226"), null);
 		});
 	}
 

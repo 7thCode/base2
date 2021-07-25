@@ -7,6 +7,8 @@
 export interface ErrorObject {
 	code: number;
 	message: string;
+	tag: string;
+	origin: any;
 }
 
 export type IErrorObject = ErrorObject | null;
@@ -52,6 +54,8 @@ export interface IUserToken {
 	auth: number;
 	username: string;
 	password: string;
+	category: string,
+	type: string,
 	content: {};
 	target: string;
 	timestamp: any;
@@ -68,6 +72,9 @@ export interface IAccountPublic {
 	username: string;
 	user_id: string;
 	auth: number;
+	category: string;
+	status: number;
+	type: string;
 	enabled: boolean;
 }
 

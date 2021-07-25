@@ -61,13 +61,11 @@ export class AppComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		this.router.events.pipe(
+		this.router.events.pipe( // SEO関連...
 			filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
 			const top_meta = environment.meta.top;
 			this.setDescription(top_meta);
 		});
-		// 	const top_meta = environment.meta.top;
-		// 	this.setDescription(top_meta);
 	}
 
 	public setDescription(meta: { title: string, description: any[] }): void {

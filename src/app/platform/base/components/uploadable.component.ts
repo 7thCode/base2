@@ -12,6 +12,7 @@ import {Directive, OnInit} from "@angular/core";
 import {SessionableComponent} from "./sessionable.component";
 import {SessionService} from "../services/session.service";
 import {environment} from "../../../../environments/environment";
+import {Errors} from "../library/errors";
 
 /**
  * アップローダブルクラス
@@ -82,7 +83,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 			};
 			fileReader.readAsDataURL(dropedFile);
 		} else {
-			callback({code: -1, message: "upload file too large. (limit to " + this.bodysize + "byte). A8427"}, null);
+			callback(Errors.generalError(-1, "upload file too large. (limit to " + this.bodysize + "byte).", "A00195"), null);
 		}
 	}
 
@@ -223,9 +224,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * @returns none
 	 */
 	public ngOnInit(): void {
-		this.getSession((error: IErrorObject, session: object): void => {
-			this.bodysize = 200 * 1000 * 1000;
-		});
+		this.bodysize = 200 * 1000 * 1000;
 	}
 
 }

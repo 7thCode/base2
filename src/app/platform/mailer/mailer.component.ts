@@ -21,6 +21,8 @@ import {Overlay} from "@angular/cdk/overlay";
 import {SendDialogComponent} from "./send-dialog/send-dialog.component";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../base/library/spinner";
+import {Errors} from "../base/library/errors";
+import {ActivatedRoute, Router} from "@angular/router";
 
 // const moment = require('moment');
 // require('moment-timezone');
@@ -46,6 +48,8 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 
 	public results: any[] = [];
 
+	public params: any = {};
+
 	protected page: number = 0;
 
 	private option: { start: number, limit: number } = {start: 0, limit: 0};
@@ -62,6 +66,8 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	 * @param mailerService
 	 * @param matDialog
 	 * @param snackbar
+	 * @param router
+	 * @param route
 	 */
 	constructor(
 		protected session: SessionService,
@@ -70,6 +76,8 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		private mailerService: MailerService,
 		private matDialog: MatDialog,
 		private snackbar: MatSnackBar,
+		private router: Router,
+		protected route: ActivatedRoute,
 	) {
 		super(session);
 		this.spinner = new Spinner(overlay);
@@ -171,9 +179,13 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 
@@ -226,18 +238,25 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 		this.setPage(1);
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object): void => {
-			this.draw((error: IErrorObject, messages: object[] | null): void => {
-				this.Progress(false);
-				if (!error) {
-					if (messages) {
-						this.results = messages;
-					} else {
-						this.errorBar({code: -1, message: "error. A3394"});
-					}
-				} else {
-					this.errorBar(error);
-				}
-			});
+			if (!error) {
+				this.route.queryParams.subscribe(params => {
+					this.params = params;
+					this.draw((error: IErrorObject, messages: object[] | null): void => {
+						this.Progress(false);
+						if (!error) {
+							if (messages) {
+								this.results = messages;
+							} else {
+								this.errorBar(Errors.generalError(-1, "error.", "A00229"));
+							}
+						} else {
+							this.errorBar(error);
+						}
+					});
+				});
+			} else {
+				this.errorBar(error);
+			}
 		});
 	}
 
@@ -302,7 +321,7 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 							if (messages) {
 								this.results = messages;
 							} else {
-								this.errorBar({code: -1, message: "error. A663i"});
+								this.errorBar(Errors.generalError(-1, "error.", "A00230"));
 							}
 						} else {
 							this.errorBar(error);
@@ -367,7 +386,7 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 									if (messages) {
 										this.results = messages;
 									} else {
-										this.errorBar({code: -1, message: "error. A8832"});
+										this.errorBar(Errors.generalError(-1, "error.", "A00231"));
 									}
 								} else {
 									this.errorBar(error);
@@ -417,7 +436,7 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 							if (messages) {
 								this.results = messages;
 							} else {
-								this.errorBar({code: -1, message: "error."});
+								this.errorBar(Errors.generalError(-1, "error.", "A00232"));
 							}
 						} else {
 							this.errorBar(error);
@@ -447,7 +466,7 @@ export class MailerComponent extends SessionableComponent implements OnInit {
 				if (messages) {
 					this.results = messages;
 				} else {
-					this.errorBar({code: -1, message: "error."});
+					this.errorBar(Errors.generalError(-1, "error.", "A00233"));
 				}
 			} else {
 				this.errorBar(error);

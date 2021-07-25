@@ -25,7 +25,7 @@ const articles: any = new Articles(event, ConfigModule, logger);
 articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void => {
 	if (!error) {
 
-		router.get("/articles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/articles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -33,7 +33,7 @@ articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void
 				});
 			}]);
 
-		router.get("/articles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/articles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -41,7 +41,7 @@ articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void
 				});
 			}]);
 
-		router.get("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.get("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -49,7 +49,7 @@ articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void
 				});
 			}]);
 
-		router.post("/articles/auth", [gatekeeper.default, gatekeeper.authenticate,
+		router.post("/articles/auth", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -57,7 +57,7 @@ articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void
 				});
 			}]);
 
-		router.put("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.put("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {
@@ -65,7 +65,7 @@ articles.init(usersConfig.initarticles, (error: IErrorObject, result: any): void
 				});
 			}]);
 
-		router.delete("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate,
+		router.delete("/articles/auth/:id", [gatekeeper.default, gatekeeper.authenticate, gatekeeper.enabled,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
 				gatekeeper.catch(response, () => {

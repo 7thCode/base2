@@ -37,11 +37,6 @@ export abstract class HttpService {
 	protected httpOptions: any;
 
 	/**
-	 * 共通エラー
-	 */
-	protected networkError: any;
-
-	/**
 	 * @constructor
 	 * @param http 基本HTTP
 	 */
@@ -49,7 +44,6 @@ export abstract class HttpService {
 		protected http: HttpClient,
 	) {
 		this.endPoint = environment.endPoint;
-		this.networkError = {code: 10000, message: "network error. A7461"};
 		this.httpOptions = {
 			headers: new HttpHeaders({
 				"Accept": "application/json; charset=utf-8",
@@ -90,7 +84,7 @@ export abstract class HttpService {
 	/**
 	 * エラー判定付きパース
 	 *
-	 * @param data　デシリアライズされるテキスト
+	 * @param data デシリアライズされるテキスト
 	 * @param callback オブジェクトを返すコールバック
 	 */
 	protected Parse(data: string, callback: Callback<any>): void {

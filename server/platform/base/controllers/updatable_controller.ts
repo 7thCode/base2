@@ -9,13 +9,14 @@
 import {Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
 import {IAccountModel, IDeleteRequest, IDParam, IGetByIDRequest, IJSONResponse, IPostRequest, IPutRequest, IQueryParam, IQueryRequest, IUpdatableModel,} from "../../../../types/platform/server";
+import {Errors} from "../library/errors";
 
 const Wrapper: any = require("./wrapper");
 
 const mongoose: any = require("mongoose");
 
 /**
- * *　データベースの更新を含むクラスのベース
+ * * データベースの更新を含むクラスのベース
  */
 export abstract class Updatable extends Wrapper {
 
@@ -54,7 +55,7 @@ export abstract class Updatable extends Wrapper {
 							}
 							const operator: IAccountModel = this.Transform(request.user);
 							this.Model.default_find(operator, query, option).then((objects: IUpdatableModel[]): void => {
-								this.ifExist(response, {code: -1, message: "not found. 3733"}, objects, () => {
+								this.ifExist(response, Errors.generalError(-1, "not found.", "S00148"), objects, () => {
 									const filtered: any[] = [];
 									objects.forEach((object) => {
 										filtered.push(object.public());
@@ -62,14 +63,14 @@ export abstract class Updatable extends Wrapper {
 									this.SendRaw(response, filtered);
 								});
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S00149"));
 							})
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00150"));
 		}
 	}
 
@@ -85,16 +86,16 @@ export abstract class Updatable extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
 					this.Model.default_find(operator, query, {}).then((objects: IUpdatableModel[]): void => {
-						this.ifExist(response, {code: -1, message: "not found. 3208"}, objects, () => {
+						this.ifExist(response, Errors.generalError(1, "not found.", "S00151"), objects, () => {
 							this.SendSuccess(response, objects.length);
 						});
 					}).catch((error: IErrorObject) => {
-						this.SendError(response, error);
+						this.SendError(response, Errors.Exception(error, "S00152"));
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00153"));
 		}
 	}
 
@@ -108,14 +109,14 @@ export abstract class Updatable extends Wrapper {
 			const target: IDParam = request.params;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.default_find_by_id(operator, target.id).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1, message: "not found. 5666"}, object, () => {
+				this.ifExist(response, Errors.generalError(1, "not found.", "S00154"), object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S00155"));
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00156"));
 		}
 	}
 
@@ -131,13 +132,13 @@ export abstract class Updatable extends Wrapper {
 			const object: IUpdatableModel = new this.Model();
 			object._create(operator, body, (error: IErrorObject, object: IUpdatableModel): void => {
 				this.ifSuccess(response, error, (): void => {
-					this.ifExist(response, {code: -1, message: "not found. 5943"}, object, () => {
+					this.ifExist(response, Errors.generalError(1, "not found.", "S00157"), object, () => {
 						this.SendSuccess(response, object.public());
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00158"));
 		}
 	}
 
@@ -152,14 +153,14 @@ export abstract class Updatable extends Wrapper {
 			const body: object = request.body;
 			const operator: IAccountModel = this.Transform(request.user);
 			this.Model.update_by_id(operator, target.id, body).then((object: IUpdatableModel): void => {
-				this.ifExist(response, {code: -1, message: "not found.(Unauthorized). 2283"}, object, () => {
+				this.ifExist(response, Errors.generalError(1, "not found.(Unauthorized).", "S00159"), object, () => {
 					this.SendSuccess(response, object.public());
 				});
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S00160"));
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00161"));
 		}
 	}
 
@@ -175,10 +176,10 @@ export abstract class Updatable extends Wrapper {
 			this.Model.remove_by_id(operator, target.id).then((object: IUpdatableModel): void => {
 				this.SendSuccess(response, {});
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S00162"));
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S00163"));
 		}
 	}
 
@@ -211,7 +212,7 @@ export abstract class Updatable extends Wrapper {
 									}
 								});
 							} else {
-								reject({code: -1, message: "? 2303"});
+								reject(Errors.generalError(1, "?", "S00164"));
 							}
 						}));
 					});
@@ -230,7 +231,7 @@ export abstract class Updatable extends Wrapper {
 				callback(error, null);
 			})
 		} else {
-			callback({code: -1, message: "config error. 6744"}, null);
+			callback(Errors.configError(1, "config error.", "S00165"), null);
 		}
 	}
 }

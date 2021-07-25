@@ -10,8 +10,7 @@ export class SocketService {
 	private sock: any = null;
 	private messageListener: any = null;
 
-	constructor(
-	) {
+	constructor() {
 		const address: string = environment.webSocket;
 		this.sock = new WebSocket(address);
 

@@ -12,15 +12,15 @@ import {ErrorComponent} from "./platform/error/error.component";
 
 const routes: Routes = [
 	{
-		path: 'platform',
-		loadChildren: () => import('./platform/platform.module').then((m) => {
-			return m.PlatformModule;
+		path: '',
+		loadChildren: () => import('./blog/blog.module').then((m) => {
+			return m.BlogModule;
 		})
 	},
 	{
-		path: 'blog',
-		loadChildren: () => import('./blog/blog.module').then((m) => {
-			return m.BlogModule;
+		path: 'platform',
+		loadChildren: () => import('./platform/platform.module').then((m) => {
+			return m.PlatformModule;
 		})
 	},
 	{path: '**', component: ErrorComponent},

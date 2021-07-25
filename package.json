@@ -1,5 +1,5 @@
 {
-	"name": "aig",
+	"name": "base1",
 	"version": "0.5.0",
 	"main": "main.js",
 	"scripts": {
@@ -8,9 +8,9 @@
 		"lint": "ng lint",
 		"e2e": "ng e2e",
 		"jest": "jest",
-		"build-debug": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) gulp sign  && ng build --base-href / && gulp",
-		"build-test-stage": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) gulp sign  && ng build --configuration=server --base-href / && gulp",
-		"build-prod-stage": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) gulp sign  && ng build --configuration=production --base-href / && gulp",
+		"build-debug": "ng build && gulp",
+		"build-test-stage": "ng build --configuration=server && gulp",
+		"build-prod-stage": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) gulp sign && ng build --configuration=production && gulp",
 		"start": "node ./app.js --trace-warnings",
 		"profile": "node --perf-basic-prof-only-functions ./app.js",
 		"leak": "node --expose-gc --inspect ./app.js",
@@ -33,6 +33,7 @@
 		"@angular/platform-browser-dynamic": "~11.2.12",
 		"@angular/router": "~11.2.12",
 		"@angular/service-worker": "~11.2.12",
+		"@google-cloud/storage": "^5.8.5",
 		"@kolkov/angular-editor": "^1.1.4",
 		"@sendgrid/mail": "^7.4.2",
 		"@stripe/stripe-js": "^1.14.0",

@@ -20,6 +20,7 @@ import {ArticlesService} from "./articles.service";
 import {Overlay} from "@angular/cdk/overlay";
 import {YesNoDialogComponent} from "../base/components/yes-no-dialog/yes-no-dialog.component";
 import {Spinner} from "../base/library/spinner";
+import {ActivatedRoute, Router} from "@angular/router";
 
 /**
  * アーティクル
@@ -37,6 +38,8 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		return this.spinner.progress;
 	}
 
+	public params: any = {};
+
 	private spinner: Spinner;
 
 	/**
@@ -46,6 +49,8 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 * @param articleService
 	 * @param matDialog
 	 * @param snackbar
+	 * @param router
+	 * @param route
 	 */
 	constructor(
 		protected session: SessionService,
@@ -53,6 +58,8 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		protected matDialog: MatDialog,
 		protected articleService: ArticlesService,
 		private snackbar: MatSnackBar,
+		private router: Router,
+		protected route: ActivatedRoute,
 	) {
 		super(session, matDialog);
 		this.service = articleService;
@@ -63,13 +70,17 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	 * エラー表示
 	 * @param error
 	 */
-	// private errorBar(error: IErrorObject): void {
-	// 	if (error) {
-	// 		this.snackbar.open(error.message, "Close", {
-	// 			duration: 8000,
-	// 		});
-	// 	}
-	// }
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
+		}
+	}
 
 	/**
 	 * メッセージ表示
@@ -78,7 +89,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-		// 		duration: 8000,
+				// 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}
@@ -104,6 +115,10 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 	public ngOnInit(): void {
 		this.sort = {};
 		super.ngOnInit();
+
+		this.route.queryParams.subscribe(params => {
+			this.params = params;
+		});
 	}
 
 	/**

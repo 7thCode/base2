@@ -21,6 +21,8 @@ import {BaseModule} from "../base/base.module";
 import {SessionService} from "../base/services/session.service";
 
 import {PersonalComponent} from "./personal.component";
+import {AccountsService} from "../accounts/accounts.service";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
 	declarations: [
@@ -28,6 +30,7 @@ import {PersonalComponent} from "./personal.component";
 	],
 	providers: [
 		SessionService,
+		AccountsService,
 	],
 	imports: [
 		CommonModule,
@@ -39,6 +42,7 @@ import {PersonalComponent} from "./personal.component";
 		MatCardModule,
 		MatButtonModule,
 		MatInputModule,
+		MatListModule,
 
 		PageEditModule,
 

@@ -93,14 +93,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		this.isDesktop = this.breakpointObserver.observe([
 			Breakpoints.Web,
 		]);
-
-
-		// 	this.getSession((error: IErrorObject, session: any | null): void => {
-		// 		if (session) {
-		// 			this.auth = session.auth;
-		// 		}
-		// 	});
-
 	}
 
 	/**

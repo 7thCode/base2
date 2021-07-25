@@ -172,12 +172,14 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		};
 
 		this.getSession((error: IErrorObject, session: any): void => {
-			if (session) {
-				if (!this.username) {
-					this.username = session.username;
+			if (!error) {
+				if (session) {
+					if (!this.username) {
+						this.username = session.username;
+					}
 				}
+				this.draw(this.fileName);
 			}
-			this.draw(this.fileName);
 		});
 	}
 

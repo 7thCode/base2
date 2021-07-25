@@ -13,6 +13,7 @@ import {retry} from "rxjs/operators";
 
 import {HttpService} from "../../platform/base/services/http.service";
 import {Injectable} from "@angular/core";
+import {Errors} from "../../platform/base/library/errors";
 
 /**
  * ファイル
@@ -48,13 +49,13 @@ export class NativeFilesService extends HttpService {
 					if (result) {
 						callback(null, result);
 					} else {
-						callback(this.networkError, 0);
+						callback(Errors.networkError("A00043"), 0);
 					}
 				}, (error: HttpErrorResponse): void => {
-					callback({code: -1, message: error.message + " A1581"}, null);
+					callback(Errors.networkException(error, "A00044"), null);
 				});
 			} else {
-				callback({code: -1, message: "query parse error. A7611"}, null);
+				callback(Errors.responseError("A00045"), null);
 			}
 		});
 	}
@@ -75,20 +76,20 @@ export class NativeFilesService extends HttpService {
 								if (Array.isArray(results)) {
 									callback(null, results);
 								} else {
-									callback({code: -1, message: "error. A7611"}, null);
+									callback(Errors.networkError("A00046"), null);
 								}
 							} else {
-								callback(this.networkError, null);
+								callback(Errors.networkError("A00047"), null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " A5814"}, null);
+							callback(Errors.networkException(error, "A00048"), null);
 						});
 					} else {
-						callback({code: -1, message: "option parse error. A9204"}, null);
+						callback(Errors.responseError("A00049"), null);
 					}
 				});
 			} else {
-				callback({code: -1, message: "query parse error. A7211"}, null);
+				callback(Errors.responseError("A00050"), null);
 			}
 		});
 	}
@@ -106,13 +107,13 @@ export class NativeFilesService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback({message: "error. A8346", code: -1}, null);
+					callback(Errors.serverError(result, "A00051"), null);
 				}
 			} else {
-				callback({message: "error. A8176", code: -1}, null);
+				callback(Errors.networkError("A00052"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A6677"}, null);
+			callback(Errors.networkException(error, "A00053"), null);
 		});
 	}
 
@@ -127,13 +128,13 @@ export class NativeFilesService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback({message: "error. A3293", code: -1}, null);
+					callback(Errors.serverError(result, "A00054"), null);
 				}
 			} else {
-				callback({message: "error. A6565", code: -1}, null);
+				callback(Errors.networkError("A00055"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A8199"}, null);
+			callback(Errors.networkException(error, "A00056"), null);
 		});
 	}
 
@@ -147,12 +148,14 @@ export class NativeFilesService extends HttpService {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);
+				} else {
+					callback(Errors.serverError(result, "A00057"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00058"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A4155"}, null);
+			callback(Errors.networkException(error, "A00059"), null);
 		});
 	}
 

@@ -9,6 +9,7 @@
 import {Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {IMailReceiverModule, IMailSenderModule} from "../../../../types/platform/server";
+import {Errors} from "../library/errors";
 
 const fs: any = require("graceful-fs");
 const pug: any = require("pug");
@@ -33,7 +34,6 @@ export class Mail extends Wrapper {
 
 	private readonly sender: IMailSenderModule = null;
 	private readonly receiver: IMailReceiverModule = null;
-
 // 	private bcc: string | any[] = "";
 
 	/**
@@ -105,7 +105,7 @@ export class Mail extends Wrapper {
 							fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 								if (!error) {
 									try {
-								// 		const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
+										// 		const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
 										const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link, nickname: nickname});
 										let text: string = "";
 										const text_lines = mailConfig.source_object.text.content.text;
@@ -116,7 +116,7 @@ export class Mail extends Wrapper {
 											})
 											callback(null, text, html);
 										} else {
-											callback({code: 1, message: "error 3392"}, "", "");
+											callback(Errors.configError(1, "config error.", "S00007"), "", "");
 										}
 									} catch (error) {
 										callback(error, "", "");
@@ -126,7 +126,7 @@ export class Mail extends Wrapper {
 								}
 							});
 						} else {
-							callback({code: 1, message: "no html object. 3932"}, "", "");
+							callback(Errors.configError(1, "config error.", "S00008"), "", "");
 						}
 					} else {
 						if (mailConfig.source_object.text) {
@@ -138,17 +138,17 @@ export class Mail extends Wrapper {
 								})
 								callback(null, text, text);
 							} else {
-								callback({code: 1, message: "error. 3302"}, "", "");
+								callback(Errors.configError(1, "config error.", "S00009"), "", "");
 							}
 						} else {
-							callback({code: 1, message: "no text object. 7733"}, "", "");
+							callback(Errors.configError(1, "config error.", "S00010"), "", "");
 						}
 					}
 				} else {
-					callback({code: 1, message: "no source_object. 3372"}, "", "");
+					callback(Errors.configError(1, "config error.", "S00011"), "", "");
 				}
 			} else {
-				callback({code: 1, message: "no content. 3392"}, "", "");
+				callback(Errors.configError(1, "config error.", "S00012"), "", "");
 			}
 		} catch (error) {
 			callback(error, "", "");
@@ -179,7 +179,7 @@ export class Mail extends Wrapper {
 				}
 			});
 		} else {
-			callback({code: 1, message: "no sender. 3722"}, null);
+			callback(Errors.configError(1, "config error.", "S00013"), null);
 		}
 	}
 
@@ -195,7 +195,7 @@ export class Mail extends Wrapper {
 		if (this.receiver) {
 			this.receiver.connect(handler);
 		} else {
-			handler({code: 1, message: "no receiver. 2283"}, "", null);
+			handler(Errors.configError(1, "config error.", "S00014"), "", null);
 		}
 	}
 
@@ -212,10 +212,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.open(imap, name, callback);
 			} else {
-				callback({code: 1, message: "no receiver. 2282"}, null);
+				callback(Errors.configError(1, "config error.", "S00015"), null);
 			}
 		} else {
-			callback({code: 1, message: "not opened. 3923"}, null);
+			callback(Errors.generalError(1, "not opened.", "S00016"), null);
 		}
 	}
 
@@ -248,10 +248,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.listMessages(imap, start, limit, callback);
 			} else {
-				callback({code: 1, message: "no receiver. 3832"}, null);
+				callback(Errors.configError(1, "config error.", "S00017"), null);
 			}
 		} else {
-			callback({code: 1, message: "not opened. 3392"}, null);
+			callback(Errors.generalError(1, "not opened.", "S00018"), null);
 		}
 	}
 
@@ -269,10 +269,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.getMessage(imap, UID, callback);
 			} else {
-				callback({code: 1, message: "no receiver. 3392"}, null);
+				callback(Errors.configError(1, "config error.", "S00019"), null);
 			}
 		} else {
-			callback({code: 1, message: "not opened. 3024"}, null);
+			callback(Errors.generalError(1, "not opened.", "S00020"), null);
 		}
 	}
 
@@ -290,10 +290,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.deleteMessage(imap, UID, callback);
 			} else {
-				callback({code: 1, message: "no receiver. 3382"});
+				callback(Errors.configError(1, "config error.", "S00021"));
 			}
 		} else {
-			callback({code: 1, message: "not opened. 0012"});
+			callback(Errors.generalError(1, "not opened.", "S00022"));
 		}
 	}
 
@@ -312,10 +312,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.addFlags(imap, UID, flags, callback);
 			} else {
-				callback({code: 1, message: "no receiver. 2611"});
+				callback(Errors.configError(1, "config error.", "S00023"));
 			}
 		} else {
-			callback({code: 1, message: "not opened. 0487"});
+			callback(Errors.generalError(1, "not opened.", "S00024"));
 		}
 	}
 
@@ -334,10 +334,10 @@ export class Mail extends Wrapper {
 			if (this.receiver) {
 				this.receiver.removeFlags(imap, UID, flags, callback);
 			} else {
-				callback({code: 1, message: "no receiver. 5668"});
+				callback(Errors.configError(1, "config error.", "S00025"));
 			}
 		} else {
-			callback({code: 1, message: "not opened. 0932"});
+			callback(Errors.generalError(1, "not opened.", "S00026"));
 		}
 	}
 

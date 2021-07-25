@@ -24,8 +24,6 @@ export abstract class Wrapper {
 	protected readonly systemsConfig: any;
 	protected readonly usersConfig: any;
 	protected readonly logger: any;
-	protected readonly message: any;
-	protected readonly errors: {};
 
 	/**
 	 *
@@ -40,19 +38,7 @@ export abstract class Wrapper {
 		this.systemsConfig = config.systems;
 		this.usersConfig = config.users;
 		this.logger = logger;
-		this.message = this.systemsConfig.message;
-		this.errors = {
-			not_logged_in: {code: 1, message: this.message.not_logged_in},
-			already_logged_in: {code: 2, message: this.message.already_logged_in},
-			account_disabled: {code: 3, message: this.message.account_disabled},
-			only_local_account: {code: 4, message: this.message.only_local_account},
-			no_permission: {code: 5, message: this.message.no_permission},
-			code_mismatch: {code: 6, message: this.message.code_mismatch},
-			unknown_error: {code: 7, message: this.message.unknown_error},
-			username_already_regist: {code: 8, message: this.message.username_already_regist},
-			username_notfound: {code: 9, message: this.message.username_notfound},
-			account_enabled: {code: 10, message: this.message.account_enabled},
-		};
+
 	}
 
 	/**
@@ -89,15 +75,47 @@ export abstract class Wrapper {
 	/**
 	 *
 	 * @param response
-	 * @param error
+	 * @param object
 	 * @returns none
 	 */
-	protected SendInfo(response: IJSONResponse, error: IErrorObject): void {
-		this.logger.info(JSON.stringify(error));
+	protected SendRaw(response: any, object: any): void {
+	// 	this.logger.trace(response.req.url);
 		if (response) {
-			response.jsonp(new result(error.code, error.message, error));
+			response.jsonp(object);
+		} else {
+			this.logger.fatal(object);
 		}
 	}
+
+	/**
+	 *
+	 * @param response
+	 * @param object
+	 * @returns none
+	 */
+	protected SendSuccess(response: IJSONResponse, object: object): void {
+// 		this.logger.trace(response.req.url);
+		if (response) {
+			response.jsonp(new result(0, "", object));
+		} else {
+			this.logger.fatal(object);
+		}
+	}
+
+	/**
+	 *
+	 * @param response
+	 * @param code
+	 * @param message
+	 * @param object
+	 * @returns none
+	 */
+// 	protected SendWarn(response: IJSONResponse, code: number, message: string, object: object): void {
+// 		this.logger.info(JSON.stringify(error));
+// 		if (response) {
+// 			response.jsonp(new result(code, message, object));
+// 		}
+// 	}
 
 	/**
 	 *
@@ -105,12 +123,14 @@ export abstract class Wrapper {
 	 * @param error
 	 * @returns none
 	 */
-	protected SendWarn(response: IJSONResponse, error: IErrorObject): void {
-		this.logger.warn(JSON.stringify(error));
-		if (response) {
-			response.jsonp(new result(error.code, error.message, error));
+ 	protected SendWarn(response: IJSONResponse, error: IErrorObject): void {
+ 		this.logger.warn(JSON.stringify(error));
+ 		if (response) {
+ 			response.jsonp(new result(error.code, error.message, error));
+ 		} else {
+			this.logger.fatal(error);
 		}
-	}
+ 	}
 
 	/**
 	 *
@@ -122,6 +142,8 @@ export abstract class Wrapper {
 		this.logger.error(JSON.stringify(error));
 		if (response) {
 			response.jsonp(new result(error.code || 1, error.message || "error.", error));
+		} else {
+			this.logger.fatal(error);
 		}
 	}
 
@@ -135,32 +157,8 @@ export abstract class Wrapper {
 		this.logger.fatal(JSON.stringify(error));
 		if (response) {
 			response.status(500).render("error", {message: error.message, status: 500});
-		}
-	}
-
-	/**
-	 *
-	 * @param response
-	 * @param object
-	 * @returns none
-	 */
-	protected SendSuccess(response: any, object: object): void {
-		this.logger.trace(response.req.url);
-		if (response) {
-			response.jsonp(new result(0, "", object));
-		}
-	}
-
-	/**
-	 *
-	 * @param response
-	 * @param object
-	 * @returns none
-	 */
-	protected SendRaw(response: any, object: any): void {
-		this.logger.trace(response.req.url);
-		if (response) {
-			response.jsonp(object);
+		} else {
+			this.logger.fatal(error);
 		}
 	}
 
@@ -248,6 +246,9 @@ export abstract class Wrapper {
 				description: "",
 			},
 			enabled: false,
+			category:  "",
+			status:  0,
+			type:  "",
 			login: false,
 			entry: "",
 			exit: "",
@@ -277,6 +278,9 @@ export abstract class Wrapper {
 						user_id: user.user_id,
 						content: user.content,
 						enabled: user.enabled,
+						category: user.category,
+						status: user.status,
+						type: user.type,
 						login: true,
 						entry: entryPoint,
 						exit: exitPoint,
@@ -293,6 +297,9 @@ export abstract class Wrapper {
 						user_id: user.id,
 						content: {mails: [], nickname: user.name.familyName + " " + user.name.givenName, id: "", description: ""},
 						enabled: true,
+						category: "",
+						status: 0,
+						type: "",
 						login: true,
 						entry: entryPoint,
 						exit: exitPoint,

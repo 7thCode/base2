@@ -14,6 +14,7 @@ import {Injectable} from "@angular/core";
 import {retry} from "rxjs/operators";
 
 import {HttpService} from "../base/services/http.service";
+import {Errors} from "../base/library/errors";
 
 @Injectable({
 	providedIn: "root",
@@ -31,10 +32,10 @@ export class FragmentService extends HttpService {
 			if (result) {
 				callback(null, result.value);
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00227"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " A2059"}, null);
+			callback(Errors.networkException(error, "A00228"), null);
 		});
 	}
 

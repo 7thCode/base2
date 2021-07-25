@@ -132,7 +132,6 @@ export class BlogBaseComponent extends ResponsiveComponent implements OnInit, On
 		this.angular = VERSION.full;
 		this.device = "desktop";
 
-
 		this.isHandset.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
 				this.device = "handset";
@@ -152,7 +151,9 @@ export class BlogBaseComponent extends ResponsiveComponent implements OnInit, On
 		});
 
 		this.getSession((error: IErrorObject, session: object | null): void => {
-			this.widthValue = 200;
+			if (!error) {
+				this.widthValue = 200;
+			}
 		});
 	}
 

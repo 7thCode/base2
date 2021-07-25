@@ -13,6 +13,7 @@ import {retry} from "rxjs/operators";
 
 import {PublicKeyService} from "../../platform/base/services/publickey.service";
 import {HttpService} from "../../platform/base/services/http.service";
+import {Errors} from "../../platform/base/library/errors";
 
 @Injectable({
 	providedIn: "root",
@@ -87,20 +88,20 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00060"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00061"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9911"}, null);
+			callback(Errors.networkException(error, "A00062"), null);
 		});
 	}
 
 	/**
 	 * カスタマークリエイト
 	 *
-	 * @param content　クリエイトデータ
+	 * @param content クリエイトデータ
 	 * @param callback コールバック
 	 */
 	public createCustomer(content: any, callback: Callback<any>): void {
@@ -109,13 +110,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00063"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00064"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9911"}, null);
+			callback(Errors.networkException(error, "A00065"), null);
 		});
 	}
 
@@ -131,13 +132,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, this.decorator(result.value));
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00066"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00067"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8419"}, null);
+			callback(Errors.networkException(error, "A00068"), null);
 		});
 	}
 
@@ -153,13 +154,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00069"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00070"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9562"}, null);
+			callback(Errors.networkException(error, "A00071"), null);
 		});
 	}
 
@@ -175,13 +176,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00072"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00073"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 8242"}, null);
+			callback(Errors.networkException(error, "A00074"), null);
 		});
 	}
 
@@ -206,16 +207,16 @@ export class StripeService extends HttpService {
 								if (result.code === 0) {
 									callback(null, result);
 								} else {
-									callback(result, null);
+									callback(Errors.serverError(result, "A00075"), null);
 								}
 							} else {
-								callback(this.networkError, null);
+								callback(Errors.networkError("A00076"), null);
 							}
 						}, (error: HttpErrorResponse): void => {
-							callback({code: -1, message: error.message + " 5562"}, null);
+							callback(Errors.networkException(error, "A00077"), null);
 						});
 					} else {
-						callback(error, null);
+						callback(Errors.generalError(error.code,error.message, "A00174"), null);
 					}
 				});
 			} else {
@@ -235,13 +236,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00078"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00079"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 5462"}, null);
+			callback(Errors.networkException(error, "A00080"), null);
 		});
 	}
 
@@ -256,41 +257,41 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00081"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00082"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 5462"}, null);
+			callback(Errors.networkException(error, "A00083"), null);
 		});
 	}
 
-/*
- * @param id
- * @param content
- * @param callback
- */
-	public deleteSource(index: number, callback: Callback<any>): void {
-		this.http.delete(this.endPoint + "/stripe/source/delete/" + index, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	/*
+	 * @param id
+	 * @param content
+	 * @param callback
+	 */
+	public deleteSource(card_id: string, callback: Callback<any>): void {
+		this.http.delete(this.endPoint + "/stripe/source/delete/" + card_id, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00084"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00085"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 5462"}, null);
+			callback(Errors.networkException(error, "A00086"), null);
 		});
 	}
 
 	/**
 	 * チャージ
 	 *
-	 * @param content　クリエイトデータ
+	 * @param content クリエイトデータ
 	 * @param callback コールバック
 	 */
 	public charge(content: any, callback: Callback<any>): void {
@@ -299,13 +300,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00087"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00088"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9021"}, null);
+			callback(Errors.networkException(error, "A00089"), null);
 		});
 	}
 
@@ -314,7 +315,7 @@ export class StripeService extends HttpService {
 	 *
 	 * https://dashboard.stripe.com/test/products/create
 	 *
-	 * @param content　クリエイトデータ
+	 * @param content クリエイトデータ
 	 * @param callback コールバック
 	 */
 	public subscribe(content: any, callback: Callback<any>): void {
@@ -323,13 +324,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00090"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00091"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9161"}, null);
+			callback(Errors.networkException(error, "A00092"), null);
 		});
 	}
 
@@ -339,7 +340,7 @@ export class StripeService extends HttpService {
 	 *
 	 * https://dashboard.stripe.com/test/products/create
 	 *
-	 * @param content　クリエイトデータ
+	 * @param content クリエイトデータ
 	 * @param callback コールバック
 	 */
 	public is_subscribe(callback: Callback<any>): void {
@@ -348,13 +349,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00093"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00094"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9761"}, null);
+			callback(Errors.networkException(error, "A00095"), null);
 		});
 	}
 
@@ -364,7 +365,7 @@ export class StripeService extends HttpService {
 	 *
 	 * https://dashboard.stripe.com/test/products/create
 	 *
-	 * @param content　クリエイトデータ
+	 * @param content クリエイトデータ
 	 * @param callback コールバック
 	 */
 	public update_subscribe(content: any, callback: Callback<any>): void {
@@ -373,13 +374,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00096"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00097"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9111"}, null);
+			callback(Errors.networkException(error, "A00098"), null);
 		});
 	}
 
@@ -388,7 +389,7 @@ export class StripeService extends HttpService {
 	 *
 	 * https://dashboard.stripe.com/test/products/create
 	 *
-	 * @param content　クリエイトデータ
+	 * @param content クリエイトデータ
 	 * @param callback コールバック
 	 */
 	public cancel_subscribe(callback: Callback<any>): void {
@@ -397,13 +398,13 @@ export class StripeService extends HttpService {
 				if (result.code === 0) {
 					callback(null, result.value);
 				} else {
-					callback(result, null);
+					callback(Errors.serverError(result, "A00099"), null);
 				}
 			} else {
-				callback(this.networkError, null);
+				callback(Errors.networkError("A00100"), null);
 			}
 		}, (error: HttpErrorResponse): void => {
-			callback({code: -1, message: error.message + " 9761"}, null);
+			callback(Errors.networkException(error, "A00101"), null);
 		});
 	}
 

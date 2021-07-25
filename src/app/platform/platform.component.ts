@@ -12,7 +12,7 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, VERSION, ViewChild} from "@angular/core";
 
-import {RouterOutlet} from '@angular/router';
+import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 
 import {MatDialog} from "@angular/material/dialog";
 import {MatSidenav} from "@angular/material/sidenav";
@@ -20,7 +20,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {ResponsiveComponent} from "./base/components/responsive.component";
 
-// import {environment} from '../../environments/environment';
 import {AccountsService} from "./accounts/accounts.service";
 import {SessionService} from "./base/services/session.service";
 
@@ -38,8 +37,10 @@ import {Spinner} from "./base/library/spinner";
 	styleUrls: ["./platform.component.css"],
 	animations: [fadeAnimation], // register the animation,
 })
+
 export class PlatformComponent extends ResponsiveComponent implements OnInit, OnDestroy {
 
+	public params: any = {};
 	public dark: boolean;
 
 	public widthValue: number;
@@ -63,6 +64,8 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 * @param elementRef
 	 * @param matDialog
 	 * @param breakpointObserver
+	 * @param router
+	 * @param route
 	 */
 	constructor(
 		protected session: SessionService,
@@ -73,6 +76,8 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 		private change: ChangeDetectorRef,
 		private elementRef: ElementRef,
 		private matDialog: MatDialog,
+		private router: Router,
+		protected route: ActivatedRoute,
 	) {
 		super(session, breakpointObserver);
 		this.widthValue = 0;
@@ -93,9 +98,13 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	* */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-		// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 
@@ -188,11 +197,10 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 	 */
 	public ngOnInit(): void {
 		super.ngOnInit();
-
+		this.Progress(true);
+		this.widthValue = 200;
 		this.angular = VERSION.full;
 		this.dark = (localStorage.getItem("darkmode") === "true");
-
-		this.Progress(true);
 
 		this.isHandsetPortrait.subscribe((layoutDetector: any) => {
 			if (layoutDetector.matches) {
@@ -212,21 +220,13 @@ export class PlatformComponent extends ResponsiveComponent implements OnInit, On
 			}
 		});
 
-		// for ws
-		// 	this.sock.addEventListener("open", (e: any) => {
-		// 	});
-//
-		// 	this.sock.addEventListener("message", (e: any) => {
-		// 	});
-//
-		// 	this.sock.addEventListener("close", (e: any) => {
-		// 	});
-//
-		// 	this.sock.addEventListener("error", (e: any) => {
-		// 	});
-//
 		this.getSession((error: IErrorObject, session: object | null): void => {
-			this.widthValue = 200;
+			if (!error) {
+				this.route.queryParams.subscribe(params => {
+					this.params = params;
+				});
+			} else {
+			}
 			this.Progress(false);
 		});
 	}

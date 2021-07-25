@@ -15,6 +15,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 import {AuthService} from "../auth.service";
+import {Router} from "@angular/router";
 
 /**
  *
@@ -50,7 +51,8 @@ export class LoginDialogComponent extends BaseDialogComponent implements OnInit 
 		public data: any,
 		public matDialogRef: MatDialogRef<any>,
 		public snackbar: MatSnackBar,
-		public auth: AuthService) {
+		public auth: AuthService,
+		private router: Router) {
 		super();
 	}
 
@@ -60,9 +62,13 @@ export class LoginDialogComponent extends BaseDialogComponent implements OnInit 
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
-			});
+			if (error.code === 1) {
+				this.router.navigate(['/']);
+			} else {
+				this.snackbar.open(error.message, "Close", {
+					duration: 8000,
+				});
+			}
 		}
 	}
 

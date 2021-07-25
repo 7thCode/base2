@@ -21,8 +21,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class StripeCustomerUpdateDialogComponent implements OnInit {
 
-	// @ViewChild("autosize") public autosize: CdkTextareaAutosize;
-
 	/**
 	 * @constructor
 	 * @param data
@@ -40,7 +38,6 @@ export class StripeCustomerUpdateDialogComponent implements OnInit {
 	*
 	*/
 	public ngOnInit(): void {
-
 	}
 
 	/**
