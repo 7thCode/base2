@@ -56,6 +56,7 @@ gulp.task('build', () => {
 		'public/**/*.js',
 		'public/**/*.css',
 		'public/**/*.html',
+		'public/**/*.jpg',
 		'public/images/**/*.*',
 		'public/iconfont/**/*.*',
 		'public/favicon/**/*.*',

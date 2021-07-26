@@ -12,7 +12,7 @@ import {ErrorComponent} from "./platform/error/error.component";
 
 const routes: Routes = [
 	{
-		path: '',
+		path: 'blog',
 		loadChildren: () => import('./blog/blog.module').then((m) => {
 			return m.BlogModule;
 		})

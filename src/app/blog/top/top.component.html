@@ -1,9 +1,10 @@
 <ng-container>
-	<mat-card style="margin:2rem;">
+	<mat-card class="smooth-white-bg" style="margin:2rem;">
 		<mat-card-header>
-			<mat-card-title>title</mat-card-title>
-			<mat-card-subtitle>Subtitle</mat-card-subtitle>
+			<mat-card-title>Tech.</mat-card-title>
+			<mat-card-subtitle>Technology is our evolution.</mat-card-subtitle>
 		</mat-card-header>
+		<img mat-card-image src="/img/hero.jpg" alt="Photo of a Shiba Inu">
 		<mat-card-content>
 			<div fxLayout="row" fxLayoutAlign="space-between">
 				<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size">
@@ -11,15 +12,19 @@
 				<button (click)="createDialog()" *ngIf="auth | authis: 'manager'" class="fab-center" color="primary" mat-fab>+</button>
 			</div>
 			<div fxLayout="row wrap" fxLayoutAlign="center">
-				<div *ngFor="let resource of results" style="height:240px;width:180px;margin:8px;padding:4px;">
+				<mat-card *ngFor="let resource of results" style="height:300px;width:180px;margin:8px;padding:4px;">
+					<mat-card-header>
+						<mat-card-title style="font-size: 14px;font-weight:900;">{{resource.content.value.title}}</mat-card-title>
+						<mat-card-subtitle style="font-size: 10px;">{{resource.create | date}}</mat-card-subtitle>
+					</mat-card-header>
 					<div fxLayout="column" fxLayoutAlign="center center" style="height:180px;">
 						<a [routerLink]="['/blog/description', resource.content.id]" matRipple style="max-width: fit-content;max-height: fit-content;padding: 0;">
-							<img [src]="imagePath(resource.content)" alt="" style="max-height:180px;max-width:180px;">
+							<img mat-card-image [src]="imagePath(resource.content)" alt="" style="max-height:180px;max-width:180px;">
 						</a>
 					</div>
-					<div fxLayout="column" fxLayoutAlign="start" style="color:#303030;margin-top:4px;">
-						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.create}}</div>
-						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.content.value.title}}</div>
+					<mat-card-content>
+					</mat-card-content>
+					<mat-card-actions>
 						<div *ngIf="auth | authis: 'manager'" fxLayout="row" fxLayoutAlign="space-around">
 							<button (click)="updateDialog(resource.content.id)" mat-icon-button>
 								<mat-icon color="primary">edit</mat-icon>
@@ -28,10 +33,11 @@
 								<mat-icon color="warn">delete_sweep</mat-icon>
 							</button>
 						</div>
-					</div>
-				</div>
+					</mat-card-actions>
+				</mat-card>
 			</div>
 		</mat-card-content>
 	</mat-card>
+
 </ng-container>
 

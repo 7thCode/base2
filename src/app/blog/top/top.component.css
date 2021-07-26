@@ -9,4 +9,7 @@
 	font-weight: 900;
 }
 
-
+.smooth-white-bg {
+	background-image: linear-gradient(to right, #e6e6e6, white, white, #e6e6e6);
+	color: #3f3f3f;
+}

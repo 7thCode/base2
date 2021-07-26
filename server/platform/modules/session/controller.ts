@@ -37,11 +37,12 @@ export class Session extends Wrapper {
 	 */
 	public get(request: { user: any }, response: IJSONResponse): void {
 		try {
-			if (request.user) {
-				this.SendSuccess(response, this.Transform(request.user));
-			} else {
-				this.SendWarn(response, Errors.userError(1, "not logged in.", "S00373"));
-			}
+			this.SendSuccess(response, this.Transform(request.user));
+// 			if (request.user) {
+// 				this.SendSuccess(response, this.Transform(request.user));
+// 			} else {
+//  		    this.SendWarn(response, Errors.userError(1, "not logged in.", "S00373"));
+// 			}
 		} catch (error) {
 			this.SendError(response, Errors.Exception(error, "S00374"));
 		}
