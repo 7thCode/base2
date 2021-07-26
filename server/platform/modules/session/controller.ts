@@ -38,6 +38,7 @@ export class Session extends Wrapper {
 	public get(request: { user: any }, response: IJSONResponse): void {
 		try {
 			this.SendSuccess(response, this.Transform(request.user));
+
 // 			if (request.user) {
 // 				this.SendSuccess(response, this.Transform(request.user));
 // 			} else {
