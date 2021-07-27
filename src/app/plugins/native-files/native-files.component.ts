@@ -412,27 +412,14 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 								result.rows = 1;
 								result.type = 0;
 
-								const type = this.mimeToType(result.metadata.type);
-								switch (type) {
-									case "jpg":
-									case "jpeg":
-									case "png":
-									case "bmp":
-									case "webp":
-										result.type = 1;
-										break;
-									case "svg+xml":
-										result.type = 2;
-										break;
-									case "mpg":
-									case "mp4":
-									case "avi":
-									case "mov":
-									case "m4v":
-									case "webm":
-										result.type = 3;
-										break;
-									default:
+								const type: string = this.mimeToMedia(result.metadata.type);
+								const types: any = {
+									"image": 1,
+									"video": 3,
+								}
+
+								if (types[type]) {
+									result.type	= types[type];
 								}
 								/*
 								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
