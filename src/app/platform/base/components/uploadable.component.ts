@@ -193,6 +193,19 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 *
 	 * @mime
 	 */
+	protected mimeToMedia(mime: string): string {
+		let result = "";
+		const type: string[] = mime.split("/");
+		if (type.length >= 2) {
+			result = type[0].toLocaleLowerCase();
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 * @mime
+	 */
 	protected mimeToType(mime: string): string {
 		let result = "";
 		const type: string[] = mime.split("/");
