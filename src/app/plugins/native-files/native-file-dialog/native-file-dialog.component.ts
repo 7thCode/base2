@@ -10,6 +10,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {Component, Inject, NgZone, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {take} from "rxjs/operators";
+import {BaseDialogComponent} from "../../../platform/base/components/base-dialog.component";
 
 /**
  *
@@ -21,7 +22,7 @@ import {take} from "rxjs/operators";
 	styleUrls: ["./native-file-dialog.component.css"],
 	templateUrl: "./native-file-dialog.component.html",
 })
-export class NativeFileDialogComponent {
+export class NativeFileDialogComponent extends BaseDialogComponent {
 
 	@ViewChild("autosize") public autosize: CdkTextareaAutosize;
 
@@ -36,6 +37,7 @@ export class NativeFileDialogComponent {
 		public data: any,
 		public matDialogRef: MatDialogRef<NativeFileDialogComponent>,
 		private zone: NgZone) {
+		super();
 	}
 
 	/**

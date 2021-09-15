@@ -29,7 +29,7 @@ import {MatSliderModule} from "@angular/material/slider";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 
-import {AceEditorModule} from "ng2-ace-editor";
+// import {AceEditorModule} from "ng2-ace-editor";
 
 import {BasePipeModule} from "../platform/base/pipes/base-pipe.module";
 
@@ -73,7 +73,7 @@ import {BlogArchiveModule} from "./archive/archive.module";
 		MatFormFieldModule,
 		MatInputModule,
 
-		AceEditorModule,
+	// 	AceEditorModule,
 
 		ErrorModule,
 		AuthModule,

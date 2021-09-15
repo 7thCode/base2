@@ -29,14 +29,14 @@ event.on("site-close", () => {
 });
 
 router.get("/robots.txt", (request: any, response: any) => {
-	gatekeeper.catch(response, () => {
+	gatekeeper.catch(response, (): void => {
 		response.header('Content-Type', 'text/plain');
 		response.send("User-agent: *\nSitemap: /sitemap_index.xml");
 	});
 });
 
 router.get("/sitemap_index.xml", (request: any, response: any) => {
-	gatekeeper.catch(response, () => {
+	gatekeeper.catch(response, (): void => {
 		response.type('application/xml');
 		const sitemap: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 			"<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n" +

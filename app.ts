@@ -64,8 +64,8 @@ const normal: () => void = () => {
 
 	mongoose.Promise = global.Promise;
 
-	mongoose.set('useCreateIndex', true);
-	mongoose.set("useFindAndModify", false);
+// 	mongoose.set('useCreateIndex', true);
+// 	mongoose.set("useFindAndModify", false);
 
 	const EventEmitter: any = require("events").EventEmitter;
 	const localEvent: any = new EventEmitter();
@@ -117,7 +117,7 @@ const normal: () => void = () => {
 				return data;
 			}
 
-		 	const broadcast = (data: any): void =>  {
+			const broadcast = (data: any): void =>  {
 				localEvent.emit('broadcast', data);
 			}
 
@@ -153,15 +153,15 @@ const normal: () => void = () => {
 
 				// server -> client
 				localEvent.on('broadcast', (data: any): void => {
-			 		socket.clients.forEach((each_client: any): void => {
-			 			if (each_client.readyState === websocket.OPEN) {
-			 				const response = onBroadcast(each_client, data);
-			 				if (response) {
-			 					each_client.send(JSON.stringify(response));
-			 				}
-			 			}
-			 		});
-			 	});
+					socket.clients.forEach((each_client: any): void => {
+						if (each_client.readyState === websocket.OPEN) {
+							const response = onBroadcast(each_client, data);
+							if (response) {
+								each_client.send(JSON.stringify(response));
+							}
+						}
+					});
+				});
 
 				// server -> client
 				// 		localEvent.on("data", onData);
@@ -249,6 +249,24 @@ const normal: () => void = () => {
 
 			module.exports.connection = mongoose.connections;
 
+			const MONGOSTORE_CLASS = require('connect-mongo');						// 暗号化されたクッキーとデータベースに保存されたセッションを関連づける
+
+			app.use(session({												// sessionとMongoDBの接続
+				name: config.sessionname,	                                           			// セッション名
+				secret: config.sessionsecret,													// セッション暗号化キー
+				resave: false,														//
+				rolling: true,		                                       			//
+				saveUninitialized: true,											//
+				cookie: {maxAge: 365 * 24 * 60 * 60 * 1000},						// クッキー側設定
+				store: MONGOSTORE_CLASS.create({									// MongoDB側接続オブジェクト
+					mongoUrl: connect_url,
+// 			mongooseConnection: MONGOOSE_MODULE.connection,					// Mongoose接続
+					ttl: 365 * 24 * 60 * 60,
+// 			clear_interval: 60 * 60,
+				}),
+			}));
+
+			/*
 			const MongoStore: any = require("connect-mongo")(session);
 			const sessionMiddleware: any = session({
 				name: config.sessionname,
@@ -267,7 +285,7 @@ const normal: () => void = () => {
 			});
 
 			app.use(sessionMiddleware);
-
+*/
 			// passport
 			app.use(passport.initialize());
 			app.use(passport.session());
@@ -325,11 +343,6 @@ const normal: () => void = () => {
 					description: {
 						display: "File",
 					},
-				},
-				mailer: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {},
 				},
 			};
 
@@ -450,41 +463,9 @@ const normal: () => void = () => {
 
 	const is_cluster: boolean = config.is_cluster;
 
-	// cpu_count = 1;
-
 	const scheduler: any = new Scheduler();
 
 	const servers: Server[] = [];
-
-	// todo: debug.
-	/*
-		const now = new Date();
-
-		const testcron1 = {
-			hour: 0,
-			minute: 0
-		};
-
-		testcron1.hour = now.getHours();
-		testcron1.minute = now.getMinutes() + 1;
-		if (testcron1.minute === 59) {
-			testcron1.minute = 0;
-			testcron1.hour++;
-		}
-
-		const testcron2 = {
-			hour: 0,
-			minute: 0
-		};
-
-		testcron2.hour = now.getHours();
-		testcron2.minute = now.getMinutes() + 2;
-		if (testcron2.minute === 59) {
-			testcron2.minute = 0;
-			testcron2.hour++;
-		}
-	*/
-	//
 
 	// cron
 	const cron = (cluster_id: number): void => {
@@ -523,16 +504,6 @@ const normal: () => void = () => {
 
 		}
 	}
-
-	// 	 			servers.forEach((server: any) => {
-	// 	  				server.close(() => {
-	// 						localEvent.emit('compaction');
-//
-	// 						logger.log("emit!");
-//
-	// 						server.listen(config.port, "::0");
-	// 					});
-	// 	 			})
 
 	if (is_cluster) {
 		if (cluster.isMaster) {

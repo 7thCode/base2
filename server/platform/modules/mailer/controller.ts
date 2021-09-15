@@ -32,8 +32,7 @@ export class Mailer extends Mail {
 	}
 
 	/**
-	 *
-	 *
+	 * openMailbox
 	 *
 	 * @param request
 	 * @param response

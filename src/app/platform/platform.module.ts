@@ -20,7 +20,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatSidenavModule} from "@angular/material/sidenav";
 
-import {AceEditorModule} from "ngx-ace-editor-wrapper";
+// import {AceEditorModule} from "ngx-ace-editor-wrapper";
 
 import {BasePipeModule} from "./base/pipes/base-pipe.module";
 
@@ -60,7 +60,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 		MatSidenavModule,
 		MatMenuModule,
 
-		AceEditorModule,
+// 		AceEditorModule,
 
 		PlatformRoutingModule,
 		ErrorModule,

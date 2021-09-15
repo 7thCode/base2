@@ -216,7 +216,7 @@ export class StripeService extends HttpService {
 							callback(Errors.networkException(error, "A00077"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00174"), null);
+						callback(Errors.generalError(error.code, error.message, "A00174"), null);
 					}
 				});
 			} else {

@@ -77,7 +77,7 @@ export class NativeFiles extends Updatable {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10000"));
 		}
 	}
 
@@ -94,10 +94,10 @@ export class NativeFiles extends Updatable {
 			this.Model.remove_by_id(operator, target_path).then((object: IUpdatableModel): void => {
 				this.SendSuccess(response, {});
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S10029"));
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10001"));
 		}
 	}
 

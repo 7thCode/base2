@@ -149,8 +149,16 @@
 						"tsConfig": "tsconfig.spec.json",
 						"karmaConfig": "karma.conf.js",
 						"assets": [
-							"src/favicon.ico",
-							"src/assets",
+							{
+								"glob": "**/*",
+								"input": "src/assets/",
+								"output": "/"
+							},
+							{
+								"glob": "favicon.ico",
+								"input": "src/",
+								"output": "/"
+							},
 							"src/manifest.webmanifest"
 						],
 						"styles": [

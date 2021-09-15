@@ -61,19 +61,19 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * ファイルアップロード
 	 * @returns none
 	 */
-	protected upload(name: string, url: string, category: string, params: any, callback: Callback<any>): void {
-		this.filesService.upload(name, category, params, url, callback);
-	}
+	// protected upload(name: string, url: string, category: string, params: any, callback: Callback<any>): void {
+	// 	this.filesService.upload(name, category, params, url, callback);
+	// }
 
 	/**
 	 * 単一ファイルアップロード
 	 * @returns none
 	 */
-	protected uploadFile(dropedFile: File, name: string, callback: Callback<any>): void {
+	protected uploadFile(dropedFile: File, name: string, metadata: { category: string, description: string }, params: { upsert: boolean }, callback: Callback<any>): void {
 		if (dropedFile.size < this.bodysize) {
 			const fileReader: FileReader = new FileReader();
 			fileReader.onload = (event: any): void => {
-				this.upload(name, event.target.result, "", {upsert: true}, (error: IErrorObject, result: any) => {
+				this.filesService.upload(name, event.target.result, metadata, params, (error: IErrorObject, result: any) => {
 					if (!error) {
 						callback(null, result);
 					} else {
@@ -91,13 +91,13 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * 複数ファイルアップロード
 	 * @returns none
 	 */
-	protected uploadFiles(path: string, dropedFiles: File[], callback: Callback<any>): void {
+	protected uploadFiles(path: string, dropedFiles: File[], metadata: { category: string, description: string }, params: { upsert: boolean }, callback: Callback<any>): void {
 		// 	const promises: Array<Promise<any>> = [];
 		const promises: Promise<any>[] = [];
 		const files: File[] = this.marshallingFiles(dropedFiles);
 		files.forEach((file: File) => {
 			const promise: Promise<any> = new Promise<any>((resolve, reject): void => {
-				this.uploadFile(file, path + file.name, (error, result): void => {
+				this.uploadFile(file, path + file.name, metadata, params, (error, result): void => {
 					if (!error) {
 						resolve(result);
 					} else {
@@ -141,10 +141,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 	 * @returns none
 	 */
 	protected marshallingFiles(files: File[]): File[] { // fileset? to array.
-		const result: File[] = [];
-		for (let index: number = 0; index < files.length; index++) {
-			result.push(files[index]);
-		}
+		const result: File[] = Array.from(files);
 		return result;
 	}
 

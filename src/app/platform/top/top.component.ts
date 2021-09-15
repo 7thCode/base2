@@ -27,7 +27,7 @@ export class TopComponent implements OnInit {
 	constructor(
 		private socket: SocketService,
 		protected route: ActivatedRoute,
-		) {
+	) {
 	}
 
 	public ngOnInit(): void {

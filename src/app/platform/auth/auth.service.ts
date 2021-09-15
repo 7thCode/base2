@@ -37,7 +37,7 @@ export class AuthService extends HttpService {
 	 */
 	constructor(
 		protected http: HttpClient,
-		private PublicKey: PublicKeyService,
+		protected PublicKey: PublicKeyService,
 	) {
 		super(http);
 	}
@@ -49,7 +49,7 @@ export class AuthService extends HttpService {
 	 * @param plain 原文
 	 * @param callback 暗号を返すコールバック
 	 */
-	private static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
+	protected static publickey_encrypt(key: string, plain: string, callback: Callback<any>): void {
 		try {
 			// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			// 	callback(null, rsa.encrypt(plain, "base64"));
@@ -66,7 +66,7 @@ export class AuthService extends HttpService {
 	 * @param plain 原文
 	 * @param callback 暗号を返すコールバック
 	 */
-	private value_encrypt(key: string, plain: object, callback: Callback<any>) {
+	protected value_encrypt(key: string, plain: object, callback: Callback<any>) {
 		try {
 			const use_publickey: boolean = environment.use_publickey;
 			if (use_publickey) {
@@ -74,7 +74,7 @@ export class AuthService extends HttpService {
 					if (!error) {
 						callback(null, encryptedText);
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
@@ -133,11 +133,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00018"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -169,11 +169,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00021"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -204,11 +204,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00104"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -270,10 +270,10 @@ export class AuthService extends HttpService {
 	 * @param metadata メタデータ
 	 * @param callback コールバック
 	 */
-	public regist(username: string, password: string,category: string,type:string, metadata: any, callback: Callback<any>): void {
+	public regist(auth: number, username: string, password: string, category: string, type: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
-				this.value_encrypt(key, {username, password, category,type, metadata}, (error: IErrorObject, value: any): void => {
+				this.value_encrypt(key, {auth, username, password, category, type, metadata}, (error: IErrorObject, value: any): void => {
 					if (!error) {
 						this.http.post(this.endPoint + "/auth/local/register", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((account: any): void => {
 							if (account) {
@@ -289,11 +289,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00156"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -309,10 +309,10 @@ export class AuthService extends HttpService {
 	 * @param type タイプ
 	 * @param callback コールバック
 	 */
-	public regist_immediate(username: string, password: string, category: string,type:string, metadata: any, callback: Callback<any>): void {
+	public regist_immediate(auth: number,username: string, password: string, category: string, type: string, metadata: any, callback: Callback<any>): void {
 		this.PublicKey.fixed((error: IErrorObject, key: string): void => {
 			if (!error) {
-				this.value_encrypt(key, {username, password,category,type, metadata}, (error: IErrorObject, value: any): void => {
+				this.value_encrypt(key, {auth, username, password, category, type, metadata}, (error: IErrorObject, value: any): void => {
 					if (!error) {
 						this.http.post(this.endPoint + "/auth/immediate/register", {content: value}, this.httpOptions).pipe(retry(3)).subscribe((account: any): void => {
 							if (account) {
@@ -328,11 +328,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00159"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -364,11 +364,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00162"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -400,11 +400,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00165"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -436,11 +436,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00168"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -472,11 +472,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00171"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -508,11 +508,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00174"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}
@@ -544,11 +544,11 @@ export class AuthService extends HttpService {
 							callback(Errors.networkException(error, "A00177"), null);
 						});
 					} else {
-						callback(Errors.generalError(error.code,error.message, "A00016"), null);
+						callback(Errors.generalError(error.code, error.message, "A00016"), null);
 					}
 				});
 			} else {
-				callback(Errors.generalError(error.code,error.message, "A00016"), null);
+				callback(Errors.generalError(error.code, error.message, "A00016"), null);
 			}
 		});
 	}

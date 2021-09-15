@@ -113,8 +113,7 @@ export class StripeComponent extends GridViewComponent implements OnInit {
 	 */
 	private errorBar(error: IErrorObject): void {
 		if (error) {
-			this.snackbar.open(error.message, "Close", {
-			});
+			this.snackbar.open(error.message, "Close", {});
 		}
 	}
 

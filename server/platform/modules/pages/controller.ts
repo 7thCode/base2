@@ -40,8 +40,7 @@ export class Pages extends Updatable {
 	}
 
 	/**
-	 *
-	 *
+	 * getPage
 	 *
 	 * @param username
 	 * @param path

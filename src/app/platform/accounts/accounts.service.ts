@@ -233,7 +233,7 @@ export class AccountsService extends QueryableService {
 		if (from) {
 			if (to) {
 				if (type) {
-					this.http.post(this.endPoint + '/accounts/relation/to', {from: from,to: to, type: type}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+					this.http.post(this.endPoint + '/accounts/relation/to', {from: from, to: to, type: type}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 						if (result) {
 							if (result.code === 0) {
 								callback(null, result.value);
@@ -260,7 +260,7 @@ export class AccountsService extends QueryableService {
 	/*
 	* relation元一覧
 	* */
-	public relation_from(type: string, option: any, callback: Callback<{account: any,enabled: boolean, from_id: any, to_id: any, type: string}[]>): void {
+	public relation_from(type: string, option: any, callback: Callback<{ account: any, enabled: boolean, from_id: any, to_id: any, type: string }[]>): void {
 		if (type) {
 			if (option) {
 				this.http.get(this.endPoint + "/accounts/relation/from/" + encodeURIComponent(type) + "/" + encodeURIComponent(JSON.stringify(option)), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
@@ -287,7 +287,7 @@ export class AccountsService extends QueryableService {
 	/*
 	* relation先一覧
 	* */
-	public relation_to(type: string, option: any, callback: Callback<{account: any,enabled: boolean, from_id: any, to_id: any, type: string}[]>): void {
+	public relation_to(type: string, option: any, callback: Callback<{ account: any, enabled: boolean, from_id: any, to_id: any, type: string }[]>): void {
 		if (type) {
 			if (option) {
 				this.http.get(this.endPoint + "/accounts/relation/to/" + encodeURIComponent(type) + "/" + encodeURIComponent(JSON.stringify(option)), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
@@ -314,7 +314,7 @@ export class AccountsService extends QueryableService {
 	/*
 	* relation元一覧
 	* */
-	public relation_from_user(username: string, type: string, option: any, callback: Callback<{account: any,enabled: boolean, from_id: any, to_id: any, type: string}[]>): void {
+	public relation_from_user(username: string, type: string, option: any, callback: Callback<{ account: any, enabled: boolean, from_id: any, to_id: any, type: string }[]>): void {
 		if (username) {
 			if (type) {
 				if (option) {
@@ -345,11 +345,11 @@ export class AccountsService extends QueryableService {
 	/*
 	* relation先一覧
 	* */
-	public relation_to_user(username: string, type: string, option: any, callback: Callback<{account: any,enabled: boolean, from_id: any, to_id: any, type: string}[]>): void {
+	public relation_to_user(username: string, type: string, option: any, callback: Callback<{ account: any, enabled: boolean, from_id: any, to_id: any, type: string }[]>): void {
 		if (username) {
 			if (type) {
 				if (option) {
-					this.http.get(this.endPoint + "/accounts/relation/touser/"+ encodeURIComponent(username) + "/" + encodeURIComponent(type) + "/" + encodeURIComponent(JSON.stringify(option)), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+					this.http.get(this.endPoint + "/accounts/relation/touser/" + encodeURIComponent(username) + "/" + encodeURIComponent(type) + "/" + encodeURIComponent(JSON.stringify(option)), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 						if (result) {
 							if (Array.isArray(result)) {
 								callback(null, result);

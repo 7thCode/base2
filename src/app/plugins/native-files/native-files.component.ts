@@ -145,7 +145,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	public onDrop(event: any): void {
 		event.preventDefault();
 		const path: string = "";
-		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files), event.shiftKey);
+		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files), {category: "", description: ""}, {upsert: false}, event.shiftKey);
 	}
 
 	/**
@@ -162,7 +162,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", Errors.generalError( -1, "error.", "A00312"));
+					this.Complete("error", Errors.generalError(-1, "error.", "A00312"));
 				}
 			} else {
 				this.Complete("error", error);
@@ -180,9 +180,9 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	/**
 	 *
 	 */
-	public Upload(path: string, file: any) {
+	public Upload(path: string, file: any, metadata: { category: string, description: string }, params: { upsert: boolean }) {
 		this.Progress(true);
-		this.uploadFile(file, path + file.name, (error: IErrorObject, result: any) => {
+		this.uploadFile(file, path + file.name, metadata, params, (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.draw((error, results) => {
 					if (!error) {
@@ -190,7 +190,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 							this.results = results;
 							this.Complete("", results);
 						} else {
-							this.Complete("error", Errors.generalError( -1, "error.", "A00310"));
+							this.Complete("error", Errors.generalError(-1, "error.", "A00310"));
 						}
 					} else {
 						this.Complete("error", error);
@@ -254,9 +254,8 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	 * @param path パス
 	 * @param files ファイルオブジェクト
 	 */
-	public onFileDrop(path: string, files: any[], escapeResize: boolean): void {
+	public onFileDrop(path: string, files: any[], metadata: { category: string, description: string }, params: { upsert: boolean }, escapeResize: boolean): void {
 		if (files.length > 0) {
-
 			const promises: any[] = [];
 			this.marshallingFiles(files).forEach((file) => {
 				promises.push(new Promise((resolve, reject) => {
@@ -290,7 +289,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 
 			promises.forEach((promise) => {
 				promise.then((file: File) => {
-					this.Upload(path, file);
+					this.Upload(path, file, metadata, params);
 				}).catch((error: IErrorObject) => {
 					this.errorBar(error);
 				})
@@ -312,7 +311,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 	public onChangeFileInput(): void {
 		const files: any[] = this.fileInput.nativeElement.files;
 		const path: string = "";
-		this.onFileDrop(path, files, false);
+		this.onFileDrop(path, files, {category: "", description: ""}, {upsert: false}, false);
 	}
 
 	/**
@@ -333,7 +332,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 					this.results = results;
 					this.Complete("", results);
 				} else {
-					this.Complete("error", Errors.generalError( -1,  "error.", "A00310"));
+					this.Complete("error", Errors.generalError(-1, "error.", "A00310"));
 				}
 			} else {
 				this.Complete("error", error);
@@ -357,7 +356,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 								this.results = results;
 								this.Complete("", results);
 							} else {
-								this.Complete("error", Errors.generalError( -1,  "error." , "A00311"));
+								this.Complete("error", Errors.generalError(-1, "error.", "A00311"));
 							}
 						} else {
 							this.Complete("error", error);
@@ -418,8 +417,10 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 									"video": 3,
 								}
 
+								// "svg+xml": 2,
+
 								if (types[type]) {
-									result.type	= types[type];
+									result.type = types[type];
 								}
 								/*
 								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
@@ -458,7 +459,7 @@ export class NativeFilesComponent extends UploadableComponent implements OnInit 
 				if (results) {
 					this.results = results;
 				} else {
-					this.Complete("error", Errors.generalError( -1,  "error." , "A00312"));
+					this.Complete("error", Errors.generalError(-1, "error.", "A00312"));
 				}
 			} else {
 				this.Complete("error", error);

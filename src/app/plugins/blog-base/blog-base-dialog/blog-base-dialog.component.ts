@@ -9,6 +9,7 @@
 import {Component, Inject, NgZone} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
+import {BaseDialogComponent} from "../../../platform/base/components/base-dialog.component";
 
 /**
  *
@@ -21,7 +22,7 @@ import {AngularEditorConfig} from "@kolkov/angular-editor";
 	templateUrl: "./blog-base-dialog.component.html",
 })
 
-export class BlogBaseDialogComponent {
+export class BlogBaseDialogComponent extends BaseDialogComponent {
 
 	public config: AngularEditorConfig = {
 		editable: true,
@@ -87,6 +88,7 @@ export class BlogBaseDialogComponent {
 		public data: any,
 		public matDialogRef: MatDialogRef<BlogBaseDialogComponent>,
 		private zone: NgZone) {
+		super();
 	}
 
 	/**

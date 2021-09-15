@@ -8,6 +8,7 @@
 
 import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../../platform/base/components/base-dialog.component";
 
 /**
  *
@@ -19,7 +20,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 	styleUrls: ["./stripe-customer-update-dialog.component.css"],
 	templateUrl: "./stripe-customer-update-dialog.component.html",
 })
-export class StripeCustomerUpdateDialogComponent implements OnInit {
+export class StripeCustomerUpdateDialogComponent extends BaseDialogComponent implements OnInit {
 
 	/**
 	 * @constructor
@@ -32,6 +33,7 @@ export class StripeCustomerUpdateDialogComponent implements OnInit {
 		public data: any,
 		public matDialogRef: MatDialogRef<StripeCustomerUpdateDialogComponent>,
 	) {
+		super();
 	}
 
 	/*

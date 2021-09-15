@@ -27,13 +27,11 @@ export class Session extends Wrapper {
 	}
 
 	/**
-	 *
-	 *
+	 * get
 	 *
 	 * @param request
 	 * @param response
 	 * @returns none
-	 *
 	 */
 	public get(request: { user: any }, response: IJSONResponse): void {
 		try {
@@ -49,8 +47,7 @@ export class Session extends Wrapper {
 	}
 
 	/**
-	 *
-	 *
+	 * put
 	 *
 	 * @param request
 	 * @param response
