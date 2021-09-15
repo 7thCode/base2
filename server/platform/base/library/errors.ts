@@ -11,6 +11,10 @@ import {IErrorObject} from "../../../../types/platform/universe";
  */
 export class Errors {
 
+	static Error(error: any, tag: string): IErrorObject {
+		return {code: error.code, message: error.message, tag: tag, origin: error};
+	}
+
 	static userError(code: number, message: string, tag: string): IErrorObject {
 		return {code: code, message: message, tag: tag, origin: null};
 	}

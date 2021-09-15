@@ -190,7 +190,7 @@ export class Entries extends Updatable {
 				})
 				this.SendSuccess(response, entries);
 			} else {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Error(error, "S10008"));
 			}
 		})
 	}
@@ -212,7 +212,7 @@ export class Entries extends Updatable {
 				})
 				this.SendSuccess(response, entries);
 			} else {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Error(error, "S10009"));
 			}
 		})
 	}
@@ -231,10 +231,10 @@ export class Entries extends Updatable {
 					this.SendSuccess(response, object);
 				});
 			}).catch((error: IErrorObject) => {
-				this.SendError(response, error);
+				this.SendError(response, Errors.Exception(error, "S10009"));
 			})
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10010"));
 		}
 	}
 
@@ -262,14 +262,14 @@ export class Entries extends Updatable {
 									this.SendRaw(response, objects);
 								});
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S10011"));
 							})
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10012"));
 		}
 	}
 

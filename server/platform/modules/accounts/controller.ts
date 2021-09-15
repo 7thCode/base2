@@ -146,7 +146,7 @@ export class Accounts extends Wrapper {
 										this.SendRaw(response, result);
 
 									}).catch((error: IErrorObject) => {
-										this.SendError(response, error);
+										this.SendError(response, Errors.Exception(error, "S10030"));
 									})
 								});
 							});
@@ -155,7 +155,7 @@ export class Accounts extends Wrapper {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10031"));
 		}
 	}
 
@@ -177,14 +177,14 @@ export class Accounts extends Wrapper {
 							LocalAccount.default_find(operator, filtered_by_auth, {}).then((accounts: IAccountModel[]): void => {
 								this.SendSuccess(response, accounts.length);
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S10032"));
 							})
 						});
 					});
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10033"));
 		}
 	}
 
@@ -206,7 +206,7 @@ export class Accounts extends Wrapper {
 								this.SendSuccess(response, account.public());
 							});
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S10034"));
 						})
 					} else {
 						this.SendError(response, Errors.generalError(2, "unreadable.", "S00303"));
@@ -214,7 +214,7 @@ export class Accounts extends Wrapper {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10036"));
 		}
 	}
 
@@ -251,7 +251,7 @@ export class Accounts extends Wrapper {
 							LocalAccount.set_by_name(operator, target.username, update).then((account: IAccountModel): void => {
 								this.SendSuccess(response, account.public());
 							}).catch((error: any) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S10037"));
 							})
 						} else {
 							this.SendError(response, Errors.generalError(2, "unreadable.", "S00307"));
@@ -260,7 +260,7 @@ export class Accounts extends Wrapper {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10026"));
 		}
 	}
 
@@ -282,11 +282,11 @@ export class Accounts extends Wrapper {
 								LocalAccount.remove_by_name(operator, target.username).then((): void => {
 									this.SendSuccess(response, {});
 								}).catch((error: IErrorObject) => {
-									this.SendError(response, error);
+									this.SendError(response, Errors.Exception(error, "S10027"));
 								})
 							});
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S10028"));
 						})
 					} else {
 						this.SendError(response, Errors.generalError(2, "unreadable.", "S00311"));
@@ -294,7 +294,7 @@ export class Accounts extends Wrapper {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10002"));
 		}
 	}
 
@@ -317,7 +317,7 @@ export class Accounts extends Wrapper {
 								this.SendSuccess(response, {is_2fa});
 							})
 						}).catch((error: IErrorObject) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S10003"));
 						});
 					} else {
 						this.SendError(response, Errors.generalError(2, "unreadable.", "S00315"));
@@ -325,7 +325,7 @@ export class Accounts extends Wrapper {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10004"));
 		}
 	}
 
@@ -372,12 +372,12 @@ export class Accounts extends Wrapper {
 											});
 										});
 									}).catch((error: any) => {
-										this.SendError(response, error);
+										this.SendError(response, Errors.Exception(error, "S10005"));
 									})
 								});
 							});
 						}).catch((error: any) => {
-							this.SendError(response, error);
+							this.SendError(response, Errors.Exception(error, "S10006"));
 						})
 					} else {
 						this.SendError(response, Errors.generalError(2, "unreadable.", "S00320"));
@@ -385,7 +385,7 @@ export class Accounts extends Wrapper {
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10016"));
 		}
 	}
 
@@ -417,12 +417,14 @@ export class Accounts extends Wrapper {
 							} else {
 								this.SendError(response, Errors.generalError(2, "unreadable.", "S00325"));
 							}
-						})
+						});
+					}).catch((error: any) => {
+						this.SendError(response, Errors.Exception(error, "S10027"));
 					})
 				});
 			});
 		} catch (error) {
-			this.SendError(response, error);
+			this.SendError(response, Errors.Exception(error, "S10026"));
 		}
 	}
 

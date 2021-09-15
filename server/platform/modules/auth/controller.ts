@@ -535,7 +535,7 @@ export class Auth extends Mail {
 									}
 								});
 							}).catch((error: IErrorObject) => {
-								this.SendError(response, error);
+								this.SendError(response, Errors.Exception(error, "S10007"));
 							})
 						});
 					});

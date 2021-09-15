@@ -31,7 +31,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 		router.get("/nfiles/auth/query/:query/:option", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
-				gatekeeper.catch(response, () => {
+				gatekeeper.catch(response, (): void => {
 					nativeFiles.query(request, response);
 				});
 			}]);
@@ -39,7 +39,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 		router.get("/nfiles/auth/count/:query", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
-				gatekeeper.catch(response, () => {
+				gatekeeper.catch(response, (): void => {
 					nativeFiles.count(request, response);
 				});
 			}]);
@@ -47,7 +47,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 		router.get("/nfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
-				gatekeeper.catch(response, () => {
+				gatekeeper.catch(response, (): void => {
 					nativeFiles.get(request, response);
 				});
 			}]);
@@ -55,7 +55,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 		router.post("/nfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
-				gatekeeper.catch(response, () => {
+				gatekeeper.catch(response, (): void => {
 					nativeFiles.post(request, response);
 				});
 			}]);
@@ -63,7 +63,7 @@ nativeFiles.init(initfiles, (error: IErrorObject, result: any): void => {
 		router.delete("/nfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
-				gatekeeper.catch(response, () => {
+				gatekeeper.catch(response, (): void => {
 					nativeFiles.delete(request, response);
 				});
 			}]);

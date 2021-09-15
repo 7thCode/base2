@@ -10,9 +10,8 @@ import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRe
 import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 import {Errors} from "../../../platform/base/library/errors";
 
-
+const Mongoose = require('mongoose');
 const fs: any = require("graceful-fs");
-const sharp: any = require("sharp");
 const mongodb: any = require("mongodb");
 
 const path: any = require("path");
@@ -409,66 +408,60 @@ export class PublicFiles extends Files {
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
 			const db: any = this.connection.db;
-			db.collection("fs.files", (error: IErrorObject, collection: object): void => {
-				if (!error) {
-					this.gfs = new mongodb.GridFSBucket(db, {});
-					this.collection = collection;
-					if (initfiles) {
-						if (initfiles.length > 0) {
-							// ensureIndex
-							this.collection.createIndex({
-								"filename": 1,
-								"metadata.username": 1,
-							}).then(() => {
-								const save = (doc: any): Promise<any> => {
-									return new Promise((resolve: any, reject: any): void => {
-										const path: string = project_root + doc.path;
-										const filename: string = doc.name;
-										const user: { username: string, auth: number } = doc.user;
-										const mimetype: string = doc.content.type;
-										const category: string = doc.content.category;
-										const description: string = doc.content.description;
-										// const type: number = doc.type;
-										const query: object = {filename};
+			this.collection = db.collection("fs.files");
+			this.gfs = new Mongoose.mongo.GridFSBucket(db);
+			if (initfiles) {
+				if (initfiles.length > 0) {
+					// ensureIndex
+					this.collection.createIndex({
+						"filename": 1,
+						"metadata.username": 1,
+					}).then(() => {
+						const promises: Promise<any>[] = [];
+						initfiles.forEach((doc) => {
+							promises.push(new Promise((resolve: any, reject: any): void => {
+								const path: string = project_root + doc.path;
+								const filename: string = doc.name;
+								const user: { username: string, auth: number } = doc.user;
+								const mimetype: string = doc.content.type;
+								const category: string = doc.content.category;
+								const description: string = doc.content.description;
+								// const type: number = doc.type;
+								const query: object = {filename};
 
-										this.collection.findOne(query).then((item: object): void => {
-											if (!item) {
-												this.fromLocal(path, user, filename, category, description, mimetype, (error: IErrorObject, file: any): void => {
-													if (!error) {
-														resolve(file);
-													} else {
-														reject(error);
-													}
-												});
+								this.collection.findOne(query).then((item: object): void => {
+									if (!item) {
+										this.fromLocal(path, user, filename, category, description, mimetype, (error: IErrorObject, file: any): void => {
+											if (!error) {
+												resolve(file);
 											} else {
-												resolve(item);
+												reject(error);
 											}
-										}).catch((error: IErrorObject) => {
-											reject(error);
 										});
-									});
-								};
-
-								const docs: object[] = initfiles;
-								Promise.all(docs.map((doc: any): any => {
-									return save(doc);
-								})).then((results: any[]): void => {
-									callback(null, results);
-								}).catch((error: IErrorObject): void => {
-									callback(error, null);
+									} else {
+										resolve(item);
+									}
+								}).catch((error: IErrorObject) => {
+									reject(error);
 								});
-							}).catch((error: IErrorObject): void => {
-								callback(error, null);
-							});
-						} else {
-							callback(null, null);
-						}
-					}
+							}));
+						})
+
+						Promise.all(promises).then((objects): void => {
+							callback(null, objects);
+						}).catch((error): void => {
+							callback(error, null);
+						});
+					}).catch((error: IErrorObject): void => {
+						callback(error, null);
+					});
 				} else {
-					callback(error, null);
+					callback(null, null);
 				}
-			});
-		} catch (e) {
+			} else {
+				callback(null, null);
+			}
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
