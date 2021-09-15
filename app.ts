@@ -247,6 +247,28 @@ const normal: () => void = () => {
 
 		mongoose.connection.once("open", () => {
 
+// 			const SESSION_MODULE = require('express-session');						// Express Session
+
+			module.exports.connection = mongoose.connections;
+
+			const MONGOSTORE_CLASS = require('connect-mongo');						// 暗号化されたクッキーとデータベースに保存されたセッションを関連づける
+
+			app.use(session({												// sessionとMongoDBの接続
+				name: config.sessionname,	                                           			// セッション名
+				secret: config.sessionsecret,													// セッション暗号化キー
+				resave: false,														//
+				rolling: true,		                                       			//
+				saveUninitialized: true,											//
+				cookie: {maxAge: 365 * 24 * 60 * 60 * 1000},						// クッキー側設定
+				store: MONGOSTORE_CLASS.create({									// MongoDB側接続オブジェクト
+					mongoUrl: connect_url,
+// 			mongooseConnection: MONGOOSE_MODULE.connection,					// Mongoose接続
+					ttl: 365 * 24 * 60 * 60,
+// 			clear_interval: 60 * 60,
+				}),
+			}));
+
+			/*
 			module.exports.connection = mongoose.connections;
 
 			const MongoStore: any = require("connect-mongo")(session);
@@ -267,6 +289,7 @@ const normal: () => void = () => {
 			});
 
 			app.use(sessionMiddleware);
+			*/
 
 			// passport
 			app.use(passport.initialize());
