@@ -70,6 +70,7 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * publickey_decrypt
 	 *
 	 * @param key
 	 * @param crypted
@@ -84,6 +85,12 @@ export class Stripe extends Mail {
 		}
 	}
 
+	/**
+	 * buildCustomer
+	 *
+	 * @param customer
+	 * @returns none
+	 */
 	private static buildCustomer(customer: any): any {
 		const result = {
 			address: {
@@ -144,6 +151,7 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * value_decrypt
 	 *
 	 * @param use_publickey
 	 * @param key
@@ -166,7 +174,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * get_self
+	 *
 	 * アカウントゲット
+	 *
 	 * @param operator
 	 * @param callback
 	 * @returns none
@@ -180,7 +191,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * put_self
+	 *
 	 * アカウントプット
+	 *
 	 * @param operator
 	 * @param update
 	 * @param callback
@@ -195,9 +209,12 @@ export class Stripe extends Mail {
 	}
 
 	/*
+	* has_same_subscriptions
+	*
 	* 同一プランチェック。
 	*
-	*
+	* @param subscriptions_1
+	* @param subscriptions_2
 	*/
 	private has_same_subscriptions(subscriptions_1: any, subscriptions_2: any): any[] {
 
@@ -221,6 +238,7 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * all_subscriptions
 	 *
 	 */
 	private all_subscriptions(request: any, callback: Callback<any>): void {
@@ -236,7 +254,7 @@ export class Stripe extends Mail {
 	}
 
 	/**
-	 *
+	 * payable
 	 *
 	 * @param operator
 	 * @param callback
@@ -244,8 +262,6 @@ export class Stripe extends Mail {
 	 *
 	 * 送り先あり 1
 	 * カードあり 2
-	 *
-	 *
 	 */
 	public payable(operator: any, callback: Callback<number>): void {
 		this.operatorToCustomer(operator, (error: IErrorObject, customer: any) => {
@@ -268,8 +284,9 @@ export class Stripe extends Mail {
 		});
 	}
 
-
 	/**
+	 * Customer
+	 *
 	 * @param stripe_id
 	 * @returns none
 	 */
@@ -278,6 +295,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * operatorToCustomer
+	 *
 	 * @param operator
 	 * @param callback
 	 * @returns none
@@ -288,6 +307,8 @@ export class Stripe extends Mail {
 				const stripe_id = account.content.stripe_id;
 				if (stripe_id) {
 					this.stripe.customers.retrieve(stripe_id).then((customer: any) => {
+						//					console.log(customer)
+						//					this.logger.error(customer);
 						callback(null, customer);
 					}).catch((error: any) => {
 						callback(error, null);
@@ -315,14 +336,18 @@ export class Stripe extends Mail {
 		try {
 			this.ifExist(response, Errors.userError(1, "not logged in.", "S00444"), request.user, () => {
 				if (this.enable) {
-					const operator: IAccountModel = this.Transform(request.user);
-					this.operatorToCustomer(operator, (error, customer) => {
-						if (!error) {
-							this.SendSuccess(response, Boolean(customer));
-						} else {
-							this.SendError(response, error);
-						}
-					});
+					if (request.user.auth > AuthLevel.user) {  //　Common User
+						const operator: IAccountModel = this.Transform(request.user);
+						this.operatorToCustomer(operator, (error, customer) => {
+							if (!error) {
+								this.SendSuccess(response, Boolean(customer));
+							} else {
+								this.SendError(response, error);
+							}
+						});
+					} else { // Manageing User
+						this.SendSuccess(response, true);
+					}
 				} else {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00445"));
 				}
@@ -333,7 +358,11 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * createCustomer
 	 *
+	 * @param request
+	 * @param response
+	 * @returns none
 	 */
 	public createCustomer(request: any, response: IJSONResponse): void {
 		try {
@@ -377,6 +406,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * retrieveCustomer
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -393,7 +424,7 @@ export class Stripe extends Mail {
 								const result_customer = {sources: {data: customer.sources.data, default: customer.default_source, updateable: updateable}};
 								this.SendSuccess(response, result_customer);
 							} else {
-								this.SendError(response, Errors.generalError(1, "no customer.", "S00400"));
+								this.SendSuccess(response, null);
 							}
 						} else {
 							this.SendError(response, error);
@@ -409,6 +440,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * updateCustomer
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -444,6 +477,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * deleteCustomer
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -486,6 +521,7 @@ export class Stripe extends Mail {
 
 	/**
 	 * create card
+	 *
 	 * もしoperatorにcustomer_idが存在しないならcustomerを作成してcardを作成。
 	 * tokensは本来clientで作成するべきだが、stripe.tokens.createの仕様が糞っぽい（HTML Element直接渡す、とか臭い)ので、別途暗号化する。
 	 *
@@ -538,7 +574,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
-	 * card 登録
+	 * retrieveSource
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -581,7 +618,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
-	 * card 登録
+	 * updateSource
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -625,7 +663,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
-	 * card 登録
+	 * deleteSource
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -665,6 +704,11 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * sendBankReceipt
+	 *
+	 * @param mailto
+	 * @param append
+	 * @param callback
 	 */
 	public sendBankReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 
@@ -701,6 +745,11 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * sendDeliveryReceipt
+	 *
+	 * @param mailto
+	 * @param append
+	 * @param callback
 	 */
 	public sendDeliveryReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 
@@ -737,6 +786,11 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * sendCardReceipt
+	 *
+	 * @param mailto
+	 * @param append
+	 * @param callback
 	 */
 	public sendCardReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 		const card = mailto.charge.payment_method_details.card;
@@ -779,7 +833,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * charge
+	 *
 	 * チャージ
+	 *
 	 * @param request
 	 * @param charge
 	 * @param callback
@@ -832,7 +889,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * subscribe
+	 *
 	 * 定期課金
+	 *
 	 * @param request
 	 * @param subscription
 	 * @param callback
@@ -887,7 +947,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
-	 * 定期課金更新
+	 * has_subscribe
+	 *
 	 * @param request
 	 * @param callback
 	 * @returns none
@@ -895,7 +956,7 @@ export class Stripe extends Mail {
 	public has_subscribe(request: any, callback: Callback<boolean>): void {
 		try {
 			const operator: IAccountModel = this.Transform(request.user);
-			if (operator.auth < AuthLevel.user) {
+			if (operator.auth <= AuthLevel.manager) {
 				callback(null, true);
 			} else {
 				this.operatorToCustomer(operator, (error: IErrorObject, customer: any) => {
@@ -911,7 +972,7 @@ export class Stripe extends Mail {
 								}
 							})
 						} else {
-							callback(Errors.generalError(1, "no customer.", "S00426"), null);
+							callback(null, false);
 						}
 					} else {
 						callback(error, null);
@@ -924,7 +985,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * update_subscribe
+	 *
 	 * 定期課金更新
+	 *
 	 * @param request
 	 * @param metadata
 	 * @param callback
@@ -943,7 +1007,9 @@ export class Stripe extends Mail {
 								const plan_id: string = this.plan_ids[0];
 								if (subscription.plan.id === plan_id) {
 									promises.push(new Promise((resolve: any, reject: any): void => {
+
 											//		const subscription_id = subscription.id;
+
 											this.stripe.subscriptions.update(subscription.id, {metadata: metadata}).then((subscription: any) => {
 												if (subscription) {
 													resolve(subscription);
@@ -979,6 +1045,8 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * cancel_subscribe
+	 *
 	 * 定期課金解除
 	 *
 	 * @param request
@@ -998,7 +1066,6 @@ export class Stripe extends Mail {
 								const plan_id: string = this.plan_ids[0];
 								if (subscription.plan.id === plan_id) {
 									promises.push(new Promise((resolve: any, reject: any): void => {
-										//			const subscription_id = subscription.id;
 										this.stripe.subscriptions.del(subscription.id).then((subscription: any) => {
 											if (subscription) {
 												resolve(subscription);
@@ -1034,7 +1101,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * receipt
+	 *
 	 * レシート
+	 *
 	 * @param request
 	 * @param charge
 	 * @param callback
@@ -1061,7 +1131,10 @@ export class Stripe extends Mail {
 	}
 
 	/**
+	 * _charge
+	 *
 	 * チャージ
+	 *
 	 * @param request
 	 * @param response
 	 * @returns none
@@ -1123,7 +1196,8 @@ export class Stripe extends Mail {
 
 	public _has_subscribe(request: any, response: IJSONResponse): void {
 		try {
-			this.ifExist(response, Errors.userError(1, "not logged in.", "S00436"), request.user, () => {
+			// this.ifExist(response, Errors.userError(1, "not logged in.", "S00436"), request.user, () => {
+			if (request.user) {
 				if (this.enable) {
 					this.has_subscribe(request, (error, subscribe: boolean) => {
 						if (!error) {
@@ -1135,7 +1209,10 @@ export class Stripe extends Mail {
 				} else {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00437"));
 				}
-			});
+			} else {
+				this.SendSuccess(response, false);
+			}
+			// 	});
 		} catch (error) {
 			this.SendError(response, error);
 		}
@@ -1183,6 +1260,7 @@ export class Stripe extends Mail {
 
 	/**
 	 * charge参照
+	 *
 	 * @param request
 	 * @param charge_id
 	 * @param callback

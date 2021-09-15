@@ -9,6 +9,7 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from "@angular/core";
 
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 @Component({
 	selector: "resize-dialog",
@@ -21,7 +22,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
  *
  * @since 0.01
  */
-export class ResizeDialogComponent implements OnInit, AfterViewInit {
+export class ResizeDialogComponent extends BaseDialogComponent implements OnInit, AfterViewInit {
 
 	public factor: string;
 
@@ -41,7 +42,7 @@ export class ResizeDialogComponent implements OnInit, AfterViewInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<ResizeDialogComponent>) {
-
+		super();
 		this.canvas = document.createElement("canvas");
 		this.target_file = null;
 

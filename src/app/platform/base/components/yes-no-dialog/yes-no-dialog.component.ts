@@ -9,6 +9,7 @@
 import {Component, Inject, OnInit} from "@angular/core";
 
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../base-dialog.component";
 
 @Component({
 	selector: "yes-no-dialog",
@@ -21,7 +22,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
  *
  * @since 0.01
  */
-export class YesNoDialogComponent implements OnInit {
+export class YesNoDialogComponent extends BaseDialogComponent implements OnInit {
 
 	get content(): any {
 		return this.data.content;
@@ -31,7 +32,7 @@ export class YesNoDialogComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<YesNoDialogComponent>) {
-
+		super();
 		if (!this.data.content.ok_button) {
 			this.data.content.ok_button = "OK"
 		}

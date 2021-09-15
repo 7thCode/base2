@@ -6,7 +6,7 @@
 		</button>
 		<span style="font-weight:400;">Platform</span>
 		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;">Release 0.5.0 / Angular {{angular}}</span>
-		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;">git_commit_hash eec0367</span>
+		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;">git_commit_hash 38ead966</span>
 	</div>
 
 	<div *ngIf="login">
@@ -45,37 +45,37 @@
 		<mat-list>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/personal" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/personal" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#e5a5ff;font-size:20px;">home</mat-icon>
 					Personal</a>
 			</mat-list-item>
 
 			<mat-list-item *ngIf="auth | authis: 'manager'" style="height: 34px;">
-				<a mat-button routerLink="/platform/accounts" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/accounts" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#b9fad7;font-size:20px;">account_circle</mat-icon>
 					Accounts</a>
 			</mat-list-item>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/pages" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/pages" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#a7e7ff;font-size:20px;">edit</mat-icon>
 					Pages</a>
 			</mat-list-item>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/files" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/files" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#99a9ff;font-size:20px;">photo_library</mat-icon>
 					Files</a>
 			</mat-list-item>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/articles" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/articles" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#e5a5ff;font-size:20px;">view_comfy</mat-icon>
 					Articles</a>
 			</mat-list-item>
 
 			<mat-list-item *ngIf="provider === 'local'" style="height: 34px;">
-				<button (complete)="onPassword($event);"  auth-password-button mat-button style="font-size:12px;">
+				<button (complete)="onPassword($event);" auth-password-button mat-button style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#fd7f8f;font-size:20px;">vpn_key</mat-icon>
 					Password
 				</button>
@@ -110,19 +110,19 @@
 			</mat-list-item>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/stripe" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/stripe" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#e5a5ff;font-size:20px;">view_comfy</mat-icon>
 					test Stripe</a>
 			</mat-list-item>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/mailer" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/mailer" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#e5a5ff;font-size:20px;">view_comfy</mat-icon>
 					test mailer</a>
 			</mat-list-item>
 
 			<mat-list-item style="height: 34px;">
-				<a mat-button routerLink="/platform/nativefiles" [queryParams]="params" style="font-size:12px;">
+				<a [queryParams]="params" mat-button routerLink="/platform/nativefiles" style="font-size:12px;">
 					<mat-icon mat-list-icon style="color:#e5a5ff;font-size:20px;">view_comfy</mat-icon>
 					test nativefile</a>
 			</mat-list-item>

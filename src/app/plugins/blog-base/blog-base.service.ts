@@ -57,7 +57,7 @@ export class BlogBaseService extends UpdatableService {
 									});
 									callback(null, filterd);
 								} else {
-									callback(Errors.generalError( result.code, result.message,  "A00302"), []);
+									callback(Errors.generalError(result.code, result.message, "A00302"), []);
 								}
 							} else {
 								callback(Errors.networkError("A00303"), null);

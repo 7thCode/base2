@@ -10,6 +10,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {Component, Inject, NgZone, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {take} from "rxjs/operators";
+import {BaseDialogComponent} from "../../base/components/base-dialog.component";
 
 /**
  *
@@ -21,7 +22,7 @@ import {take} from "rxjs/operators";
 	styleUrls: ["./reply-dialog.component.css"],
 	templateUrl: "./reply-dialog.component.html",
 })
-export class ReplyDialogComponent {
+export class ReplyDialogComponent extends BaseDialogComponent {
 
 	@ViewChild("autosize") public autosize: CdkTextareaAutosize;
 
@@ -36,6 +37,7 @@ export class ReplyDialogComponent {
 		public data: any,
 		public matDialogRef: MatDialogRef<ReplyDialogComponent>,
 		private zone: NgZone) {
+		super();
 	}
 
 	/**

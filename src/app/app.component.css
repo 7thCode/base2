@@ -7,6 +7,11 @@ body, input, textarea, select {
 	font-size: 14px;
 }
 
+.smooth-white-bg {
+	background-image: linear-gradient(to right, #e6e6e6, white, white, #e6e6e6);
+	color: #3f3f3f;
+}
+
 ::ng-deep.mat-dialog-container {
 	backdrop-filter: blur(4px);
 	background-color: #fdfdfddf;

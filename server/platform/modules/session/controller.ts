@@ -27,18 +27,15 @@ export class Session extends Wrapper {
 	}
 
 	/**
-	 *
-	 *
+	 * get
 	 *
 	 * @param request
 	 * @param response
 	 * @returns none
-	 *
 	 */
 	public get(request: { user: any }, response: IJSONResponse): void {
 		try {
 			this.SendSuccess(response, this.Transform(request.user));
-
 // 			if (request.user) {
 // 				this.SendSuccess(response, this.Transform(request.user));
 // 			} else {
@@ -50,8 +47,7 @@ export class Session extends Wrapper {
 	}
 
 	/**
-	 *
-	 *
+	 * put
 	 *
 	 * @param request
 	 * @param response

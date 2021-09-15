@@ -214,6 +214,10 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		});
 	}
 
+	// protected upload(name: string, url: string, category: string, params: any, callback: Callback<any>): void {
+	// 	this.filesService.upload(name, category, params, url, callback);
+	// }
+
 	/**
 	 *
 	 * @param event
@@ -234,7 +238,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 					case "cancel":
 						break;
 					case "update":
-						this.upload(this.fileName, result.content, "", {upsert: true}, (error: IErrorObject, result: any): void => {
+						this.filesService.upload(this.fileName, result.content, {category: "", description: ""}, {upsert: true}, (error: IErrorObject, result: any): void => {
+							// 		this.upload(this.fileName, result.content, "", {upsert: true}, (error: IErrorObject, result: any): void => {
 							if (!error) {
 								this.draw(this.fileName);
 								this.Complete("update", {name: this.fileName});
@@ -281,7 +286,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	*
 	* */
 	public Upload(path: string, file: any) {
-		this.uploadFile(file, path + this.fileName, (error: IErrorObject, result: any): void => {
+		this.uploadFile(file, path + this.fileName, {category: "", description: ""}, {upsert: false}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.draw(this.fileName);
 				this.Complete("create", {name: this.fileName});

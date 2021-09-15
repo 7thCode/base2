@@ -158,7 +158,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public onDrop(event: any): void {
 		event.preventDefault();
 		const path: string = "";
-		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files), event.shiftKey);
+		this.onFileDrop(path, this.marshallingFiles(event.dataTransfer.files), {category: "", description: ""}, {upsert: false}, event.shiftKey);
 	}
 
 	/**
@@ -196,9 +196,9 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	/**
 	 *
 	 */
-	public Upload(path: string, file: any) {
+	public Upload(path: string, file: any, metadata: { category: string, description: string }, params: { upsert: boolean }) {
 		this.Progress(true);
-		this.uploadFile(file, path + file.name, (error: IErrorObject, result: any) => {
+		this.uploadFile(file, path + file.name, metadata, params, (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.draw((error, results) => {
 					if (!error) {
@@ -269,49 +269,50 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	 * ファイルドロップハンドラー
 	 * @param path パス
 	 * @param files ファイルオブジェクト
+	 * @param metadata
+	 * @param escapeResize
 	 */
-	public onFileDrop(path: string, files: any[], escapeResize: boolean): void {
+	public onFileDrop(path: string, files: any[], metadata: { category: string, description: string }, params: { upsert: boolean }, escapeResize: boolean): void {
 		if (files.length > 0) {
-
 			const promises: any[] = [];
-			files.forEach((file) => {
-				promises.push(new Promise((resolve, reject) => {
-					const type = this.mimeToType(file.type);
-					switch (type) {  // resizeable?
-						case "jpeg":
-						case "png":
-							this.getImage(file, (error, image) => {
-								if (!error) {
-									if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
-										this.resizeDialog(file, image, (error: IErrorObject, resized: any) => {
-											if (!error) {
-												resolve(resized);
-											} else {
-												reject(error);
-											}
-										});
+			if (Array.isArray(files)) {
+				files.forEach((file) => {
+					promises.push(new Promise((resolve, reject) => {
+						const type = this.mimeToType(file.type);
+						switch (type) {  // resizeable?
+							case "jpeg":
+							case "png":
+								this.getImage(file, (error, image) => {
+									if (!error) {
+										if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
+											this.resizeDialog(file, image, (error: IErrorObject, resized: any) => {
+												if (!error) {
+													resolve(resized);
+												} else {
+													reject(error);
+												}
+											});
+										} else {
+											resolve(file);
+										}
 									} else {
-										resolve(file);
+										reject(error);
 									}
-								} else {
-									reject(error);
-								}
-							})
-							break;
-						default:
-							resolve(file);
-					}
-				}));
-			});
-
-			promises.forEach((promise) => {
-				promise.then((file: File) => {
-					this.Upload(path, file);
-				}).catch((error: IErrorObject) => {
-					this.errorBar(error);
+								})
+								break;
+							default:
+								resolve(file);
+						}
+					}));
+				});
+				promises.forEach((promise) => {
+					promise.then((file: File) => {
+						this.Upload(path, file, metadata, params);
+					}).catch((error: IErrorObject) => {
+						this.errorBar(error);
+					})
 				})
-			})
-
+			}
 		}
 	}
 
@@ -328,7 +329,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public onChangeFileInput(): void {
 		const files: any[] = this.fileInput.nativeElement.files;
 		const path: string = "";
-		this.onFileDrop(path, files, false);
+		this.onFileDrop(path, this.marshallingFiles(files), {category: "", description: ""}, {upsert: false}, false);
 	}
 
 	/**
@@ -337,7 +338,6 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 	public findByFilename(): void {
 		this.query = {};
 		this.page = 0;
-
 
 		if (this.filename) {
 			this.query = {filename: {$regex: this.filename}};
@@ -435,7 +435,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 								}
 
 								if (types[type]) {
-									result.type	= types[type];
+									result.type = types[type];
 								}
 								/*
 								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {

@@ -65,17 +65,6 @@ export class Accounts extends Wrapper {
 	 * @param user_id
 	 * @returns own
 	 */
-	// private static own_by_id(current: any, user_id: string): boolean {
-	// 	// マネージャ以上は、自分以外のアカウントを変更できる。
-	// 	let readable: boolean = false;
-	// 	if (current.auth < AuthLevel.user) { // is not manager?
-	// 		readable = true;
-	// 	} else {
-	// 		readable = (current.user_id === user_id); // is self?
-	// 	}
-	// 	return readable;
-	// }
-
 	private static from_aggregater(aggregater: any[], user_id: mongoose.Types.ObjectId, type: string): void {
 		aggregater.push({$match: {$and: [{to_id: user_id}, {type: type}]}});
 		aggregater.push({$lookup: {from: 'accounts', localField: 'from_id', foreignField: 'user_id', as: 'lookup_account'}});

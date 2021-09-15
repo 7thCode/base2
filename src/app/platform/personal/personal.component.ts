@@ -239,7 +239,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 				});
 
 
-				this.accountService.relation_from_user("oda.mikio+manager@gmail.com",this.relation_type, {}, (error, results) => {
+				this.accountService.relation_from_user("oda.mikio+manager@gmail.com", this.relation_type, {}, (error, results) => {
 					this.from_user = results;
 					this.accountService.relation_to_user("oda.mikio+manager@gmail.com", this.relation_type, {}, (error, results) => {
 						this.to_user = results;
@@ -258,7 +258,7 @@ export class PersonalComponent extends SessionableComponent implements OnInit {
 		});
 	}
 
-	public onMakeRelationTo(from: string, to:string): void {
+	public onMakeRelationTo(from: string, to: string): void {
 		this.makeRelationTo(from, to, this.relation_type, () => {
 			this.draw();
 		});

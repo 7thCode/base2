@@ -6,10 +6,10 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
-
 import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
-import {Errors} from "../../base/library/errors";
+import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {Errors} from "../../../platform/base/library/errors";
+
 
 const fs: any = require("graceful-fs");
 const sharp: any = require("sharp");
@@ -19,8 +19,6 @@ const path: any = require("path");
 
 const project_root: string = path.join(__dirname, "../../../..");
 
-const Wrapper: any = require("../../../../server/platform/base/controllers/wrapper");
-
 interface IRenderParam {
 	u: string;
 	c: string;
@@ -28,17 +26,15 @@ interface IRenderParam {
 	h: string;
 }
 
+
+const Files: any = require("../../../platform/modules/files/controller");
+
 /*
 *
 *
 *
 */
-export class Files extends Wrapper {
-
-	protected gfs: any;
-	protected collection: any;
-	protected connection: any;
-	protected default_user: { username: string } = {username: ""};
+export class PublicFiles extends Files {
 
 	/**
 	 *
@@ -48,39 +44,7 @@ export class Files extends Wrapper {
 	 * @param db_connections
 	 */
 	constructor(event: any, config: any, logger: any, db_connections: any) {
-		super(event, config, logger);
-
-		this.connection = db_connections[0];
-		if (this.config.systems.default) {
-			this.default_user = this.config.systems.default;
-		}
-
-		event.on("end-maintenance", () => {
-
-// 			logger.info("start compaction Files");
-// 			this.db.command({compact: "fs.files"});
-// 			this.db.command({compact: "fs.chunks"});
-// 			logger.info("end compaction Files");
-
-		});
-	}
-
-	/**
-	 * to_mime
-	 * mime type from data url .
-	 *
-	 * @param request
-	 */
-	protected static to_mime(request: { body: { url: string } }): string {
-		let type: string = "image/octet-stream";
-		const index: number = request.body.url.indexOf(";");
-		if (index > 0) {
-			const types: string[] = request.body.url.substring(0, index).split(":");
-			if (types.length === 2) {
-				type = types[1];
-			}
-		}
-		return type;
+		super(event, config, logger, db_connections);
 	}
 
 	/**
@@ -94,11 +58,7 @@ export class Files extends Wrapper {
 	 * @returns nonequery_by_user_read
 	 */
 	protected static query_by_user_read(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
-		let result = {$and: [{"metadata.username": default_user.username}, query]};
-		if (user) {
-			result = {$and: [{"metadata.username": user.username}, {"metadata.rights.read": {$gte: user.auth}}, query]};
-		}
-		return result;
+		return query;
 	}
 
 	/**
@@ -112,54 +72,7 @@ export class Files extends Wrapper {
 	 * @returns none
 	 */
 	protected static query_by_user_write(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
-		let result = {$and: [{"metadata.username": default_user.username}, query]};
-		if (user) {
-			result = {$and: [{"metadata.username": user.username}, {"metadata.rights.write": {$gte: user.auth}}, query]};
-		}
-		return result;
-	}
-
-	/*
-	* set_header
-	*
-	* set response header
-	*
-	* @param response
-	* @param status
-	* @param mimetype
-	* @param start
-	* @param end
-	* @param total
-	* */
-	protected static set_header(response: any, status: number, mimetype: string, start: number, end: number, total: number): void {
-		response.status(status);
-		response.type(mimetype);
-		response.set("Content-Range", "bytes " + start + "-" + end + "/" + total);
-		response.set("Accept-Ranges", "bytes");
-		response.set("Content-Length", (end - start) + 1);
-	}
-
-	/*
-	 * parse_range
-	 *
-	 * for RFC 7233, Range Requests.
-	 * Extract range from header string.
-	 *
-	 * @param range Header Element
-	 * @param total total response Size
-	 *
-	 * */
-	protected static parse_range(range: string, total: number): { start: number, end: number } {
-		let start: number = 0;
-		let end: number = 0;
-		const header_range: string[] = range.replace(/bytes=/, "").split("-");
-		if (header_range.length >= 2) {
-			const partial_start: string = header_range[0];
-			const partial_end: string = header_range[1];
-			start = partial_start ? parseInt(partial_start, 10) : 0;
-			end = partial_end ? parseInt(partial_end, 10) : total - 1;
-		}
-		return {start: start, end: end};
+		return query;
 	}
 
 	/**
@@ -309,7 +222,7 @@ export class Files extends Wrapper {
 	 */
 	private get_record(username: string, name: string, callback: Callback<any>): void {
 		try {
-			const query: object = Files.query_by_user_read({username, auth: AuthLevel.public}, this.default_user, {filename: name});
+			const query: object = PublicFiles.query_by_user_read({username, auth: AuthLevel.public}, this.default_user, {filename: name});
 			this.collection.findOne(query).then((item: object): void => {
 				if (item) {
 					callback(null, item);
@@ -370,24 +283,6 @@ export class Files extends Wrapper {
 		} catch (e) {
 			callback(e, null);
 		}
-	}
-
-	/*
-	*
-	* return "not found." image.
-	*
-	* @param response.
-	* @param next
-	*/
-	private render_blank(response: any, next: () => void): void {
-		this.result_public_file("blank.png", (error: IErrorObject, stream: any, length: number): void => {
-			if (!error) {
-				Files.set_header(response, 200, "image/png", 0, length - 1, length);
-				stream.pipe(response);
-			} else {
-				next();
-			}
-		});
 	}
 
 	/*
@@ -591,7 +486,7 @@ export class Files extends Wrapper {
 					this.Decode(request.params.option, (error: IErrorObject, option: IQueryOption): void => {
 						this.ifSuccess(response, error, (): void => {
 							const operator: IAccountModel = this.Transform(request.user);
-							this.collection.find(Files.query_by_user_read(operator, this.default_user, query), option).limit(option.limit).skip(option.skip).toArray().then((docs: any): void => {
+							this.collection.find(PublicFiles.query_by_user_read(operator, this.default_user, query), option).limit(option.limit).skip(option.skip).toArray().then((docs: any): void => {
 								this.SendRaw(response, docs);
 							}).catch((error: IErrorObject) => {
 								this.SendError(response, Errors.Exception(error, "S00185"));
@@ -617,7 +512,7 @@ export class Files extends Wrapper {
 				this.ifSuccess(response, error, (): void => {
 					const operator: IAccountModel = this.Transform(request.user);
 					// const auth: number = user.auth;
-					this.collection.find(Files.query_by_user_read(operator, this.default_user, query)).count().then((count: number): void => {
+					this.collection.find(PublicFiles.query_by_user_read(operator, this.default_user, query)).count().then((count: number): void => {
 						this.SendSuccess(response, count);
 					}).catch((error: IErrorObject) => {
 						this.SendError(response, Errors.Exception(error, "S00187"));
@@ -644,7 +539,7 @@ export class Files extends Wrapper {
 			const BinaryToBase64: any = (str: string): any => {
 				return Buffer.from(str, "binary").toString("base64");
 			};
-			const query: object = Files.query_by_user_read(operator, this.default_user, {filename: path});
+			const query: object = PublicFiles.query_by_user_read(operator, this.default_user, {filename: path});
 			this.collection.findOne(query).then((item: { _id: object, metadata: { type: string } }): void => {
 				if (item) {
 					let buffer: Buffer = Buffer.alloc(0);
@@ -693,7 +588,7 @@ export class Files extends Wrapper {
 					const rights = {read: AuthLevel.public, write: AuthLevel.user};
 
 					if (path) {
-						const query: object = Files.query_by_user_write(operator, this.default_user, {filename: path});
+						const query: object = PublicFiles.query_by_user_write(operator, this.default_user, {filename: path});
 						this.collection.findOne(query).then((item: object): void => {
 							if (!item) { // new.
 								this.insert_file(request, operator, path, rights, category, description, (error: IErrorObject, result: object): void => {
@@ -741,7 +636,7 @@ export class Files extends Wrapper {
 				const path: string = request.params[0];
 				const operator: IAccountModel = this.Transform(request.user);
 
-				const query: object = Files.query_by_user_write(operator, this.default_user, {filename: path});
+				const query: object = PublicFiles.query_by_user_write(operator, this.default_user, {filename: path});
 				this.collection.findOneAndDelete(query).then((): void => {
 					this.SendSuccess(response, {});
 				}).catch((error: IErrorObject) => {
@@ -762,11 +657,6 @@ export class Files extends Wrapper {
 		const user: IAccountModel = this.Transform(request.user);
 
 		const _default: any = this.config.systems.default;
-
-// 		let username: string = param.u || _default.username;
-// 		if (user) {
-// 			username = param.u || user.username || _default.username;
-// 		}
 
 		let username: string = _default.username;
 
@@ -794,241 +684,6 @@ export class Files extends Wrapper {
 		this.render_by_id(response, next, _id, param, range);
 	}
 
-	/**
-	 *
-	 * @param mimetype ex. "image/jpeg"...
-	 * @param size
-	 * @param command  ex. [{"c":"resize","p":{"width":300,"height":100}}]
-	 * @param stream
-	 * @param callback
-	 * @returns none
-	 */
-	public effect(mimetype: string, size: { w: string, h: string }, command: string, stream: any, callback: Callback<any>): void {
-		switch (mimetype) {
-			case "image/jpeg":
-			case "image/jpg":
-			case "image/png":
-			case "image/webp":
-				if (command) { // image effect
-					try {
-						const commands: any[] = JSON.parse(command);
-						if (Array.isArray(commands)) {
-							commands.forEach((command) => {
-								const parameter = command.p;
-								switch (command.c) {
-									case "resize": {
-										stream = this.resize(parameter, stream);
-										break;
-									}
-									case "extend": {
-										stream = this.extend(parameter, stream);
-										break;
-									}
-									case "extract": {
-										stream = this.extract(parameter, stream);
-										break;
-									}
-									case "trim": {
-										break;
-									}
-									case "rotate": {
-										stream = this.rotate(parameter, stream);
-										break;
-									}
-									case "flip": {
-										stream = this.flip(parameter, stream);
-										break;
-									}
-									case "flop": {
-										stream = this.flop(parameter, stream);
-										break;
-									}
-									case "sharpen": {
-										stream = this.sharpen(parameter, stream);
-										break;
-									}
-									case "median": {
-										stream = this.median(parameter, stream);
-										break;
-									}
-									case "blur": {
-										stream = this.blur(parameter, stream);
-										break;
-									}
-									case "flatten": {
-										stream = this.flatten(parameter, stream);
-										break;
-									}
-									case "gamma": {
-										stream = this.gamma(parameter, stream);
-										break;
-									}
-									case "negate": {
-										stream = this.negate(parameter, stream);
-										break;
-									}
-									case "normalise": {
-										stream = this.normalise(parameter, stream);
-										break;
-									}
-									case "threshold": {
-										stream = this.threshold(parameter, stream);
-										break;
-									}
-									case "boolean": {
-										stream = this.boolean(parameter, stream);
-										break;
-									}
-									case "linear": {
-										stream = this.linear(parameter, stream);
-										break;
-									}
-									case "recomb": {
-										stream = this.recomb(parameter, stream);
-										break;
-									}
-									case "tint": {
-										stream = this.tint(parameter, stream);
-										break;
-									}
-									case "greyscale": {
-										stream = this.greyscale(parameter, stream);
-										break;
-									}
-									default:
-								}
-							});
-						} else {
-							callback(Errors.generalError(1, "invalid command.", "S00364"), stream);
-						}
-					} finally {
-						callback(null, stream);
-					}
-				} else { // shorthand
-					try {
-						const width: number = parseInt(size.w, 10);
-						const height: number = parseInt(size.h, 10);
-						if (width || height) {
-							stream = this.resize({width, height}, stream);
-						}
-					} finally {
-						callback(null, stream);
-					}
-				}
-				break;
-			default:
-				callback(null, stream);
-		}
-	}
-
-	// {"c":"resize","p":{"width":100,"height":100}};
-	public resize(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().resize(parameter);
-		return result.pipe(resizer);
-	}
-
-	// {"c":"extend","p":{"top":100,"bottom":200,"left":100,"right":100,"background":{"r":100,"g":100,"b":0,"alpha":1}}}
-	public extend(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().extend(parameter);
-		return result.pipe(resizer);
-	}
-
-	//  {"c": "extract", "p":{ "left": 50, "top": 10, "width": 30, "height": 40 }}
-	public extract(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().extract(parameter);
-		return result.pipe(resizer);
-	}
-
-	// {"c": "rotate", "p": { "angle": 45}};
-	public rotate(parameter: any, result: any): object {
-		const angle: WritableStream = parameter.angle || 90;
-		const resizer: object = sharp().rotate(angle);
-		return result.pipe(resizer);
-	}
-
-	// {"c": "flip", "p": {}};
-	public flip(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().flip();
-		return result.pipe(resizer);
-	}
-
-	// {"c": "flop", "p": {}};
-	public flop(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().flop();
-		return result.pipe(resizer);
-	}
-
-	// {"c": "sharpen", "p": {"sigma":1.2}};
-	public sharpen(parameter: any, result: any): object {
-		const sigma: number = parameter.sigma || 10;
-		const resizer: WritableStream = sharp().sharpen(Math.min(1000, Math.max(sigma, 0.3)));
-		return result.pipe(resizer);
-	}
-
-	// {"c": "median", "p": {"size":10}};
-	public median(parameter: any, result: any): object {
-		const size: number = parameter.size || 3;
-		const resizer: WritableStream = sharp().median(size);
-		return result.pipe(resizer);
-	}
-
-	// {"c": "blur", "p": {"sigma":1.2}};
-	public blur(parameter: any, result: any): object {
-		const sigma: number = parameter.sigma || 10;
-		const resizer: WritableStream = sharp().blur(Math.min(1000, Math.max(sigma, 0.3)));
-		return result.pipe(resizer);
-	}
-
-	public flatten(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().flatten(parameter);
-		return result.pipe(resizer);
-	}
-
-	public gamma(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().gamma(parameter);
-		return result.pipe(resizer);
-	}
-
-	public negate(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().negate(parameter);
-		return result.pipe(resizer);
-	}
-
-	public normalise(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().normalise(parameter);
-		return result.pipe(resizer);
-	}
-
-	public threshold(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().threshold(parameter);
-		return result.pipe(resizer);
-	}
-
-	public boolean(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().boolean(parameter);
-		return result.pipe(resizer);
-	}
-
-	public linear(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().linear(parameter);
-		return result.pipe(resizer);
-	}
-
-	public recomb(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().recomb(parameter);
-		return result.pipe(resizer);
-	}
-
-	public tint(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().tint(parameter);
-		return result.pipe(resizer);
-	}
-
-	public greyscale(parameter: any, result: any): object {
-		const resizer: WritableStream = sharp().greyscale(parameter);
-		return result.pipe(resizer);
-	}
-
 }
 
-module.exports = Files;
+module.exports = PublicFiles;

@@ -36,6 +36,11 @@ export class Entries extends Updatable {
 		});
 	}
 
+	/**
+	 * build_group_by_month_aggrigater
+	 *
+	 * @param aggregater
+	 */
 	private static build_group_by_month_aggrigater(aggregater: any[]): void {
 
 		aggregater.push({$sort: {create: -1}});
@@ -53,6 +58,11 @@ export class Entries extends Updatable {
 		});
 	}
 
+	/**
+	 * build_group_by_type_aggrigater
+	 *
+	 * @param aggregater
+	 */
 	private static build_group_by_type_aggrigater(aggregater: any[]): void {
 
 		aggregater.push({$sort: {create: -1}});
@@ -69,8 +79,10 @@ export class Entries extends Updatable {
 	}
 
 	/**
-	 * @param option
+	 * option_to_aggregater
+	 *
 	 * @param aggregater
+	 * @param option
 	 */
 	private static option_to_aggregater(aggregater: any[], option: IQueryOption): void {
 		if (option.sort) {
@@ -101,8 +113,7 @@ export class Entries extends Updatable {
 // }
 
 	/**
-	 * カウント。
-	 * レコードのカウント。
+	 * sitemap
 	 *
 	 * @param request
 	 * @param response
@@ -127,6 +138,13 @@ export class Entries extends Updatable {
 		}
 	}
 
+	/**
+	 * sitemap
+	 *
+	 * @param params
+	 * @param aggregater
+	 * @param callback
+	 */
 	public aggrigate(params: any, aggregater: any[], callback: (error: IErrorObject, result: any) => void): void {
 		this.Decode(params.query, (error: IErrorObject, query: any): void => {
 			if (!error) {
@@ -155,6 +173,12 @@ export class Entries extends Updatable {
 		});
 	}
 
+	/**
+	 * group_by_month
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public group_by_month(request: IQueryRequest, response: IJSONResponse): void {
 		const params: IQueryParam = request.params;
 		const aggregater: any = [];
@@ -171,6 +195,12 @@ export class Entries extends Updatable {
 		})
 	}
 
+	/**
+	 * group_by_type
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public group_by_type(request: IQueryRequest, response: IJSONResponse): void {
 		const params: IQueryParam = request.params;
 		const aggregater: any = [];
@@ -188,7 +218,7 @@ export class Entries extends Updatable {
 	}
 
 	/**
-	 *
+	 * get
 	 * @param request
 	 * @param response
 	 */
@@ -209,7 +239,7 @@ export class Entries extends Updatable {
 	}
 
 	/**
-	 * 検索
+	 * query
 	 * @param request
 	 * @param response
 	 * @returns none

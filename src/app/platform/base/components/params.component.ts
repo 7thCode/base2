@@ -34,7 +34,7 @@ export abstract class ParamsComponent extends SessionableComponent implements On
 	 */
 	public ngOnInit(): void {
 		this.route.paramMap.subscribe((params: ParamMap) => {
-			});
+		});
 	}
 
 }

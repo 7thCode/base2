@@ -9,6 +9,7 @@
 import {Component, Inject, OnInit} from "@angular/core";
 
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../base-dialog.component";
 
 @Component({
 	selector: "info-dialog",
@@ -21,7 +22,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
  *
  * @since 0.01
  */
-export class InfoDialogComponent implements OnInit {
+export class InfoDialogComponent extends BaseDialogComponent implements OnInit {
 
 	get content(): any {
 		return this.data.content;
@@ -31,7 +32,7 @@ export class InfoDialogComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<InfoDialogComponent>) {
-
+		super();
 		if (!this.data.content.ok_button) {
 			this.data.content.ok_button = "OK"
 		}

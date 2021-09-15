@@ -7,7 +7,7 @@
 "use strict";
 
 import {ActivatedRoute, Router} from '@angular/router';
-import {Callback, IErrorObject} from "../../../../types/platform/universe";
+import {AuthLevel, Callback, IErrorObject} from "../../../../types/platform/universe";
 
 import {Component, OnInit} from "@angular/core";
 
@@ -394,10 +394,12 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 				const content: { username: string, password: string, nickname: string } = result.content;
 				const username: string = content.username;
 				const password: string = content.password;
-				const category: string = "category";
-				const type: string = "type";
+				const category: string = "";
+				const type: string = "";
+				const auth:number = AuthLevel.user;
+
 				const metadata: { nickname: string, id: string } = {nickname: content.nickname, id: "1"};
-				this.authService.regist_immediate(username, password,category, type, metadata, (error: IErrorObject, result: object): void => {
+				this.authService.regist_immediate(auth, username, password, category, type, metadata, (error: IErrorObject, result: object): void => {
 					if (!error) {
 						this.draw((error: IErrorObject, accounts: object[]): void => {
 							if (!error) {

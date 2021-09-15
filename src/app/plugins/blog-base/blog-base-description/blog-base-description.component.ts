@@ -52,8 +52,8 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 		}
 	}
 
+	/**/
 	public setDescription(meta: { title: string, description: any[] }): void {
-
 		meta.description.forEach((each_description) => {
 			this.meta.updateTag(each_description);
 		})
@@ -106,7 +106,9 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 		let path = "";
 		if (this.images) {
 			if (this.images.length > 0) {
-				path = "/files/get/" + this.images[0].name;
+				if (this.images[0].name) {
+					path = "/pfiles/get/" + this.images[0].name;
+				}
 			}
 		}
 		return path;

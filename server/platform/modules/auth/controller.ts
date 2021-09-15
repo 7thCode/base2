@@ -465,15 +465,16 @@ export class Auth extends Mail {
 										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
 											this.ifSuccess(response, error, (): void => {
 												this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00052"), account, () => {
+													const stripe_id = account.content.stripe_id;
 													const is_2fa = (account.secret !== "");
 													if (is_2fa) {
-														this.SendSuccess(response, {is_2fa});
+														this.SendSuccess(response, {is_2fa, stripe_id});
 													} else {
 														request.login(account, (error: IErrorObject): void => {
 															this.ifSuccess(response, error, (): void => {
 																// for ws
 																// this.event.emitter.emit("client:send", {username: value.username});
-																this.SendSuccess(response, {is_2fa});
+																this.SendSuccess(response, {is_2fa, stripe_id});
 															});
 														});
 													}
@@ -517,9 +518,10 @@ export class Auth extends Mail {
 										if (account.secret) {
 											const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
 											if (verified) {
+												const stripe_id = account.content.stripe_id;
 												request.login(account, (error: IErrorObject): void => {
 													this.ifSuccess(response, error, (): void => {
-														this.SendSuccess(response, {});
+														this.SendSuccess(response, {stripe_id});
 													});
 												});
 											} else {
@@ -545,7 +547,6 @@ export class Auth extends Mail {
 			this.SendFatal(response, Errors.Exception(error, "S00062"));
 		}
 	}
-
 
 	/**
 	 * verify totp
@@ -642,15 +643,16 @@ export class Auth extends Mail {
 										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
 											this.ifSuccess(response, error, (): void => {
 												this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00076"), account, () => {
+													const stripe_id = account.content.stripe_id;
 													const is_2fa = (account.secret !== "");
 													if (is_2fa) {
-														this.SendSuccess(response, {is_2fa});
+														this.SendSuccess(response, {is_2fa, stripe_id});
 													} else {
 														request.login(account, (error: IErrorObject): void => {
 															this.ifSuccess(response, error, (): void => {
 																// for ws
 																// this.event.emitter.emit("client:send", {username: value.username});
-																this.SendSuccess(response, {is_2fa});
+																this.SendSuccess(response, {is_2fa, stripe_id});
 															});
 														});
 													}
@@ -693,7 +695,8 @@ export class Auth extends Mail {
 							if (!account) {
 
 								const tokenValue: IUserToken = {
-									auth: AuthLevel.user,
+					// 					auth: AuthLevel.user,
+									auth: value.auth,
 									username: value.username,
 									password: value.password,
 									category: value.category,
@@ -809,14 +812,14 @@ export class Auth extends Mail {
 				this.ifExist(response, Errors.userError(1, "not logged in.", "S00086"), operator.login, () => {
 					if (operator.auth < AuthLevel.user) {
 						this.ifExist(response, Errors.generalError(1, "no content.", "S00087"), request.body.content, () => {
-							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string,category:string, type: string, metadata: object }): void => {
+							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: {auth: number, username: string, password: string, category: string, type: string, metadata: object }): void => {
 								this.ifSuccess(response, error, (): void => {
 									const username: string = value.username;
 									LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
 										if (!account) {
 											const username: string = value.username;
 											const password: string = value.password;
-											const auth: number = AuthLevel.public;
+											const auth: number = value.auth;
 											const category: string = value.category;
 											const type: string = value.type;
 											const adding_content: object = value.metadata;
@@ -1367,7 +1370,7 @@ export class Auth extends Mail {
 
 						const newAccount: any = new LocalAccount();
 						newAccount.provider = operator.provider;
-						newAccount.auth = AuthLevel.public;
+						newAccount.auth = AuthLevel.user;
 						// 	newAccount.user_id = operator.user_id;
 						newAccount.user_id = new mongoose.Types.ObjectId();
 						newAccount.username = operator.username;
@@ -1414,7 +1417,7 @@ export class Auth extends Mail {
 
 						const newAccount: any = new LocalAccount();
 						newAccount.provider = operator.provider;
-						newAccount.auth = AuthLevel.public;
+						newAccount.auth = AuthLevel.user;
 						newAccount.user_id = operator.user_id;
 						newAccount.username = operator.username;
 						newAccount.privatekey = keypair.private;

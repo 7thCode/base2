@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {IErrorObject} from "../../../../../types/platform/universe";
+import {AuthLevel, IErrorObject} from "../../../../../types/platform/universe";
 
 import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -55,7 +55,8 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 		public matDialogRef: MatDialogRef<any>,
 		public snackbar: MatSnackBar,
 		public auth: AuthService,
-		private router: Router) {
+		protected router: Router
+	) {
 		super();
 	}
 
@@ -63,7 +64,7 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 	 *
 	 * @param error
 	 */
-	private errorBar(error: IErrorObject): void {
+	protected errorBar(error: IErrorObject): void {
 		if (error) {
 			if (error.code === 1) {
 				this.router.navigate(['/']);
@@ -94,10 +95,11 @@ export class RegistDialogComponent extends BaseDialogComponent implements OnInit
 	 */
 	public onAccept(): void {
 		this.Progress(true);
-		const category: string ="category";
-		const type: string = "type";
+		const category: string = "";
+		const type: string = "";
+		const auth: number = AuthLevel.user;
 		const metadata: any = {nickname: this.content.nickname, id: "1"};
-		this.auth.regist(this.content.username, this.content.password,category, type, metadata, (error: IErrorObject, result: any) => {
+		this.auth.regist(auth, this.content.username, this.content.password, category, type, metadata, (error: IErrorObject, result: any) => {
 			if (!error) {
 				this.matDialogRef.close(this.data);
 			} else {

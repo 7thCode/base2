@@ -28,6 +28,7 @@ export class PublicKey extends Wrapper {
 	}
 
 	/**
+	 * get_fixed_public_key
 	 *
 	 * @param request
 	 * @param response
@@ -42,6 +43,7 @@ export class PublicKey extends Wrapper {
 	}
 
 	/**
+	 * get_public_key
 	 *
 	 * @param request
 	 * @param response
@@ -60,6 +62,7 @@ export class PublicKey extends Wrapper {
 	}
 
 	/**
+	 * get_access_token
 	 *
 	 * @param request
 	 * @param response

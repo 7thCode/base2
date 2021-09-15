@@ -99,13 +99,13 @@ export class FilesService extends HttpService {
 	/**
 	 *
 	 * @param filename
-	 * @param category
+	 * @param metadata
 	 * @param params
 	 * @param dataUrl
 	 * @param callback
 	 */
-	public upload(filename: string, category: string, params: any, dataUrl: string, callback: Callback<any>): void {
-		this.http.post(this.endPoint + "/files/auth/" + filename, {url: dataUrl, category, params}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public upload(filename: string, dataUrl: string, metadata: { category: string, description: string }, params: { upsert: boolean }, callback: Callback<any>): void {
+		this.http.post(this.endPoint + "/files/auth/" + filename, {url: dataUrl, category: metadata.category, description: metadata.description, params}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
 					callback(null, result.value);

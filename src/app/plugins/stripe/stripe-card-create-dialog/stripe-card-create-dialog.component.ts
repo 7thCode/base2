@@ -8,6 +8,7 @@
 
 import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BaseDialogComponent} from "../../../platform/base/components/base-dialog.component";
 
 /**
  *
@@ -19,7 +20,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 	styleUrls: ["./stripe-card-create-dialog.component.css"],
 	templateUrl: "./stripe-card-create-dialog.component.html",
 })
-export class StripeCardCreateDialogComponent {
+export class StripeCardCreateDialogComponent extends BaseDialogComponent {
 
 	public months = [
 		"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
@@ -39,6 +40,7 @@ export class StripeCardCreateDialogComponent {
 		@Inject(MAT_DIALOG_DATA)
 		public data: any,
 		public matDialogRef: MatDialogRef<StripeCardCreateDialogComponent>) {
+		super();
 	}
 
 	/**
