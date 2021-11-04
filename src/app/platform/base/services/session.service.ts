@@ -26,7 +26,7 @@ import {Errors} from "../library/errors";
 })
 export class SessionService extends HttpService {
 
-	private cache: any;
+	public cache: any;
 
 	/**
 	 * @constructor
@@ -72,10 +72,14 @@ export class SessionService extends HttpService {
 	 * @param callback コールバック
 	 */
 	public put(content: object, callback: Callback<ISession>): void {
-		this.http.put(this.endPoint + "/session/auth", {data: content}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+		this.http.put(this.endPoint + "/session/auth", content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 			if (result) {
 				if (result.code === 0) {
-					this.cache = result.value;
+					if (this.cache) {
+						if (this.cache.data) {
+							this.cache.data = result.value;
+						}
+					}
 					callback(null, result.value);
 				} else {
 					callback(Errors.serverError(result, "A00039"), null);

@@ -74,7 +74,8 @@ gulp.task('build', () => {
 		'package-lock.json',
 		'htdigest',
 		'cluster.json',
-		'*.p8'
+		'*.p8',
+		'tools/**/*.*'
 	], {base: './', allowEmpty: true})
 		.pipe(gulp.dest('product'));
 

@@ -1147,7 +1147,6 @@ export class Stripe extends Mail {
 		append.forEach((line) => {
 			mail_object.text.content.text.push(line);
 		});
-
 		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
 
 		this.sendMail({
@@ -1430,6 +1429,40 @@ export class Stripe extends Mail {
 				callback(error, null);
 			}
 		});
+	}
+
+	/**
+	 * isSubscribeId
+	 *
+	 * @param stripe_id
+	 * @param callback
+	 * @returns none
+	 */
+	public isSubscribeId(stripe_id: string, callback: Callback<number>): void {
+		try {
+			if (stripe_id) {
+				this.stripe.customers.retrieve(stripe_id).then((customer: any) => {
+					this.isSubscribeCustomer(customer, (error: IErrorObject, is_subscribe: boolean) => {
+						if (!error) {
+							if (is_subscribe) {
+								callback(null, 1); // subscribe
+							} else {
+								callback(null, 0); // not subscribe
+							}
+						} else {
+							callback(error, null);
+						}
+					});
+				}).catch((error: any) => {
+					callback(null, -1); // invalid stripe account
+					// 			this.SendError(response, Stripe.translationError(error));
+				});
+			} else {
+				callback(null, -2);  // no stripe account
+			}
+		} catch (error) {
+			this.SendError(error, null);
+		}
 	}
 
 	/**

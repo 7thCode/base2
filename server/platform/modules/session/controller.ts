@@ -33,9 +33,12 @@ export class Session extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
-	public get(request: { user: any }, response: IJSONResponse): void {
+	public get(request: { session: any, body: { data: any } }, response: IJSONResponse): void {
 		try {
-			this.SendSuccess(response, this.Transform(request.user));
+			const user: { data: object } = this.Transform(request.session.req.user);
+
+			this.SendSuccess(response, user);
+
 // 			if (request.user) {
 // 				this.SendSuccess(response, this.Transform(request.user));
 // 			} else {
@@ -53,16 +56,22 @@ export class Session extends Wrapper {
 	 * @param response
 	 * @returns none
 	 */
-	public put(request: { session: any, body: { data: object } }, response: IJSONResponse): void {
+	public put(request: { session: any, body: { data: any } }, response: IJSONResponse): void {
 		try {
-			const user: { data: object } = request.session.req.user;
+			const user: { data: object } = this.Transform(request.session.req.user); // request.session.req.user;
 			if (user) {
-				if (!user.data) {
-					user.data = {};
-				}
-				user.data = _.merge(user.data, request.body.data);
-				request.session.save();
-				this.SendSuccess(response, user);
+				// 		if (!user.data) {
+				// 			user.data = {};
+				// 		}
+
+
+				request.session.req.user.data = _.merge(request.session.req.user.data, request.body);
+
+
+				// 		request.session.req.user.data = request.body;
+				// 		user.data = request.body;
+				// 	   request.session.save();
+				this.SendSuccess(response, request.body);
 			} else {
 				this.SendError(response, Errors.userError(1, "not logged in.", "S00375"));
 			}

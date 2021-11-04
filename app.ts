@@ -211,7 +211,10 @@ const normal: () => void = () => {
 
 		const options: any = {
 			keepAlive: 1,
+			maxPoolSize: 10,
 			connectTimeoutMS: 1000000,
+			socketTimeoutMS: 560000,
+			serverSelectionTimeoutMS: 50000,
 			// 	reconnectTries: 30,
 			// 	reconnectInterval: 2000,
 			useNewUrlParser: true,
@@ -295,13 +298,14 @@ const normal: () => void = () => {
 				if (modules) {
 					Object.keys(modules).forEach((key: string) => {
 						const path: string = root + modules[key].path;
-						app.use("/", require(path + key + "/api"));
+						app.use("/", require(path + key + "/tools"));
 					});
 				}
 			};
 
 			logger.info("V1");
 
+			/*
 			const default_modules: any = {
 				auth: {
 					type: "required",
@@ -345,8 +349,9 @@ const normal: () => void = () => {
 					},
 				},
 			};
+*/
 
-			load_module("./server", default_modules);
+	// 		load_module("./server", default_modules);
 			load_module("./server", config.modules);
 
 			logger.info("VR");

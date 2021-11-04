@@ -34,6 +34,7 @@ export class Mail extends Wrapper {
 
 	private readonly sender: IMailSenderModule = null;
 	private readonly receiver: IMailReceiverModule = null;
+
 // 	private bcc: string | any[] = "";
 
 	/**
@@ -86,6 +87,7 @@ export class Mail extends Wrapper {
 		});
 	}
 
+
 	/**
 	 *
 	 * parse content
@@ -94,7 +96,7 @@ export class Mail extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private parseContent(mailConfig: any, callback: (error: IErrorObject, text: string, html: string) => void): void {
+	private parseHTMLContent(mailConfig: any, callback: (error: IErrorObject, text: string, html: string) => void): void {
 		try {
 			if (mailConfig) {
 				if (mailConfig.source_object) {
@@ -126,9 +128,33 @@ export class Mail extends Wrapper {
 								}
 							});
 						} else {
-							callback(Errors.configError(1, "config error.", "S00008"), "", "");
+							callback(null, "", "");
 						}
-					} else {
+					}
+				} else {
+					callback(Errors.configError(1, "config error.", "S00011"), "", "");
+				}
+			} else {
+				callback(Errors.configError(1, "config error.", "S00012"), "", "");
+			}
+		} catch (error) {
+			callback(error, "", "");
+		}
+	}
+
+	/**
+	 *
+	 * parse content
+	 *
+	 * @param mailConfig
+	 * @param callback
+	 * @returns none
+	 */
+	private parseTEXTContent(mailConfig: any, callback: (error: IErrorObject, text: string, html: string) => void): void {
+		try {
+			if (mailConfig) {
+				if (mailConfig.source_object) {
+					if (mailConfig.template_url) {
 						if (mailConfig.source_object.text) {
 							let text: string = "";
 							const text_lines: string[] = mailConfig.source_object.text.content.text;
@@ -141,7 +167,7 @@ export class Mail extends Wrapper {
 								callback(Errors.configError(1, "config error.", "S00009"), "", "");
 							}
 						} else {
-							callback(Errors.configError(1, "config error.", "S00010"), "", "");
+							callback(null, "", "");
 						}
 					}
 				} else {
@@ -165,11 +191,17 @@ export class Mail extends Wrapper {
 	 */
 	protected sendMail(mailConfig: any, callback: Callback<any>): void {
 		if (this.sender) {
-			this.parseContent(mailConfig, (error: IErrorObject, text: string, html: string): void => {
+			this.parseHTMLContent(mailConfig, (error: IErrorObject, text: string, html: string): void => {
 				if (!error) {
-					this.sender.send(mailConfig.address, mailConfig.bcc, mailConfig.title, text, html, (error: IErrorObject): void => {
+					this.parseTEXTContent(mailConfig, (error: IErrorObject, text: string, html: string): void => {
 						if (!error) {
-							callback(null, mailConfig.result_object);
+							this.sender.send(mailConfig.address, mailConfig.bcc, mailConfig.title, text, html, (error: IErrorObject): void => {
+								if (!error) {
+									callback(null, mailConfig.result_object);
+								} else {
+									callback(error, null);
+								}
+							});
 						} else {
 							callback(error, null);
 						}
@@ -182,7 +214,6 @@ export class Mail extends Wrapper {
 			callback(Errors.configError(1, "config error.", "S00013"), null);
 		}
 	}
-
 
 	/**
 	 *

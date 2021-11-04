@@ -23,18 +23,26 @@ import {Errors} from "../library/errors";
 export abstract class SessionableComponent {
 
 	/**
-	 * @returns 処理中か。
-	 */
-	// protected get isProgress(): boolean {
-	// 	return this.progress;
-	// }
-
-	/**
 	 *  @returns 現行のセッション。
 	 */
 	public get currentSession(): any {
+		if (this.session.cache) {
+			this.privateCurrentSession = this.session.cache;
+		}
 		return this.privateCurrentSession;
 	}
+
+// 	public set currentSession(value: any) {
+// 		this.privateCurrentSession = value;
+// 	}
+
+	public get currentSessionData(): any {
+		return this.privateCurrentSession.data;
+	}
+
+// 	public set currentSessionData(value: any) {
+// 		this.privateCurrentSession.data = value;
+// 	}
 
 	/**
 	 * authLevel
@@ -43,7 +51,8 @@ export abstract class SessionableComponent {
 	public get auth(): number {
 		let result: number = AuthLevel.public;
 		if (this.privateCurrentSession) {
-			result = this.privateCurrentSession.auth;
+			const session = this.privateCurrentSession;
+			result = session.auth;
 		}
 		return result;
 	}
@@ -55,7 +64,8 @@ export abstract class SessionableComponent {
 	public get login(): boolean {
 		let result: boolean = false;
 		if (this.privateCurrentSession) {
-			result = this.privateCurrentSession.login;
+			const session = this.privateCurrentSession;
+			result = session.login;
 		}
 		return result;
 	}
@@ -67,8 +77,9 @@ export abstract class SessionableComponent {
 	public get provider(): string {
 		let result: string = "";
 		if (this.privateCurrentSession) {
-			if (this.privateCurrentSession.provider) {
-				result = this.privateCurrentSession.provider;
+			const session = this.privateCurrentSession;
+			if (session.provider) {
+				result = session.provider;
 			}
 		}
 		return result;
@@ -102,6 +113,7 @@ export abstract class SessionableComponent {
 		protected session: SessionService,
 	) {
 		this.privateCurrentSession = {
+			auth: AuthLevel.public,
 			provider: "",
 			username: "",
 			user_id: "",
@@ -157,11 +169,11 @@ export abstract class SessionableComponent {
 	 * @param data 追加データ
 	 * @param callback コールバック
 	 */
-	protected putSessionData(data: object, callback: Callback<ISession>): void {
+	protected putSessionData(data: object, callback: Callback<any>): void {
 		this.session.put(data, (error: IErrorObject, results: ISession | null): void => {
 			if (!error) {
 				if (results) {
-					this.privateCurrentSession = results;
+					this.privateCurrentSession.data = results;// results;
 					callback(null, results);
 				} else {
 					callback(Errors.responseError("A00194"), null);

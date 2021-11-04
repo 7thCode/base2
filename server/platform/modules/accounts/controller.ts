@@ -279,10 +279,14 @@ export class Accounts extends Wrapper {
 					if (Accounts.own_by_name(operator, target.username)) {
 						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
 							this.ifExist(response, Errors.generalError(-1, "not found.", "S00310"), account, () => {
-								LocalAccount.remove_by_name(operator, target.username).then((): void => {
-									this.SendSuccess(response, {});
+								Relation.delete(account.user_id).then((result: any) => {
+									LocalAccount.remove_by_name(operator, target.username).then((): void => {
+										this.SendSuccess(response, {});
+									}).catch((error: IErrorObject) => {
+										this.SendError(response, Errors.Exception(error, "S10027"));
+									})
 								}).catch((error: IErrorObject) => {
-									this.SendError(response, Errors.Exception(error, "S10027"));
+									this.SendError(response, Errors.Exception(error, "S00353"));
 								})
 							});
 						}).catch((error: IErrorObject) => {
@@ -297,7 +301,6 @@ export class Accounts extends Wrapper {
 			this.SendError(response, Errors.Exception(error, "S10002"));
 		}
 	}
-
 	/**
 	 *
 	 * @param request
@@ -626,7 +629,8 @@ export class Accounts extends Wrapper {
 										this.SendError(response, error);
 									})
 								} else {
-									this.SendError(response, Errors.generalError(1, "already.", "S00333"));
+									this.SendSuccess(response, result);
+							// 		this.SendError(response, Errors.generalError(1, "already.", "S00333"));
 								}
 							}).catch((error: IErrorObject) => {
 								this.SendError(response, Errors.Exception(error, "S00334"));
