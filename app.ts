@@ -298,7 +298,7 @@ const normal: () => void = () => {
 				if (modules) {
 					Object.keys(modules).forEach((key: string) => {
 						const path: string = root + modules[key].path;
-						app.use("/", require(path + key + "/tools"));
+						app.use("/", require(path + key + "/api"));
 					});
 				}
 			};

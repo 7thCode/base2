@@ -422,7 +422,7 @@ auth.init(init_users, (error: IErrorObject, result: any): void => {
 				});
 			}]);
 
-// tools test
+// api test
 //
 // http://localhost:3000/auth/test
 
