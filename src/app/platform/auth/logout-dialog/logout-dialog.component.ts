@@ -63,7 +63,7 @@ export class LogoutDialogComponent extends BaseDialogComponent implements OnInit
 	 *
 	 * @param error
 	 */
-	private errorBar(error: IErrorObject): void {
+	protected errorBar(error: IErrorObject): void {
 		if (error) {
 			if (error.code === 1) {
 				this.router.navigate(['/']);

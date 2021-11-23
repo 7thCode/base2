@@ -709,7 +709,9 @@ export class Auth extends Mail {
 								// const mail_object = this.message.registmail;
 								const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.registmail));
 
-								mail_object.html.content.nickname = value.metadata.nickname;
+								if (mail_object.html) {
+									mail_object.html.content.nickname = value.metadata.nickname;
+								}
 
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/register/" + token;
@@ -1056,7 +1058,11 @@ export class Auth extends Mail {
 													};
 													// const mail_object: any = this.message.usernamemail;
 													const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.usernamemail));
-													mail_object.html.content.nickname = account.content.nickname;
+
+													if (mail_object.html) {
+														mail_object.html.content.nickname = account.content.nickname;
+													}
+
 													const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 													const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
 													this.sendMail({
@@ -1246,7 +1252,11 @@ export class Auth extends Mail {
 								};
 								// const mail_object = this.message.removemail;
 								const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.removemail));
-								mail_object.html.content.nickname = account.content.nickname;
+
+								if (mail_object.html) {
+									mail_object.html.content.nickname = account.content.nickname;
+								}
+
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/remove/" + token;
 								this.sendMail({
