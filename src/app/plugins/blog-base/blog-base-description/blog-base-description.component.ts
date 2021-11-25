@@ -23,6 +23,7 @@ import {environment} from "../../../../environments/environment";
 export class BlogBaseDescriptionComponent extends ResponsiveComponent implements OnInit {
 
 	public id: string = "";
+	public title: string;
 	public description: SafeHtml;
 	public images: { name: string }[] = [];
 
@@ -36,7 +37,7 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 		protected activatedRoute: ActivatedRoute,
 		protected snackbar: MatSnackBar,
 		protected router: Router,
-		protected title: Title,
+		protected _title: Title,
 		protected meta: Meta
 	) {
 		super(session, breakpointObserver);
@@ -69,11 +70,12 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 						if (!error) {
 
 							const meta = environment.meta.description;
-							this.title.setTitle(blogpage.value.title);
+							this._title.setTitle(blogpage.value.title);
 							meta.description.push({name: 'keywords', content: blogpage.accessory.keyword});
 							meta.description.push({name: 'description', content: blogpage.accessory.description});
 							this.setDescription(meta);
 
+							this.title = blogpage.value.title;
 							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.value.description);
 							this.images = blogpage.accessory.images;
 						} else {

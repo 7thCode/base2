@@ -1,16 +1,14 @@
 <ng-container>
+	<div fxLayout="row" fxLayoutAlign="start center">
+		<div class="desc-title">{{title}}</div>
+	</div>
 	<div fxLayout="column" fxLayoutAlign="center center">
-		<mat-card style="margin:42px;">
-			<mat-card-header>
-				<mat-card-title>title</mat-card-title>
-				<mat-card-subtitle>Subtitle</mat-card-subtitle>
-			</mat-card-header>
-			<mat-card-content>
-				<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
-					<img [src]="imagePath()" style="margin:24px;max-width:300px;max-height: 300px;">
-				</div>
-				<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
-			</mat-card-content>
-		</mat-card>
+		<div>
+			<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
+				<img [src]="imagePath()" style="margin:24px;max-width:300px;max-height: 300px;">
+			</div>
+			<div [innerHTML]='description'
+				 style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
+		</div>
 	</div>
 </ng-container>

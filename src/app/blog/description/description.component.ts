@@ -34,10 +34,10 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 		protected activatedRoute: ActivatedRoute,
 		protected snackbar: MatSnackBar,
 		protected router: Router,
-		protected title: Title,
+		protected _title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar, router, title, meta);
+		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar, router, _title, meta);
 	}
 
 	/**/
@@ -50,11 +50,12 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 						if (!error) {
 
 							const meta = environment.meta.description;
-							this.title.setTitle(blogpage.content.value.title);
+							this._title.setTitle(blogpage.content.value.title);
 							meta.description.push({name: 'keywords', content: blogpage.content.accessory.keyword});
 							meta.description.push({name: 'description', content: blogpage.content.accessory.description});
 							this.setDescription(meta);
 
+							this.title = blogpage.content.value.title;
 							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.content.value.description);
 							this.images = blogpage.content.accessory.images;
 						} else {

@@ -1,26 +1,26 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" style="background-color:#651fff;">
-
-	<div fxLayout="row" fxLayoutAlign="start">
-		<button (click)="sidenav.toggle()" *ngIf="(device === 'handset')" mat-icon-button>
-			<mat-icon style="color:#fdfdfd;">menu</mat-icon>
-		</button>
-		<span style="color:#ff9800;font-weight:900;">Blog</span>
-		<span style="margin-left:0.8rem;font-size:0.5rem;font-weight:900;color:#fdfdfd;">Release 0.5.0</span>
-	</div>
-
+<mat-toolbar fxLayout="row" fxLayoutAlign="end center" style="background-color:#72a3d2;height:32px">
+	<button (click)="sidenav.toggle()" *ngIf="(device === 'handset')" mat-icon-button>
+		<mat-icon style="color:#303030;">menu</mat-icon>
+	</button>
 </mat-toolbar>
 
+<div fxLayout="column" fxLayout.lt-sm="column" style="height: auto;">
+	<div class="hero" fxLayout="row" fxLayoutAlign="center center" style="position:relative">
+		<img src="/images/hero.jpg" style="width:100%;height:100%;">
+		<div style="position:absolute;left:8px;top:8px;padding: 20px 20px;font-size:24px;font-weight:900;color:#808080;">7th Code.</div>
+	</div>
+</div>
+
 <mat-sidenav-container class="container">
-	<mat-sidenav #sidenav [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset')" fxLayout="column" fxLayoutAlign="center" style="width:200px;background-color:#a255ff;">
+	<mat-sidenav #sidenav [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset')"
+				 fxLayout="column" fxLayoutAlign="center"
+				 style="border-right:none;width:200px;background-color:#fdfdfd;">
 		<blog-list type="month"></blog-list>
 		<blog-list type="type"></blog-list>
 	</mat-sidenav>
-
-	<mat-sidenav-content style="background-color:#E1E2E1;">
+	<mat-sidenav-content style="background-color:#fdfdfd;">
 		<div [@fadeAnimation]="prepareRoute(outlet)">
 			<router-outlet #outlet="outlet"></router-outlet>
 		</div>
 	</mat-sidenav-content>
-
 </mat-sidenav-container>
-

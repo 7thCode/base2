@@ -1,14 +1,10 @@
 <ng-container>
-	<mat-card style="margin:2rem;">
-		<mat-card-header>
-			<mat-card-title>title</mat-card-title>
-			<mat-card-subtitle>Subtitle</mat-card-subtitle>
-		</mat-card-header>
-		<mat-card-content>
+
+		<div>
 			<div fxLayout="row" fxLayoutAlign="space-between">
 				<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size">
 				</mat-paginator>
-				<button (click)="createDialog()" *ngIf="auth | authis: 'manager'" class="fab-center" color="primary" mat-fab>+</button>
+				<button (click)="createDialog()" *ngIf="auth | authis: 'manager'" class="fab-center" color="primary" mat-fab style="margin:12px;">+</button>
 			</div>
 			<div fxLayout="row wrap" fxLayoutAlign="center">
 				<div *ngFor="let resource of results" style="height:240px;width:180px;margin:8px;padding:4px;">
@@ -17,9 +13,11 @@
 							<img [src]="imagePath(resource.content)" alt="" style="max-height:180px;max-width:180px;">
 						</a>
 					</div>
-					<div fxLayout="column" fxLayoutAlign="start" style="color:#303030;margin-top:4px;">
-						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.create}}</div>
-						<div style="color:#303030;font-size:16px;font-weight:900">{{resource.content.value.title}}</div>
+					<div fxLayout="column" fxLayoutAlign="space-between" style="color:#303030;margin-top:8px;">
+						<div>
+							<div class="top-sub">{{resource.create | date}}</div>
+							<div class="top-title">{{resource.content.value.title}}</div>
+						</div>
 						<div *ngIf="auth | authis: 'manager'" fxLayout="row" fxLayoutAlign="space-around">
 							<button (click)="updateDialog(resource.content.id)" mat-icon-button>
 								<mat-icon color="primary">edit</mat-icon>
@@ -31,7 +29,7 @@
 					</div>
 				</div>
 			</div>
-		</mat-card-content>
-	</mat-card>
+		</div>
+
 </ng-container>
 

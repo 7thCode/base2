@@ -9,4 +9,24 @@
 	font-weight: 900;
 }
 
+.article-title {
+	margin:2px 12px;
+	font-size:18px;
+	font-weight:900;
+}
 
+.article-sub {
+	margin:2px 12px;
+	font-size:12px;
+	font-weight:500;
+	color:#606060;
+}
+
+.article-text {
+	margin:12px 18px;
+	font-weight: 200;
+	letter-spacing: 0.07em;
+	line-height: 2em;
+	font-size: 13px;
+	color: #404040;
+}
