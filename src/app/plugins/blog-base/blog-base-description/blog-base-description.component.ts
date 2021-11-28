@@ -23,6 +23,7 @@ import {environment} from "../../../../environments/environment";
 export class BlogBaseDescriptionComponent extends ResponsiveComponent implements OnInit {
 
 	public id: string = "";
+	public create: any;
 	public title: string;
 	public description: SafeHtml;
 	public images: { name: string }[] = [];
@@ -75,6 +76,7 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 							meta.description.push({name: 'description', content: blogpage.accessory.description});
 							this.setDescription(meta);
 
+							this.create = blogpage.value.create;
 							this.title = blogpage.value.title;
 							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.value.description);
 							this.images = blogpage.accessory.images;

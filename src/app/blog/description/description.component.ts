@@ -55,6 +55,7 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 							meta.description.push({name: 'description', content: blogpage.content.accessory.description});
 							this.setDescription(meta);
 
+							this.create = blogpage.create;
 							this.title = blogpage.content.value.title;
 							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.content.value.description);
 							this.images = blogpage.content.accessory.images;
