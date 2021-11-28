@@ -3,12 +3,9 @@
 		<div class="desc-title">{{title}}</div>
 	</div>
 	<div fxLayout="column" fxLayoutAlign="center center">
-		<div>
-			<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
-				<img [src]="imagePath()" style="margin:24px;max-width:300px;max-height: 300px;">
-			</div>
-			<div [innerHTML]='description'
-				 style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
+		<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
+			<img [src]="imagePath()" style="max-width:100%;max-height: 300px;">
 		</div>
+		<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
 	</div>
 </ng-container>
