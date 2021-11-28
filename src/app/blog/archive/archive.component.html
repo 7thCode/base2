@@ -1,17 +1,15 @@
 <ng-container>
-
-			<div fxLayout="column">
-				<div (click)="click(resource.content)" *ngFor="let resource of results" fxLayout="row" matRipple style="height:200px;">
-					<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
-						<img [src]="imagePath(resource.content)" alt="" style="width:100px;">
-					</div>
-					<div fxLayout="column" fxLayoutAlign="start start" style="margin:12px;">
-						<div class="article-sub">{{resource.create | date}}</div>
-						<div class="article-title">{{resource.content.value.title}}</div>
-						<div class="article-text">{{resource.content.value.description | striphtml | truncate:200 }}</div>
-					</div>
-				</div>
+	<div fxLayout="column" style="margin:24px;">
+		<div fxLayout="row" style="height:200px;margin:24px" matRipple (click)="click(resource.content)" *ngFor="let resource of results" >
+			<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
+				<img style="width:100px;" [src]="imagePath(resource.content)" alt="">
 			</div>
-
+			<div fxLayout="column" fxLayoutAlign="start start" style="margin:24px;">
+				<div class="article-sub">{{resource.create | date}}</div>
+				<div class="article-title">{{resource.content.value.title}}</div>
+				<div class="article-text">{{resource.content.value.description | striphtml | truncate:200 }}</div>
+			</div>
+		</div>
+	</div>
 </ng-container>
 
