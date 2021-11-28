@@ -1,6 +1,6 @@
 <ng-container>
 	<div fxLayout="column" style="margin:24px;">
-		<div fxLayout="row" style="height:200px;margin:24px" matRipple (click)="click(resource.content)" *ngFor="let resource of results" >
+		<div fxLayout="row" fxLayout.lt-sm="column"  style="margin:24px" matRipple (click)="click(resource.content)" *ngFor="let resource of results" >
 			<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
 				<img style="width:100px;" [src]="imagePath(resource.content)" alt="">
 			</div>
@@ -12,4 +12,3 @@
 		</div>
 	</div>
 </ng-container>
-
