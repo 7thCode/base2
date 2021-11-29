@@ -106,12 +106,12 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	/*
 	*
 	*/
-	public imagePath(): string {
+	public imagePath(index: number): string {
 		let path = "";
 		if (this.images) {
-			if (this.images.length > 0) {
-				if (this.images[0].name) {
-					path = "/pfiles/get/" + this.images[0].name;
+			if (this.images.length > index) {
+				if (this.images[index].name) {
+					path = "/pfiles/get/" + this.images[index].name;
 				}
 			}
 		}

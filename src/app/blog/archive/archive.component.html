@@ -2,7 +2,7 @@
 	<div fxLayout="column" style="margin:24px;">
 		<div fxLayout="row" fxLayout.lt-sm="column"  style="margin:24px" matRipple (click)="click(resource.content)" *ngFor="let resource of results" >
 			<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
-				<img style="width:100px;" [src]="imagePath(resource.content)" alt="">
+				<img style="width:100px;" *ngIf="images(resource.content) != 0" [src]="imagePath(resource.content, 0)" alt="">
 			</div>
 			<div fxLayout="column" fxLayoutAlign="start start" style="margin:24px;">
 				<div class="article-sub">{{resource.create | date}}</div>

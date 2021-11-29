@@ -16,6 +16,7 @@ import {BlogService} from "../blog.service";
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 import {BlogDialogComponent} from "../blog-dialog/blog-dialog.component";
 
+
 @Component({
 	selector: "blog-top",
 	templateUrl: "./top.component.html",
