@@ -58,7 +58,7 @@ export class MailSender implements IMailSenderModule {
 					callback(error);
 					this.smtpUser.close();
 				});
-			} catch (e) {
+			} catch (e: any) {
 				callback(e);
 			}
 		} else {

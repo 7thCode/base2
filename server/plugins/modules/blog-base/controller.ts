@@ -133,7 +133,7 @@ export class Entries extends Updatable {
 			}).catch((error: IErrorObject) => {
 				response.send(error.message);
 			})
-		} catch (error) {
+		} catch (error: any) {
 			response.send(error.message);
 		}
 	}
@@ -233,7 +233,7 @@ export class Entries extends Updatable {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S10009"));
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10010"));
 		}
 	}
@@ -268,7 +268,7 @@ export class Entries extends Updatable {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10012"));
 		}
 	}

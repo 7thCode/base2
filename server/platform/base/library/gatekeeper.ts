@@ -105,7 +105,7 @@ export class Gatekeeper {
 	public static catch(response: any, callback: () => void): void {
 		try {
 			callback();
-		} catch (error) {
+		} catch (error: any) {
 			Gatekeeper.SendFatal(response, error);
 		}
 	}
@@ -202,7 +202,7 @@ export class Gatekeeper {
 	public static page_catch(request: any, response: any, next: () => void): void {
 		try {
 			next();
-		} catch (e) {
+		} catch (e: any) {
 			response.status(500).render("error", {
 				status: 500,
 				message: e.message,
@@ -229,7 +229,7 @@ export class Gatekeeper {
 			} else {
 				response.status(403).render("error", {status: 403, message: "Forbidden.", url: request.url});
 			}
-		} catch (e) {
+		} catch (e: any) {
 			response.status(500).render("error", {
 				status: 500,
 				message: e.message,

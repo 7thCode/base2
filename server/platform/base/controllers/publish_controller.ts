@@ -60,7 +60,7 @@ export abstract class Publishable extends Updatable {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00145"));
 		}
 	}
@@ -83,7 +83,7 @@ export abstract class Publishable extends Updatable {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00147"));
 		}
 	}
@@ -106,7 +106,7 @@ export abstract class Publishable extends Updatable {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S00358"));
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00359"));
 		}
 	}
@@ -125,7 +125,7 @@ export abstract class Publishable extends Updatable {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00360"));
 		}
 	}

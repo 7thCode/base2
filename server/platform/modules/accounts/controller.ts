@@ -154,7 +154,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10031"));
 		}
 	}
@@ -183,7 +183,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10033"));
 		}
 	}
@@ -213,7 +213,7 @@ export class Accounts extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10036"));
 		}
 	}
@@ -259,7 +259,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10026"));
 		}
 	}
@@ -297,7 +297,7 @@ export class Accounts extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10002"));
 		}
 	}
@@ -327,7 +327,7 @@ export class Accounts extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10004"));
 		}
 	}
@@ -387,7 +387,7 @@ export class Accounts extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10016"));
 		}
 	}
@@ -426,7 +426,7 @@ export class Accounts extends Wrapper {
 					})
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10026"));
 		}
 	}
@@ -457,7 +457,7 @@ export class Accounts extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -499,7 +499,7 @@ export class Accounts extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -535,7 +535,7 @@ export class Accounts extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -562,7 +562,7 @@ export class Accounts extends Wrapper {
 					})
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -595,7 +595,7 @@ export class Accounts extends Wrapper {
 					})
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -645,7 +645,7 @@ export class Accounts extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00337"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00338"));
 		}
 	}
@@ -702,7 +702,7 @@ export class Accounts extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00337"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00338"));
 		}
 	}
@@ -736,7 +736,7 @@ export class Accounts extends Wrapper {
 				});
 
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -769,7 +769,7 @@ export class Accounts extends Wrapper {
 				});
 
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -811,7 +811,7 @@ export class Accounts extends Wrapper {
 						this.SendError(response, Errors.Exception(error, "S00345"));
 					});
 				});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -853,7 +853,7 @@ export class Accounts extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00345"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -890,7 +890,7 @@ export class Accounts extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00345"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -927,7 +927,7 @@ export class Accounts extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00350"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00351"));
 		}
 	}
@@ -964,7 +964,7 @@ export class Accounts extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00355"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00356"));
 		}
 	}

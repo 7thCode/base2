@@ -93,7 +93,7 @@ export class ExtServices extends Wrapper {
 					this.SendError(response, Errors.generalError(-1, "不明なエラー。", "S00454"));
 				}
 			});
-		} catch (e) {
+		} catch (e: any) {
 			this.SendError(response, Errors.Exception(e, "S00385"));
 		}
 

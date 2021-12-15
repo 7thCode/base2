@@ -56,7 +56,7 @@ export class Cipher {
 			const cipher: any = cipherCrypto.createCipheriv(cipherMode, key, iv);
 			crypted = cipher.update(plain, "utf8", "hex");
 			crypted += cipher.final("hex");
-		} catch (ex) {
+		} catch (ex: any) {
 			//        console.log(ex.message);
 		}
 		return crypted;
@@ -76,7 +76,7 @@ export class Cipher {
 			const decipher: any = cipherCrypto.createDecipheriv(cipherMode, key, iv);
 			decrypted = decipher.update(crypted, "hex", "utf8");
 			decrypted += decipher.final("utf8");
-		} catch (ex) {
+		} catch (ex: any) {
 			//        console.log(ex.message);
 		}
 		return decrypted;
@@ -162,7 +162,7 @@ export class Cipher {
 			} else {
 				callback(Errors.userError(1, "auth fail.", "S00363"), null);
 			}
-		} catch (exept) {
+		} catch (exept: any) {
 			callback(exept, null);
 		}
 	}
