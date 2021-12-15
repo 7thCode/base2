@@ -44,7 +44,7 @@ export class Session extends Wrapper {
 // 			} else {
 //  		    this.SendWarn(response, Errors.userError(1, "not logged in.", "S00373"));
 // 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00374"));
 		}
 	}
@@ -75,7 +75,7 @@ export class Session extends Wrapper {
 			} else {
 				this.SendError(response, Errors.userError(1, "not logged in.", "S00375"));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00376"));
 		}
 	}

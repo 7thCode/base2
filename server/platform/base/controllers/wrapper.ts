@@ -195,7 +195,7 @@ export abstract class Wrapper {
 	protected Decode(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
@@ -209,7 +209,7 @@ export abstract class Wrapper {
 	protected Encode(data: any, callback: Callback<any>): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
@@ -223,7 +223,7 @@ export abstract class Wrapper {
 	protected Parse(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(data));
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}

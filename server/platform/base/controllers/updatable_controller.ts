@@ -69,7 +69,7 @@ export abstract class Updatable extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00150"));
 		}
 	}
@@ -94,7 +94,7 @@ export abstract class Updatable extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00153"));
 		}
 	}
@@ -115,7 +115,7 @@ export abstract class Updatable extends Wrapper {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S00155"));
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00156"));
 		}
 	}
@@ -137,7 +137,7 @@ export abstract class Updatable extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00158"));
 		}
 	}
@@ -159,7 +159,7 @@ export abstract class Updatable extends Wrapper {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S00160"));
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00161"));
 		}
 	}
@@ -178,7 +178,7 @@ export abstract class Updatable extends Wrapper {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S00162"));
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00163"));
 		}
 	}

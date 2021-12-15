@@ -6,9 +6,26 @@
 
 "use strict";
 
-import {AuthLevel, Callback, IErrorObject, IPasswordToken, IUserNameToken, IUserToken, StatusCallback} from "../../../../types/platform/universe";
+import {
+	AuthLevel,
+	Callback,
+	IErrorObject,
+	IPasswordToken,
+	IUserNameToken,
+	IUserToken,
+	StatusCallback
+} from "../../../../types/platform/universe";
 
-import {IAccountModel, IContentRequest, IJSONResponse, ILoginRequest, IRedirectResponse, IUserIDParam, IUsernameParam, IUserRequest} from "../../../../types/platform/server";
+import {
+	IAccountModel,
+	IContentRequest,
+	IJSONResponse,
+	ILoginRequest,
+	IRedirectResponse,
+	IUserIDParam,
+	IUsernameParam,
+	IUserRequest
+} from "../../../../types/platform/server";
 import {Errors} from "../../base/library/errors";
 
 const _: any = require("lodash");
@@ -32,6 +49,8 @@ export class Auth extends Mail {
 	private readonly content: any = {mails: [], nickname: "", tokens: {}};
 	private readonly passport: any;
 
+	private module_config: any;
+
 	/**
 	 *
 	 * @param event
@@ -42,6 +61,9 @@ export class Auth extends Mail {
 	constructor(event: any, config: object, logger: any, passport: object) {
 		super(event, config, logger);
 		this.passport = passport;
+		if (this.systemsConfig.modules.auth) {
+			this.module_config = this.systemsConfig.modules.auth;
+		}
 
 		event.on("compaction", () => {
 			logger.info("start compaction Auth");
@@ -58,7 +80,7 @@ export class Auth extends Mail {
 	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		try {
 			callback(null, Cipher.Decrypt(key, crypted));
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, "");
 		}
 	}
@@ -109,7 +131,7 @@ export class Auth extends Mail {
 			} else {
 				callback(null, JSON.parse(crypted));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(Errors.generalError(7, "unknown error.", "S00028"), {});
 		}
 	}
@@ -439,7 +461,7 @@ export class Auth extends Mail {
 			} else {
 				this.SendRaw(response, {code: 0, message: "not logged in.", tag: "S00047"});
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00048"));
 		}
 	}
@@ -467,14 +489,16 @@ export class Auth extends Mail {
 												this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00052"), account, () => {
 													const stripe_id = account.content.stripe_id;
 													const is_2fa = (account.secret !== "");
+													const fixedKey = this.config.systems.key2;
+													const token = Cipher.FixedCrypt(JSON.stringify(value), fixedKey);
 													if (is_2fa) {
-														this.SendSuccess(response, {is_2fa, stripe_id});
+														this.SendSuccess(response, {is_2fa, stripe_id, token});
 													} else {
 														request.login(account, (error: IErrorObject): void => {
 															this.ifSuccess(response, error, (): void => {
 																// for ws
 																// this.event.emitter.emit("client:send", {username: value.username});
-																this.SendSuccess(response, {is_2fa, stripe_id});
+																this.SendSuccess(response, {is_2fa, stripe_id, token});
 															});
 														});
 													}
@@ -492,7 +516,7 @@ export class Auth extends Mail {
 			} else {
 				this.SendError(response, Errors.userError(5, "already logged in.", "S00054"));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00055"));
 		}
 	}
@@ -516,7 +540,11 @@ export class Auth extends Mail {
 								this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00057"), account, () => {
 									if (account.enabled) {
 										if (account.secret) {
-											const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
+											const verified: boolean = SpeakEasy.totp.verify({
+												secret: account.secret,
+												encoding: "base32",
+												token: value.code
+											});
 											if (verified) {
 												const stripe_id = account.content.stripe_id;
 												request.login(account, (error: IErrorObject): void => {
@@ -543,7 +571,7 @@ export class Auth extends Mail {
 			} else {
 				this.SendError(response, Errors.userError(5, "already logged in.", "S00061"));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00062"));
 		}
 	}
@@ -564,7 +592,11 @@ export class Auth extends Mail {
 							this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00064"), account, () => {
 								if (account.enabled) {
 									if (account.secret) {
-										const verified: boolean = SpeakEasy.totp.verify({secret: account.secret, encoding: "base32", token: value.code});
+										const verified: boolean = SpeakEasy.totp.verify({
+											secret: account.secret,
+											encoding: "base32",
+											token: value.code
+										});
 										this.SendSuccess(response, verified);
 									} else {
 										this.SendError(response, Errors.generalError(1, "Single-factor authentication.", "S00065"));
@@ -579,7 +611,7 @@ export class Auth extends Mail {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00068"));
 		}
 	}
@@ -596,28 +628,34 @@ export class Auth extends Mail {
 	public get_login_token(request: ILoginRequest, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "not logged in.", "S00069"), request.user, () => {
+				// const fixedKey = this.config.systems.key2;
+				// const token = Cipher.FixedDecrypt(request.params.token, fixedKey);
 				const token = request.params.token;
-				Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
+				// 		Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
+				// 			this.ifSuccess(response, error, (): void => {
+
+				// 		LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
+				// 			this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00070"), account, () => {
+				// 				if (account.enabled) {
+
+				QRCode.toDataURL(token, (error: IErrorObject, qrcode: any): void => {
 					this.ifSuccess(response, error, (): void => {
-						LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
-							this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00070"), account, () => {
-								if (account.enabled) {
-									QRCode.toDataURL(token, (error: IErrorObject, qrcode: any): void => {
-										this.ifSuccess(response, error, (): void => {
-											this.SendRaw(response, qrcode);
-										});
-									});
-								} else {
-									this.SendError(response, Errors.userError(4, "account disabled.", "S00071"));
-								}
-							});
-						}).catch((error: IErrorObject) => {
-							this.SendError(response, Errors.Exception(error, "S00072"));
-						})
+						this.SendRaw(response, qrcode);
 					});
 				});
+
+				// 					} else {
+				// 						this.SendError(response, Errors.userError(4, "account disabled.", "S00071"));
+				// 					}
+				// 				});
+				// 			}).catch((error: IErrorObject) => {
+				// 				this.SendError(response, Errors.Exception(error, "S00072"));
+				// 			})
+
+				// 			});
+				// 		});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00073"));
 		}
 	}
@@ -633,46 +671,55 @@ export class Auth extends Mail {
 		try {
 			if (!request.user) {
 				this.ifExist(response, Errors.generalError(1, "no content.", "S00074"), request.body.content, () => {
-					Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
-						this.ifSuccess(response, error, (): void => {
-							request.body.username = value.username; // for multi tenant.;
-							request.body.password = value.password;
-							LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
-								this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00075"), account, () => {
-									if (account.enabled) {
-										this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
-											this.ifSuccess(response, error, (): void => {
-												this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00076"), account, () => {
-													const stripe_id = account.content.stripe_id;
-													const is_2fa = (account.secret !== "");
-													if (is_2fa) {
-														this.SendSuccess(response, {is_2fa, stripe_id});
-													} else {
-														request.login(account, (error: IErrorObject): void => {
-															this.ifSuccess(response, error, (): void => {
-																// for ws
-																// this.event.emitter.emit("client:send", {username: value.username});
-																this.SendSuccess(response, {is_2fa, stripe_id});
-															});
+					try {
+						const fixedKey = this.config.systems.key2;
+						const value = JSON.parse(Cipher.FixedDecrypt(request.body.content, fixedKey));
+
+						// 	Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
+						// 		this.ifSuccess(response, error, (): void => {
+						request.body.username = value.username; // for multi tenant.;
+						request.body.password = value.password;
+						LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
+							this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00075"), account, () => {
+								if (account.enabled) {
+									this.passport.authenticate("local", (error: IErrorObject, account: any): void => {  // request.body must has username/password
+										this.ifSuccess(response, error, (): void => {
+											this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00076"), account, () => {
+												const stripe_id = account.content.stripe_id;
+												const is_2fa = (account.secret !== "");
+												const fixedKey = this.config.systems.key2;
+												const token = Cipher.FixedCrypt(JSON.stringify(value), fixedKey);
+												if (is_2fa) {
+													this.SendSuccess(response, {is_2fa, stripe_id, token});
+												} else {
+													request.login(account, (error: IErrorObject): void => {
+														this.ifSuccess(response, error, (): void => {
+															// for ws
+															// this.event.emitter.emit("client:send", {username: value.username});
+															this.SendSuccess(response, {is_2fa, stripe_id, token});
 														});
-													}
-												});
+													});
+												}
 											});
-										})(request, response);
-									} else {
-										this.SendError(response, Errors.userError(4, "account disabled.", "S00077"));
-									}
-								});
-							}).catch((error: IErrorObject) => {
-								this.SendError(response, Errors.Exception(error, "S00078"));
+										});
+									})(request, response);
+								} else {
+									this.SendError(response, Errors.userError(4, "account disabled.", "S00077"));
+								}
 							});
+						}).catch((error: IErrorObject) => {
+							this.SendError(response, Errors.Exception(error, "S00078"));
 						});
-					});
+						// 		});
+						// 	});
+					} catch (error: any) {
+						this.SendError(response, Errors.userError(6, "invalid key.", "S00179"));
+					}
 				});
 			} else {
 				this.SendError(response, Errors.userError(5, "already logged in.", "S00079"));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00080"));
 		}
 	}
@@ -695,7 +742,7 @@ export class Auth extends Mail {
 							if (!account) {
 
 								const tokenValue: IUserToken = {
-					// 					auth: AuthLevel.user,
+									// 					auth: AuthLevel.user,
 									auth: value.auth,
 									username: value.username,
 									password: value.password,
@@ -707,21 +754,23 @@ export class Auth extends Mail {
 								};
 
 								// const mail_object = this.message.registmail;
-								const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.registmail));
+								const immutable = JSON.parse(JSON.stringify(this.module_config.registmail));
 
-								if (mail_object.html) {
-									mail_object.html.content.nickname = value.metadata.nickname;
-								}
+
+								const nickname = value.metadata.nickname;
 
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/register/" + token;
+
+								const mutable = {link:link, nickname:nickname};
+
 								this.sendMail({
 									address: value.username,
 									bcc: this.bcc,
-									title: this.systemsConfig.message.registconfirmtext,
-									template_url: "views/platform/auth/mail/mail_template.pug",
-									source_object: mail_object,
-									link,
+									title: this.module_config.registconfirmtext,
+									template_url: "views/platform/auth/mail/mail_template.ejs",
+									immutable: immutable,
+									mutable: mutable,
 									result_object: {code: 0, message: ["Prease Wait.", ""]},
 								}, (error: IErrorObject, result: any) => {
 									this.ifSuccess(response, error, (): void => {
@@ -737,7 +786,7 @@ export class Auth extends Mail {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00084"));
 		}
 	}
@@ -774,11 +823,17 @@ export class Auth extends Mail {
 											if (!error) {
 												response.redirect(target);
 											} else {
-												response.status(error.code).render("error", {message: error.message, status: error.code});
+												response.status(error.code).render("error", {
+													message: error.message,
+													status: error.code
+												});
 											}
 										});
 									} else {
-										response.status(error.status).render("error", {message: error.message, status: error.status});
+										response.status(error.status).render("error", {
+											message: error.message,
+											status: error.status
+										});
 									}
 								});
 							} else {
@@ -794,7 +849,7 @@ export class Auth extends Mail {
 					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
@@ -814,7 +869,7 @@ export class Auth extends Mail {
 				this.ifExist(response, Errors.userError(1, "not logged in.", "S00086"), operator.login, () => {
 					if (operator.auth < AuthLevel.user) {
 						this.ifExist(response, Errors.generalError(1, "no content.", "S00087"), request.body.content, () => {
-							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: {auth: number, username: string, password: string, category: string, type: string, metadata: object }): void => {
+							Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { auth: number, username: string, password: string, category: string, type: string, metadata: object }): void => {
 								this.ifSuccess(response, error, (): void => {
 									const username: string = value.username;
 									LocalAccount.default_find_by_name({}, username).then((account: IAccountModel): void => {
@@ -846,7 +901,7 @@ export class Auth extends Mail {
 					}
 				});
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00091"));
 		}
 	}
@@ -877,23 +932,28 @@ export class Auth extends Mail {
 										};
 
 										// const mail_object: any = this.message.passwordmail;
-										const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.passwordmail));
+										const immutable = JSON.parse(JSON.stringify(this.module_config.passwordmail));
 
-										if (mail_object.html) {
-											if (mail_object.html.content) {
-												mail_object.html.content.nickname = account.content.nickname;
-											}
-										}
+										// if (immutable.html) {
+										// 	if (immutable.html.content) {
+										// 		immutable.html.content.nickname = account.content.nickname;
+										// 	}
+										// }
+
+										const nickname = value.metadata.nickname;
 
 										const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 										const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/password/" + token;
+
+										const mutable = {link:link, nickname:nickname};
+
 										this.sendMail({
 											address: value.username,
 											bcc: this.bcc,
-											title: this.systemsConfig.message.passwordconfirmtext,
-											template_url: "views/platform/auth/mail/mail_template.pug",
-											source_object: mail_object,
-											link,
+											title: this.module_config.passwordconfirmtext,
+											template_url: "views/platform/auth/mail/mail_template.ejs",
+											immutable: immutable,
+											mutable: mutable,
 											result_object: {code: 0, message: "", tag: ""},
 										}, (error: IErrorObject, result: any) => {
 											this.ifSuccess(response, error, (): void => {
@@ -909,7 +969,7 @@ export class Auth extends Mail {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00097"));
 		}
 	}
@@ -942,11 +1002,17 @@ export class Auth extends Mail {
 													if (!error) {
 														response.redirect(target);
 													} else {
-														response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
+														response.status(500).render("error", {
+															message: "db error. 4572",
+															status: 500
+														}); // timeout
 													}
 												});
 											} else {
-												response.status(500).render("error", {message: "get_password_token " + error.message, status: 500}); // already
+												response.status(500).render("error", {
+													message: "get_password_token " + error.message,
+													status: 500
+												}); // already
 											}
 										});
 									} else {
@@ -968,7 +1034,7 @@ export class Auth extends Mail {
 					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
@@ -1022,7 +1088,7 @@ export class Auth extends Mail {
 					}
 				})
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00107"));
 		}
 	}
@@ -1057,21 +1123,26 @@ export class Auth extends Mail {
 														timestamp: Date.now(),
 													};
 													// const mail_object: any = this.message.usernamemail;
-													const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.usernamemail));
+													const immutable = JSON.parse(JSON.stringify(this.module_config.usernamemail));
 
-													if (mail_object.html) {
-														mail_object.html.content.nickname = account.content.nickname;
-													}
+													// if (immutable.html) {
+													// 	immutable.html.content.nickname = account.content.nickname;
+													// }
+
+													const nickname = value.metadata.nickname;
 
 													const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 													const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/username/" + token;
+
+													const mutable = {link:link, nickname:nickname};
+
 													this.sendMail({
 														address: update_username,
 														bcc: this.bcc,
-														title: this.systemsConfig.message.usernameconfirmtext,
-														template_url: "views/platform/auth/mail/mail_template.pug",
-														source_object: mail_object,
-														link,
+														title: this.module_config.usernameconfirmtext,
+														template_url: "views/platform/auth/mail/mail_template.ejs",
+														immutable: immutable,
+														mutable: mutable,
 														result_object: {code: 0, message: "", tag: ""},
 													}, (error: IErrorObject, result: any) => {
 														this.ifSuccess(response, error, (): void => {
@@ -1093,7 +1164,7 @@ export class Auth extends Mail {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00116"));
 		}
 	}
@@ -1132,16 +1203,25 @@ export class Auth extends Mail {
 												LocalAccount.findOneAndUpdate({username: original_username}, setter, {upsert: false}).then(() => {
 													response.redirect(target);
 												}).catch((error: IErrorObject): void => {
-													response.status(500).render("error", {message: "db error. 4572", status: 500}); // timeout
+													response.status(500).render("error", {
+														message: "db error. 4572",
+														status: 500
+													}); // timeout
 												});
 											} else {
-												response.status(200).render("error", {message: "ローカルアカウントのみ可能です", status: 200}); // already
+												response.status(200).render("error", {
+													message: "ローカルアカウントのみ可能です",
+													status: 200
+												}); // already
 											}
 										} else {
 											response.status(200).render("error", {message: "ユーザは既に存在します", status: 200}); // already
 										}
 									}).catch((error: IErrorObject) => {
-										response.status(500).render("error", {message: error.message, status: error.code});
+										response.status(500).render("error", {
+											message: error.message,
+											status: error.code
+										});
 									});
 								} else {
 									response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
@@ -1160,7 +1240,7 @@ export class Auth extends Mail {
 					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
@@ -1223,7 +1303,7 @@ export class Auth extends Mail {
 					}
 				})
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00129"));
 		}
 	}
@@ -1251,21 +1331,26 @@ export class Auth extends Mail {
 									timestamp: Date.now(),
 								};
 								// const mail_object = this.message.removemail;
-								const mail_object = JSON.parse(JSON.stringify(this.systemsConfig.message.removemail));
+								const immutable = JSON.parse(JSON.stringify(this.module_config.removemail));
 
-								if (mail_object.html) {
-									mail_object.html.content.nickname = account.content.nickname;
-								}
+								// if (mail_object.html) {
+								// 	mail_object.html.content.nickname = account.content.nickname;
+								// }
+
+								const nickname = account.content.nickname;
 
 								const token: string = Cipher.FixedCrypt(JSON.stringify(tokenValue), this.systemsConfig.tokensecret);
 								const link: string = this.systemsConfig.protocol + "://" + this.systemsConfig.domain + "/auth/remove/" + token;
+
+								const mutable = {link:link, nickname:nickname};
+
 								this.sendMail({
 									address: username,
 									bcc: this.bcc,
-									title: this.systemsConfig.message.removeconfirmtext,
-									template_url: "views/platform/auth/mail/mail_template.pug",
-									source_object: mail_object,
-									link,
+									title: this.module_config.removeconfirmtext,
+									template_url: "views/platform/auth/mail/mail_template.ejs",
+									immutable: immutable,
+									mutable: mutable,
 									result_object: {code: 0, message: "", tag: ""},
 								}, (error: IErrorObject, result: any) => {
 									this.ifSuccess(response, error, (): void => {
@@ -1280,7 +1365,7 @@ export class Auth extends Mail {
 					this.SendError(response, Errors.Exception(error, "S00134"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00135"));
 		}
 	}
@@ -1309,7 +1394,10 @@ export class Auth extends Mail {
 										request.logout();
 										response.redirect(target);
 									}).catch((error: IErrorObject): void => {
-										response.status(500).render("error", {message: error.message, status: error.code});
+										response.status(500).render("error", {
+											message: error.message,
+											status: error.code
+										});
 									});
 								} else {
 									response.status(200).render("error", {message: "Already. 1110", status: 200}); // already
@@ -1327,7 +1415,7 @@ export class Auth extends Mail {
 					response.status(500).render("error", {message: error.message, status: error.code});
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			response.status(500).render("error", {message: error.message, status: error.code});
 		}
 	}
@@ -1359,7 +1447,7 @@ export class Auth extends Mail {
 					this.SendError(response, Errors.Exception(error, "S00140"));
 				})
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00141"));
 		}
 	}
@@ -1406,7 +1494,7 @@ export class Auth extends Mail {
 					this.SendError(response, error);
 				})
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00379"));
 		}
 	}
@@ -1445,7 +1533,7 @@ export class Auth extends Mail {
 					this.SendError(response, error);
 				})
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00380"));
 		}
 	}
@@ -1483,7 +1571,7 @@ export class Auth extends Mail {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00381"));
 		}
 	}
@@ -1523,7 +1611,7 @@ export class Auth extends Mail {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00382"));
 		}
 	}
@@ -1563,7 +1651,7 @@ export class Auth extends Mail {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, error);
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00383"));
 		}
 	}
@@ -1578,7 +1666,7 @@ export class Auth extends Mail {
 		try {
 			request.logout();
 			this.SendSuccess(response, {code: 0, message: "", tag: ""});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00384"));
 		}
 	}

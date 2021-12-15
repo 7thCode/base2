@@ -57,7 +57,7 @@ export class Pages extends Updatable {
 					callback(error, "", "");
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null, "");
 		}
 	}

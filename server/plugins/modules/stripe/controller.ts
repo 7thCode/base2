@@ -80,7 +80,7 @@ export class Stripe extends Mail {
 	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		try {
 			callback(null, Cipher.Decrypt(key, crypted));
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, "");
 		}
 	}
@@ -168,7 +168,7 @@ export class Stripe extends Mail {
 					callback(Errors.generalError(-2, "unknown error.", "S00442"), {});
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(Errors.generalError(-3, "unknown error.", "S00443"), {});
 		}
 	}
@@ -632,7 +632,7 @@ export class Stripe extends Mail {
 			}).catch((error: any) => {
 				callback(Stripe.translationError(error), null);
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -701,7 +701,7 @@ export class Stripe extends Mail {
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -734,7 +734,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00445"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -782,7 +782,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "not logged in.", "S00448"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -803,7 +803,13 @@ export class Stripe extends Mail {
 						if (!error) {
 							if (customer) {
 								const updateable = Stripe.buildCustomer(customer);
-								const result_customer = {sources: {data: customer.sources.data, default: customer.default_source, updateable: updateable}};
+								const result_customer = {
+									sources: {
+										data: customer.sources.data,
+										default: customer.default_source,
+										updateable: updateable
+									}
+								};
 								this.SendSuccess(response, result_customer);
 							} else {
 								this.SendSuccess(response, null);
@@ -816,7 +822,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "not logged in.", "S00401"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -853,7 +859,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "not logged in.", "S00404"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -896,7 +902,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00407"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -950,7 +956,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00410"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -994,7 +1000,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00414"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1036,10 +1042,10 @@ export class Stripe extends Mail {
 						}
 					});
 				} else {
-					this.SendError(response, Errors.generalError(-1, "disabled.", "S00418"));
+					this.SendError(response, Errors.generalError(-1, "disabled.", "S00318"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1080,7 +1086,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00421"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1095,27 +1101,29 @@ export class Stripe extends Mail {
 	public sendBankReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 
 		// const mail_object = this.module_config.receiptmail;
-		const mail_object = JSON.parse(JSON.stringify(this.module_config.receiptmail));
+		const immutable = JSON.parse(JSON.stringify(this.module_config.receiptmail));
 
 		const formatter = new Intl.NumberFormat('ja-JP');
 
-		mail_object.html.content.text = mail_object.text.content.text = [
+		immutable.html.content.text = immutable.text.content.text = [
 			`amount: ¥${formatter.format(mailto.charge.amount)}`,
 		];
 
 		append.forEach((line) => {
-			mail_object.text.content.text.push(line);
+			immutable.text.content.text.push(line);
 		});
 
-		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
+		immutable.text.content.text.push(`description: ${mailto.charge.description}`);
+
+		const mutable = {link:mailto.charge.receipt_url};
 
 		this.sendMail({
 			address: mailto.address,
 			bcc: this.bcc,
 			title: "Recept",
-			template_url: "views/plugins/stripe/mail/mail_template.pug",
-			source_object: mail_object,
-			link: mailto.charge.receipt_url,
+			template_url: "views/plugins/stripe/mail/mail_template.ejs",
+			immutable: immutable,
+			mutable: mutable,
 			result_object: {code: 0, message: ["Prease Wait.", ""]},
 		}, (error: IErrorObject, result: any) => {
 			if (!error) {
@@ -1136,26 +1144,28 @@ export class Stripe extends Mail {
 	public sendDeliveryReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 
 		// const mail_object = this.module_config.receiptmail;
-		const mail_object = JSON.parse(JSON.stringify(this.module_config.receiptmail));
+		const immutable = JSON.parse(JSON.stringify(this.module_config.receiptmail));
 
 		const formatter = new Intl.NumberFormat('ja-JP');
 
-		mail_object.html.content.text = mail_object.text.content.text = [
+		immutable.html.content.text = immutable.text.content.text = [
 			`amount: ¥${formatter.format(mailto.charge.amount)}`,
 		];
 
 		append.forEach((line) => {
-			mail_object.text.content.text.push(line);
+			immutable.text.content.text.push(line);
 		});
-		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
+		immutable.text.content.text.push(`description: ${mailto.charge.description}`);
+
+		const mutable = {link:mailto.charge.receipt_url};
 
 		this.sendMail({
 			address: mailto.address,
 			bcc: this.bcc,
 			title: "Recept",
-			template_url: "views/plugins/stripe/mail/mail_template.pug",
-			source_object: mail_object,
-			link: mailto.charge.receipt_url,
+			template_url: "views/plugins/stripe/mail/mail_template.ejs",
+			immutable: immutable,
+			mutable: mutable,
 			result_object: {code: 0, message: ["Prease Wait.", ""]},
 		}, (error: IErrorObject, result: any) => {
 			if (!error) {
@@ -1176,11 +1186,11 @@ export class Stripe extends Mail {
 	public sendCardReceipt(mailto: { address: string, charge: any, customer: any }, append: any[], callback: Callback<any>): void {
 		const card = mailto.charge.payment_method_details.card;
 		// const mail_object = this.module_config.receiptmail;
-		const mail_object = JSON.parse(JSON.stringify(this.module_config.receiptmail));
+		const immutable = JSON.parse(JSON.stringify(this.module_config.receiptmail));
 
 		const formatter = new Intl.NumberFormat('ja-JP');
 
-		mail_object.html.content.text = mail_object.text.content.text = [
+		immutable.html.content.text = immutable.text.content.text = [
 			`amount: ¥${formatter.format(mailto.charge.amount)}`,
 			`-`,
 			`card: ${card.brand}`,
@@ -1191,18 +1201,20 @@ export class Stripe extends Mail {
 		];
 
 		append.forEach((line) => {
-			mail_object.text.content.text.push(line);
+			immutable.text.content.text.push(line);
 		});
 
-		mail_object.text.content.text.push(`description: ${mailto.charge.description}`);
+		immutable.text.content.text.push(`description: ${mailto.charge.description}`);
+
+		const mutable = {link:mailto.charge.receipt_url};
 
 		this.sendMail({
 			address: mailto.address,
 			bcc: this.bcc,
 			title: "Recept",
-			template_url: "views/plugins/stripe/mail/mail_template.pug",
-			source_object: mail_object,
-			link: mailto.charge.receipt_url,
+			template_url: "views/plugins/stripe/mail/mail_template.ejs",
+			immutable: immutable,
+			mutable: mutable,
 			result_object: {code: 0, message: ["Prease Wait.", ""]},
 		}, (error: IErrorObject, result: any) => {
 			if (!error) {
@@ -1250,7 +1262,11 @@ export class Stripe extends Mail {
 								//                      console.log(charges);
 								//              });
 
-								callback(null, {address: customer.email || operator.username, charge: charge, customer: customer});
+								callback(null, {
+									address: customer.email || operator.username,
+									charge: charge,
+									customer: customer
+								});
 							} else {
 								callback(Errors.generalError(1000, "Stripe error.", "S00422"), null);
 							}
@@ -1264,7 +1280,7 @@ export class Stripe extends Mail {
 					callback(error, null);
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1322,7 +1338,7 @@ export class Stripe extends Mail {
 					callback(error, null);
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1360,7 +1376,7 @@ export class Stripe extends Mail {
 					}
 				});
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1404,10 +1420,10 @@ export class Stripe extends Mail {
 						this.SendError(response, error);
 					});
 				} else {
-					this.SendError(response, Errors.generalError(-1, "disabled.", "S00418"));
+					this.SendError(response, Errors.generalError(-1, "disabled.", "S00428"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1460,7 +1476,7 @@ export class Stripe extends Mail {
 			} else {
 				callback(null, -2);  // no stripe account
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(error, null);
 		}
 	}
@@ -1520,7 +1536,7 @@ export class Stripe extends Mail {
 					callback(error, null);
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1576,7 +1592,7 @@ export class Stripe extends Mail {
 					callback(error, null);
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1598,7 +1614,11 @@ export class Stripe extends Mail {
 				if (!error) {
 					if (customer) {
 						charge.customer = customer.id;
-						callback(null, {address: customer.email || operator.username, charge: charge, customer: customer});
+						callback(null, {
+							address: customer.email || operator.username,
+							charge: charge,
+							customer: customer
+						});
 					} else {
 						callback(Errors.generalError(1, "no customer.", "S00431"), null);
 					}
@@ -1606,7 +1626,7 @@ export class Stripe extends Mail {
 					callback(error, null);
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1641,7 +1661,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00433"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1670,7 +1690,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00435"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1694,7 +1714,7 @@ export class Stripe extends Mail {
 				this.SendSuccess(response, false);
 			}
 			// 	});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1714,7 +1734,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00439"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1734,7 +1754,7 @@ export class Stripe extends Mail {
 					this.SendError(response, Errors.generalError(-1, "disabled.", "S00441"));
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, error);
 		}
 	}
@@ -1754,7 +1774,7 @@ export class Stripe extends Mail {
 			}).catch((error: any) => {
 				callback(Stripe.translationError(error), null);
 			})
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -1773,10 +1793,60 @@ export class Stripe extends Mail {
 			}).catch((error: any) => {
 				callback(Stripe.translationError(error), null);
 			})
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
+
+	/**
+	 * operatorToCustomer
+	 *
+	 * @param request
+	 * @param response
+	 * @returns
+	 *  1 subscribed.
+	 *  0 unsubscribed.
+	 * -1 invalid stripe account.
+	 * -2 no stripe account.
+	 * -3 error.
+	 */
+	public isSubscribeUserPublic(request: any, response: IJSONResponse): void {
+		try {
+			if (this.enable) {
+				const key:{key:string} = request.query;
+				const username = request.params.username;
+				LocalAccount.default_find_by_name(null, username).then((account: IAccountModel): void => {
+					const stripe_id = account.content.stripe_id;
+					if (stripe_id) {
+						this.stripe.customers.retrieve(stripe_id).then((customer: any) => {
+							this.isSubscribeCustomer(customer, (error: IErrorObject, is_subscribe: boolean) => {
+								if (!error) {
+									if (is_subscribe) {
+										this.SendSuccess(response, 1); // 課金
+									} else {
+										this.SendSuccess(response, 0); // 非課金
+									}
+								} else {
+									this.SendError(response, error);
+								}
+							});
+						}).catch((error: any) => {
+							this.SendSuccess(response, -1); // stripeアカウント不明
+						});
+					} else {
+						this.SendSuccess(response, -2);  // stripeアカウント未登録
+					}
+				}).catch((error: IErrorObject) => {
+					this.SendError(response, error);
+				});
+			} else {
+				this.SendError(response, Errors.generalError(-1, "disabled.", "S00428"));
+			}
+		} catch (error: any) {
+			this.SendError(response, error);
+		}
+	}
+
 }
 
 module.exports = Stripe;

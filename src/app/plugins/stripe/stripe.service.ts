@@ -44,7 +44,7 @@ export class StripeService extends HttpService {
 			// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			// 	callback(null, rsa.encrypt(plain, "base64"));
 			callback(null, plain);
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, "");
 		}
 	}
@@ -65,7 +65,7 @@ export class StripeService extends HttpService {
 					callback(error, "");
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, "");
 		}
 	}

@@ -43,7 +43,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				callback(Errors.generalError(1, "not imap.", "S00167"), null);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(Errors.Exception(error, "S00168"), null);
 		}
 	}
@@ -60,7 +60,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				callback(Errors.generalError(1, "not imap.", "S00169"), null);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(Errors.Exception(error, "S00170"), null);
 		}
 	}
@@ -77,7 +77,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				callback(Errors.generalError(1, "not imap.", "S00171"), null);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(Errors.Exception(error, "S00172"), null);
 		}
 	}
@@ -107,7 +107,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				callback(Errors.generalError(1, "not imap.", "S00173"), null);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -122,7 +122,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				callback(Errors.generalError(1, "not imap.", "S00174"));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(error);
 		}
 	}
@@ -159,7 +159,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				handler(Errors.generalError(1, "not imap.", "S00175"), null, "", null);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			handler(error, null, "", null);
 		}
 
@@ -183,7 +183,7 @@ export class MailReceiver implements IMailReceiverModule {
 			} else {
 				callback(Errors.generalError(1, "not imap.", "S00176"), null);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -196,7 +196,7 @@ export class MailReceiver implements IMailReceiverModule {
 			if (imap) {
 				imap.close()
 			}
-		} catch (error) {
+		} catch (error: any) {
 		}
 	}
 

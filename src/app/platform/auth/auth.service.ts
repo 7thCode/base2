@@ -54,7 +54,7 @@ export class AuthService extends HttpService {
 			// 	const rsa: NodeRSA = new NodeRSA(key, "pkcs1-public-pem", {encryptionScheme: "pkcs1_oaep"});
 			// 	callback(null, rsa.encrypt(plain, "base64"));
 			callback(null, plain);
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, "");
 		}
 	}
@@ -80,7 +80,7 @@ export class AuthService extends HttpService {
 			} else {
 				callback(null, JSON.stringify(plain));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			callback(Errors.networkException(error, "A00174"), null);
 		}
 	}

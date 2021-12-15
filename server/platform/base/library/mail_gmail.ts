@@ -38,7 +38,7 @@ export class MailGMail implements IMailSenderModule {
 					callback(error);
 					this.smtpUser.close();
 				});
-			} catch (e) {
+			} catch (e: any) {
 				callback(e);
 			}
 		} else {

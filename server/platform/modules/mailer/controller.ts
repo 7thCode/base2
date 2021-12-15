@@ -86,7 +86,7 @@ export class Mailer extends Mail {
 					});
 				})
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00367"));
 		}
 	}
@@ -110,7 +110,7 @@ export class Mailer extends Mail {
 					})
 				});
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00368"));
 		}
 	}
@@ -146,7 +146,7 @@ export class Mailer extends Mail {
 					this.SendSuccess(response, {})
 				});
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00369"));
 		}
 	}
@@ -171,7 +171,7 @@ export class Mailer extends Mail {
 					});
 				});
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00370"));
 		}
 	}
@@ -196,7 +196,7 @@ export class Mailer extends Mail {
 					});
 				});
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00371"));
 		}
 	}
@@ -222,7 +222,7 @@ export class Mailer extends Mail {
 					});
 				});
 			})
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S00372"));
 		}
 	}

@@ -76,7 +76,7 @@ export class NativeFiles extends Updatable {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10000"));
 		}
 	}
@@ -96,7 +96,7 @@ export class NativeFiles extends Updatable {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S10029"));
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendError(response, Errors.Exception(error, "S10001"));
 		}
 	}

@@ -62,7 +62,7 @@ export abstract class HttpService {
 	protected Decode(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(decodeURIComponent(data)));
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}
@@ -76,7 +76,7 @@ export abstract class HttpService {
 	protected Encode(data: any, callback: Callback<any>): void {
 		try {
 			callback(null, encodeURIComponent(JSON.stringify(data)));
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, "");
 		}
 	}
@@ -90,7 +90,7 @@ export abstract class HttpService {
 	protected Parse(data: string, callback: Callback<any>): void {
 		try {
 			callback(null, JSON.parse(data));
-		} catch (error) {
+		} catch (error: any) {
 			callback(error, null);
 		}
 	}

@@ -12,7 +12,7 @@ import {IMailReceiverModule, IMailSenderModule} from "../../../../types/platform
 import {Errors} from "../library/errors";
 
 const fs: any = require("graceful-fs");
-const pug: any = require("pug");
+const ejs: any = require("ejs");
 
 const path: any = require("path");
 
@@ -34,8 +34,6 @@ export class Mail extends Wrapper {
 
 	private readonly sender: IMailSenderModule = null;
 	private readonly receiver: IMailReceiverModule = null;
-
-// 	private bcc: string | any[] = "";
 
 	/**
 	 *
@@ -87,7 +85,6 @@ export class Mail extends Wrapper {
 		});
 	}
 
-
 	/**
 	 *
 	 * parse content
@@ -96,49 +93,53 @@ export class Mail extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private parseHTMLContent(mailConfig: any, callback: (error: IErrorObject, text: string, html: string) => void): void {
+	private parseHTMLContent(mailConfig: any, callback: (error: IErrorObject, html: string) => void): void {
 		try {
 			if (mailConfig) {
-				if (mailConfig.source_object) {
+				if (mailConfig.immutable) {
 					if (mailConfig.template_url) {
-						if (mailConfig.source_object.html) {
-							const nickname = mailConfig.source_object.html.content.nickname;
-							// mailConfig.source_object.html.content.subtitle = this.parseTemplate(mailConfig.source_object.html.content.subtitle, {nickname: nickname});
+						if (mailConfig.immutable.html) {
+							// 	const nickname = mailConfig.immutable.html.content.nickname;
+							// mailConfig.immutable.html.content.subtitle = this.parseTemplate(mailConfig.immutable.html.content.subtitle, {nickname: nickname});
 							fs.readFile(path.join(project_root, mailConfig.template_url), "utf8", (error: IErrorObject, data: any): void => {
 								if (!error) {
 									try {
-										// 		const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link});
-										const html: string = pug.render(data, {content: mailConfig.source_object.html, link: mailConfig.link, nickname: nickname});
+										// 	const html: string = ejs.render(data, {content: mailConfig.immutable.html, link: mailConfig.link, nickname: nickname});
+										const html: string = ejs.render(data, {immutable: mailConfig.immutable, mutable: mailConfig.mutable});
+										// 	const html: string = pug.render(data, {content: mailConfig.immutable.html, link: mailConfig.link, nickname: nickname});
+										callback(null, html);
+										/*
 										let text: string = "";
-										const text_lines = mailConfig.source_object.text.content.text;
+										const text_lines = mailConfig.immutable.text.content.text;
 										const value = {link: mailConfig.link};
 										if (text_lines) {
 											text_lines.forEach((line: string) => {
 												text += this.parseTemplate(line, value) + "\n";
 											})
-											callback(null, text, html);
+											callback(null, html);
 										} else {
-											callback(Errors.configError(1, "config error.", "S00007"), "", "");
+											callback(Errors.configError(1, "config error.", "S00007"),  "");
 										}
-									} catch (error) {
-										callback(error, "", "");
+										*/
+									} catch (error: any) {
+										callback(error,  "");
 									}
 								} else {
-									callback(error, "", "");
+									callback(error,  "");
 								}
 							});
 						} else {
-							callback(null, "", "");
+							callback(null,  "");
 						}
 					}
 				} else {
-					callback(Errors.configError(1, "config error.", "S00011"), "", "");
+					callback(Errors.configError(1, "config error.", "S00011"),  "");
 				}
 			} else {
-				callback(Errors.configError(1, "config error.", "S00012"), "", "");
+				callback(Errors.configError(1, "config error.", "S00012"),  "");
 			}
-		} catch (error) {
-			callback(error, "", "");
+		} catch (error: any) {
+			callback(error,  "");
 		}
 	}
 
@@ -150,34 +151,39 @@ export class Mail extends Wrapper {
 	 * @param callback
 	 * @returns none
 	 */
-	private parseTEXTContent(mailConfig: any, callback: (error: IErrorObject, text: string, html: string) => void): void {
+	private parseTEXTContent(mailConfig: any, callback: (error: IErrorObject, text: string) => void): void {
 		try {
 			if (mailConfig) {
-				if (mailConfig.source_object) {
+				if (mailConfig.immutable) {
 					if (mailConfig.template_url) {
-						if (mailConfig.source_object.text) {
+						if (mailConfig.immutable.text) {
 							let text: string = "";
-							const text_lines: string[] = mailConfig.source_object.text.content.text;
+							const text_lines: string[] = mailConfig.immutable.text.content.text;
 							if (text_lines) {
-								text_lines.forEach((line: string) => {
-									text += line + "\n";
-								})
-								callback(null, text, text);
+								const value = {link: mailConfig.mutable.link};
+								if (text_lines) {
+									text_lines.forEach((line: string) => {
+										text += this.parseTemplate(line, value) + "\n";
+									})
+									callback(null, text);
+								} else {
+									callback(Errors.configError(1, "config error.", "S00007"),  "");
+								}
 							} else {
-								callback(Errors.configError(1, "config error.", "S00009"), "", "");
+								callback(Errors.configError(1, "config error.", "S00009"), "");
 							}
 						} else {
-							callback(null, "", "");
+							callback(null, "");
 						}
 					}
 				} else {
-					callback(Errors.configError(1, "config error.", "S00011"), "", "");
+					callback(Errors.configError(1, "config error.", "S00011"), "");
 				}
 			} else {
-				callback(Errors.configError(1, "config error.", "S00012"), "", "");
+				callback(Errors.configError(1, "config error.", "S00012"), "");
 			}
-		} catch (error) {
-			callback(error, "", "");
+		} catch (error: any) {
+			callback(error, "");
 		}
 	}
 
@@ -191,9 +197,9 @@ export class Mail extends Wrapper {
 	 */
 	protected sendMail(mailConfig: any, callback: Callback<any>): void {
 		if (this.sender) {
-			this.parseHTMLContent(mailConfig, (error: IErrorObject, text: string, html: string): void => {
+			this.parseHTMLContent(mailConfig, (error: IErrorObject, html: string): void => {
 				if (!error) {
-					this.parseTEXTContent(mailConfig, (error: IErrorObject, text: string, html: string): void => {
+					this.parseTEXTContent(mailConfig, (error: IErrorObject, text: string): void => {
 						if (!error) {
 							this.sender.send(mailConfig.address, mailConfig.bcc, mailConfig.title, text, html, (error: IErrorObject): void => {
 								if (!error) {

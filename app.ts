@@ -38,7 +38,7 @@ let saslprep: any = null;
 
 try {
 	saslprep = require("saslprep");
-} catch (e) {
+} catch (e: any) {
 }
 
 const normal: () => void = () => {
@@ -99,7 +99,7 @@ const normal: () => void = () => {
 		app.use(helmet.referrerPolicy());
 		app.use(helmet.xssFilter());
 
-		logger.info("Hundred.");
+		logger.trace("Hundred.");
 
 		let socket: any = null;
 
@@ -223,7 +223,7 @@ const normal: () => void = () => {
 		};
 
 		mongoose.connection.on("connected", () => {
-			logger.info("connected");
+			logger.trace("connected");
 		});
 
 		mongoose.connection.once("error", (error: IErrorObject) => {
@@ -234,18 +234,18 @@ const normal: () => void = () => {
 		});
 
 		mongoose.connection.once("closed", () => {
-			logger.info("Mongoose default connection closed");
+			logger.error("Mongoose default connection closed");
 		});
 
 		mongoose.connection.once("disconnected", () => {
-			logger.info("Mongoose default connection disconnected");
+			logger.error("Mongoose default connection disconnected");
 			log4js.shutdown((err: any) => {
 				process.exit(1);
 			})
 		});
 
 		mongoose.connection.once("reconnected", () => {
-			logger.info("reconnected");
+			logger.warn("reconnected");
 		});
 
 		mongoose.connection.once("open", () => {
@@ -303,7 +303,7 @@ const normal: () => void = () => {
 				}
 			};
 
-			logger.info("V1");
+			logger.trace("V1");
 
 			/*
 			const default_modules: any = {
@@ -354,7 +354,7 @@ const normal: () => void = () => {
 	// 		load_module("./server", default_modules);
 			load_module("./server", config.modules);
 
-			logger.info("VR");
+			logger.trace("VR");
 
 			const server: Server = Serve(config, socket, app);
 
@@ -616,7 +616,7 @@ const Serve = (config: any, primary_socket: any, app: any): any => {
 
 	server.listen(port, "::0");
 
-	logger.info("V2");
+	logger.trace("V2");
 
 	return server;
 };

@@ -208,7 +208,7 @@ export class Files extends Wrapper {
 
 			readstream.pipe(writestream);
 
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
@@ -320,7 +320,7 @@ export class Files extends Wrapper {
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
 			});
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
@@ -345,7 +345,7 @@ export class Files extends Wrapper {
 			}).catch((error: IErrorObject) => {
 				callback(error, null);
 			});
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
@@ -368,7 +368,7 @@ export class Files extends Wrapper {
 			} else {
 				callback(Errors.generalError(1, "stream not found.", "S00184"), null);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			callback(e, null);
 		}
 	}
@@ -596,7 +596,7 @@ export class Files extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00186"));
 		}
 	}
@@ -620,7 +620,7 @@ export class Files extends Wrapper {
 					});
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00188"));
 		}
 	}
@@ -665,7 +665,7 @@ export class Files extends Wrapper {
 			}).catch((error: IErrorObject) => {
 				this.SendError(response, Errors.Exception(error, "S00192"));
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00193"));
 		}
 	}
@@ -720,7 +720,7 @@ export class Files extends Wrapper {
 					}
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00200"));
 		}
 	}
@@ -744,7 +744,7 @@ export class Files extends Wrapper {
 					this.SendError(response, Errors.Exception(error, "S00202"));
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00203"));
 		}
 	}
