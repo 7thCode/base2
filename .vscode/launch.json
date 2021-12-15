@@ -12,7 +12,7 @@
             "stopAtEntry": false,
             "environment": [],
             "externalConsole": false,
-            "MIMode": "lldb",
+            "MIMode": "lldb"
         },
         {
             "type": "node",
@@ -25,9 +25,15 @@
                 "${workspaceFolder}/build/**/*.js"
             ],
             "skipFiles": [
-				"<node_internals>/**"
+                "<node_internals>/**"
             ],
             "outputCapture": "std"
+        },
+        {
+            "type": "pwa-chrome",
+            "name": "localhost:3000/blog",
+            "request": "launch",
+            "url": "localhost:3000/blog"
         }
     ]
 }

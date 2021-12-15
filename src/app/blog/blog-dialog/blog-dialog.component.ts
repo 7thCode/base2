@@ -103,6 +103,7 @@ export class BlogDialogComponent extends BaseDialogComponent {
 */
 	public ngOnInit(): void {
 		this.images = this.content.accessory.images;
+		this.content.category = "blog"
 	}
 
 	/**
