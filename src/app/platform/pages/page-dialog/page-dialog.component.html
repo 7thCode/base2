@@ -39,7 +39,8 @@
 					</form>
 				</div>
 				<div fxLayout="column">
-			<!--		<ace-editor #editor [(text)]="content.value" [mode]="content.category" [theme]="'chrome'" style="height: calc(100vh - 340px);border-style: solid; border-color: #d0d0d0;"></ace-editor> -->
+					<textarea #value="ngModel" [(ngModel)]="content.value" matInput name="value" style="border-style: solid; border-color: #d0d0d0;" required></textarea>
+					<!--		<ace-editor #editor [(text)]="content.value" [mode]="content.category" [theme]="'chrome'" style="height: calc(100vh - 340px);border-style: solid; border-color: #d0d0d0;"></ace-editor> -->
 				</div>
 			</mat-card-content>
 		</mat-card>
@@ -49,7 +50,7 @@
 
 	<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around" style="margin:6px;">
 		<mat-slide-toggle [(ngModel)]="content.enabled" [color]="'primary'" [disabled]="false" name="enable">enable</mat-slide-toggle>
-		<button (click)="onAccept()" [disabled]="form.invalid || invalid()" cdkFocusInitial color="primary" mat-raised-button>OK</button>
+		<button (click)="onAccept()" [disabled]="form.invalid" cdkFocusInitial color="primary" mat-raised-button>OK</button>
 		<button (click)="cancel()" color="warn" mat-dialog-close="" mat-raised-button>Cancel</button>
 	</mat-dialog-actions>
 
