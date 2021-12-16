@@ -4,7 +4,7 @@
 	</button>
 </mat-toolbar>
 
-<div fxLayout="column" fxLayout.lt-sm="column" style="height: auto;">
+<div fxLayout="column" fxLayout.lt-sm="column" style="height: auto;border-bottom: medium solid #25a8ff;">
 	<div class="hero" fxLayout="row" fxLayoutAlign="center center" style="position:relative">
 		<img src="/images/hero.jpg" style="width:100%;height:100%;">
 		<div style="position:absolute;left:8px;top:8px;padding: 20px 20px;font-size:24px;font-weight:900;color:#808080;">7th Code.</div>
@@ -12,7 +12,7 @@
 </div>
 
 <mat-sidenav-container class="container">
-	<mat-sidenav #sidenav [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="!(device === 'handset')"
+	<mat-sidenav #sidenav [mode]="(device === 'handset') ? 'over' : 'side'" [opened]="(device === 'desktop')"
 				 fxLayout="column" fxLayoutAlign="center"
 				 style="border-right:none;width:200px;background-color:#fdfdfd;">
 		<blog-list type="month"></blog-list>

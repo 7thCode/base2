@@ -1,37 +1,39 @@
 <ng-container>
-	<div fxLayout="row" fxLayoutAlign="space-between">
-		<h1><span>7thCode Blog.</span></h1>
-		<button (click)="createDialog()" *ngIf="auth | authis: 'manager'" class="fab-center" color="primary" mat-fab
-				style="margin:12px;">+
-		</button>
-	</div>
-	<div style="margin:36px;font-size:14px;letter-spacing: 0.07em;line-height: 1.8em;color:#808080;">
-		<p>ロレム・イプサムの嘆き、トマト大好き学部のエリット、しかし時と活力、そのような労働と悲しみ、
-		ブラインド行うにはいくつかの重要な事柄に座ります。</p>
-		<p>長年にわたり、私は学区と長寿であれば、そのような刺激の取り組み、彼女のうち、運動の利点を分注を邪魔されたする人が来ます。</p>
-		<p>クピダタットのつるの痛みになりたい宿題に、批判されてきたら痛み、マグナ逃亡しても結果の喜びを生成しません。</p>
-		<p>先例クピダタットブラックは先例していない、つまり、彼らはあなたの悩みに責任がある人の、一般的な義務を捨て、魂を癒しています。</p>
-	</div>
-	<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size"></mat-paginator>
-	<div fxLayout="row wrap" fxLayoutAlign="center">
-		<div *ngFor="let resource of results" style="height:240px;width:180px;margin:8px;padding:4px;">
-			<div fxLayout="column" fxLayoutAlign="center center" style="height:180px;">
-				<a [routerLink]="['/blog/description', resource.content.id]" matRipple style="max-width: fit-content;max-height: fit-content;padding: 0;">
-					<img *ngIf="images(resource.content) != 0" [src]="imagePath(resource.content, 0)" alt="" style="max-height:180px;max-width:180px;">
-				</a>
-			</div>
-			<div fxLayout="column" fxLayoutAlign="space-between" style="color:#303030;margin-top:8px;">
-				<div>
-					<div class="top-sub">{{resource.create | date}}</div>
-					<div class="top-title">{{resource.content.value.title | truncate:14}}</div>
+	<div style="margin-top:64px;">
+		<div fxLayout="row" fxLayoutAlign="space-between">
+			<h1><span>7thCode Blog.</span></h1>
+			<button (click)="createDialog()" *ngIf="auth | authis: 'manager'" class="fab-center" color="primary" mat-fab
+					style="margin:12px;">+
+			</button>
+		</div>
+		<div style="margin:36px;font-size:14px;letter-spacing: 0.07em;line-height: 1.8em;color:#808080;">
+			<p>ロレム・イプサムの嘆き、トマト大好き学部のエリット、しかし時と活力、そのような労働と悲しみ、
+				ブラインド行うにはいくつかの重要な事柄に座ります。</p>
+			<p>長年にわたり、私は学区と長寿であれば、そのような刺激の取り組み、彼女のうち、運動の利点を分注を邪魔されたする人が来ます。</p>
+			<p>クピダタットのつるの痛みになりたい宿題に、批判されてきたら痛み、マグナ逃亡しても結果の喜びを生成しません。</p>
+			<p>先例クピダタットブラックは先例していない、つまり、彼らはあなたの悩みに責任がある人の、一般的な義務を捨て、魂を癒しています。</p>
+		</div>
+		<mat-paginator (page)="Page($event)" [length]="count" [pageSize]="size"></mat-paginator>
+		<div fxLayout="row wrap" fxLayoutAlign="center">
+			<div *ngFor="let resource of results" style="height:240px;width:180px;margin:8px;padding:4px;">
+				<div fxLayout="column" fxLayoutAlign="center center" style="height:180px;">
+					<a [routerLink]="['/blog/description', resource.content.id]" matRipple style="max-width: fit-content;max-height: fit-content;padding: 0;">
+						<img *ngIf="images(resource.content) != 0" [src]="imagePath(resource.content, 0)" alt="" style="max-height:180px;max-width:180px;">
+					</a>
 				</div>
-				<div *ngIf="auth | authis: 'manager'" fxLayout="row" fxLayoutAlign="space-around">
-					<button (click)="updateDialog(resource.content.id)" mat-icon-button>
-						<mat-icon style="color:#5f73df;">edit</mat-icon>
-					</button>
-					<button (click)="onDelete($event, resource.content.id)" mat-icon-button>
-						<mat-icon style="color:#f36e6e;">delete_sweep</mat-icon>
-					</button>
+				<div fxLayout="column" fxLayoutAlign="space-between" style="color:#303030;margin-top:8px;">
+					<div>
+						<div class="top-sub">{{resource.create | date}}</div>
+						<div class="top-title">{{resource.content.value.title | truncate:14}}</div>
+					</div>
+					<div *ngIf="auth | authis: 'manager'" fxLayout="row" fxLayoutAlign="space-around">
+						<button (click)="updateDialog(resource.content.id)" mat-icon-button>
+							<mat-icon style="color:#5f73df;">edit</mat-icon>
+						</button>
+						<button (click)="onDelete($event, resource.content.id)" mat-icon-button>
+							<mat-icon style="color:#f36e6e;">delete_sweep</mat-icon>
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
