@@ -136,8 +136,9 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 		};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
+			width: "80%",
 			minWidth: "320px",
-			height: "fit-content",
+			height: "80%",
 			data: {content: this.toView(initalData)},
 			disableClose: true,
 		});
@@ -192,8 +193,9 @@ export class PagesComponent extends GridViewComponent implements OnInit {
 		this.get(id, (error: IErrorObject, result: object): void => {
 			if (!error) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(PageDialogComponent, {
+					width: "80%",
 					minWidth: "320px",
-					height: "fit-content",
+					height: "80%",
 					data: {content: this.toView(result)},
 					disableClose: true,
 				});
