@@ -11,8 +11,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Callback, IErrorObject} from "../../../../../types/platform/universe";
 import {BlogBaseService} from "../blog-base.service";
 import {ResponsiveComponent} from "../../../platform/base/components/responsive.component";
-import {ActivatedRoute, ParamMap} from "@angular/router";
-import {DomSanitizer} from "@angular/platform-browser";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
+import {Overlay} from "@angular/cdk/overlay";
+import {MatDialog} from "@angular/material/dialog";
 
 @Directive()
 export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnInit {
@@ -28,13 +30,18 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 		protected session: SessionService,
 		protected blogsService: BlogBaseService,
 		protected breakpointObserver: BreakpointObserver,
+		protected overlay: Overlay,
+		protected matDialog: MatDialog,
+		protected snackbar: MatSnackBar,
+
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
-		protected snackbar: MatSnackBar,
+		protected router: Router,
+		protected title: Title,
+		protected meta: Meta
 	) {
 		super(session, breakpointObserver);
 		this.service = blogsService;
-
 	}
 
 	/**
@@ -44,7 +51,7 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 	private errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-// 		duration: 8000,
+		 		duration: 8000,
 			});
 		}
 	}
@@ -56,7 +63,7 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 	private messageBar(message: string): void {
 		if (message) {
 			this.snackbar.open(message, "Close", {
-// 		duration: 8000,
+		 		duration: 8000,
 				panelClass: ["message-snackbar"]
 			});
 		}

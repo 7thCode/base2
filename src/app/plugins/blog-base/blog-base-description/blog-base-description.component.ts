@@ -18,6 +18,8 @@ import {ResponsiveComponent} from "../../../platform/base/components/responsive.
 import {SessionService} from "../../../platform/base/services/session.service";
 import {BlogBaseService} from "../blog-base.service";
 import {environment} from "../../../../environments/environment";
+import {Overlay} from "@angular/cdk/overlay";
+import {MatDialog} from "@angular/material/dialog";
 
 @Directive()
 export class BlogBaseDescriptionComponent extends ResponsiveComponent implements OnInit {
@@ -34,9 +36,12 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 		protected session: SessionService,
 		protected blogsService: BlogBaseService,
 		protected breakpointObserver: BreakpointObserver,
+		protected overlay: Overlay,
+		protected matDialog: MatDialog,
+		protected snackbar: MatSnackBar,
+
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
-		protected snackbar: MatSnackBar,
 		protected router: Router,
 		protected _title: Title,
 		protected meta: Meta
@@ -49,7 +54,9 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	protected errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
+
 		 		duration: 8000,
+
 			});
 		}
 	}
