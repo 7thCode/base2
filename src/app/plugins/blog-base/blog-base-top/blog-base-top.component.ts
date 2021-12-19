@@ -133,19 +133,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		}
 	}
 
-	public imagePath(article: any): string {
-		let path = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > 0) {
-					path = "/files/get/" + article.accessory.images[0].name;
-				}
-			}
-		}
-		return path;
-	}
-
-	/*
 	public imagePath(article: any, index: number): string {
 		let path = "";
 		if (article.accessory) {
@@ -159,7 +146,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		}
 		return path;
 	}
-	*/
+
 
 	public images(article: any): number {
 		let images_count: number = 0;
