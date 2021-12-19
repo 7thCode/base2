@@ -34,14 +34,13 @@ export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
-
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected router: Router,
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar, domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	/**
