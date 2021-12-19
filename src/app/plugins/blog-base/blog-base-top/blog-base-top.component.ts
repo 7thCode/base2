@@ -13,15 +13,23 @@ import {Spinner} from "../../../platform/base/library/spinner";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {IErrorObject} from "../../../../../types/platform/universe";
-// import {BlogBaseDialogComponent} from "../blog-base-dialog/blog-base-dialog.component";
 import {YesNoDialogComponent} from "../../../platform/base/components/yes-no-dialog/yes-no-dialog.component";
 import {BlogBaseService} from "../blog-base.service";
-import {BlogBasePageComponent} from "../blog-base-page/blog-base-page.component";
 import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Directive()
-export class BlogBaseTopComponent extends BlogBasePageComponent implements OnInit {
+export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
+
+	public get isProgress(): boolean {
+		return this.spinner.progress;
+	}
+
+	public isHandset: any; // 360 – 399
+	public isTablet: any; // 600 – 719
+	public isDesktop: any;
+
+	protected spinner: Spinner;
 
 	public constructor(
 		protected session: SessionService,
@@ -37,11 +45,52 @@ export class BlogBaseTopComponent extends BlogBasePageComponent implements OnIni
 		protected title: Title,
 		protected meta: Meta
 	) {
-	 	super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
+		super(session, matDialog);
+		this.service = blogsService;
+		this.spinner = new Spinner(overlay);
 	}
 
 	public ngOnInit(): void {
+		this.sort = {};
 		super.ngOnInit();
+		this.isHandset = this.breakpointObserver.observe([
+			Breakpoints.HandsetPortrait,
+		]);
+		this.isTablet = this.breakpointObserver.observe([
+			Breakpoints.TabletPortrait,
+		]);
+		this.isDesktop = this.breakpointObserver.observe([
+			Breakpoints.Web,
+		]);
+	}
+
+	/**
+	 * エラー表示
+	 * @param error
+	 */
+	protected errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+				duration: 8000,
+			});
+		}
+	}
+
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	protected messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+				duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
+	}
+
+	protected Progress(value: boolean): void {
+		this.spinner.Progress(value);
 	}
 
 	/**
