@@ -17,6 +17,8 @@ import {BlogBaseDescriptionComponent} from "../../plugins/blog-base/blog-base-de
 import {BlogService} from "../blog.service";
 import {IErrorObject} from "../../../../types/platform/universe";
 import {environment} from "../../../environments/environment";
+import {Overlay} from "@angular/cdk/overlay";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
 	selector: "blog-description",
@@ -26,18 +28,21 @@ import {environment} from "../../../environments/environment";
 
 export class BlogDescriptionComponent extends BlogBaseDescriptionComponent implements OnInit {
 
-	constructor(
+	public constructor(
 		protected session: SessionService,
 		protected blogsService: BlogService,
 		protected breakpointObserver: BreakpointObserver,
+		protected overlay: Overlay,
+		protected matDialog: MatDialog,
+		protected snackbar: MatSnackBar,
+
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
-		protected snackbar: MatSnackBar,
 		protected router: Router,
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar, router, title, meta);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	/**/

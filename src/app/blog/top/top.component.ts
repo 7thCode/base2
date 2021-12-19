@@ -15,6 +15,8 @@ import {BlogBaseTopComponent} from "../../plugins/blog-base/blog-base-top/blog-b
 import {BlogService} from "../blog.service";
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 import {BlogDialogComponent} from "../blog-dialog/blog-dialog.component";
+import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
 	selector: "blog-top",
@@ -24,15 +26,6 @@ import {BlogDialogComponent} from "../blog-dialog/blog-dialog.component";
 
 export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 
-	/**
-	 *
-	 * @param session
-	 * @param overlay
-	 * @param matDialog
-	 * @param breakpointObserver
-	 * @param blogsService
-	 * @param snackbar
-	 */
 	public constructor(
 		protected session: SessionService,
 		protected blogsService: BlogService,
@@ -40,8 +33,14 @@ export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
+
+		protected domSanitizer: DomSanitizer,
+		protected activatedRoute: ActivatedRoute,
+		protected router: Router,
+		protected title: Title,
+		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	/**

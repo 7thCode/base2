@@ -11,8 +11,10 @@ import {BreakpointObserver} from "@angular/cdk/layout";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 import {BlogBaseArchiveComponent} from "../../plugins/blog-base/blog-base-archive/blog-base-archive.component";
-import {DomSanitizer} from "@angular/platform-browser";
+import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {BlogService} from "../blog.service";
+import {Overlay} from "@angular/cdk/overlay";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
 	selector: "blog-archive",
@@ -22,26 +24,21 @@ import {BlogService} from "../blog.service";
 
 export class BlogArchiveComponent extends BlogBaseArchiveComponent implements OnInit {
 
-	/**
-	 *
-	 * @param session
-	 * @param blogsService
-	 * @param breakpointObserver
-	 * @param domSanitizer
-	 * @param activatedRoute
-	 * @param snackbar
-	 * @param router
-	 */
 	public constructor(
 		protected session: SessionService,
 		protected blogsService: BlogService,
 		protected breakpointObserver: BreakpointObserver,
+		protected overlay: Overlay,
+		protected matDialog: MatDialog,
+		protected snackbar: MatSnackBar,
+
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
-		protected snackbar: MatSnackBar,
-		private router: Router
+		protected router: Router,
+		protected title: Title,
+		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, domSanitizer, activatedRoute, snackbar);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	public click(resource: any): void {
