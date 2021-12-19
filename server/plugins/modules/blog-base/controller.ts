@@ -41,7 +41,9 @@ export class Entries extends Updatable {
 	 *
 	 * @param aggregater
 	 */
-	private static build_group_by_month_aggrigater(aggregater: any[]): void {
+	private static build_group_by_month_aggrigater(query: any, aggregater: any[]): void {
+
+		aggregater.push({$match: query});
 
 		aggregater.push({$sort: {create: -1}});
 
@@ -63,7 +65,8 @@ export class Entries extends Updatable {
 	 *
 	 * @param aggregater
 	 */
-	private static build_group_by_type_aggrigater(aggregater: any[]): void {
+	private static build_group_by_type_aggrigater(query: any, aggregater: any[]): void {
+		aggregater.push({$match: query});
 
 		aggregater.push({$sort: {create: -1}});
 
@@ -146,31 +149,28 @@ export class Entries extends Updatable {
 	 * @param callback
 	 */
 	public aggrigate(params: any, aggregater: any[], callback: (error: IErrorObject, result: any) => void): void {
-		this.Decode(params.query, (error: IErrorObject, query: any): void => {
+
+		this.Decode(params.option, (error: IErrorObject, option: IQueryOption): void => {
 			if (!error) {
-				this.Decode(params.option, (error: IErrorObject, option: IQueryOption): void => {
-					if (!error) {
 
-						if (JSON.stringify(query) !== "{}") {
-							aggregater.push({$match: query});
-						}
+				// 		if (JSON.stringify(query) !== "{}") {
+				// 			aggregater.push({$match: query});
+				// 		}
 
-						Entries.option_to_aggregater(aggregater, option);	// skip, limit
+				Entries.option_to_aggregater(aggregater, option);	// skip, limit
 
-						Article.aggregate(aggregater).then((entries: any[]): void => {
-							callback(null, entries);
-						}).catch((error: IErrorObject) => {
-							callback(error, null);
-						});
-
-					} else {
-						callback(error, null);
-					}
+				Article.aggregate(aggregater).then((entries: any[]): void => {
+					callback(null, entries);
+				}).catch((error: IErrorObject) => {
+					callback(error, null);
 				});
+
 			} else {
 				callback(error, null);
 			}
 		});
+
+
 	}
 
 	/**
@@ -182,17 +182,22 @@ export class Entries extends Updatable {
 	public group_by_month(request: IQueryRequest, response: IJSONResponse): void {
 		const params: IQueryParam = request.params;
 		const aggregater: any = [];
-		Entries.build_group_by_month_aggrigater(aggregater);
-		this.aggrigate(params, aggregater, (error, entries) => {
+		this.Decode(params.query, (error: IErrorObject, query: any): void => {
 			if (!error) {
-				entries.forEach((entry: any) => {
-					entry.name = String(entry._id.yyyy) + "/" + String(entry._id.mm);
+				Entries.build_group_by_month_aggrigater(query, aggregater);
+				this.aggrigate(params, aggregater, (error, entries) => {
+					if (!error) {
+						entries.forEach((entry: any) => {
+							entry.name = String(entry._id.yyyy) + "/" + String(entry._id.mm);
+						})
+						this.SendSuccess(response, entries);
+					} else {
+						this.SendError(response, Errors.Error(error, "S10008"));
+					}
 				})
-				this.SendSuccess(response, entries);
 			} else {
-				this.SendError(response, Errors.Error(error, "S10008"));
 			}
-		})
+		});
 	}
 
 	/**
@@ -204,17 +209,24 @@ export class Entries extends Updatable {
 	public group_by_type(request: IQueryRequest, response: IJSONResponse): void {
 		const params: IQueryParam = request.params;
 		const aggregater: any = [];
-		Entries.build_group_by_type_aggrigater(aggregater);
-		this.aggrigate(params, aggregater, (error, entries) => {
+		this.Decode(params.query, (error: IErrorObject, query: any): void => {
 			if (!error) {
-				entries.forEach((entry: any) => {
-					entry.name = entry._id.type;
+				Entries.build_group_by_type_aggrigater(query, aggregater);
+				this.aggrigate(params, aggregater, (error, entries) => {
+					if (!error) {
+						entries.forEach((entry: any) => {
+							entry.name = entry._id.type;
+						})
+						this.SendSuccess(response, entries);
+					} else {
+						this.SendError(response, Errors.Error(error, "S10009"));
+					}
 				})
-				this.SendSuccess(response, entries);
 			} else {
-				this.SendError(response, Errors.Error(error, "S10009"));
 			}
-		})
+		});
+
+
 	}
 
 	/**

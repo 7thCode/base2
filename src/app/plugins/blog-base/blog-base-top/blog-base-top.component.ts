@@ -17,6 +17,7 @@ import {YesNoDialogComponent} from "../../../platform/base/components/yes-no-dia
 import {BlogBaseService} from "../blog-base.service";
 import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Errors} from "../../../platform/base/library/errors";
 
 @Directive()
 export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
@@ -38,7 +39,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
-
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected router: Router,
@@ -51,17 +51,40 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
+		this.query = {"content.category":"blog"};
 		this.sort = {};
-		super.ngOnInit();
-		this.isHandset = this.breakpointObserver.observe([
-			Breakpoints.HandsetPortrait,
-		]);
-		this.isTablet = this.breakpointObserver.observe([
-			Breakpoints.TabletPortrait,
-		]);
-		this.isDesktop = this.breakpointObserver.observe([
-			Breakpoints.Web,
-		]);
+		this.page = 0;
+		this.results = [];
+		this.getSession((error: IErrorObject, session: object | null): void => {
+			if (!error) {
+				this.draw((error: IErrorObject, results: object[] | null): void => {
+					if (!error) {
+						if (results) {
+							this.results = results;
+
+							this.isHandset = this.breakpointObserver.observe([
+								Breakpoints.HandsetPortrait,
+							]);
+							this.isTablet = this.breakpointObserver.observe([
+								Breakpoints.TabletPortrait,
+							]);
+							this.isDesktop = this.breakpointObserver.observe([
+								Breakpoints.Web,
+							]);
+
+							this.Complete("", results);
+
+						} else {
+							this.Complete("error", Errors.generalError(-1, "error.", "A00026"));
+						}
+					} else {
+						this.Complete("error", error);
+					}
+				});
+			} else {
+				this.Complete("error", error);
+			}
+		});
 	}
 
 	/**
@@ -152,7 +175,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		let images_count: number = 0;
 		if (article.accessory) {
 			if (article.accessory.images) {
-				images_count= article.accessory.images.length
+				images_count = article.accessory.images.length
 			}
 		}
 		return images_count;

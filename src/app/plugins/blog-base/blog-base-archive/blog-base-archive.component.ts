@@ -90,8 +90,9 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 	 * @param callback コールバック
 	 */
 	public draw(callback: Callback<object[]>): void {
+		const query = {"content.category":"blog"};
 		const option = {sort: {_id: -1}, limit: 1, skip: this.skip};
-		this.service.group_by(this.type, {}, option, (error: IErrorObject, results: any[]): void => {
+		this.service.group_by(this.type, query, option, (error: IErrorObject, results: any[]): void => {
 			if (!error) {
 				callback(null, results);
 			} else {
