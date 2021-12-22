@@ -34,6 +34,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	@Input() public width: number = 0;
 	@Input() public height: number = 0;
 	@Input() public view: string = "";
+	@Input() public type: string = "";
 	@Input() public fileName: string = "";
 	@Input() public username: string = "";
 	@Input() public extensions: string = "";
@@ -286,10 +287,11 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	*
 	* */
 	public Upload(path: string, file: any) {
+
 		this.uploadFile(file, path + this.fileName, {category: "", description: ""}, {upsert: false}, (error: IErrorObject, result: any): void => {
 			if (!error) {
-				this.draw(this.fileName);
-				this.Complete("create", {name: this.fileName});
+				this.draw(file.name);
+				this.Complete("create", {name: file.name, type: file.type, size: file.size});
 			} else {
 				this.Complete("error", error);
 			}
