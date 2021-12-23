@@ -91,7 +91,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param name
 	 */
 	private draw(name: string): void {
-		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
+		this.imagePath = this.endPoint + "/pfiles/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
 	}
 
 	/**
@@ -157,7 +157,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.view = ImageComponent.defaultValue(changes.view, "visible");
 		this.width = ImageComponent.defaultValue(changes.width, 120);
 		this.height = ImageComponent.defaultValue(changes.height, 120);
-		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png,webp");
+		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png,webp,avi,mp4,mov,webm,wmv,mpg,mkv,flv,asf");
 		this.username = ImageComponent.defaultValue(changes.username, null);
 	}
 
@@ -287,7 +287,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	*
 	* */
 	public Upload(path: string, file: any) {
-
 		this.uploadFile(file, path + this.fileName, {category: "", description: ""}, {upsert: false}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.draw(file.name);
@@ -335,6 +334,5 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 			}
 		}
 	}
-
 
 }

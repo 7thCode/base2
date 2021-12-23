@@ -170,6 +170,44 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		return path;
 	}
 
+	public imageName(article: any, index: number): string {
+		let name = "";
+		if (article.accessory) {
+			if (article.accessory.images) {
+				if (article.accessory.images.length > index) {
+					if (article.accessory.images[index].name) {
+						name = article.accessory.images[index].name;
+					}
+				}
+			}
+		}
+		return name;
+	}
+
+	public mimeToMedia(mime: string): string {
+		let result = "";
+		if (mime) {
+			const type: string[] = mime.split("/");
+			if (type.length >= 2) {
+				result = type[0].toLocaleLowerCase();
+			}
+		}
+		return result;
+	}
+
+	public imageMedia(article: any, index: number): string {
+		let type = "";
+		if (article.accessory) {
+			if (article.accessory.images) {
+				if (article.accessory.images.length > index) {
+					if (article.accessory.images[index].type) {
+						type = this.mimeToMedia(article.accessory.images[index].type);
+					}
+				}
+			}
+		}
+		return type;
+	}
 
 	public images(article: any): number {
 		let images_count: number = 0;

@@ -1,11 +1,47 @@
-<div [ngSwitch]="view">
-	<div *ngSwitchCase="'editable'" [ngStyle]="style" class="drop-area">
-		<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
+<div [ngSwitch]="type">
+	<div *ngSwitchCase="'image'" [ngSwitch]="view">
+		<div *ngSwitchCase="'editable'" [ngStyle]="style" class="drop-area">
+			<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
+		</div>
+		<div *ngSwitchCase="'rename'" [ngStyle]="style" class="drop-area">
+			<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
+		</div>
+		<div *ngSwitchDefault [ngStyle]="style">
+			<img [ngStyle]="style" [src]="imagePath" alt="{{description}}">
+		</div>
 	</div>
-	<div *ngSwitchCase="'rename'" [ngStyle]="style" class="drop-area">
-		<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
+	<div *ngSwitchCase="'video'" [ngSwitch]="view">
+		<div *ngSwitchCase="'editable'" class="drop-area">
+			<video controls muted playsinline [ngStyle]="style">
+				<source [src]="imagePath">
+			</video>
+		</div>
+		<div *ngSwitchCase="'rename'" class="drop-area">
+			<video controls muted playsinline [ngStyle]="style">
+				<source [src]="imagePath">
+			</video>
+		</div>
+		<div *ngSwitchDefault>
+			<video controls muted playsinline [ngStyle]="style">
+				<source [src]="imagePath">
+			</video>
+		</div>
 	</div>
-	<div *ngSwitchCase="'visible'" [ngStyle]="style">
-		<img [ngStyle]="style" [src]="imagePath" alt="{{description}}">
+	<div *ngSwitchDefault [ngSwitch]="view">
+		<div *ngSwitchCase="'editable'" [ngStyle]="style" class="drop-area">
+			<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
+		</div>
+		<div *ngSwitchCase="'rename'" [ngStyle]="style" class="drop-area">
+			<img [ngStyle]="style" [src]="imagePath" alt="{{description}}" style="cursor: hand; cursor:pointer;">
+		</div>
+		<div *ngSwitchDefault [ngStyle]="style">
+			<img [ngStyle]="style" [src]="imagePath" alt="{{description}}">
+		</div>
 	</div>
+
 </div>
+
+
+
+
+
