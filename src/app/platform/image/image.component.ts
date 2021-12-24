@@ -167,8 +167,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	public ngOnInit(): void {
 		super.ngOnInit();
 		this.style = {
-			"width": this.width + "px",
-			"height": this.height + "px",
+			"max-width": this.width + "px",
+			"max-height": this.height + "px",
 			"line-height": this.height + "px",
 		};
 
@@ -190,7 +190,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	public resizeDialog(file: any, image: any, callback: Callback<any>): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
-			// width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {

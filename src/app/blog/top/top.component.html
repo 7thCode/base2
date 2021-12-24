@@ -15,7 +15,7 @@
 					<div fxLayout="column" fxLayoutAlign="center center" style="height:180px;">
 						<a [routerLink]="['/blog/description', resource.content.id]" matRipple style="max-width: fit-content;max-height: fit-content;padding: 0;">
 
-							<app-image [fileName]="imageName(resource.content, 0)" [type]="imageMedia(resource.content, 0)"></app-image>
+							<app-image [fileName]="imageName(resource.content.accessory.images, 0)" [type]="imageMedia(resource.content.accessory.images, 0)"></app-image>
 
 							<!--<img [src]="imagePath(resource.content, 0)" alt="" style="max-height:180px;max-width:180px;"> -->
 						</a>

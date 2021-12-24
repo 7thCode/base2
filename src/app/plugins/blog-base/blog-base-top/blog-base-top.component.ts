@@ -156,31 +156,31 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		}
 	}
 
-	public imagePath(article: any, index: number): string {
+	public imagePath(images: any[], index: number): string {
 		let path = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > index) {
-					if (article.accessory.images[index].name) {
-						path = "/pfiles/get/" + article.accessory.images[index].name;
-					}
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					path = "/pfiles/get/" + images[index].name;
 				}
 			}
 		}
+
 		return path;
 	}
 
-	public imageName(article: any, index: number): string {
+	public imageName(images: any[], index: number): string {
 		let name = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > index) {
-					if (article.accessory.images[index].name) {
-						name = article.accessory.images[index].name;
-					}
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					name = images[index].name;
 				}
 			}
 		}
+
 		return name;
 	}
 
@@ -195,14 +195,13 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		return result;
 	}
 
-	public imageMedia(article: any, index: number): string {
+	public imageMedia(images: any[], index: number): string {
 		let type = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > index) {
-					if (article.accessory.images[index].type) {
-						type = this.mimeToMedia(article.accessory.images[index].type);
-					}
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].type) {
+					type = this.mimeToMedia(images[index].type);
 				}
 			}
 		}

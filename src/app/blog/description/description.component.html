@@ -7,7 +7,10 @@
 			</mat-card-header>
 			<mat-card-content>
 				<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
-					<img [src]="imagePath()" style="margin:24px;max-width:300px;max-height: 300px;">
+		<!--			<img [src]="imagePath_o()" style="margin:24px;max-width:300px;max-height: 300px;"> -->
+
+				 <app-image [fileName]="imageName(images, 0)" [type]="imageMedia(images, 0)" style="margin:24px;max-width:300px;max-height: 300px;"></app-image>
+
 				</div>
 				<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
 			</mat-card-content>

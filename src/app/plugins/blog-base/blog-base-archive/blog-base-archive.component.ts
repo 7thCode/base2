@@ -105,16 +105,58 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 		return this.domSanitizer.bypassSecurityTrustHtml(text);
 	}
 
-	public imagePath(article: any): string {
+	public imagePath(images: any[], index: number): string {
 		let path = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > 0) {
-					path = "/files/get/" + article.accessory.images[0].name;
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					path = "/pfiles/get/" + images[index].name;
 				}
 			}
 		}
+
 		return path;
 	}
+
+	public imageName(images: any[], index: number): string {
+		let name = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					name = images[index].name;
+				}
+			}
+		}
+
+		return name;
+	}
+
+	public mimeToMedia(mime: string): string {
+		let result = "";
+		if (mime) {
+			const type: string[] = mime.split("/");
+			if (type.length >= 2) {
+				result = type[0].toLocaleLowerCase();
+			}
+		}
+		return result;
+	}
+
+	public imageMedia(images: any[], index: number): string {
+		let type = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].type) {
+					type = this.mimeToMedia(images[index].type);
+				}
+			}
+		}
+
+		return type;
+	}
+
 
 }

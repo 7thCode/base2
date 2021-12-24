@@ -107,7 +107,8 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	/*
 	*
 	*/
-	public imagePath(): string {
+/*
+	public imagePath_o(): string {
 		let path = "";
 		if (this.images) {
 			if (this.images.length > 0) {
@@ -117,7 +118,60 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 			}
 		}
 		return path;
+	} */
+
+	public imagePath(images: any[], index: number): string {
+		let path = "";
+			if (images) {
+				if (images.length > index) {
+					if (images[index].name) {
+						path = "/pfiles/get/" + images[index].name;
+					}
+				}
+			}
+
+		return path;
 	}
+
+	public imageName(images: any[], index: number): string {
+		let name = "";
+
+			if (images) {
+				if (images.length > index) {
+					if (images[index].name) {
+						name = images[index].name;
+					}
+				}
+			}
+
+		return name;
+	}
+
+	public mimeToMedia(mime: string): string {
+		let result = "";
+		if (mime) {
+			const type: string[] = mime.split("/");
+			if (type.length >= 2) {
+				result = type[0].toLocaleLowerCase();
+			}
+		}
+		return result;
+	}
+
+	public imageMedia(images: any[], index: number): string {
+		let type = "";
+
+			if (images) {
+				if (images.length > index) {
+					if (images[index].type) {
+						type = this.mimeToMedia(images[index].type);
+					}
+				}
+			}
+
+		return type;
+	}
+
 
 }
 

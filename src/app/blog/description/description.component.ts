@@ -46,6 +46,7 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 	}
 
 	/**/
+	/*
 	public ngOnInit(): void {
 		this.getSession((error: IErrorObject, session: object | null): void => {
 			if (!error) {
@@ -70,6 +71,6 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 			}
 		});
 	}
-
+*/
 
 }
