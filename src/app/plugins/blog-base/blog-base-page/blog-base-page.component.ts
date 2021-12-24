@@ -20,7 +20,7 @@ import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Directive()
-export class BlogBasePageComponent extends UpdatableComponent implements OnInit {
+export abstract class BlogBasePageComponent extends UpdatableComponent implements OnInit {
 
 	public get isProgress(): boolean {
 		return this.spinner.progress;
@@ -80,6 +80,7 @@ export class BlogBasePageComponent extends UpdatableComponent implements OnInit 
 		this.spinner.Progress(value);
 	}
 
+	/*
 	public ngOnInit(): void {
 		this.sort = {};
 		super.ngOnInit();
@@ -93,6 +94,8 @@ export class BlogBasePageComponent extends UpdatableComponent implements OnInit 
 			Breakpoints.Web,
 		]);
 	}
+	*/
+
 
 	/**
 	 * クリエイトダイアログ
@@ -186,6 +189,7 @@ export class BlogBasePageComponent extends UpdatableComponent implements OnInit 
 	 * @param event
 	 * @param id ターゲット
 	 */
+	/*
 	public onDelete(event: any, id: string): void {
 		const _delete = (id: string): void => {
 			this.Progress(true);
@@ -220,5 +224,84 @@ export class BlogBasePageComponent extends UpdatableComponent implements OnInit 
 			});
 		}
 	}
+*/
+	/*
+	public imagePath(article: any): string {
+		let path = "";
+		if (article.accessory) {
+			if (article.accessory.images) {
+				if (article.accessory.images.length > 0) {
+					path = "/files/get/" + article.accessory.images[0].name;
+				}
+			}
+		}
+		return path;
+	}
+*/
+	/*
+	public imagePath(images: any[], index: number): string {
+		let path = "";
 
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					path = "/pfiles/get/" + images[index].name;
+				}
+			}
+		}
+
+		return path;
+	} */
+
+	public imagePath(images: any[], index: number): string {
+		let path = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					path = "/pfiles/get/" + images[index].name;
+				}
+			}
+		}
+
+		return path;
+	}
+
+	public imageName(images: any[], index: number): string {
+		let name = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					name = images[index].name;
+				}
+			}
+		}
+
+		return name;
+	}
+
+	public mimeToMedia(mime: string): string {
+		let result = "";
+		if (mime) {
+			const type: string[] = mime.split("/");
+			if (type.length >= 2) {
+				result = type[0].toLocaleLowerCase();
+			}
+		}
+		return result;
+	}
+
+	public imageMedia(images: any[], index: number): string {
+		let type = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].type) {
+					type = this.mimeToMedia(images[index].type);
+				}
+			}
+		}
+		return type;
+	}
 }
