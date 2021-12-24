@@ -6,7 +6,7 @@
 
 				<div fxLayout="row wrap">
 					<div *ngFor="let image of images; let i = index">
-						<app-image (complete)="onDrop(i, $event)" [fileName]="images[i].name" [view]="'editable'"></app-image>
+						<app-image (complete)="onDrop(i, $event)" [fileName]="images[i].name" [view]="'editable'" [type]="mimeToMedia(images[i].type)"></app-image>
 					</div>
 				</div>
 

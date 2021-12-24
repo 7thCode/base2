@@ -105,27 +105,58 @@ export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnI
 		return this.domSanitizer.bypassSecurityTrustHtml(text);
 	}
 
-	public imagePath(article: any, index:number): string {
+	public imagePath(images: any[], index: number): string {
 		let path = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > index) {
-					if (article.accessory.images[index].name) {
-						path = "/files/get/" + article.accessory.images[index].name;
-					}
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					path = "/pfiles/get/" + images[index].name;
 				}
 			}
 		}
+
 		return path;
 	}
 
-	public images(article: any): number {
-		let images_count: number = 0;
-		if (article.accessory) {
-			if (article.accessory.images) {
-				images_count= article.accessory.images.length
+	public imageName(images: any[], index: number): string {
+		let name = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].name) {
+					name = images[index].name;
+				}
 			}
 		}
-		return images_count;
+
+		return name;
 	}
+
+	public mimeToMedia(mime: string): string {
+		let result = "";
+		if (mime) {
+			const type: string[] = mime.split("/");
+			if (type.length >= 2) {
+				result = type[0].toLocaleLowerCase();
+			}
+		}
+		return result;
+	}
+
+	public imageMedia(images: any[], index: number): string {
+		let type = "";
+
+		if (images) {
+			if (images.length > index) {
+				if (images[index].type) {
+					type = this.mimeToMedia(images[index].type);
+				}
+			}
+		}
+
+		return type;
+	}
+
+
 }

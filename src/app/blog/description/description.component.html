@@ -1,12 +1,19 @@
 <ng-container>
-	<div style="margin:64px 36px 24px;">
-		<div class="subtitle">{{create | date}}</div>
-		<h1><span>{{title}}</span></h1>
-		<div fxLayout="column" fxLayoutAlign="center center">
-			<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
-				<img *ngIf="images.length != 0" [src]="imagePath(0)" style="max-width:100%;max-height: 300px;">
-			</div>
-			<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;width:100%"></div>
-		</div>
+	<div fxLayout="column" fxLayoutAlign="center center">
+		<mat-card style="margin:42px;">
+			<mat-card-header>
+				<mat-card-title>title</mat-card-title>
+				<mat-card-subtitle>Subtitle</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<div fxLayout="column" fxLayoutAlign="center center" style="height:300px;">
+		<!--			<img [src]="imagePath_o()" style="margin:24px;max-width:300px;max-height: 300px;"> -->
+
+				 <app-image [fileName]="imageName(images, 0)" [type]="imageMedia(images, 0)" style="margin:24px;max-width:300px;max-height: 300px;"></app-image>
+
+				</div>
+				<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
+			</mat-card-content>
+		</mat-card>
 	</div>
 </ng-container>

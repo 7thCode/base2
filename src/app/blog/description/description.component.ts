@@ -47,6 +47,11 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 
 	/**/
 	public ngOnInit(): void {
+		super.ngOnInit();
+	}
+
+/*
+	public ngOnInit(): void {
 		this.getSession((error: IErrorObject, session: object | null): void => {
 			if (!error) {
 				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
@@ -72,6 +77,6 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 			}
 		});
 	}
-
+*/
 
 }

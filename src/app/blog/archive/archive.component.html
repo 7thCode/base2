@@ -1,14 +1,20 @@
 <ng-container>
-	<div fxLayout="column" style="margin:36px;">
-		<div fxLayout="row" fxLayout.lt-sm="column"  style="margin:24px" matRipple (click)="click(resource.content)" *ngFor="let resource of results" >
-			<div fxLayout="column" fxLayoutAlign="center center" style="max-height:200px;">
-				<img style="width:100px;" *ngIf="images(resource.content) != 0" [src]="imagePath(resource.content, 0)" alt="">
+	<mat-card style="margin:2rem;">
+		<mat-card-content>
+			<div fxLayout="column">
+				<div (click)="click(resource.content)" *ngFor="let resource of results" fxLayout="row" matRipple style="height:200px;">
+					<div fxLayout="column" fxLayoutAlign="center center" style="min-width:120px;max-height:200px;">
+						<app-image [fileName]="imageName(resource.content.accessory.images, 0)" [type]="imageMedia(resource.content.accessory.images, 0)"></app-image>
+					<!--	<img [src]="imagePath(resource.content, 0)" alt="" style="width:100px;"> -->
+					</div>
+					<div fxLayout="column" fxLayoutAlign="start start" style="margin:12px;">
+						<div style="margin:12px;font-size:16px;font-weight:500">{{resource.create | date}}</div>
+						<div style="margin:12px;font-size:18px;font-weight:900;">{{resource.content.value.title}}</div>
+						<div style="margin:12px;font-weight:200;">{{resource.content.value.description | striphtml | truncate:200 }}</div>
+					</div>
+				</div>
 			</div>
-			<div fxLayout="column" fxLayoutAlign="start start" style="margin:24px;">
-				<div class="article-sub">{{resource.create | date}}</div>
-				<div class="article-title">{{resource.content.value.title}}</div>
-				<div class="article-text">{{resource.content.value.description | striphtml | truncate:200 }}</div>
-			</div>
-		</div>
-	</div>
+		</mat-card-content>
+	</mat-card>
 </ng-container>
+

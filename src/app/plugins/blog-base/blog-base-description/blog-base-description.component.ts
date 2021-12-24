@@ -25,8 +25,6 @@ import {MatDialog} from "@angular/material/dialog";
 export class BlogBaseDescriptionComponent extends ResponsiveComponent implements OnInit {
 
 	public id: string = "";
-	public create: any;
-	public title: string;
 	public description: SafeHtml;
 	public images: { name: string }[] = [];
 
@@ -43,7 +41,7 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected router: Router,
-		protected _title: Title,
+		protected title: Title,
 		protected meta: Meta
 	) {
 		super(session, breakpointObserver);
@@ -54,9 +52,7 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	protected errorBar(error: IErrorObject): void {
 		if (error) {
 			this.snackbar.open(error.message, "Close", {
-
-		 		duration: 8000,
-
+ 		duration: 8000,
 			});
 		}
 	}
@@ -70,30 +66,30 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 
 	/**/
 	public ngOnInit(): void {
-		this.getSession((error: IErrorObject, session: object | null): void => {
-			if (!error) {
+
+	// 	this.getSession((error: IErrorObject, session: object | null): void => {
+	// 		if (!error) {
 				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
 					this.id = params.get('id');
 					this.draw((error, blogpage: any) => {
 						if (!error) {
-
+							const content = blogpage.content;
 							const meta = environment.meta.description;
-							this._title.setTitle(blogpage.value.title);
-							meta.description.push({name: 'keywords', content: blogpage.accessory.keyword});
-							meta.description.push({name: 'description', content: blogpage.accessory.description});
+							this.title.setTitle(content.value.title);
+							meta.description.push({name: 'keywords', content: content.accessory.keyword});
+							meta.description.push({name: 'description', content: content.accessory.description});
 							this.setDescription(meta);
 
-							this.create = blogpage.value.create;
-							this.title = blogpage.value.title;
-							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.value.description);
-							this.images = blogpage.accessory.images;
+							this.description = this.domSanitizer.bypassSecurityTrustHtml(content.value.description);
+							this.images = content.accessory.images;
 						} else {
 							this.errorBar(error);
 						}
 					})
 				});
-			}
-		});
+	// 		}
+	// 	});
+
 	}
 
 	/**
@@ -113,17 +109,70 @@ export class BlogBaseDescriptionComponent extends ResponsiveComponent implements
 	/*
 	*
 	*/
-	public imagePath(index: number): string {
+/*
+	public imagePath_o(): string {
 		let path = "";
 		if (this.images) {
-			if (this.images.length > index) {
-				if (this.images[index].name) {
-					path = "/pfiles/get/" + this.images[index].name;
+			if (this.images.length > 0) {
+				if (this.images[0].name) {
+					path = "/pfiles/get/" + this.images[0].name;
 				}
 			}
 		}
 		return path;
+	} */
+
+	public imagePath(images: any[], index: number): string {
+		let path = "";
+			if (images) {
+				if (images.length > index) {
+					if (images[index].name) {
+						path = "/pfiles/get/" + images[index].name;
+					}
+				}
+			}
+		return path;
 	}
+
+	public imageName(images: any[], index: number): string {
+		let name = "";
+
+			if (images) {
+				if (images.length > index) {
+					if (images[index].name) {
+						name = images[index].name;
+					}
+				}
+			}
+
+		return name;
+	}
+
+	public mimeToMedia(mime: string): string {
+		let result = "";
+		if (mime) {
+			const type: string[] = mime.split("/");
+			if (type.length >= 2) {
+				result = type[0].toLocaleLowerCase();
+			}
+		}
+		return result;
+	}
+
+	public imageMedia(images: any[], index: number): string {
+		let type = "";
+
+			if (images) {
+				if (images.length > index) {
+					if (images[index].type) {
+						type = this.mimeToMedia(images[index].type);
+					}
+				}
+			}
+
+		return type;
+	}
+
 
 }
 
