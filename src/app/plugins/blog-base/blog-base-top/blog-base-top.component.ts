@@ -18,19 +18,10 @@ import {BlogBaseService} from "../blog-base.service";
 import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Errors} from "../../../platform/base/library/errors";
+import {BlogBasePageComponent} from "../blog-base-page/blog-base-page.component";
 
 @Directive()
-export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
-
-	public get isProgress(): boolean {
-		return this.spinner.progress;
-	}
-
-	public isHandset: any; // 360 – 399
-	public isTablet: any; // 600 – 719
-	public isDesktop: any;
-
-	protected spinner: Spinner;
+export abstract class BlogBaseTopComponent extends BlogBasePageComponent implements OnInit {
 
 	public constructor(
 		protected session: SessionService,
@@ -45,9 +36,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, matDialog);
-		this.service = blogsService;
-		this.spinner = new Spinner(overlay);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	public ngOnInit(): void {
@@ -85,35 +74,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 				this.Complete("error", error);
 			}
 		});
-	}
-
-	/**
-	 * エラー表示
-	 * @param error
-	 */
-	protected errorBar(error: IErrorObject): void {
-		if (error) {
-			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
-			});
-		}
-	}
-
-	/**
-	 * メッセージ表示
-	 * @param message
-	 */
-	protected messageBar(message: string): void {
-		if (message) {
-			this.snackbar.open(message, "Close", {
-				duration: 8000,
-				panelClass: ["message-snackbar"]
-			});
-		}
-	}
-
-	protected Progress(value: boolean): void {
-		this.spinner.Progress(value);
 	}
 
 	/**
@@ -155,59 +115,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 			});
 		}
 	}
-
-	public imagePath(images: any[], index: number): string {
-		let path = "";
-
-		if (images) {
-			if (images.length > index) {
-				if (images[index].name) {
-					path = "/pfiles/get/" + images[index].name;
-				}
-			}
-		}
-
-		return path;
-	}
-
-	public imageName(images: any[], index: number): string {
-		let name = "";
-
-		if (images) {
-			if (images.length > index) {
-				if (images[index].name) {
-					name = images[index].name;
-				}
-			}
-		}
-
-		return name;
-	}
-
-	public mimeToMedia(mime: string): string {
-		let result = "";
-		if (mime) {
-			const type: string[] = mime.split("/");
-			if (type.length >= 2) {
-				result = type[0].toLocaleLowerCase();
-			}
-		}
-		return result;
-	}
-
-	public imageMedia(images: any[], index: number): string {
-		let type = "";
-
-		if (images) {
-			if (images.length > index) {
-				if (images[index].type) {
-					type = this.mimeToMedia(images[index].type);
-				}
-			}
-		}
-		return type;
-	}
-
+	/*
 	public images(article: any): number {
 		let images_count: number = 0;
 		if (article.accessory) {
@@ -217,4 +125,5 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		}
 		return images_count;
 	}
+	*/
 }
