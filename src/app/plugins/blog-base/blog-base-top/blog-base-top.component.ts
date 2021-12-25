@@ -115,15 +115,5 @@ export abstract class BlogBaseTopComponent extends BlogBasePageComponent impleme
 			});
 		}
 	}
-	/*
-	public images(article: any): number {
-		let images_count: number = 0;
-		if (article.accessory) {
-			if (article.accessory.images) {
-				images_count = article.accessory.images.length
-			}
-		}
-		return images_count;
-	}
-	*/
+
 }

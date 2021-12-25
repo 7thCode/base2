@@ -48,8 +48,6 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
 	}
 
-
-
 	/**/
 	public setDescription(meta: { title: string, description: any[] }): void {
 		meta.description.forEach((each_description) => {
@@ -59,9 +57,8 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 
 	/**/
 	public ngOnInit(): void {
-
-	// 	this.getSession((error: IErrorObject, session: object | null): void => {
-	// 		if (!error) {
+	 	this.getSession((error: IErrorObject, session: object | null): void => {
+			if (!error) {
 				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
 					this.id = params.get('id');
 					this.draw((error, blogpage: any) => {
@@ -80,9 +77,8 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 						}
 					})
 				});
-	// 		}
-	// 	});
-
+	 		}
+	 	});
 	}
 
 	/**
