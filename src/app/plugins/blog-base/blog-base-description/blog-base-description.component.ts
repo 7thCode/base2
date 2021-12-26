@@ -99,8 +99,6 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 		});
 	}
 
-
-
 }
 
 

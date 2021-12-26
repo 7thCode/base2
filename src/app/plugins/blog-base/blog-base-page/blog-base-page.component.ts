@@ -80,7 +80,6 @@ export abstract class BlogBasePageComponent extends UpdatableComponent implement
 		this.spinner.Progress(value);
 	}
 
-
 	public imagePath(images: any[], index: number): string {
 		let path = "";
 
