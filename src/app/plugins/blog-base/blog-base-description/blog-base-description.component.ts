@@ -28,7 +28,7 @@ import {BlogBasePageComponent} from "../blog-base-page/blog-base-page.component"
 export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent implements OnInit {
 
 	public id: string = "";
-	public _title: string = "";
+	public _title_: string = "";
 	public subtitle: string = "";
 	public description: SafeHtml;
 	public images: { name: string }[] = [];
@@ -71,7 +71,7 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 							meta.description.push({name: 'keywords', content: content.accessory.keyword});
 							meta.description.push({name: 'description', content: content.accessory.description});
 							this.setDescription(meta);
-							this._title = content.value.title;
+							this._title_ = content.value.title;
 							if (content.value.subtitle) {
 								this.subtitle =  content.value.subtitle;
 							}
@@ -100,8 +100,6 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 			}
 		});
 	}
-
-
 
 }
 

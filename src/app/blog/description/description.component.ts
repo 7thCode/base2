@@ -46,8 +46,8 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 	}
 
 	/**/
-	public ngOnInit(): void {
-		super.ngOnInit();
-	}
+	// public ngOnInit(): void {
+	// 	super.ngOnInit();
+	// }
 
 }
