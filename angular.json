@@ -43,7 +43,25 @@
 						]
 					},
 					"configurations": {
-
+						"debug": {
+							"optimization": false,
+							"outputHashing": "none",
+							"sourceMap": true,
+							"namedChunks": false,
+							"aot": true,
+							"extractLicenses": true,
+							"vendorChunk": false,
+							"buildOptimizer": false,
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "14mb",
+									"maximumError": "20mb"
+								}
+							],
+							"serviceWorker": true,
+							"ngswConfigPath": "ngsw-config.json"
+						},
 						"production": {
 							"fileReplacements": [
 								{
