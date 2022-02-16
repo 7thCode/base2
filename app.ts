@@ -38,7 +38,7 @@ let saslprep: any = null;
 
 try {
 	saslprep = require("saslprep");
-} catch (e: any) {
+} catch (error: any) {
 }
 
 const normal: () => void = () => {
@@ -170,7 +170,7 @@ const normal: () => void = () => {
 
 		// view engine setup
 		app.set("views", "./views");
-		app.set("view engine", "pug");
+		app.set("view engine", "ejs");
 		app.set("trust proxy", true);
 
 		// result settings
@@ -198,29 +198,36 @@ const normal: () => void = () => {
 
 		// database
 
-		let port = "27017";
+		let user = "";
+		if (config.db.user) {
+			user = config.db.user + ":";
+		}
 
+		let pass = "";
+		if (config.db.password) {
+			pass = config.db.password + "@";
+		}
+
+		let port = "";
 		if (config.db.port) {
-			port = config.db.port;
+			port = ":" + config.db.port;
 		}
 
-		let connect_url: string = config.db.protocol + "://" + config.db.user + ":" + config.db.password + "@" + config.db.address + ":" + port + "/" + config.db.name;
-		if (config.db.noauth) {
-			connect_url = config.db.protocol + "://" + config.db.address + ":" + port + "/" + config.db.name;
-		}
+		const connect_url: string = config.db.protocol + "://" + user + pass + config.db.address + port + "/" + config.db.name;
 
-		const options: any = {
+		let options: any = {
 			keepAlive: 1,
 			maxPoolSize: 10,
 			connectTimeoutMS: 1000000,
 			socketTimeoutMS: 560000,
 			serverSelectionTimeoutMS: 50000,
-			// 	reconnectTries: 30,
-			// 	reconnectInterval: 2000,
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
-			// 	useUnifiedTopology: true,
 		};
+
+		if (config.options) {
+			options = config.options;
+		}
 
 		mongoose.connection.on("connected", () => {
 			logger.trace("connected");
@@ -228,7 +235,7 @@ const normal: () => void = () => {
 
 		mongoose.connection.once("error", (error: IErrorObject) => {
 			logger.error("Mongoose default connection error: " + error);
-			log4js.shutdown((err: any) => {
+			log4js.shutdown((error: any) => {
 				process.exit(1);
 			})
 		});
@@ -239,7 +246,7 @@ const normal: () => void = () => {
 
 		mongoose.connection.once("disconnected", () => {
 			logger.error("Mongoose default connection disconnected");
-			log4js.shutdown((err: any) => {
+			log4js.shutdown((error: any) => {
 				process.exit(1);
 			})
 		});
@@ -254,9 +261,9 @@ const normal: () => void = () => {
 
 			const MONGOSTORE_CLASS = require('connect-mongo');						// 暗号化されたクッキーとデータベースに保存されたセッションを関連づける
 
-			app.use(session({												// sessionとMongoDBの接続
-				name: config.sessionname,	                                           			// セッション名
-				secret: config.sessionsecret,													// セッション暗号化キー
+			app.use(session({														// sessionとMongoDBの接続
+				name: config.sessionname,	                               			// セッション名
+				secret: config.sessionsecret,										// セッション暗号化キー
 				resave: false,														//
 				rolling: true,		                                       			//
 				saveUninitialized: true,											//
@@ -269,26 +276,6 @@ const normal: () => void = () => {
 				}),
 			}));
 
-			/*
-			const MongoStore: any = require("connect-mongo")(session);
-			const sessionMiddleware: any = session({
-				name: config.sessionname,
-				secret: config.sessionsecret,
-				resave: false,
-				rolling: true,
-				saveUninitialized: true,
-				cookie: {
-					maxAge: 365 * 24 * 60 * 60 * 1000,
-				},
-				store: new MongoStore({
-					mongooseConnection: mongoose.connection,
-					ttl: 365 * 24 * 60 * 60,
-					clear_interval: 60 * 60,
-				}),
-			});
-
-			app.use(sessionMiddleware);
-*/
 			// passport
 			app.use(passport.initialize());
 			app.use(passport.session());
@@ -305,86 +292,37 @@ const normal: () => void = () => {
 
 			logger.trace("V1");
 
-			/*
-			const default_modules: any = {
-				auth: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {},
-				},
-				accounts: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {},
-				},
-				publickey: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {},
-				},
-				session: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {},
-				},
-				articles: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {
-						display: "Article",
-					},
-				},
-				pages: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {
-						display: "page",
-					},
-				},
-				files: {
-					type: "required",
-					path: "/platform/modules/",
-					description: {
-						display: "File",
-					},
-				},
-			};
-*/
-
-	// 		load_module("./server", default_modules);
 			load_module("./server", config.modules);
 
 			logger.trace("VR");
 
 			const server: Server = Serve(config, socket, app);
 
-			// io.wait(config, event);
-
 			// error handlers
-			app.use((req: any, res: any, next: (e: any) => {}): void => {
+			app.use((req: any, res: any, next: (error: any) => {}): void => {
 				//    res.redirect("/");
-				const err: any = new Error("Not Found");
-				err.status = 404;
-				next(err);
+				const error: any = new Error("Not Found");
+				error.status = 404;
+				next(error);
 			});
 
 			if (app.get("env") === "development") {
-				app.use((err: any, req: any, res: any, next: (e: any) => {}): void => {
-					res.status(err.status || 500);
+				app.use((error: any, req: any, res: any, next: (error: any) => {}): void => {
+					res.status(error.status || 500);
 					res.render("error", {
-						message: err.message,
-						status: err.status,
+						message: error.message,
+						status: error.status,
 					});
 				});
 			}
 
-			app.use((err: any, req: any, res: any, next: (e: any) => {}): void => {
+			app.use((error: any, req: any, res: any, next: (error: any) => {}): void => {
 				if (req.xhr) {
-					res.status(500).send(err);
+					res.status(500).send(error);
 				} else {
-					res.status(err.status || 500);
+					res.status(error.status || 500);
 					res.render("error", {
-						message: err.message,
+						message: error.message,
 						error: {},
 					});
 				}
@@ -394,10 +332,12 @@ const normal: () => void = () => {
 		});
 
 		// database
+
+		//const url ="mongodb+srv://aigmaster:33550336@cluster0.od1kc.mongodb.net/aig?retryWrites=true&w=majority";
 		mongoose.connect(connect_url, options)
 			.catch((error: any) => {
 				logger.fatal("catch Mongoose exception. ", error.stack);
-				log4js.shutdown((err: any) => {
+				log4js.shutdown((error: any) => {
 					process.exit(1);
 				})
 			});
@@ -435,7 +375,7 @@ const normal: () => void = () => {
 			mongoose.connection.close(() => {
 				mongoose.disconnect();
 				logger.info("Stop by SIGINT.");
-				log4js.shutdown((err: any) => {
+				log4js.shutdown((error: any) => {
 					process.exit(0);
 				})
 			});
@@ -446,7 +386,7 @@ const normal: () => void = () => {
 			if (msg === "shutdown") {
 				logger.info("Stop by shutdown.");
 				setTimeout(() => {
-					log4js.shutdown((err: any) => {
+					log4js.shutdown((error: any) => {
 						process.exit(0);
 					})
 				}, 1500);
@@ -486,9 +426,19 @@ const normal: () => void = () => {
 			}
 
 			if (config.cron) {
-				if (config.cron.close) {
+				const cron = config.cron;
+
+				if (cron.cleanup) {
 					scheduler.Add({
-						timing: config.cron.close, name: "site-close", job: () => { // config.cron.close
+						timing: cron.cleanup, name: "cleanup", job: () => { // config.cron.cleanup
+							localEvent.emit("cleanup");
+						},
+					});
+				}
+
+				if (cron.close) {
+					scheduler.Add({
+						timing: cron.close, name: "site-close", job: () => { // config.cron.close
 							localEvent.emit("site-close");
 							localEvent.emit("begin-maintenance");
 							localEvent.emit("maintenance");
@@ -498,14 +448,15 @@ const normal: () => void = () => {
 					});
 				}
 
-				if (config.cron.open) {
+				if (cron.open) {
 					scheduler.Add({
-						timing: config.cron.open, name: "site-open", job: () => { // config.cron.open
+						timing: cron.open, name: "site-open", job: () => { // config.cron.open
 							// 				localEvent.emit("site-open");
 						},
 					});
 				}
 			}
+
 		}
 	}
 
@@ -546,13 +497,13 @@ const Serve = (config: any, primary_socket: any, app: any): any => {
 			switch (error.code) {
 				case "EACCES":
 					logger.error(bind + " requires elevated privileges");
-					log4js.shutdown((err: any) => {
+					log4js.shutdown((error: any) => {
 						process.exit(1);
 					})
 					break;
 				case "EADDRINUSE":
 					logger.error(bind + " is already in use");
-					log4js.shutdown((err: any) => {
+					log4js.shutdown((error: any) => {
 						process.exit(1);
 					})
 					break;

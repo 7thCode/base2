@@ -31,6 +31,7 @@ import {IErrorObject} from "../../../types/platform/universe";
 	styleUrls: ["./blog.component.css"],
 	animations: [fadeAnimation], // register the animation,
 })
+
 export class BlogComponent extends BlogBaseComponent implements OnInit, OnDestroy {
 
 	/**
