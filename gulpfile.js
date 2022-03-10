@@ -7,6 +7,24 @@ const configured_typescript = typescript.createProject("server_tsconfig.json");
 
 var rimraf = require('rimraf');
 
+var sftp = require('gulp-sftp-up4');
+
+var fs = require('fs');
+var options = JSON.parse(fs.readFileSync('config/ftp.json', 'utf8'));
+
+gulp.task('upload', function () {
+	return gulp.src([
+		'models/**/*',
+		'public/**/*',
+		'server/**/*',
+		'views/**/*',
+		'app.js',
+		'package.json',
+		'package-lock.json',
+		], {base: './product', allowEmpty: true})
+		.pipe(sftp(options));
+});
+
 gulp.task('dry', (cb) => {
 	rimraf('backup', cb);
 	rimraf('dist', cb);
