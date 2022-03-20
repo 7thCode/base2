@@ -23,7 +23,7 @@
 
 					<mat-grid-tile-header fxLayout="row" fxLayoutAlign="space-between center" style="padding-left:4px;padding-right:4px;line-height:32px;">
 						<app-image [fileName]="'avatar.jpg'" [height]="32" [username]="account.username" [view]="'visible'" [width]="32"></app-image>
-						<button (click)="updateDialog(account.username)" color="primary" mat-icon-button>
+						<button (click)="updateDialog(account)" color="primary" mat-icon-button>
 							<mat-icon>folder_shared</mat-icon>
 						</button>
 						<button [username]="account.username" auth-username-immediate-button color="primary" mat-icon-button>
@@ -32,7 +32,7 @@
 						<button [username]="account.username" auth-password-immediate-button color="warn" mat-icon-button>
 							<mat-icon>vpn_key</mat-icon>
 						</button>
-						<button (click)="deleteDialog(account.username)" *ngIf="account.auth > 1" color="warn" mat-icon-button>
+						<button (click)="deleteDialog(account)" *ngIf="account.auth > 1" color="warn" mat-icon-button>
 							<mat-icon>clear</mat-icon>
 						</button>
 					</mat-grid-tile-header>

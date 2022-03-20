@@ -93,7 +93,7 @@ export class NativeFiles extends Updatable {
 			const target_path = "image/" + this.mailAddressToFileName(operator.username) + "/" + path;
 			this.Model.remove_by_id(operator, target_path).then((object: IUpdatableModel): void => {
 				this.SendSuccess(response, {});
-			}).catch((error: IErrorObject) => {
+			}).catch((error: IErrorObject): void => {
 				this.SendError(response, Errors.Exception(error, "S10029"));
 			});
 		} catch (error: any) {

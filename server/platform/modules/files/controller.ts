@@ -770,9 +770,10 @@ export class Files extends Wrapper {
 // 			username = param.u || user.username || _default.username;
 // 		}
 
-		let username: string = _default.username;
-
-		if (!username) {
+		let username = "";
+		if (_default) {
+			username = _default.username;
+		} else {
 			if (user) {
 				username = user.username;
 			}

@@ -20,7 +20,7 @@ import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Directive()
-export abstract class BlogBasePageComponent extends UpdatableComponent implements OnInit {
+export class BlogBasePageComponent extends UpdatableComponent implements OnInit {
 
 	public get isProgress(): boolean {
 		return this.spinner.progress;
@@ -80,55 +80,156 @@ export abstract class BlogBasePageComponent extends UpdatableComponent implement
 		this.spinner.Progress(value);
 	}
 
-	public imagePath(images: any[], index: number): string {
+	public ngOnInit(): void {
+		this.sort = {};
+		super.ngOnInit();
+		this.isHandset = this.breakpointObserver.observe([
+			Breakpoints.HandsetPortrait,
+		]);
+		this.isTablet = this.breakpointObserver.observe([
+			Breakpoints.TabletPortrait,
+		]);
+		this.isDesktop = this.breakpointObserver.observe([
+			Breakpoints.Web,
+		]);
+	}
+
+	/**
+	 * クリエイトダイアログ
+	 */
+	/*
+	public createDialog(): void {
+
+		const initalData: IArticleModelContent = {
+			id: "",
+			parent_id: "",
+			enabled: true,
+			category: "",
+			status: 0,
+			type: "",
+			name: "",
+			value: {title: "", description: ""},
+			accessory: {
+				images: [
+					{name: "", description: {}},
+					{name: "", description: {}},
+					{name: "", description: {}},
+					{name: "", description: {}}
+				]
+			},
+		};
+
+		const dialog: MatDialogRef<any> = this.matDialog.open(BlogBaseDialogComponent, {
+			minWidth: "320px",
+			height: "fit-content",
+			data: {content: this.toView(initalData)},
+			disableClose: true,
+		});
+
+		dialog.beforeClosed().subscribe((result: any): void => {
+			if (result) { // if not cancel then
+				this.Progress(true);
+				this.create(this.confirmToModel(result), (error: IErrorObject, result: any): void => {
+					if (error) {
+						this.Complete("error", error);
+					}
+					this.Progress(false);
+				});
+			}
+		});
+
+		dialog.afterClosed().subscribe((result: any): void => {
+			this.Complete("", result);
+		});
+
+	}
+*/
+	/**
+	 * アップデートダイアログ
+	 * @param id ターゲット
+	 */
+
+	/*
+	public updateDialog(id: string): void {
+		this.get(id, (error: IErrorObject, result: any): void => {
+			if (!error) {
+				const dialog: MatDialogRef<any> = this.matDialog.open(BlogBaseDialogComponent, {
+					minWidth: "320px",
+					height: "fit-content",
+					data: this.toView(result),
+					disableClose: true,
+				});
+
+				dialog.beforeClosed().subscribe((result: any): void => {
+					if (result) { // if not cancel then
+						this.Progress(true);
+						this.update(id, this.confirmToModel(result.content), (error: IErrorObject, result: any): void => {
+							if (error) {
+								this.Complete("error", error);
+							}
+							this.Progress(false);
+						});
+					}
+				});
+
+				dialog.afterClosed().subscribe((result: any): void => {
+					this.Complete("", result);
+				});
+			} else {
+				this.Complete("error", error);
+			}
+		});
+	}
+*/
+	/**
+	 * 削除
+	 * @param event
+	 * @param id ターゲット
+	 */
+	public onDelete(event: any, id: string): void {
+		const _delete = (id: string): void => {
+			this.Progress(true);
+			this.delete(id, (error: IErrorObject, result: any): void => {
+				if (!error) {
+					this.Complete("", result);
+				} else {
+					this.Complete("error", error);
+				}
+				this.Progress(false);
+			});
+		};
+
+		if (event.shiftKey) { // dialog?
+			_delete(id);
+		} else {
+			const resultDialogContent: any = {title: "Articles", message: "Delete this?"};
+			const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
+				width: "30%",
+				minWidth: "320px",
+				height: "fit-content",
+				data: {
+					session: this.currentSession,
+					content: resultDialogContent,
+				},
+				disableClose: true,
+			});
+			dialog.afterClosed().subscribe((result: object) => {
+				if (result) { // if not cancel then
+					_delete(id);
+				}
+			});
+		}
+	}
+
+	public imagePath(article: any): string {
 		let path = "";
-
-		if (images) {
-			if (images.length > index) {
-				if (images[index].name) {
-					path = "/pfiles/get/" + images[index].name;
+		if (article.accessory) {
+			if (article.accessory.images) {
+				if (article.accessory.images.length > 0) {
+					path = "/files/get/" + article.accessory.images[0].name;
 				}
 			}
 		}
-
 		return path;
-	}
-
-	public imageName(images: any[], index: number): string {
-		let name = "";
-
-		if (images) {
-			if (images.length > index) {
-				if (images[index].name) {
-					name = images[index].name;
-				}
-			}
-		}
-
-		return name;
-	}
-
-	public mimeToMedia(mime: string): string {
-		let result = "";
-		if (mime) {
-			const type: string[] = mime.split("/");
-			if (type.length >= 2) {
-				result = type[0].toLocaleLowerCase();
-			}
-		}
-		return result;
-	}
-
-	public imageMedia(images: any[], index: number): string {
-		let type = "";
-
-		if (images) {
-			if (images.length > index) {
-				if (images[index].type) {
-					type = this.mimeToMedia(images[index].type);
-				}
-			}
-		}
-		return type;
 	}
 }

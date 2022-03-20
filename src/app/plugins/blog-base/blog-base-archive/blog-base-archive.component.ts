@@ -15,14 +15,13 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatDialog} from "@angular/material/dialog";
-import {UpdatableComponent} from "../../../platform/base/components/updatable.component";
-import {Spinner} from "../../../platform/base/library/spinner";
-import {BlogBasePageComponent} from "../blog-base-page/blog-base-page.component";
 
 @Directive()
-export abstract class BlogBaseArchiveComponent extends BlogBasePageComponent implements OnInit {
+export class BlogBaseArchiveComponent extends ResponsiveComponent implements OnInit {
 
 	public results: any[] = [];
+
+	private service: BlogBaseService;
 
 	private type: string;
 	private skip: number;
@@ -41,7 +40,33 @@ export abstract class BlogBaseArchiveComponent extends BlogBasePageComponent imp
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
+		super(session, breakpointObserver);
+		this.service = blogsService;
+	}
+
+	/**
+	 * エラー表示
+	 * @param error
+	 */
+	private errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+		 		duration: 8000,
+			});
+		}
+	}
+
+	/**
+	 * メッセージ表示
+	 * @param message
+	 */
+	private messageBar(message: string): void {
+		if (message) {
+			this.snackbar.open(message, "Close", {
+		 		duration: 8000,
+				panelClass: ["message-snackbar"]
+			});
+		}
 	}
 
 	/**
@@ -80,8 +105,16 @@ export abstract class BlogBaseArchiveComponent extends BlogBasePageComponent imp
 		return this.domSanitizer.bypassSecurityTrustHtml(text);
 	}
 
-
-
-
+	public imagePath(article: any): string {
+		let path = "";
+		if (article.accessory) {
+			if (article.accessory.images) {
+				if (article.accessory.images.length > 0) {
+					path = "/files/get/" + article.accessory.images[0].name;
+				}
+			}
+		}
+		return path;
+	}
 
 }

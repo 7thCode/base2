@@ -110,7 +110,7 @@ export abstract class UploadableComponent extends SessionableComponent implement
 
 		Promise.all(promises).then((result): void => {
 			callback(null, result);
-		}).catch((error): void => {
+		}).catch((error: IErrorObject): void => {
 			callback(error, null);
 		});
 	}

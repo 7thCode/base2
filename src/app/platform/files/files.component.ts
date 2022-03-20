@@ -278,7 +278,7 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 			if (Array.isArray(files)) {
 				files.forEach((file) => {
 					promises.push(new Promise((resolve, reject) => {
-						const type = this.mimeToType(file.type);
+						const type:string = this.mimeToType(file.type);
 						switch (type) {  // resizeable?
 							case "jpeg":
 							case "png":

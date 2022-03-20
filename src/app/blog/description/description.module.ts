@@ -15,7 +15,6 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTableModule} from "@angular/material/table";
 import {RouterModule} from "@angular/router";
 import {MatCardModule} from "@angular/material/card";
-import {ImageModule} from "../../platform/image/image.module";
 
 @NgModule({
 	declarations: [BlogDescriptionComponent],
@@ -28,8 +27,6 @@ import {ImageModule} from "../../platform/image/image.module";
 		MatTableModule,
 		RouterModule,
 		MatCardModule,
-
-		ImageModule,
 	]
 })
 

@@ -76,6 +76,7 @@ export interface IAccountPublic {
 	status: number;
 	type: string;
 	enabled: boolean;
+	subscribe: number;
 }
 
 export interface IRights {

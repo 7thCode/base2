@@ -60,17 +60,16 @@ export class Session extends Wrapper {
 		try {
 			const user: { data: object } = this.Transform(request.session.req.user); // request.session.req.user;
 			if (user) {
-				// 		if (!user.data) {
-				// 			user.data = {};
-				// 		}
 
-
-				request.session.req.user.data = _.merge(request.session.req.user.data, request.body);
-
+				if (request.session.req.user.data === undefined) {
+					request.session.req.user.data = request.body
+				} else {
+					request.session.req.user.data = _.merge(request.session.req.user.data, request.body);
+				}
 
 				// 		request.session.req.user.data = request.body;
 				// 		user.data = request.body;
-				// 	   request.session.save();
+				request.session.save();
 				this.SendSuccess(response, request.body);
 			} else {
 				this.SendError(response, Errors.userError(1, "not logged in.", "S00375"));

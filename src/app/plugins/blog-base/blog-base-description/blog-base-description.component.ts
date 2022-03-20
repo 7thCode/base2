@@ -20,18 +20,15 @@ import {BlogBaseService} from "../blog-base.service";
 import {environment} from "../../../../environments/environment";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatDialog} from "@angular/material/dialog";
-import {UpdatableComponent} from "../../../platform/base/components/updatable.component";
-import {Spinner} from "../../../platform/base/library/spinner";
-import {BlogBasePageComponent} from "../blog-base-page/blog-base-page.component";
 
 @Directive()
-export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent implements OnInit {
+export class BlogBaseDescriptionComponent extends ResponsiveComponent implements OnInit {
 
 	public id: string = "";
-	public _title_: string = "";
-	public subtitle: string = "";
 	public description: SafeHtml;
 	public images: { name: string }[] = [];
+
+	protected service: BlogBaseService;
 
 	constructor(
 		protected session: SessionService,
@@ -40,13 +37,24 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
+
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected router: Router,
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
+		super(session, breakpointObserver);
+		this.service = blogsService;
+	}
+
+	/**/
+	protected errorBar(error: IErrorObject): void {
+		if (error) {
+			this.snackbar.open(error.message, "Close", {
+ 		duration: 8000,
+			});
+		}
 	}
 
 	/**/
@@ -58,40 +66,35 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 
 	/**/
 	public ngOnInit(): void {
-
-	// 	this.getSession((error: IErrorObject, session: object | null): void => {
-	// 		if (!error) {
+		this.getSession((error: IErrorObject, session: object | null): void => {
+			if (!error) {
 				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
 					this.id = params.get('id');
 					this.draw((error, blogpage: any) => {
 						if (!error) {
-							const content = blogpage.content;
+
 							const meta = environment.meta.description;
-							this.title.setTitle(content.value.title);
-							meta.description.push({name: 'keywords', content: content.accessory.keyword});
-							meta.description.push({name: 'description', content: content.accessory.description});
+							this.title.setTitle(blogpage.value.title);
+							meta.description.push({name: 'keywords', content: blogpage.accessory.keyword});
+							meta.description.push({name: 'description', content: blogpage.accessory.description});
 							this.setDescription(meta);
-							this._title_ = content.value.title;
-							if (content.value.subtitle) {
-								this.subtitle =  content.value.subtitle;
-							}
-							this.description = this.domSanitizer.bypassSecurityTrustHtml(content.value.description);
-							this.images = content.accessory.images;
+
+							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.value.description);
+							this.images = blogpage.accessory.images;
 						} else {
 							this.errorBar(error);
 						}
 					})
 				});
-	// 		}
-	// 	});
-
+			}
+		});
 	}
 
 	/**
 	 * 再描画
 	 * @param callback コールバック
 	 */
-	public draw(callback: Callback<object[]>): void {
+	public draw(callback: Callback<object>): void {
 		this.service.get(this.id, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				callback(null, result);
@@ -99,6 +102,21 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 				callback(error, null);
 			}
 		});
+	}
+
+	/*
+	*
+	*/
+	public imagePath(): string {
+		let path = "";
+		if (this.images) {
+			if (this.images.length > 0) {
+				if (this.images[0].name) {
+					path = "/pfiles/get/" + this.images[0].name;
+				}
+			}
+		}
+		return path;
 	}
 
 }

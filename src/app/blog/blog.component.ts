@@ -30,7 +30,6 @@ import {RouterOutlet} from "@angular/router";
 	styleUrls: ["./blog.component.css"],
 	animations: [fadeAnimation], // register the animation,
 })
-
 export class BlogComponent extends BlogBaseComponent implements OnInit, OnDestroy {
 
 	/**
@@ -62,5 +61,6 @@ export class BlogComponent extends BlogBaseComponent implements OnInit, OnDestro
 	public prepareRoute(outlet: RouterOutlet): any {
 		return (outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation);
 	}
+
 
 }

@@ -1,11 +1,50 @@
-var gulp = require('gulp');
-var typescript = require('gulp-typescript');
-var sourcemaps = require('gulp-sourcemaps');
-var replace     = require('gulp-replace');
+const gulp = require('gulp');
+const typescript = require('gulp-typescript');
+const sourcemaps = require('gulp-sourcemaps');
+const replace     = require('gulp-replace');
 
 const configured_typescript = typescript.createProject("server_tsconfig.json");
 
-var rimraf = require('rimraf');
+const rimraf = require('rimraf');
+
+try {
+	const sftp = require('gulp-sftp-up4');
+	const fs = require('fs');
+	const options = JSON.parse(fs.readFileSync('config/ftp.json', 'utf8'));
+	const standby = options.standby;
+	const ONLINE = options.ONLINE;
+
+	gulp.task('upload', () => {
+		return gulp.src([
+			'models/**/*',
+			'public/**/*',
+			'server/**/*',
+			'views/**/*',
+			'app.js',
+			'package.json',
+			'package-lock.json',
+		], {base: './product', allowEmpty: true})
+			.pipe(sftp(standby.a1))
+			.pipe(sftp(standby.a2));
+	});
+
+
+	gulp.task('UPLOAD_ONLINE', () => {
+		return gulp.src([
+//		'models/**/*',
+//		'public/**/*',
+//		'server/**/*',
+//		'views/**/*',
+//		'app.js',
+//		'package.json',
+//		'package-lock.json',
+		], {base: './product', allowEmpty: true})
+//		.pipe(sftp(ONLINE.A1))
+//		.pipe(sftp(ONLINE.A2));
+	});
+} catch {
+
+}
 
 gulp.task('dry', (cb) => {
 	rimraf('backup', cb);
@@ -62,10 +101,10 @@ gulp.task('build', () => {
 		'public/favicon/**/*.*',
 		'bridge/**/*.js',
 		'server/**/*.js',
-		'server/**/*.ejs',
+		'server/**/*.pug',
 		'server/platform/**/*.js',
 		'server/platform/assets/**/*.*',
-		'views/**/*.ejs',
+		'views/**/*.pug',
 		'types/**/*.js',
 		'app.js',
 		'patch.js',

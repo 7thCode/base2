@@ -172,7 +172,7 @@ export class ArticlesComponent extends GridViewComponent implements OnInit {
 		this.get(id, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				const dialog: MatDialogRef<any> = this.matDialog.open(ArticleDialogComponent, {
-	// 				width: "30%",
+					width: "30%",
 					minWidth: "320px",
 					height: "fit-content",
 					data: {content: this.toView(result)},

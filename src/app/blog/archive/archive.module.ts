@@ -23,7 +23,6 @@ import {BlogRoutingModule} from "../blog-routing.module";
 
 import {BlogArchiveComponent} from "./archive.component";
 import {MatListModule} from "@angular/material/list";
-import {ImageModule} from "../../platform/image/image.module";
 
 @NgModule({
 	declarations: [
@@ -39,7 +38,6 @@ import {ImageModule} from "../../platform/image/image.module";
 		MatIconModule,
 		MatDialogModule,
 		MatRippleModule,
-		ImageModule,
 
 		BlogRoutingModule,
 

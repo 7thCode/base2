@@ -6,7 +6,7 @@
 
 "use strict";
 
-import {Component, HostListener, Inject, NgZone} from "@angular/core";
+import {Component, Inject, NgZone} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {AngularEditorConfig} from "@kolkov/angular-editor";
 import {BaseDialogComponent} from "../../platform/base/components/base-dialog.component";
@@ -98,7 +98,6 @@ export class BlogDialogComponent extends BaseDialogComponent {
 		return this.data.content;
 	}
 
-
 	/*
 *
 */
@@ -131,27 +130,5 @@ export class BlogDialogComponent extends BaseDialogComponent {
 				this.images[index] = event.value;
 			}
 		}
-	}
-
-	public mimeToMedia(mime: string): string {
-		let result = "";
-		if (mime) {
-			const type: string[] = mime.split("/");
-			if (type.length >= 2) {
-				result = type[0].toLocaleLowerCase();
-			}
-		}
-		return result;
-	}
-
-	public mimeToType(mime: string): string {
-		let result = "";
-		if (mime) {
-			const type: string[] = mime.split("/");
-			if (type.length >= 2) {
-				result = type[type.length - 1].toLocaleLowerCase();
-			}
-		}
-		return result;
 	}
 }
