@@ -6,7 +6,7 @@
 
 import {Component, OnInit} from "@angular/core";
 import {SessionService} from "../../platform/base/services/session.service";
-import {BreakpointObserver} from "@angular/cdk/layout";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Overlay} from "@angular/cdk/overlay";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -16,7 +16,10 @@ import {BlogService} from "../blog.service";
 import {IArticleModelContent, IErrorObject} from "../../../../types/platform/universe";
 import {BlogDialogComponent} from "../blog-dialog/blog-dialog.component";
 import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {Errors} from "../../platform/base/library/errors";
+import {environment} from "../../../environments/environment";
+
 
 @Component({
 	selector: "blog-top",
@@ -26,6 +29,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 
 export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 
+	public main: any;
+	public description: any;
+	public images: any[];
+
 	public constructor(
 		protected session: SessionService,
 		protected blogsService: BlogService,
@@ -33,14 +40,13 @@ export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 		protected overlay: Overlay,
 		protected matDialog: MatDialog,
 		protected snackbar: MatSnackBar,
-
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected router: Router,
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar, domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	/**
@@ -129,4 +135,22 @@ export class BlogTopComponent extends BlogBaseTopComponent implements OnInit {
 			}
 		});
 	}
+
+	public ngOnInit(): void {
+		super.ngOnInit();
+		this.main = null;
+		this.service.query({"content.category": "news"}, {sort: {}, skip: 0, limit: 1}, (error: IErrorObject, results: any[]): void => {
+			if (!error) {
+				if (results) {
+					if (results.length) {
+						this.main = results[0];
+						const content = this.main.content;
+						this.description = this.domSanitizer.bypassSecurityTrustHtml(content.value.description);
+						this.images = content.accessory.images;
+					}
+				}
+			}
+		});
+	}
+
 }

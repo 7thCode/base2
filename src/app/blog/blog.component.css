@@ -18,4 +18,11 @@
 	position: relative;
 }
 
+.paragraph {
+	font-size:14px;
+	letter-spacing: 0.07em;
+	line-height: 1.8em;
+	color:#808080;
+}
+
 /*# sourceMappingURL=progress.css.map */

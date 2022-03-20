@@ -8,7 +8,7 @@
 
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {Overlay} from "@angular/cdk/overlay";
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, VERSION} from "@angular/core";
 
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -18,6 +18,7 @@ import {SessionService} from "../platform/base/services/session.service";
 
 import {fadeAnimation} from "../platform/base/library/fade-animation";
 import {RouterOutlet} from "@angular/router";
+import {IErrorObject} from "../../../types/platform/universe";
 
 /**
  * プラットフォーム
@@ -30,6 +31,7 @@ import {RouterOutlet} from "@angular/router";
 	styleUrls: ["./blog.component.css"],
 	animations: [fadeAnimation], // register the animation,
 })
+
 export class BlogComponent extends BlogBaseComponent implements OnInit, OnDestroy {
 
 	/**
@@ -58,9 +60,20 @@ export class BlogComponent extends BlogBaseComponent implements OnInit, OnDestro
 	/**
 	 *
 	 */
+	public ngOnInit(): void {
+		super.ngOnInit();
+		this.isTablet.subscribe((layoutDetector: any) => {
+			if (layoutDetector.matches) {
+				this.device = "desktop";
+			}
+		});
+	}
+
+	/**
+	 *
+	 */
 	public prepareRoute(outlet: RouterOutlet): any {
 		return (outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation);
 	}
-
 
 }

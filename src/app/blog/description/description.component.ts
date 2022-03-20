@@ -39,37 +39,15 @@ export class BlogDescriptionComponent extends BlogBaseDescriptionComponent imple
 		protected domSanitizer: DomSanitizer,
 		protected activatedRoute: ActivatedRoute,
 		protected router: Router,
-		protected title: Title,
+		protected _title: Title,
 		protected meta: Meta
 	) {
-		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, _title, meta);
 	}
 
 	/**/
-	public ngOnInit(): void {
-		this.getSession((error: IErrorObject, session: object | null): void => {
-			if (!error) {
-				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
-					this.id = params.get('id');
-					this.draw((error, blogpage: any) => {
-						if (!error) {
-
-							const meta = environment.meta.description;
-							this.title.setTitle(blogpage.content.value.title);
-							meta.description.push({name: 'keywords', content: blogpage.content.accessory.keyword});
-							meta.description.push({name: 'description', content: blogpage.content.accessory.description});
-							this.setDescription(meta);
-
-							this.description = this.domSanitizer.bypassSecurityTrustHtml(blogpage.content.value.description);
-							this.images = blogpage.content.accessory.images;
-						} else {
-							this.errorBar(error);
-						}
-					})
-				});
-			}
-		});
-	}
-
+	// public ngOnInit(): void {
+	// 	super.ngOnInit();
+	// }
 
 }
