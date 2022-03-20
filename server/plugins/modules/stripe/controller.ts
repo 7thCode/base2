@@ -80,8 +80,8 @@ export class Stripe extends Mail {
 	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		try {
 			callback(null, Cipher.Decrypt(key, crypted));
-		} catch (e: any) {
-			callback(e, "");
+		} catch (error: any) {
+			callback(error, "");
 		}
 	}
 
@@ -569,7 +569,7 @@ export class Stripe extends Mail {
 	private get_self(operator: IAccountModel, callback: Callback<IAccountModel>): void {
 		LocalAccount.default_find_by_id(operator, operator.user_id).then((account: IAccountModel): void => {
 			callback(null, account);
-		}).catch((error: IErrorObject) => {
+		}).catch((error: IErrorObject): void => {
 			callback(error, null);
 		});
 	}
@@ -587,7 +587,7 @@ export class Stripe extends Mail {
 	private put_self(operator: IAccountModel, update: object, callback: Callback<IAccountModel>): void {
 		LocalAccount.set_by_id(operator, operator.user_id, update).then((account: IAccountModel): void => {
 			callback(null, account);
-		}).catch((error: IErrorObject) => {
+		}).catch((error: IErrorObject): void => {
 			callback(error, null);
 		})
 	}
@@ -629,7 +629,7 @@ export class Stripe extends Mail {
 		try {
 			this.stripe.subscriptions.list({}).then((subscriptions: any[]) => {
 				callback(null, subscriptions);
-			}).catch((error: any) => {
+			}).catch((error: IErrorObject): void => {
 				callback(Stripe.translationError(error), null);
 			});
 		} catch (error: any) {
@@ -692,13 +692,13 @@ export class Stripe extends Mail {
 				if (stripe_id) {
 					this.stripe.customers.retrieve(stripe_id).then((customer: any) => {
 						callback(null, customer);
-					}).catch((error: any) => {
+					}).catch((error: IErrorObject): void => {
 						callback(Stripe.translationError(error), null);
 					});
 				} else {
 					callback(null, null);
 				}
-			}).catch((error: IErrorObject) => {
+			}).catch((error: IErrorObject): void => {
 				callback(error, null);
 			});
 		} catch (error: any) {
@@ -871,6 +871,7 @@ export class Stripe extends Mail {
 	 * @param response
 	 * @returns none
 	 */
+	/*
 	public deleteCustomer(request: any, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "not logged in.", "S00405"), request.user, () => {
@@ -904,6 +905,68 @@ export class Stripe extends Mail {
 			});
 		} catch (error: any) {
 			this.SendError(response, error);
+		}
+	}
+*/
+
+	public deleteCustomer(request: any, response: IJSONResponse): void {
+		try {
+			this.innerDeleteCustomer(request.user, (error: IErrorObject, customer_id) => {
+				if (!error) {
+					this.SendSuccess(response, customer_id);
+				} else {
+					this.SendError(response, Stripe.translationError(error));
+				}
+			})
+		} catch (error: any) {
+			this.SendError(response, error);
+		}
+	}
+
+	/**
+	 * innerDeleteCustomer
+	 *
+	 * @param user
+	 * @param callback
+	 * @returns none
+	 */
+	public innerDeleteCustomer(user: any, callback: Callback<any>): void {
+		try {
+			if (user) {
+				if (this.enable) {
+					const operator: IAccountModel = this.Transform(user);
+					this.get_self(operator, (error, account: any) => {
+						if (!error) {
+							const stripe_id = account.content.stripe_id;
+							if (stripe_id) {
+								this.logger.info('begin deleteCustomer. ' + operator.username);
+								this.stripe.customers.del(stripe_id).then((customer: any) => {
+									this.logger.info('end deleteCustomer. ' + operator.username);
+									this.put_self(operator, {"content.stripe_id": null}, (error, account) => {
+										if (!error) {
+											callback(null, customer.id);
+										} else {
+											callback(error, null);
+										}
+									});
+								}).catch((error: any) => {
+									callback(Stripe.translationError(error), null);
+								});
+							} else {
+								callback(null, null);
+							}
+						} else {
+							callback(error, null);
+						}
+					});
+				} else {
+					callback(Errors.generalError(-1, "disabled.", "S00407"), null);
+				}
+			} else {
+				callback(Errors.userError(1, "not logged in.", "S00405"), null);
+			}
+		} catch (error: any) {
+			callback(error, null);
 		}
 	}
 
@@ -1115,7 +1178,7 @@ export class Stripe extends Mail {
 
 		immutable.text.content.text.push(`description: ${mailto.charge.description}`);
 
-		const mutable = {link:mailto.charge.receipt_url};
+		const mutable = {link: mailto.charge.receipt_url};
 
 		this.sendMail({
 			address: mailto.address,
@@ -1157,7 +1220,7 @@ export class Stripe extends Mail {
 		});
 		immutable.text.content.text.push(`description: ${mailto.charge.description}`);
 
-		const mutable = {link:mailto.charge.receipt_url};
+		const mutable = {link: mailto.charge.receipt_url};
 
 		this.sendMail({
 			address: mailto.address,
@@ -1206,7 +1269,7 @@ export class Stripe extends Mail {
 
 		immutable.text.content.text.push(`description: ${mailto.charge.description}`);
 
-		const mutable = {link:mailto.charge.receipt_url};
+		const mutable = {link: mailto.charge.receipt_url};
 
 		this.sendMail({
 			address: mailto.address,
@@ -1813,7 +1876,7 @@ export class Stripe extends Mail {
 	public isSubscribeUserPublic(request: any, response: IJSONResponse): void {
 		try {
 			if (this.enable) {
-				const key:{key:string} = request.query;
+				const key: { key: string } = request.query;
 				const username = request.params.username;
 				LocalAccount.default_find_by_name(null, username).then((account: IAccountModel): void => {
 					const stripe_id = account.content.stripe_id;

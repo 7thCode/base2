@@ -125,6 +125,7 @@ export class AuthService extends HttpService {
 								if (result.code === 0) {
 									this.session.put({token:result.value.token} ,() => {
 										callback(null, result.value);
+										//			localStorage.setItem("QR", result.value.token);
 									})
 								} else {
 									callback(Errors.serverError(result, "A00216"), null);
@@ -251,14 +252,9 @@ export class AuthService extends HttpService {
 	public get_login_token(callback: Callback<any>): void {
 		this.session.get((error, session: any) => {
 			const value: any = session.data.token;
-			// const value: any = localStorage.getItem("QR");
 			this.http.get(this.endPoint + "/auth/token/qr/" + encodeURIComponent(value), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
-					if (result.code === 0) {
-						callback(null, result.value);
-					} else {
-						callback(Errors.serverError(result, "A00108"), null);
-					}
+					callback(null, result.value);
 				} else {
 					callback(Errors.networkError("A00109"), null);
 				}
@@ -267,6 +263,7 @@ export class AuthService extends HttpService {
 			});
 		})
 	}
+
 
 	/**
 	 * ユーザ登録
@@ -562,6 +559,7 @@ export class AuthService extends HttpService {
 		});
 	}
 
+
 	/**
 	 * ログアウト
 	 *
@@ -571,6 +569,7 @@ export class AuthService extends HttpService {
 		this.http.get(this.endPoint + "/auth/logout", this.httpOptions).pipe(retry(3)).subscribe((account: any): void => {
 			if (account) {
 				if (account.code === 0) {
+					//			localStorage.removeItem("QR");
 					callback(null, account.value);
 				} else {
 					callback(null, null);
@@ -605,4 +604,22 @@ export class AuthService extends HttpService {
 			callback(Errors.networkException(error, "A00182"), null);
 		});
 	}
+
+	/*
+		public loginFacebook(callback: Callback<any>): void {
+			this.http.get(this.endPoint + "/auth/facebook", this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+				if (result) {
+					if (result.code === 0) {
+						callback(null, result.value);
+					} else {
+						callback(result, null);
+					}
+				} else {
+					callback(this.networkError("0000"), null);
+				}
+			}, (error: HttpErrorResponse): void => {
+				callback(this.networkException(error,"0001"), null);
+			});
+		}
+	*/
 }

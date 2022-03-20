@@ -26,7 +26,7 @@ namespace AccountModel {
 		provider: {type: String, default: "local"},
 		auth: {type: Number, default: 200},
 		user_id: {type: Schema.Types.ObjectId, required: true, index: {unique: true}}, 	// main key
-		username: {type: String, required: true, index: {unique: true}},
+		username: {type: String, required: true, index: {unique: true, dropDups: true}},
 		password: {type: String},
 		relations: {type: mongoose.Schema.Types.Mixed},
 		privatekey: {type: String, default: ""},

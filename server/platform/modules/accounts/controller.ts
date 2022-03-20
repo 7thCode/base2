@@ -8,7 +8,7 @@
 
 import {AuthLevel, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
 
-import {IAccountContent, IAccountModel, IAccountRequest, IJSONResponse, IQueryParam, IQueryRequest, IUsernameParam} from "../../../../types/platform/server";
+import {IAccountContent, IAccountModel, IAccountRequest, IJSONResponse, IQueryParam, IQueryRequest, IUserIDParam, IUsernameParam} from "../../../../types/platform/server";
 import * as mongoose from "mongoose";
 import {Errors} from "../../base/library/errors";
 
@@ -40,6 +40,23 @@ export class Accounts extends Wrapper {
 		event.on("compaction", () => {
 			logger.info("start compaction Accounts");
 		});
+	}
+
+	/**
+	 *
+	 * @param current
+	 * @param username
+	 * @returns own
+	 */
+	private static own_by_id(current: any, user_id: string): boolean {
+		// マネージャ以上は、自分以外のアカウントを変更できる。
+		let readable: boolean = false;
+		if (current.auth < AuthLevel.user) { // is not manager?
+			readable = true;
+		} else {
+			readable = (current.user_id === user_id); // is self?
+		}
+		return readable;
 	}
 
 	/**
@@ -197,11 +214,11 @@ export class Accounts extends Wrapper {
 	public get(request: IAccountRequest<any>, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00300"), request.user, () => {
-				const target: IUsernameParam = request.params;
+				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00301"), operator.login, () => {
-					if (Accounts.own_by_name(operator, target.username)) {
-						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
+					if (Accounts.own_by_id(operator, target.user_id)) {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, Errors.generalError(-1, "no user.", "S00302"), account, () => {
 								this.SendSuccess(response, account.public());
 							});
@@ -227,7 +244,7 @@ export class Accounts extends Wrapper {
 	public put(request: IAccountRequest<IAccountContent>, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00304"), request.user, () => {
-				const target: IUsernameParam = request.params;
+				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				const type: string = request.body.type;
 				const content: IAccountContent = request.body.content;
@@ -247,8 +264,8 @@ export class Accounts extends Wrapper {
 					}
 
 					this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00306"), operator.login, () => {
-						if (Accounts.own_by_name(operator, target.username)) {
-							LocalAccount.set_by_name(operator, target.username, update).then((account: IAccountModel): void => {
+						if (Accounts.own_by_id(operator, target.user_id)) {
+							LocalAccount.set_by_id(operator, target.user_id, update).then((account: IAccountModel): void => {
 								this.SendSuccess(response, account.public());
 							}).catch((error: any) => {
 								this.SendError(response, Errors.Exception(error, "S10037"));
@@ -273,14 +290,14 @@ export class Accounts extends Wrapper {
 	public delete(request: IAccountRequest<any>, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00308"), request.user, () => {
-				const target: IUsernameParam = request.params;
+				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00309"), operator.login, () => {
-					if (Accounts.own_by_name(operator, target.username)) {
-						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
+					if (Accounts.own_by_id(operator, target.user_id)) {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, Errors.generalError(-1, "not found.", "S00310"), account, () => {
 								Relation.delete(account.user_id).then((result: any) => {
-									LocalAccount.remove_by_name(operator, target.username).then((): void => {
+									LocalAccount.remove_by_id(operator, target.user_id).then((): void => {
 										this.SendSuccess(response, {});
 									}).catch((error: IErrorObject) => {
 										this.SendError(response, Errors.Exception(error, "S10027"));
@@ -310,11 +327,11 @@ export class Accounts extends Wrapper {
 	public get_is_secret(request: IAccountRequest<any>, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00312"), request.user, () => {
-				const target: IUsernameParam = request.params;
+				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00313"), operator.login, () => {
-					if (Accounts.own_by_name(operator, target.username)) {
-						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
+					if (Accounts.own_by_id(operator, target.user_id)) {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, Errors.generalError(-1, "no user.", "S00314"), account, () => {
 								const is_2fa: boolean = (account.secret !== "");
 								this.SendSuccess(response, {is_2fa});
@@ -346,16 +363,16 @@ export class Accounts extends Wrapper {
 
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00316"), request.user, () => {
-				const target: IUsernameParam = request.params;
+				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00317"), operator.login, () => {
-					if (Accounts.own_by_name(operator, target.username)) {
-						LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
+					if (Accounts.own_by_id(operator, target.user_id)) {
+						LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 							this.ifExist(response, Errors.generalError(-1, "no user.", "S00318"), account, () => {
 								this.ifExist(response, Errors.generalError(-1, "Already Multi-factor authentication.", "S00319"), !Boolean(account.secret), () => {
 									const secret: any = SpeakEasy.generateSecret({
 										length: 20,
-										name: target.username,
+										name: account.username,
 										issuer: this.systemsConfig.ua,
 									});
 									const update: object = {
@@ -364,11 +381,11 @@ export class Accounts extends Wrapper {
 
 									const qr_url: string = SpeakEasy.otpauthURL({ // data url encode of secret QR code.
 										secret: secret.ascii,
-										label: encodeURIComponent(usernameToMail(target.username)),
+										label: encodeURIComponent(usernameToMail(account.username)),
 										issuer: this.systemsConfig.ua,
 									});
 
-									LocalAccount.set_by_name(operator, target.username, update).then((account: object): void => {
+									LocalAccount.set_by_name(operator, account.username, update).then((account: object): void => {
 										QRCode.toDataURL(qr_url, (error: IErrorObject, qrcode: any): void => {
 											this.ifSuccess(response, error, (): void => {
 												this.SendSuccess(response, {qrcode});
@@ -401,16 +418,16 @@ export class Accounts extends Wrapper {
 	public post_reset_secret(request: IAccountRequest<any>, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00321"), request.user, () => {
-				const target: IUsernameParam = request.params;
+				const target: IUserIDParam = request.params;
 				const operator: IAccountModel = this.Transform(request.user);
 				this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00322"), operator.login, () => {
-					LocalAccount.default_find_by_name(operator, target.username).then((account: IAccountModel): void => {
+					LocalAccount.default_find_by_id(operator, target.user_id).then((account: IAccountModel): void => {
 						this.ifExist(response, Errors.generalError(-1, "no user.", "S00323"), account, () => {
-							if (Accounts.own_by_name(operator, target.username)) {
+							if (Accounts.own_by_id(operator, target.user_id)) {
 								const update: object = {
 									secret: "",
 								};
-								LocalAccount.set_by_name(operator, target.username, update).then((account: IAccountModel): void => {
+								LocalAccount.set_by_id(operator, target.user_id, update).then((account: IAccountModel): void => {
 									this.ifExist(response, Errors.generalError(-1, "no user.", "S00324"), account, () => {
 										this.SendSuccess(response, {});
 									});
@@ -784,11 +801,11 @@ export class Accounts extends Wrapper {
 		try {
 				this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00341"), request.user, () => {
 					const params = request.params;
-					const target_user_name: string = params.username;
+					const target_username: string = params.username;
 					const type: string = params.type;
 					const option: IQueryOption = params.option;
 
-					LocalAccount.default_find_by_name(null, target_user_name).then((target_user: any) => {
+					LocalAccount.default_find_by_name(null, target_username).then((target_user: any) => {
 						if (target_user) {
 							const user_id = target_user.user_id;
 
@@ -826,11 +843,11 @@ export class Accounts extends Wrapper {
 		try {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00341"), request.user, () => {
 				const params = request.params;
-				const target_user_name: string = params.username;
+				const target_username: string = params.username;
 				const type: string = params.type;
 				const option: IQueryOption = params.option;
 
-				LocalAccount.default_find_by_name(null, target_user_name).then((target_user: any) => {
+				LocalAccount.default_find_by_name(null, target_username).then((target_user: any) => {
 					if (target_user) {
 						const user_id = target_user.user_id;
 
@@ -869,9 +886,9 @@ export class Accounts extends Wrapper {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00341"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				const from_user_id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(operator.user_id);
-				const target_user_name: string = request.params.username;
+				const target_username: string = request.params.username;
 				const type: string = request.params.type;
-				LocalAccount.default_find_by_name(null, target_user_name).then((target_user: any) => {
+				LocalAccount.default_find_by_name(null, target_username).then((target_user: any) => {
 					if (target_user) {
 						const to_user_id: mongoose.Types.ObjectId = target_user.user_id;
 						Relation.cancel(to_user_id, from_user_id, type).then((result: any) => {
@@ -906,9 +923,9 @@ export class Accounts extends Wrapper {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00346"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				const from_user_id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(operator.user_id);
-				const target_user_name: string = request.params.username;
+				const target_username: string = request.params.username;
 				const type: string = request.params.type;
-				LocalAccount.default_find_by_name(null, target_user_name).then((target_user: any) => {
+				LocalAccount.default_find_by_name(null, target_username).then((target_user: any) => {
 					if (target_user) {
 						const to_user_id: mongoose.Types.ObjectId = target_user.user_id;
 						Relation.cancel(from_user_id, to_user_id, type).then((result: any) => {
@@ -943,9 +960,9 @@ export class Accounts extends Wrapper {
 			this.ifExist(response, Errors.userError(1, "ログインしていません.", "S00377"), request.user, () => {
 				const operator: IAccountModel = this.Transform(request.user);
 				const from_user_id: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(operator.user_id);
-				const target_user_name: string = request.params.username;
+				const target_username: string = request.params.username;
 				const type: string = request.params.type;
-				LocalAccount.default_find_by_name(null, target_user_name).then((target_user: any) => {
+				LocalAccount.default_find_by_name(null, target_username).then((target_user: any) => {
 					if (target_user) {
 						const to_user_id: mongoose.Types.ObjectId = target_user.user_id;
 						Relation.break(from_user_id, to_user_id, type).then((result: any) => {

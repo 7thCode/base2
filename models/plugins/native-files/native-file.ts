@@ -7,7 +7,7 @@
 "use strict";
 
 import {IAccountModel} from "../../../types/platform/server";
-import {Callback, IErrorObject, IQueryOption} from "../../../types/platform/universe";
+import {Callback, IAccountPublic, IErrorObject, IQueryOption} from "../../../types/platform/universe";
 
 /*
 *
@@ -25,6 +25,18 @@ namespace NativeFileModel {
 	const NativeFile = new Schema({
 		user_id: {type: Schema.Types.ObjectId},		// owner
 		filepath: {type: String, required: true, index: {unique: true}}, 	// main key
+		metadata: {
+			username: String,
+			relations: Object,
+			rights: {
+				read: Number,
+				write: Number
+			},
+			type: String,
+			count: Number,
+			category: Number,
+			description: String
+		}
 	});
 
 	NativeFile.plugin(rights);		// 権限
@@ -35,10 +47,11 @@ namespace NativeFileModel {
 	ユーザが一致するか、書き込み権限があるものを検索するクエリーを返す
 	*/
 	const query_by_user_read: any = (user: any, query: object): any => {
-		let result: any = {user_id: null};
-		if (user) {
-			result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
-		}
+		const result: any = query;
+		// 	if (user) {
+		// 	// 	result = {$and: [{user_id: {$eq: user.user_id}}, {"rights.read": {$gte: user.auth}}, query]};
+		// 		result = {$and: [{"rights.read": {$gte: user.auth}}, query]};
+		// 	}
 		return result;
 	};
 
@@ -70,6 +83,10 @@ namespace NativeFileModel {
 	// NativeFile.methods._save = function (): Promise<any> {
 	// 	return this.save();
 	// };
+
+	NativeFile.methods.public = function (): any {
+		return this;
+	};
 
 	NativeFile.statics.remove_by_id = function (user: IAccountModel, filepath: string): Promise<any> {
 		return this.model("NativeFile").findOneAndRemove(query_by_user_write(user, {filepath: filepath}));

@@ -240,7 +240,7 @@ export abstract class UpdatableComponent extends SessionableComponent implements
 
 	public ngOnInit(): void {
 		this.page = 0;
-	 	this.query = {};
+		this.query = {};
 		this.results = [];
 		this.getSession((error: IErrorObject, session: object | null): void => {
 			if (!error) {

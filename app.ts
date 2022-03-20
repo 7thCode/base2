@@ -198,6 +198,7 @@ const normal: () => void = () => {
 
 		// database
 
+
 		let user = "";
 		if (config.db.user) {
 			user = config.db.user + ":";
@@ -261,9 +262,9 @@ const normal: () => void = () => {
 
 			const MONGOSTORE_CLASS = require('connect-mongo');						// 暗号化されたクッキーとデータベースに保存されたセッションを関連づける
 
-			app.use(session({														// sessionとMongoDBの接続
-				name: config.sessionname,	                               			// セッション名
-				secret: config.sessionsecret,										// セッション暗号化キー
+			app.use(session({												// sessionとMongoDBの接続
+				name: config.sessionname,	                                           			// セッション名
+				secret: config.sessionsecret,													// セッション暗号化キー
 				resave: false,														//
 				rolling: true,		                                       			//
 				saveUninitialized: true,											//
@@ -276,6 +277,26 @@ const normal: () => void = () => {
 				}),
 			}));
 
+			/*
+			const MongoStore: any = require("connect-mongo")(session);
+			const sessionMiddleware: any = session({
+				name: config.sessionname,
+				secret: config.sessionsecret,
+				resave: false,
+				rolling: true,
+				saveUninitialized: true,
+				cookie: {
+					maxAge: 365 * 24 * 60 * 60 * 1000,
+				},
+				store: new MongoStore({
+					mongooseConnection: mongoose.connection,
+					ttl: 365 * 24 * 60 * 60,
+					clear_interval: 60 * 60,
+				}),
+			});
+
+			app.use(sessionMiddleware);
+*/
 			// passport
 			app.use(passport.initialize());
 			app.use(passport.session());
@@ -297,6 +318,8 @@ const normal: () => void = () => {
 			logger.trace("VR");
 
 			const server: Server = Serve(config, socket, app);
+
+			// io.wait(config, event);
 
 			// error handlers
 			app.use((req: any, res: any, next: (error: any) => {}): void => {
@@ -426,19 +449,9 @@ const normal: () => void = () => {
 			}
 
 			if (config.cron) {
-				const cron = config.cron;
-
-				if (cron.cleanup) {
+				if (config.cron.close) {
 					scheduler.Add({
-						timing: cron.cleanup, name: "cleanup", job: () => { // config.cron.cleanup
-							localEvent.emit("cleanup");
-						},
-					});
-				}
-
-				if (cron.close) {
-					scheduler.Add({
-						timing: cron.close, name: "site-close", job: () => { // config.cron.close
+						timing: config.cron.close, name: "site-close", job: () => { // config.cron.close
 							localEvent.emit("site-close");
 							localEvent.emit("begin-maintenance");
 							localEvent.emit("maintenance");
@@ -448,9 +461,9 @@ const normal: () => void = () => {
 					});
 				}
 
-				if (cron.open) {
+				if (config.cron.open) {
 					scheduler.Add({
-						timing: cron.open, name: "site-open", job: () => { // config.cron.open
+						timing: config.cron.open, name: "site-open", job: () => { // config.cron.open
 							// 				localEvent.emit("site-open");
 						},
 					});

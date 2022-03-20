@@ -37,9 +37,9 @@ export class AccountsService extends QueryableService {
 	 * @param content
 	 * @param callback
 	 */
-	public put(username: any, content: any, callback: Callback<any>): void {
-		if (username) {
-			this.http.put(this.endPoint + "/accounts/auth/" + encodeURIComponent(username), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public put(user_id: any, content: any, callback: Callback<any>): void {
+		if (user_id) {
+			this.http.put(this.endPoint + "/accounts/auth/" + encodeURIComponent(user_id), content, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
 					if (result.code === 0) {
 						callback(null, result);
@@ -101,12 +101,12 @@ export class AccountsService extends QueryableService {
 
 	/**
 	 *
-	 * @param username
+	 * @param user_id
 	 * @param callback
 	 */
-	public delete(username: string, callback: Callback<any>): void {
-		if (username) {
-			this.http.delete(this.endPoint + "/accounts/auth/" + encodeURIComponent(username), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public delete(user_id: string, callback: Callback<any>): void {
+		if (user_id) {
+			this.http.delete(this.endPoint + "/accounts/auth/" + encodeURIComponent(user_id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
 					if (result.code === 0) {
 						callback(null, result.value);
@@ -126,12 +126,12 @@ export class AccountsService extends QueryableService {
 
 	/**
 	 *
-	 * @param username
+	 * @param user_id
 	 * @param callback
 	 */
-	public is_2fa(username: string, callback: Callback<any>): void {
-		if (username) {
-			this.http.get(this.endPoint + "/accounts/auth/is2fa/" + encodeURIComponent(username), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public is_2fa(user_id: string, callback: Callback<any>): void {
+		if (user_id) {
+			this.http.get(this.endPoint + "/accounts/auth/is2fa/" + encodeURIComponent(user_id), this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
 					if (result.code === 0) {
 						callback(null, result.value.is_2fa);
@@ -151,12 +151,12 @@ export class AccountsService extends QueryableService {
 
 	/**
 	 *
-	 * @param username
+	 * @param user_id
 	 * @param callback
 	 */
-	public set_2fa(username: string, callback: Callback<any>): void {
-		if (username) {
-			this.http.post(this.endPoint + "/accounts/auth/set2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public set_2fa(user_id: string, callback: Callback<any>): void {
+		if (user_id) {
+			this.http.post(this.endPoint + "/accounts/auth/set2fa/" + encodeURIComponent(user_id), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
 					if (result.code === 0) {
 						callback(null, result.value.qrcode);
@@ -176,12 +176,12 @@ export class AccountsService extends QueryableService {
 
 	/**
 	 *
-	 * @param username
+	 * @param user_id
 	 * @param callback
 	 */
-	public reset_2fa(username: string, callback: Callback<any>): void {
-		if (username) {
-			this.http.post(this.endPoint + "/accounts/auth/reset2fa/" + encodeURIComponent(username), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
+	public reset_2fa(user_id: string, callback: Callback<any>): void {
+		if (user_id) {
+			this.http.post(this.endPoint + "/accounts/auth/reset2fa/" + encodeURIComponent(user_id), {}, this.httpOptions).pipe(retry(3)).subscribe((result: any): void => {
 				if (result) {
 					if (result.code === 0) {
 						callback(null, result.value);
@@ -195,7 +195,7 @@ export class AccountsService extends QueryableService {
 				callback(Errors.networkException(error, "A00137"), null);
 			});
 		} else {
-			callback(Errors.generalError(-1, "'username' required.", "A00143"), null);
+			callback(Errors.generalError(-1, "'user_id' required.", "A00143"), null);
 		}
 	}
 

@@ -80,8 +80,8 @@ export class Auth extends Mail {
 	private static publickey_decrypt(key: string, crypted: string, callback: Callback<any>): void {
 		try {
 			callback(null, Cipher.Decrypt(key, crypted));
-		} catch (e: any) {
-			callback(e, "");
+		} catch (error: any) {
+			callback(error, "");
 		}
 	}
 
@@ -106,8 +106,8 @@ export class Auth extends Mail {
 	 *
 	 * @param e
 	 */
-	public static error_handler(e: IErrorObject) {
-		this.logger.fatal(e.message);
+	public static error_handler(error: IErrorObject) {
+		this.logger.fatal(error.message);
 	}
 
 	/**
@@ -275,21 +275,21 @@ export class Auth extends Mail {
 												content: content,
 											}), rootpassword).then(() => {
 												resolve({});
-											}).catch((error: any) => {
+											}).catch((error: IErrorObject): void => {
 												reject(error);
 											});
 										});
 										promise.then((results: any): void => {
 											// 	this.event.emitter.emit("auth:register", {user, user_id, username: user.username});
 											resolve({});
-										}).catch((error: any): void => {
+										}).catch((error: IErrorObject): void => {
 											reject(error);
 										});
 									} else {
 										resolve({});
 									}
 
-								}).catch((error: any) => {
+								}).catch((error: IErrorObject): void => {
 									reject(error);
 								})
 							} else {
@@ -300,7 +300,7 @@ export class Auth extends Mail {
 
 					Promise.all(promises).then((objects): void => {
 						callback(null, objects);
-					}).catch((error): void => {
+					}).catch((error: IErrorObject): void => {
 						callback(error, null);
 					});
 				} else {
@@ -507,7 +507,7 @@ export class Auth extends Mail {
 										})(request, response);
 									});
 								});
-							}).catch((error: IErrorObject) => {
+							}).catch((error: IErrorObject): void => {
 								this.SendError(response, Errors.Exception(error, "S00053"));
 							});
 						});
@@ -562,7 +562,7 @@ export class Auth extends Mail {
 										this.SendError(response, Errors.userError(4, "account disabled.", "S00060"));
 									}
 								});
-							}).catch((error: IErrorObject) => {
+							}).catch((error: IErrorObject): void => {
 								this.SendError(response, Errors.Exception(error, "S10007"));
 							})
 						});
@@ -631,12 +631,6 @@ export class Auth extends Mail {
 				// const fixedKey = this.config.systems.key2;
 				// const token = Cipher.FixedDecrypt(request.params.token, fixedKey);
 				const token = request.params.token;
-				// 		Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, token, (error: IErrorObject, value: { username: string, password: string }): void => {
-				// 			this.ifSuccess(response, error, (): void => {
-
-				// 		LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
-				// 			this.ifExist(response, Errors.userError(3, "username or password missmatch.", "S00070"), account, () => {
-				// 				if (account.enabled) {
 
 				QRCode.toDataURL(token, (error: IErrorObject, qrcode: any): void => {
 					this.ifSuccess(response, error, (): void => {
@@ -644,16 +638,6 @@ export class Auth extends Mail {
 					});
 				});
 
-				// 					} else {
-				// 						this.SendError(response, Errors.userError(4, "account disabled.", "S00071"));
-				// 					}
-				// 				});
-				// 			}).catch((error: IErrorObject) => {
-				// 				this.SendError(response, Errors.Exception(error, "S00072"));
-				// 			})
-
-				// 			});
-				// 		});
 			});
 		} catch (error: any) {
 			this.SendFatal(response, Errors.Exception(error, "S00073"));
@@ -675,8 +659,6 @@ export class Auth extends Mail {
 						const fixedKey = this.config.systems.key2;
 						const value = JSON.parse(Cipher.FixedDecrypt(request.body.content, fixedKey));
 
-						// 	Auth.value_decrypt(this.systemsConfig.use_publickey, this.systemsConfig.privatekey, request.body.content, (error: IErrorObject, value: { username: string, password: string }): void => {
-						// 		this.ifSuccess(response, error, (): void => {
 						request.body.username = value.username; // for multi tenant.;
 						request.body.password = value.password;
 						LocalAccount.default_find_by_name({}, value.username).then((account: any): void => {
@@ -710,8 +692,7 @@ export class Auth extends Mail {
 						}).catch((error: IErrorObject) => {
 							this.SendError(response, Errors.Exception(error, "S00078"));
 						});
-						// 		});
-						// 	});
+
 					} catch (error: any) {
 						this.SendError(response, Errors.userError(6, "invalid key.", "S00179"));
 					}
@@ -821,7 +802,9 @@ export class Auth extends Mail {
 									if (!error) {
 										request.login(user, (error: IErrorObject): void => {
 											if (!error) {
-												response.redirect(target);
+												const fixedKey = this.config.systems.key2;
+												const token = Cipher.FixedCrypt(JSON.stringify({username,password}), fixedKey);
+												response.redirect(target + "?token=" + token);
 											} else {
 												response.status(error.code).render("error", {
 													message: error.message,
@@ -934,11 +917,6 @@ export class Auth extends Mail {
 										// const mail_object: any = this.message.passwordmail;
 										const immutable = JSON.parse(JSON.stringify(this.module_config.passwordmail));
 
-										// if (immutable.html) {
-										// 	if (immutable.html.content) {
-										// 		immutable.html.content.nickname = account.content.nickname;
-										// 	}
-										// }
 
 										const nickname = value.metadata.nickname;
 
@@ -1124,10 +1102,6 @@ export class Auth extends Mail {
 													};
 													// const mail_object: any = this.message.usernamemail;
 													const immutable = JSON.parse(JSON.stringify(this.module_config.usernamemail));
-
-													// if (immutable.html) {
-													// 	immutable.html.content.nickname = account.content.nickname;
-													// }
 
 													const nickname = value.metadata.nickname;
 
@@ -1333,9 +1307,6 @@ export class Auth extends Mail {
 								// const mail_object = this.message.removemail;
 								const immutable = JSON.parse(JSON.stringify(this.module_config.removemail));
 
-								// if (mail_object.html) {
-								// 	mail_object.html.content.nickname = account.content.nickname;
-								// }
 
 								const nickname = account.content.nickname;
 

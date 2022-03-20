@@ -428,7 +428,8 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * アップデートダイアログ
 	 * @returns none
 	 */
-	public updateDialog(id: string): void {
+	public updateDialog(account:any): void {
+		const id = account.user_id;
 		this.Progress(true);
 		this.get(id, (error: IErrorObject, result: any | null): void => {
 			if (!error) {
@@ -497,7 +498,9 @@ export class AccountsComponent extends SessionableComponent implements OnInit {
 	 * デリートダイアログ
 	 * @returns none
 	 */
-	public deleteDialog(id: string): void {
+	public deleteDialog(account:any): void {
+
+		const id = account.user_id;
 		const resultDialogContent: any = {title: "User", message: "Delete User?"};
 
 		const dialog: MatDialogRef<any> = this.matDialog.open(YesNoDialogComponent, {
