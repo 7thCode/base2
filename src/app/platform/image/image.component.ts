@@ -34,6 +34,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	@Input() public width: number = 0;
 	@Input() public height: number = 0;
 	@Input() public view: string = "";
+	@Input() public type: string = "";
 	@Input() public fileName: string = "";
 	@Input() public username: string = "";
 	@Input() public extensions: string = "";
@@ -90,7 +91,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param name
 	 */
 	private draw(name: string): void {
-		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
+		this.imagePath = this.endPoint + "/pfiles/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
 	}
 
 	/**
@@ -116,15 +117,14 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	@HostListener("drop", ["$event"])
 	public onDrop(event: any): void {
 		const path: string = "";
-		const upsert: boolean = true;
 		switch (this.view) {
 			case "editable":
 				event.preventDefault();
-				this.onFileDrop(path, this.filterExtensionFiles(this.marshallingFiles(event.dataTransfer.files), this.extensions), false, event.shiftKey, upsert);
+				this.onFileDrop(path, this.filterExtensionFiles(this.marshallingFiles(event.dataTransfer.files), this.extensions), false, event.shiftKey);
 				break;
 			case "rename":
 				event.preventDefault();
-				this.onFileDrop(path, this.filterExtensionFiles(this.marshallingFiles(event.dataTransfer.files), this.extensions), true, event.shiftKey, upsert);
+				this.onFileDrop(path, this.filterExtensionFiles(this.marshallingFiles(event.dataTransfer.files), this.extensions), true, event.shiftKey);
 				break;
 			case "visible":
 				break;
@@ -157,8 +157,9 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.view = ImageComponent.defaultValue(changes.view, "visible");
 		this.width = ImageComponent.defaultValue(changes.width, 120);
 		this.height = ImageComponent.defaultValue(changes.height, 120);
-		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png,webp");
+		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png,webp,avi,mp4,mov,webm,wmv,mpg,mkv,flv,asf");
 		this.username = ImageComponent.defaultValue(changes.username, null);
+		this.draw(this.fileName);
 	}
 
 	/**
@@ -167,8 +168,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	public ngOnInit(): void {
 		super.ngOnInit();
 		this.style = {
-			"width": this.width + "px",
-			"height": this.height + "px",
+			"max-width": this.width + "px",
+			"max-height": this.height + "px",
 			"line-height": this.height + "px",
 		};
 
@@ -190,7 +191,6 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	public resizeDialog(file: any, image: any, callback: Callback<any>): void {
 		const resultDialogContent: any = {title: file.name, message: "size is " + file.size + "byte. upload it?", file: file, image: image};
 		const dialog: MatDialogRef<any> = this.matDialog.open(ResizeDialogComponent, {
-			// width: "30%",
 			minWidth: "320px",
 			height: "fit-content",
 			data: {
@@ -286,8 +286,8 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	/*
 	*
 	* */
-	public Upload(path: string, file: any, upsert: boolean): void {
-		this.uploadFile(file, path + this.fileName, {category: "", description: ""}, {upsert: upsert}, (error: IErrorObject, result: any): void => {
+	public Upload(path: string, file: any) {
+		this.uploadFile(file, path + this.fileName, {category: "", description: ""}, {upsert: false}, (error: IErrorObject, result: any): void => {
 			if (!error) {
 				this.draw(file.name);
 				this.Complete("create", {name: file.name, type: file.type, size: file.size});
@@ -303,13 +303,13 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param files
 	 * @param rename
 	 */
-	public onFileDrop(path: string, files: File[], rename: boolean, escapeResize: boolean, upsert: boolean): void {
+	public onFileDrop(path: string, files: File[], rename: boolean, escapeResize: boolean): void {
 		if (files.length > 0) {
 			const file = files[0];
 			if (!rename) {
 				this.fileName = file.name;
 			}
-			const type: string = this.mimeToType(file.type);
+			const type = this.mimeToType(file.type);
 			switch (type) {  // resizeable?
 				case "jpeg":
 				case "png":
@@ -318,22 +318,21 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 							if (!error) {
 								if ((image.width > this.resizeThreshold.width) || (image.height > this.resizeThreshold.height)) {
 									this.resizeDialog(file, image, (error: IErrorObject, result: any) => {
-										this.Upload(path, result, upsert);
+										this.Upload(path, result);
 									});
 								} else {
-									this.Upload(path, file, upsert);
+									this.Upload(path, file);
 								}
 							}
 						})
 					} else {
-						this.Upload(path, file, upsert);
+						this.Upload(path, file);
 					}
 					break;
 				default:
-					this.Upload(path, file, upsert);
+					this.Upload(path, file);
 			}
 		}
 	}
-
 
 }
