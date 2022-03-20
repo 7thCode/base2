@@ -146,22 +146,18 @@ export class Entries extends Updatable {
 	 * @param callback
 	 */
 	public aggrigate(params: any, aggregater: any[], callback: (error: IErrorObject, result: any) => void): void {
-
 		this.Decode(params.option, (error: IErrorObject, option: IQueryOption): void => {
 			if (!error) {
 				Entries.option_to_aggregater(aggregater, option);	// skip, limit
-
 				Article.aggregate(aggregater).then((entries: any[]): void => {
 					callback(null, entries);
 				}).catch((error: IErrorObject): void => {
 					callback(error, null);
 				});
-
 			} else {
 				callback(error, null);
 			}
 		});
-
 	}
 
 	/**
