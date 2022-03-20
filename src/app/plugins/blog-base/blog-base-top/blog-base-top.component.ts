@@ -18,19 +18,10 @@ import {BlogBaseService} from "../blog-base.service";
 import {DomSanitizer, Meta, Title} from "@angular/platform-browser";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Errors} from "../../../platform/base/library/errors";
+import {BlogBasePageComponent} from "../blog-base-page/blog-base-page.component";
 
 @Directive()
-export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
-
-	public get isProgress(): boolean {
-		return this.spinner.progress;
-	}
-
-	public isHandset: any; // 360 – 399
-	public isTablet: any; // 600 – 719
-	public isDesktop: any;
-
-	protected spinner: Spinner;
+export abstract class BlogBaseTopComponent extends BlogBasePageComponent implements OnInit {
 
 	public constructor(
 		protected session: SessionService,
@@ -45,9 +36,7 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		protected title: Title,
 		protected meta: Meta
 	) {
-		super(session, matDialog);
-		this.service = blogsService;
-		this.spinner = new Spinner(overlay);
+		super(session, blogsService, breakpointObserver, overlay, matDialog, snackbar,	 domSanitizer, activatedRoute, router, title, meta);
 	}
 
 	public ngOnInit(): void {
@@ -85,35 +74,6 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 				this.Complete("error", error);
 			}
 		});
-	}
-
-	/**
-	 * エラー表示
-	 * @param error
-	 */
-	protected errorBar(error: IErrorObject): void {
-		if (error) {
-			this.snackbar.open(error.message, "Close", {
-				duration: 8000,
-			});
-		}
-	}
-
-	/**
-	 * メッセージ表示
-	 * @param message
-	 */
-	protected messageBar(message: string): void {
-		if (message) {
-			this.snackbar.open(message, "Close", {
-				duration: 8000,
-				panelClass: ["message-snackbar"]
-			});
-		}
-	}
-
-	protected Progress(value: boolean): void {
-		this.spinner.Progress(value);
 	}
 
 	/**
@@ -156,28 +116,4 @@ export class BlogBaseTopComponent extends UpdatableComponent implements OnInit {
 		}
 	}
 
-	public imagePath(article: any, index: number): string {
-		let path = "";
-		if (article.accessory) {
-			if (article.accessory.images) {
-				if (article.accessory.images.length > index) {
-					if (article.accessory.images[index].name) {
-						path = "/pfiles/get/" + article.accessory.images[index].name;
-					}
-				}
-			}
-		}
-		return path;
-	}
-
-
-	public images(article: any): number {
-		let images_count: number = 0;
-		if (article.accessory) {
-			if (article.accessory.images) {
-				images_count = article.accessory.images.length
-			}
-		}
-		return images_count;
-	}
 }
