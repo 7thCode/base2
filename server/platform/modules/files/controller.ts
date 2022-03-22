@@ -765,22 +765,18 @@ export class Files extends Wrapper {
 
 		const _default: any = this.config.systems.default;
 
-// 		let username: string = param.u || _default.username;
-// 		if (user) {
-// 			username = param.u || user.username || _default.username;
-// 		}
-
 		let username = "";
-		if (_default) {
-			username = _default.username;
-		} else {
-			if (user) {
-				username = user.username;
-			}
-		}
 
 		if (param.u) {
 			username = param.u;
+		} else {
+			if (_default) {
+				username = _default.username;
+			} else {
+				if (user) {
+					username = user.username;
+				}
+			}
 		}
 
 		this.render_by_file(response, next, username, path, param, range);
