@@ -651,9 +651,10 @@ export class PublicFiles extends Files {
 
 		const _default: any = this.config.systems.default;
 
-		let username: string = _default.username;
-
-		if (!username) {
+		let username = "";
+		if (_default) {
+			username = _default.username;
+		} else {
 			if (user) {
 				username = user.username;
 			}

@@ -426,26 +426,8 @@ export class FilesComponent extends UploadableComponent implements OnInit {
 							results.forEach((result) => {
 								result.cols = 1;
 								result.rows = 1;
-								result.type = 0;
 
-								const type: string = this.mimeToMedia(result.metadata.type);
-								const types: any = {
-									"image": 1,
-									"video": 3,
-								}
-
-								if (types[type]) {
-									result.type = types[type];
-								}
-								/*
-								if (this.hasExtension({name: result.filename}, "jpg,jpeg,png,bmp,webp")) {
-									result.type = 1;
-								} else if (this.hasExtension({name: result.filename}, "svg")) {
-									result.type = 2;
-								} else if (this.hasExtension({name: result.filename}, "mpg,mp4,avi,mov,m4v,webm")) {
-									result.type = 3;
-								}
-								*/
+								result.type = this.mimeToMedia(result.metadata.type);
 								result.extension = this.Extension({name: result.filename});
 
 								filtered.push(result);
