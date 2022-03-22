@@ -91,7 +91,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param name
 	 */
 	private draw(name: string): void {
-		this.imagePath = this.endPoint + "/pfiles/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
+		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
 	}
 
 	/**

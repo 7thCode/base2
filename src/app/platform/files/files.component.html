@@ -19,10 +19,9 @@
 				</mat-form-field>
 			</div>
 			<mat-grid-list (window:resize)="onResize($event)" [cols]="breakpoint" rowHeight="1:1">
-				<mat-grid-tile *ngFor="let file of results" [colspan]="file.cols" [ngSwitch]="file.type" [rowspan]="file.rows" class="box-body">
-					<app-image *ngSwitchCase="1" [fileName]="file.filename" [username]="file.metadata.username" [view]="'editable'"></app-image>
-					<img *ngSwitchCase="2" alt="" src="{{endPoint}}/files/get/{{file.filename}}" style="height: 60%;"/>
-					<video *ngSwitchCase="3" controls muted playsinline style="height: 60%;">
+				<mat-grid-tile *ngFor="let file of results" [ngSwitch]="file.type" [colspan]="file.cols"  [rowspan]="file.rows" class="box-body">
+					<app-image *ngSwitchCase="'image'" [fileName]="file.filename" [username]="file.metadata.username" [view]="'editable'"></app-image>
+					<video *ngSwitchCase="'video'" controls muted playsinline style="height: 60%;">
 						<source src="{{endPoint}}/files/get/{{file.filename}}">
 					</video>
 					<div *ngSwitchDefault [ngSwitch]="file.extension">
