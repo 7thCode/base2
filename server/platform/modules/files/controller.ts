@@ -763,19 +763,13 @@ export class Files extends Wrapper {
 		const param: IRenderParam = request.query;
 		const user: IAccountModel = this.Transform(request.user);
 
-		const _default: any = this.config.systems.default;
-
 		let username = "";
 
-		if (param.u) {
-			username = param.u;
+		if (user.username) {
+			username = user.username;
 		} else {
-			if (_default) {
-				username = _default.username;
-			} else {
-				if (user) {
-					username = user.username;
-				}
+			if (param.u) {
+				username = param.u;
 			}
 		}
 
