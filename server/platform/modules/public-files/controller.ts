@@ -6,27 +6,30 @@
 
 "use strict";
 
-import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
-import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
-import {Errors} from "../../../platform/base/library/errors";
+// import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
+// import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+// import {Errors} from "../../base/library/errors";
 
-const Mongoose = require('mongoose');
-const fs: any = require("graceful-fs");
-const mongodb: any = require("mongodb");
+// const Mongoose = require('mongoose');
+// const fs: any = require("graceful-fs");
+// const mongodb: any = require("mongodb");
 
-const path: any = require("path");
+// const path: any = require("path");
 
-const project_root: string = path.join(__dirname, "../../../..");
+// const project_root: string = path.join(__dirname, "../../../..");
 
+const Files: any = require("../files/controller");
+
+/*
 interface IRenderParam {
 	u: string;
 	c: string;
 	w: string;
 	h: string;
 }
+*/
 
 
-const Files: any = require("../../../platform/modules/files/controller");
 
 /*
 *
@@ -42,9 +45,9 @@ export class PublicFiles extends Files {
 	 * @param logger
 	 * @param db_connections
 	 */
-	constructor(event: any, config: any, logger: any, db_connections: any) {
-		super(event, config, logger, db_connections);
-	}
+// 	constructor(event: any, config: any, logger: any, db_connections: any) {
+// 		super(event, config, logger, db_connections);
+// 	}
 
 	/**
 	 * query_by_user_read
@@ -73,21 +76,7 @@ export class PublicFiles extends Files {
 	protected static query_by_user_write(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
 		return query;
 	}
-
-	/**
-	 * fromLocal
-	 *
-	 * insert local file into db.
-	 *
-	 * @param pathFrom
-	 * @param user
-	 * @param name
-	 * @param category
-	 * @param description
-	 * @param mimetype
-	 * @param callback
-	 * @returns none
-	 */
+	/*
 	private fromLocal(pathFrom: string, user: { username: string, auth: number }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
 		try {
 			const writestream: any = this.gfs.openUploadStream(name,
@@ -124,15 +113,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 * result_public_file
-	 *
-	 * public file
-	 *
-	 * @param name
-	 * @param callback
-	 * @returns none
-	 */
 	private result_public_file(name: string, callback: (error: IErrorObject, stream: object, length: number) => void): void {
 		this.collection.findOne({filename: name}, (error: IErrorObject, item: any): void => {
 			if (!error) {
@@ -148,20 +128,6 @@ export class PublicFiles extends Files {
 		});
 	}
 
-	/**
-	 * insert_file
-	 *
-	 * insert file
-	 *
-	 * @param request
-	 * @param user
-	 * @param name
-	 * @param rights
-	 * @param category
-	 * @param description
-	 * @param callback
-	 * @returns none
-	 */
 	private insert_file(request: IPostFile, user: { username: string, auth: number }, name: string, rights: { read: number, write: number }, category: string, description: string, callback: Callback<any>): void {
 
 		const parseDataURL: any = (dataURL: string): any => {
@@ -210,15 +176,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 *
-	 * get
-	 *
-	 * @param username
-	 * @param name
-	 * @param callback
-	 * @returns none
-	 */
 	private get_record(username: string, name: string, callback: Callback<any>): void {
 		try {
 			const query: object = PublicFiles.query_by_user_read({username, auth: AuthLevel.public}, this.default_user, {filename: name});
@@ -236,14 +193,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 *
-	 *
-	 *
-	 * @param _id
-	 * @param callback
-	 * @returns none
-	 */
 	private get_record_by_id(_id: string, callback: Callback<any>): void {
 		try {
 			const id: any = new mongodb.ObjectId(_id);
@@ -261,16 +210,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 *
-	 *
-	 *
-	 * @param _id
-	 * @param start
-	 * @param end
-	 * @param callback
-	 * @returns none
-	 */
 	private get_partial(_id: string, start: number, end: number, callback: Callback<any>): void {
 		try {
 			const readstream: object = this.gfs.openDownloadStream(_id, {start, end: end + 1});
@@ -284,17 +223,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/*
-	*
-	* response
-	*
-	* @param response
-	* @param next
-	* @param data
-	* @param query
-	* @param range
-	* @param command_string
-	*/
 	private render(response: any, next: () => void, data: any, range: string, param: IRenderParam): void {
 
 		const command_string: string = param.c || "";
@@ -306,11 +234,10 @@ export class PublicFiles extends Files {
 		let start: number = 0;
 		let end: number = 0;
 
-		/*
-		* HTTP/1.1： 範囲要請
-		* RFC 7233, Range Requests
-		* https://triple-underscore.github.io/RFC7233-ja.html
-		 */
+		// HTTP/1.1： 範囲要請
+		// RFC 7233, Range Requests
+		// https://triple-underscore.github.io/RFC7233-ja.html
+
 		if (range) {    // with [Range Request] for Large Stream seeking. (ex Video,Sound...)
 			command = ""; // Because, in partial transfer, the effect cannot be used.
 			const target_range: { start: number, end: number } = Files.parse_range(range, total);
@@ -346,19 +273,6 @@ export class PublicFiles extends Files {
 		});
 	};
 
-	/*
-	*
-	* get files by username and file path
-	*
-	* @param response
-	* @param next
-	* @param username
-	* @param path
-	* @param query
-	* @param range
-	* @param command_string
-	*
-	*/
 	private render_by_file(response: any, next: () => void, username: string, path: string, param: IRenderParam, range: string): void {
 		this.get_record(username, path, (error: IErrorObject, data: any): void => {
 			if (!error) {
@@ -373,18 +287,6 @@ export class PublicFiles extends Files {
 		});
 	};
 
-	/*
-	* render_by_id
-	*
-	* get files by id
-	*
-	* @param response
-	* @param next
-	* @param id
-	* @param query
-	* @param range
-	* @param command_string
-	*/
 	private render_by_id(response: any, next: () => void, _id: string, param: IRenderParam, range: string): void {
 		this.get_record_by_id(_id, (error: IErrorObject, data: any): void => {
 			if (!error) {
@@ -399,12 +301,6 @@ export class PublicFiles extends Files {
 		});
 	};
 
-	/**
-	 *
-	 * @param initfiles
-	 * @param callback
-	 * @returns none
-	 */
 	public init(initfiles: any[], callback: Callback<any>): void {
 		try {
 			const db: any = this.connection.db;
@@ -466,12 +362,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 *
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
 	public queryFiles(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			this.Decode(request.params.query, (error: IErrorObject, query: object): void => {
@@ -493,12 +383,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 *
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
 	public countFiles(request: IQueryRequest, response: IJSONResponse): void {
 		try {
 			this.Decode(request.params.query, (error: IErrorObject, query: object): void => {
@@ -517,13 +401,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 * getFile
-	 *
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
 	public getFile(request: IGetFile, response: IJSONResponse): void {
 		try {
 			const path: string = request.params[0];
@@ -562,13 +439,6 @@ export class PublicFiles extends Files {
 		}
 	}
 
-	/**
-	 * postFile
-	 *
-	 * @param request
-	 * @param response
-	 * @returns none
-	 */
 	public postFile(request: any, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(1, "not logged in.", "S00194"), request.user, () => {
@@ -623,6 +493,7 @@ export class PublicFiles extends Files {
 	 * @param response
 	 * @returns none
 	 */
+	/*
 	public deleteFile(request: IDeleteFile, response: IJSONResponse): void {
 		try {
 			this.ifExist(response, Errors.userError(-1, "not logged in.", "000201"), request.user, () => {
@@ -677,7 +548,7 @@ export class PublicFiles extends Files {
 
 		this.render_by_id(response, next, _id, param, range);
 	}
-
+*/
 }
 
 module.exports = PublicFiles;

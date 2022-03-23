@@ -14,7 +14,7 @@ export const router = express.Router();
 const event: any = require.main.exports.event;
 const logger: any = require.main.exports.logger;
 
-const gatekeeper: any = require("../../../platform/base/library/gatekeeper");
+const gatekeeper: any = require("../../base/library/gatekeeper");
 
 const ConfigModule: any = require.main.exports.config;
 
@@ -54,7 +54,7 @@ publicFiles.init(systemsConfig.initpublicfiles, (error: IErrorObject, result: an
 				});
 			},
 		]);
-
+/*
 		router.post("/pfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
 			(request: any, response: object): void => {
 				logger.trace(request.url);
@@ -72,7 +72,7 @@ publicFiles.init(systemsConfig.initpublicfiles, (error: IErrorObject, result: an
 				});
 			},
 		]);
-
+*/
 		router.get("/pfiles/get/*", [gatekeeper.default,
 			(request: any, response: any, next: () => void): void => {
 				logger.trace(request.url);
@@ -90,7 +90,7 @@ publicFiles.init(systemsConfig.initpublicfiles, (error: IErrorObject, result: an
 			}]);
 
 	} else {
-		logger.fatal("init error. (videos) ", error.message);
+		logger.fatal("init error.", error.message);
 		process.exit(1);
 	}
 });
