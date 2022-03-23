@@ -6,30 +6,26 @@
 
 "use strict";
 
-// import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
-// import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
-// import {Errors} from "../../base/library/errors";
+import {IAccountModel, IDeleteFile, IGetFile, IJSONResponse, IPostFile, IQueryRequest} from "../../../../types/platform/server";
+import {AuthLevel, Callback, IErrorObject, IQueryOption} from "../../../../types/platform/universe";
+import {Errors} from "../../base/library/errors";
 
-// const Mongoose = require('mongoose');
-// const fs: any = require("graceful-fs");
-// const mongodb: any = require("mongodb");
+const Mongoose = require('mongoose');
+const fs: any = require("graceful-fs");
+const mongodb: any = require("mongodb");
 
-// const path: any = require("path");
+const path: any = require("path");
 
-// const project_root: string = path.join(__dirname, "../../../..");
+const project_root: string = path.join(__dirname, "../../../..");
 
 const Files: any = require("../files/controller");
 
-/*
 interface IRenderParam {
 	u: string;
 	c: string;
 	w: string;
 	h: string;
 }
-*/
-
-
 
 /*
 *
@@ -76,6 +72,7 @@ export class PublicFiles extends Files {
 	protected static query_by_user_write(user: { username: string, auth: number }, default_user: { username: string }, query: object): object {
 		return query;
 	}
+
 	/*
 	private fromLocal(pathFrom: string, user: { username: string, auth: number }, name: string, category: string, description: string, mimetype: string, callback: Callback<any>): void {
 		try {
@@ -493,6 +490,7 @@ export class PublicFiles extends Files {
 	 * @param response
 	 * @returns none
 	 */
+
 	/*
 	public deleteFile(request: IDeleteFile, response: IJSONResponse): void {
 		try {
@@ -511,6 +509,7 @@ export class PublicFiles extends Files {
 			this.SendFatal(response, Errors.Exception(error, "S00203"));
 		}
 	}
+*/
 
 	public renderFile(request: any, response: any, next: any): void {
 
@@ -518,37 +517,33 @@ export class PublicFiles extends Files {
 		const range: string = request.headers.range;
 
 		const param: IRenderParam = request.query;
-		const user: IAccountModel = this.Transform(request.user);
+		// const user: IAccountModel = this.Transform(request.user);
 
 		const _default: any = this.config.systems.default;
 
 		let username = "";
-		if (_default) {
-			username = _default.username;
-		} else {
-			if (user) {
-				username = user.username;
-			}
-		}
 
-		if (param.u) {
-			username = param.u;
+		if (_default) {
+			if (_default.username) {
+				username = _default.username;
+			}
 		}
 
 		this.render_by_file(response, next, username, path, param, range);
 	}
 
-	public renderId(request: any, response: any, next: any): void {
-		const _id = request.params.id;
-		const range: string = request.headers.range;
+	/*
+		public renderId(request: any, response: any, next: any): void {
+			const _id = request.params.id;
+			const range: string = request.headers.range;
 
-		const param: IRenderParam = request.query;
+			const param: IRenderParam = request.query;
 
-		// 	const command_string: string = param.c || "";
+			// 	const command_string: string = param.c || "";
 
-		this.render_by_id(response, next, _id, param, range);
-	}
-*/
+			this.render_by_id(response, next, _id, param, range);
+		}
+	*/
 }
 
 module.exports = PublicFiles;

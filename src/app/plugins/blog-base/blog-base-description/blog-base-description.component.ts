@@ -58,7 +58,8 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 
 	/**/
 	public ngOnInit(): void {
-	 	this.getSession((error: IErrorObject, session: object | null): void => {
+		super.ngOnInit();
+		this.getSession((error: IErrorObject, session: object | null): void => {
 			if (!error) {
 				this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
 					this.id = params.get('id');
@@ -81,8 +82,8 @@ export abstract class BlogBaseDescriptionComponent extends BlogBasePageComponent
 						}
 					})
 				});
-	 		}
-	 	});
+			}
+		});
 	}
 
 	/**

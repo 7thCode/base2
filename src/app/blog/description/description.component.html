@@ -7,7 +7,7 @@
 			</mat-card-header>
 			<mat-card-content>
 				<div fxLayout="column" fxLayoutAlign="center center">
-					<app-image [width]="360" [height]="360" [fileName]="imageName(images, 0)" [type]="imageMedia(images, 0)"></app-image>
+					<app-image [scope]="'publish'" [width]="360" [height]="360" [fileName]="imageName(images, 0)" [type]="imageMedia(images, 0)"></app-image>
 				</div>
 				<div [innerHTML]='description' style="margin:48px;font-size: 12px;font-weight:500;line-height: 1.8rem;"></div>
 			</mat-card-content>

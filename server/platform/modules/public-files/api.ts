@@ -54,25 +54,25 @@ publicFiles.init(systemsConfig.initpublicfiles, (error: IErrorObject, result: an
 				});
 			},
 		]);
-/*
-		router.post("/pfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
-			(request: any, response: object): void => {
-				logger.trace(request.url);
-				gatekeeper.catch(response, (): void => {
-					publicFiles.postFile(request, response);
-				});
-			},
-		]);
+		/*
+				router.post("/pfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
+					(request: any, response: object): void => {
+						logger.trace(request.url);
+						gatekeeper.catch(response, (): void => {
+							publicFiles.postFile(request, response);
+						});
+					},
+				]);
 
-		router.delete("/pfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
-			(request: any, response: object): void => {
-				logger.trace(request.url);
-				gatekeeper.catch(response, (): void => {
-					publicFiles.deleteFile(request, response);
-				});
-			},
-		]);
-*/
+				router.delete("/pfiles/auth/*", [gatekeeper.default, gatekeeper.authenticate,
+					(request: any, response: object): void => {
+						logger.trace(request.url);
+						gatekeeper.catch(response, (): void => {
+							publicFiles.deleteFile(request, response);
+						});
+					},
+				]);
+		*/
 		router.get("/pfiles/get/*", [gatekeeper.default,
 			(request: any, response: any, next: () => void): void => {
 				logger.trace(request.url);
