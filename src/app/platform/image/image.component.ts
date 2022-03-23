@@ -38,6 +38,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	@Input() public fileName: string = "";
 	@Input() public username: string = "";
 	@Input() public extensions: string = "";
+	@Input() public scope: string = '';
 
 	public endPoint: string;
 	public style: any = null;
@@ -60,7 +61,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.description = "";
 		this.filesService = new FilesService(http);
 		// 	this.endPoint = environment.endPoint;
-		this.imagePath = this.endPoint + "/files/get/blank.png";
+		this.imagePath = this.endPoint + "/pfiles/get/blank.png";
 		this.resizeThreshold = {width: 1000, height: 1000};
 	}
 
@@ -91,7 +92,15 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 	 * @param name
 	 */
 	private draw(name: string): void {
-		this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
+		switch (this.scope) {
+			case "publish":
+				this.imagePath = this.endPoint + "/pfiles/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
+				break;
+			case "":
+				this.imagePath = this.endPoint + "/files/get/" + encodeURIComponent(name) + "?u=" + encodeURIComponent(this.username) + "&r=" + this.randamString();
+				break;
+			default:
+		}
 	}
 
 	/**
