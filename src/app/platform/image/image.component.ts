@@ -168,7 +168,7 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 		this.height = ImageComponent.defaultValue(changes.height, 120);
 		this.extensions = ImageComponent.defaultValue(changes.extensions, "jpg,jpeg,png,webp,avi,mp4,mov,webm,wmv,mpg,mkv,flv,asf");
 		this.username = ImageComponent.defaultValue(changes.username, null);
-	//	this.draw(this.fileName);
+		this.draw(this.fileName);
 	}
 
 	/**
@@ -343,5 +343,4 @@ export class ImageComponent extends UploadableComponent implements OnInit, OnCha
 			}
 		}
 	}
-
 }
